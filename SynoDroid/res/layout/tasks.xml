@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  android:id="@+id/LinearLayout01"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+>
+  <RelativeLayout
+    android:id="@+id/RelativeLayout01"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+  >
+    <RelativeLayout
+      android:layout_alignParentBottom="true" android:layout_height="24dip" android:layout_alignParentLeft="true" style="?android:attr/windowTitleBackgroundStyle" android:id="@+id/bottom_bar" android:layout_width="fill_parent">
+      <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/rate_bar" android:layout_width="wrap_content" android:layout_centerHorizontal="false" android:layout_height="24dip" android:layout_centerInParent="true" android:layout_alignParentRight="false">
+        <ImageView
+          android:id="@+id/ImageView01"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/dl_download"
+        ></ImageView>
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginRight="10dip"
+        android:text="0.00KB/s" android:textStyle="bold" android:id="@+id/id_total_download"></TextView>
+        <ImageView
+          android:id="@+id/ImageView02"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/dl_upload"
+        ></ImageView>
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|center_horizontal"
+        android:text="0.00KB/s" android:textStyle="bold" android:id="@+id/id_total_upload"></TextView>
+      </LinearLayout>
+    
+</RelativeLayout>
+    <ListView
+      android:isScrollContainer="true"
+      android:layout_height="fill_parent"
+      android:layout_width="fill_parent"
+      android:id="@+id/task_list"
+      android:clickable="true"
+      android:choiceMode="singleChoice"
+      android:longClickable="true" android:layout_above="@+id/bottom_bar"></ListView>
+  </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Synodroid-DS</string>
+
+<string name="connect_cant_connect">"Can't connect to {0}. Error is '{1}'."</string>
+<string name="connect_unknwon_reason">&quot;Can't connect for an unknown reason&quot;</string>
+<string name="connect_wrong_userpassword">"Wrong user or password. Please try again."</string>
+<string name="connect_already_connected">"You're connected to another computer. Please reconnect."</string>
+<string name="connect_nohost">&quot;Can't contact host. Please verify your parameters.&quot;</string>
+<string name="connect_error_title">"Error"</string>
+<string name="connect_connecting">"Connecting to \n{0}\nPlease wait..."</string>
+<string name="connect_ssl_error">"SSL error: {0}"</string>
+<string name="action_deleting">&quot;Deleting file %s&quot;</string>
+<string name="action_pausing">&quot;Pausing file %s&quot;</string>
+<string name="action_resuming">&quot;Resuming file %s&quot;</string>
+<string name="menu_connect">Connect to</string>
+<string name="menu_search">Search</string>
+<string name="dialog_title_action">Action</string>
+<string name="menu_parameter">Parameters</string>
+
+<string name="connect_cant">&quot;You are not allowed to use this service&quot;</string>
+<string name="label_nickname">Nickname</string>
+<string name="label_protocol">Protocol</string>
+<string name="label_host">Host</string>
+<string name="label_port">Port</string>
+<string name="label_username">Username</string>
+<string name="label_password">Password</string>
+<string name="label_refreshinterval">Refresh interval</string>
+<string name="hint_nickname">Set the nickname</string>
+<string name="hint_protocol">Set the protocol to use</string>
+<string name="hint_host">Set the hostname or IP</string>
+<string name="hint_port">Set the port</string>
+<string name="hint_username">The username</string>
+<string name="hint_password">The password</string>
+
+
+<string name="hint_refreshinterval">Refresh interval in second</string>
+<string-array name="protocols_array"><item>HTTP</item>
+<item>HTTPS</item>
+</string-array>
+
+<string name="button_cancel">Cancel</string>
+<string name="label_dsm_version">Disk Station Manager</string>
+<string name="hint_dsm_version">&quot;Set you DSM's version&quot;</string>
+<string-array name="dsm_version_array"><item>DSM 2.2</item>
+<item>DSM 2.3</item>
+</string-array>
+<string name="title_preference">Preferences</string>
+<string name="label_autorefresh">Auto refresh</string>
+<string name="hint_autorefresh_on">Auto resfresh is enabled</string>
+<string name="hint_autorefresh_off">Auto refresh is disabled</string>
+<string name="title_cat_servers">Servers</string>
+<string name="title_cat_general">General Options</string>
+
+
+<string name="menu_delete_server">Delete server(s)</string>
+<string-array name="sorts_array"><item>By date created</item>
+<item>By user</item>
+</string-array>
+<string name="label_process_sort">Sort tasks</string>
+<string name="hint_process_sort">Select how to sort tasks</string>
+
+
+<string-array name="sort_array_values"><item>date</item>
+<item>user</item>
+</string-array>
+<string name="button_delete">Delete</string>
+<string name="menu_add_server">Add a server</string>
+<string name="label_default_server_prefix">Server </string>
+<string name="hint_default_server">Click to edit</string>
+<string name="menu_refresh">Refresh</string>
+<string name="title_cat_connection">Connection parameters</string>
+<string name="title_cat_server">General parameters</string>
+
+<string name="action_resume">Resume</string>
+<string name="action_pause">Pause</string>
+
+<string name="action_delete">Delete</string>
+<string name="action_details">Show details...</string>
+<string name="dialog_title_confirm">Confirm</string>
+<string name="button_yes">Yes</string>
+<string name="button_no">No</string>
+<string name="dialog_message_confirm">&quot;The file operations are not completely finished. Would you like to continue?&quot;</string>
+<string name="label_sort_taskid">By creation date</string>
+<string name="label_sort_filename">By filename</string>
+<string name="label_sort_totalsize">By total size</string>
+<string name="label_sort_currentsize">By current size</string>
+<string name="label_sort_progress">By progress</string>
+<string name="label_sort_uploadrate">By upload rate</string>
+<string name="label_sort_currentrate">By download rate</string>
+<string name="label_sort_timeleft">By time left</string>
+<string name="label_sort_status">By status</string>
+<string name="label_sort_username">By username</string>
+<string name="label_asc_sort">Ascending sort</string>
+<string name="hint_asc_sort_on">The sort is ascending</string>
+<string name="hint_asc_sort_off">The sort is descending</string>
+<string name="eula_title">Licence</string>
+<string name="eula_accept">Accept</string>
+<string name="eula_refuse">Refuse</string>
+<string name="action_detailing">Not yet implemented</string>
+<string name="action_adding">Adding file %s</string>
+</resources>

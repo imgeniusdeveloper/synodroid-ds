@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:versionCode="1"
+  android:versionName="1.0"
+  package="org.jared.synodroid.ds"
+>
+  <application
+    android:label="@string/app_name"
+    android:debuggable="true"
+    android:allowTaskReparenting="false"
+    android:icon="@drawable/icon_phone"
+    android:name="DownloadApplication"
+  >
+    <activity
+      android:label="@string/app_name"
+      android:name="DownloadActivity"
+      android:launchMode="singleTask"
+    >
+      <intent-filter>
+        <action
+          android:name="android.intent.action.MAIN"
+        ></action>
+        <category
+          android:name="android.intent.category.LAUNCHER"
+        ></category>
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <category
+          android:name="android.intent.category.BROWSABLE" />
+        <data
+          android:mimeType="application/x-bittorrent" />
+        <data
+          scheme="http"
+          android:mimeType="application/x-bittorrent" />
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <category
+          android:name="android.intent.category.BROWSABLE" />
+        <data
+          android:scheme="http"
+          android:host="*"
+          android:pathPattern=".*\\.torrent" />
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <category
+          android:name="android.intent.category.BROWSABLE" />
+        <data
+          android:mimeType="application/x-bittorrent" />
+        <data
+          scheme="file"
+          android:mimeType="application/x-bittorrent" />
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <data
+          android:scheme="file"
+          android:pathPattern=".*\\.torrent" />
+      </intent-filter>
+    </activity>
+    <activity
+      android:name="DownloadPreferenceActivity"
+    >
+      <intent-filter>
+        <action
+          android:name="android.intent.action.VIEW"
+        ></action>
+        <category
+          android:name="android.intent.category.PREFERENCE"
+        ></category>
+      </intent-filter>
+    </activity>
+  </application>
+  <uses-sdk
+    android:minSdkVersion="3" />
+  <uses-permission
+    android:name="android.permission.INTERNET"
+  ></uses-permission>
+</manifest>
