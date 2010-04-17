@@ -127,7 +127,7 @@ public class DownloadApplication extends Application {
 			// First verify if it is a DeleteTaskAction and if the task is not finished
 			TaskStatus status = null;
 			if (actionP.getTask() != null && actionP.getTask().status!=null) {
-				TaskStatus.valueOf(actionP.getTask().status);
+				status = TaskStatus.valueOf(actionP.getTask().status);
 			}
 			if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
 				Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(R.string.dialog_message_confirm).setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes,
