@@ -75,7 +75,7 @@
     </activity>
     <activity
       android:name="DownloadPreferenceActivity"
-    >
+    android:launchMode="singleTop">
       <intent-filter>
         <action
           android:name="android.intent.action.VIEW"
@@ -85,7 +85,11 @@
         ></category>
       </intent-filter>
     </activity>
-  </application>
+  <activity android:name="DetailActivity" android:launchMode="singleTop"><intent-filter><action android:name="android.intent.action.VIEW"></action>
+<category android:name="android.intent.category.DEFAULT"></category>
+</intent-filter>
+</activity>
+</application>
   <uses-sdk
     android:minSdkVersion="3" />
   <uses-permission
