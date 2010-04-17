@@ -421,7 +421,7 @@ public class DownloadActivity extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
 				// Only if TaskActionMenu is enabled: it seems that even if the item is
-				// disablethe user can tap it
+				// disable the user can tap it
 				if (taskAction.isEnabled()) {
 					DownloadApplication app = (DownloadApplication) getApplication();
 					app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
