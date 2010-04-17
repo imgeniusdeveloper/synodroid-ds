@@ -16,6 +16,9 @@
  */
 package org.jared.synodroid.common.protocol;
 
+import java.util.List;
+
+import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 
@@ -34,28 +37,34 @@ public interface DSHandler {
 
 	/**
 	 * Stop a torrent
-	 * @param torrentP
+	 * @param taskP
 	 * @throws DSMException
 	 */
-  public void stop(final Task torrentP) throws Exception;
+  public void stop(final Task taskP) throws Exception;
   
   /**
    * Resume a torrent
    * @param torrentP
    * @throws DSMException
    */
-  public void resume(final Task torrentP) throws Exception;
+  public void resume(final Task taskP) throws Exception;
   
   /**
    * delete a torrent
    * @param torrentP
    * @throws DSMException
    */
-  public void delete(final Task torrentP) throws Exception;
+  public void delete(final Task taskP) throws Exception;
   
   /**
    * Upload a file defined by an Uri
    * @param uriP
    */
   public void upload(final Uri uriP) throws Exception ;
+  
+  /**
+   * Get task's details
+   * @param uriP
+   */
+  public List<Detail> getDetails(final Task taskP) throws Exception ;
 }

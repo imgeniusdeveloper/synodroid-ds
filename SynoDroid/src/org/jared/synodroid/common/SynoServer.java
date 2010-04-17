@@ -244,14 +244,14 @@ public class SynoServer {
 	/**
 	 * Send a message
 	 */
-	private void fireMessage(DownloadActivity activityP, int msgP) {
+	public void fireMessage(DownloadActivity activityP, int msgP) {
 		fireMessage(activityP, msgP, null);
 	}
 
 	/**
 	 * Send a message
 	 */
-	private void fireMessage(DownloadActivity activityP, int msgP, Object objP) {
+	public void fireMessage(DownloadActivity activityP, int msgP, Object objP) {
 		// Send the connecting message
 		Message msg = new Message();
 		msg.what = msgP;

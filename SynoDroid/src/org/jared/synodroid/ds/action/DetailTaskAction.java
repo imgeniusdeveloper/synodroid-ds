@@ -16,15 +16,16 @@
  */
 package org.jared.synodroid.ds.action;
 
+import java.util.List;
+
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
-import android.app.AlertDialog;
-
 /**
- * This action request the server for information details about a task
+ * This action requests the server for information details about a task
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class DetailTaskAction implements TaskAction {
@@ -40,11 +41,8 @@ public class DetailTaskAction implements TaskAction {
 	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception {
-    new AlertDialog.Builder(activityP)
-    .setMessage("Phyllis is calling")
-    .setPositiveButton("Answer", null)
-    .show();
-
+  	List<Detail> details = serverP.getDSMHandlerFactory().getDSHandler().getDetails(task);
+  	serverP.fireMessage(activityP, DownloadActivity.MSG_DETAILS_RETRIEVED, details);
   }
 
 	/* (non-Javadoc)

@@ -79,6 +79,8 @@ public class DownloadActivity extends Activity {
 	public static final int MSG_CONNECTED = 6;
 	// Show a Toast's message
 	public static final int MSG_TOAST = 7;
+	// Task's details retrieved
+	public static final int MSG_DETAILS_RETRIEVED = 8;
 
 	// Menu connection
 	public static final int MENU_CONNECT = 1;
@@ -104,7 +106,8 @@ public class DownloadActivity extends Activity {
 
 	// Message handler which update the UI when the torrent list is updated
 	private Handler handler = new Handler() {
-		@Override
+		@SuppressWarnings("unchecked")
+    @Override
 		public void handleMessage(Message msg) {
 			// Update torrent
 			if (msg.what == MSG_TASKS_UPDATED) {
@@ -154,7 +157,7 @@ public class DownloadActivity extends Activity {
 			// Connection is done
 			else if (msg.what == MSG_CONNECTED) {
 				// Change the title
-				setTitle(getString(R.string.app_name)+": "+server.getNickname());
+				setTitle(getString(R.string.app_name) + ": " + server.getNickname());
 			}
 			// Connecting to the server
 			else if (msg.what == MSG_CONNECTING) {
@@ -177,9 +180,15 @@ public class DownloadActivity extends Activity {
 				Toast toast = Toast.makeText(DownloadActivity.this, text, Toast.LENGTH_LONG);
 				toast.show();
 			}
+			else if (msg.what == MSG_DETAILS_RETRIEVED) {
+				Intent next = new Intent();
+				next.setClass(DownloadActivity.this, DetailActivity.class);
+				next.putExtra("org.jared.synodroid.ds.Details", (ArrayList)msg.obj);
+				DownloadActivity.this.startActivity(next);
+			}
+
 		}
 	};
-
 
 	/**
 	 * Handle a message. This method is thread safe and can be call from every
@@ -197,10 +206,10 @@ public class DownloadActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Diplay the EULA
 		Eula.show(this);
-		
+
 		// Request a specific feature: show a indeterminate progress in the title
 		// bar
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -210,9 +219,9 @@ public class DownloadActivity extends Activity {
 		setProgressBarIndeterminateVisibility(false);
 		// Retrieve the listview
 		taskView = (ListView) findViewById(R.id.task_list);
-		totalUpView = (TextView)findViewById(R.id.id_total_upload);		
-		totalDownView = (TextView)findViewById(R.id.id_total_download);
-		
+		totalUpView = (TextView) findViewById(R.id.id_total_upload);
+		totalDownView = (TextView) findViewById(R.id.id_total_download);
+
 		// Create the task adapter
 		TaskAdapter taskAdapter = new TaskAdapter(this);
 		taskView.setAdapter(taskAdapter);
@@ -222,47 +231,53 @@ public class DownloadActivity extends Activity {
 		if (!((DownloadApplication) getApplication()).bindActivity(this)) {
 			Intent intent = getIntent();
 			String action = intent.getAction();
-			// Show the dialog only if the intent's action is not to view a content -> add a new file
+			// Show the dialog only if the intent's action is not to view a content ->
+			// add a new file
 			if (!action.equals(Intent.ACTION_VIEW)) {
-			  showDialogToConnect(true, null);
+				showDialogToConnect(true, null);
 			}
 		}
 	}
 
-	/* (non-Javadoc)
-   * @see android.app.Activity#onStart()
-   */
-  @Override
-  protected void onStart() {
-	  super.onStart();
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
 
-	/* (non-Javadoc)
-   * @see android.app.Activity#onNewIntent(android.content.Intent)
-   */
-  @Override
-  protected void onNewIntent(Intent intentP) {
-	  super.onNewIntent(intentP);
-	  Log.d(DS_TAG, "New intent: "+intentP);
-	  handleIntent(intentP);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 */
+	@Override
+	protected void onNewIntent(Intent intentP) {
+		super.onNewIntent(intentP);
+		Log.d(DS_TAG, "New intent: " + intentP);
+		handleIntent(intentP);
+	}
 
-  /**
-   * Handle all new intent
-   * @param intentP
-   */
-  private void handleIntent(Intent intentP) {
-  	String action = intentP.getAction();
-  	if (action != null && action.equals(Intent.ACTION_VIEW)) {
-  		Uri uri = intentP.getData();
-  		if (uri != null) {
-  			AddTaskAction addTask = new AddTaskAction(uri);
-  			DownloadApplication app = (DownloadApplication)getApplication();
-  			app.executeAction(this, addTask, true);
-  		}
-  	}
-  }
-  
+	/**
+	 * Handle all new intent
+	 * 
+	 * @param intentP
+	 */
+	private void handleIntent(Intent intentP) {
+		String action = intentP.getAction();
+		if (action != null && action.equals(Intent.ACTION_VIEW)) {
+			Uri uri = intentP.getData();
+			if (uri != null) {
+				AddTaskAction addTask = new AddTaskAction(uri);
+				DownloadApplication app = (DownloadApplication) getApplication();
+				app.executeAction(this, addTask, true);
+			}
+		}
+	}
+
 	/**
 	 * Create the connection and error dialog
 	 */
@@ -370,7 +385,7 @@ public class DownloadActivity extends Activity {
 				public void onClick(DialogInterface dialog, int item) {
 					server = servers.get(item);
 					// Change the server
-					((DownloadApplication)getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+					((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
 				}
 			});
 			AlertDialog connectDialog = builder.create();
@@ -381,7 +396,7 @@ public class DownloadActivity extends Activity {
 			if (servers.size() > 0) {
 				server = servers.get(0);
 				// Change the server
-				((DownloadApplication)getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+				((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
 			}
 		}
 	}
@@ -432,5 +447,3 @@ public class DownloadActivity extends Activity {
 		connectDialog.show();
 	}
 }
-
-

@@ -17,8 +17,10 @@
 package org.jared.synodroid.common.protocol.v22;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.protocol.DSHandler;
@@ -190,6 +192,42 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#getDetails(org.jared.synodroid
+	 * .common.data.Task)
+	 */
+	public List<Detail> getDetails(Task taskP) throws Exception {
+		List<Detail> result = new ArrayList<Detail>();
+		// If we are logged on
+		if (server.isConnected()) {
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
+			// Execute
+			synchronized (server) {
+				JSONObject json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				boolean success = json.getBoolean("success");
+				// If successful then build details list
+				if (success) {
+					JSONObject data = json.getJSONObject("data");
+					JSONArray arrayNames = data.names();
+					for(int iLoop=0; iLoop<arrayNames.length(); iLoop++) {
+						Detail detail = new Detail();
+						result.add(detail);
+						detail.name = arrayNames.getString(iLoop);
+						detail.value = data.getString(detail.name);
+					}
+				}
+				// Otherwise throw a exception
+				else {
+					throw new DSMException(json.getString("reason"));
+				}
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jared.synodroid.common.protocol.DSHandler#upload(android.net.Uri)
 	 */
 	public void upload(Uri uriP) throws Exception {
@@ -213,7 +251,7 @@ class DSHandlerDSM22 implements DSHandler {
 				// The upload_type's part
 				builder.addPart(new Part("upload_type").setContent("torrent".getBytes()));
 				// The torrent's part
-				Part filePart = new Part("torrent").addExtra("filename",uriP.getPath());
+				Part filePart = new Part("torrent").addExtra("filename", uriP.getPath());
 				filePart.setContentType("application/octet-stream");
 				// Get the stream according to the Uri
 				byte[] buffer = StreamFactory.getStream(uriP);

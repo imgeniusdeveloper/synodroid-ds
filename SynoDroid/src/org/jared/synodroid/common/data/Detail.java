@@ -18,39 +18,16 @@ package org.jared.synodroid.common.data;
 
 import java.io.Serializable;
 
-import org.jared.synodroid.common.SynoServer;
-
 /**
- * A simple data container for a torrent. This class is used to display
- * 'general' information about a torrent file.<br/>
+ * A detail which consist in a name/value pair
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class Task implements Serializable {
+public class Detail implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-	// The server from which is torrent is retrieved
-	public SynoServer server;
-	
-	// The unique ID of the torrent
-	public int taskId;
-	// The filename
-	public String fileName;	
-	// Total size
-	public String totalSize;
-	// Creator's name
-	public String creator;
-	// Upload rate
-	public String uploadRate;
-	// Download rate
-	public String downloadRate;
-	// Current size downloaded
-	public String downloadSize;
-	// Progress
-	public int progress;
-	// Status
-	public String status;
-	// Time left
-	public String eta;
-
+  // The name of this detail
+	public String name;
+	// The value of this detail
+	public String value;
 }
