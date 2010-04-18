@@ -77,6 +77,15 @@ public class DownloadApplication extends Application {
 	}
 
 	/**
+	 * Get the current server
+	 * 
+	 * @return currentServer
+	 */
+	public SynoServer getServer(){
+		return currentServer;
+	}
+	
+	/**
 	 * Bind an activity to the current server
 	 * 
 	 * @param activityP

@@ -98,7 +98,7 @@
 <string name="eula_title">Licence</string>
 <string name="eula_accept">Accept</string>
 <string name="eula_refuse">Refuse</string>
-<string name="action_detailing">Retrieving details of '%s'</string>
+<string name="action_detailing">Retrieving details of \'%s\'</string>
 <string name="action_adding">Adding file %s</string>
 <string name="detail_tab_general">General</string>
 <string name="detail_tab_transfer">Transfer</string>

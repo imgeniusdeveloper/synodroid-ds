@@ -317,6 +317,10 @@ public class DownloadActivity extends Activity {
 		switch (id) {
 		// The connection dialog
 		case CONNECTION_DIALOG_ID:
+			// On UI rotation this.server is set to null. Verifying is the server is null fixes the force close on UI rotate.
+			if (server == null){
+				server = ((DownloadApplication) getApplication()).getServer();
+			}
 			String msg = MessageFormat.format(getString(R.string.connect_connecting), new Object[] { server.toString() });
 			((ProgressDialog) dialog).setMessage(msg);
 			break;
