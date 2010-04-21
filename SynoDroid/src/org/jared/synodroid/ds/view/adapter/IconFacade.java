@@ -58,6 +58,9 @@ public class IconFacade {
 		case TASK_FINISHED:
 			id = R.drawable.dl_finish;
 			break;
+		case TASK_ERROR:
+			id = R.drawable.dl_error;
+			break;
 		}
 		viewP.setImageResource(id);
 	}

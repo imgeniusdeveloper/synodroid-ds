@@ -21,5 +21,5 @@ package org.jared.synodroid.common.data;
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public enum TaskStatus {
-  TASK_WAITING, TASK_DOWNLOADING, TASK_SEEDING, TASK_PAUSED, TASK_FINISHED, TASK_HASH_CHECKING
+  TASK_WAITING, TASK_DOWNLOADING, TASK_SEEDING, TASK_PAUSED, TASK_FINISHED, TASK_HASH_CHECKING, TASK_ERROR
 }
