@@ -261,7 +261,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		CheckBoxPreference autoRefresh = new CheckBoxPreference(this);
 		autoRefresh.setKey(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX);
 		autoRefresh.setTitle(R.string.label_autorefresh);
-		autoRefresh.setChecked(true);
+		//It looks like by using the set check function, the preference is not save properly. Removing it seems to make default preference better
+		//autoRefresh.setChecked(true);
 		autoRefresh.setDefaultValue(true);
 		autoRefresh.setSummaryOn(R.string.hint_autorefresh_on);
 		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
