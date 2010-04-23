@@ -92,6 +92,8 @@ public class SynoServer {
 
 	// Binded DownloadActivity
 	private DownloadActivity bindedActivity;
+	
+	private String lasterror;
 
 	/**
 	 * Static intialization of the SSL factory to accept each certificate, even if
@@ -239,6 +241,20 @@ public class SynoServer {
 	public void disconnect() {
 		connected = false;
 		collector.interrupt();
+	}
+	
+	/**
+	 * Saves the last error for future retrieval
+	 */
+	public void set_last_error(String error) {
+		lasterror = error;
+	}
+	
+	/**
+	 * Disconnect from the server
+	 */
+	public String get_last_error() {
+		return lasterror;
 	}
 
 	/**

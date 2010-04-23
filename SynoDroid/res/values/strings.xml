@@ -18,6 +18,7 @@
 <string name="menu_search">Search</string>
 <string name="dialog_title_action">Action</string>
 <string name="menu_parameter">Parameters</string>
+<string name="err_unknown">Unknown error!</string>
 
 <string name="connect_cant">&quot;You are not allowed to use this service&quot;</string>
 <string name="label_nickname">Nickname</string>

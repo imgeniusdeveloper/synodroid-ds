@@ -99,8 +99,6 @@ public class DownloadActivity extends Activity {
 	private TextView totalUpView;
 	// The total download rate view
 	private TextView totalDownView;
-	// The current error message
-	private String currentErrorMsg;
 	// The synology server
 	private SynoServer server;
 
@@ -151,7 +149,9 @@ public class DownloadActivity extends Activity {
 				catch (IllegalArgumentException ex) {
 				}
 				// Show the error
-				currentErrorMsg = (String) msg.obj;
+				// Save the last error inside the server to surive UI rotation and pause/resume.
+				if (server == null) server = ((DownloadApplication) getApplication()).getServer();
+				if (server != null) server.set_last_error((String) msg.obj);
 				showDialog(CONNECTION_ERROR_ID);
 			}
 			// Connection is done
@@ -297,10 +297,19 @@ public class DownloadActivity extends Activity {
 		// The error dialog
 		case CONNECTION_ERROR_ID:
 			AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-			builder.setMessage("foo");
+			//The error messages are stored in the server instead of the Activity because the activity variable are not loaded properly on UI rotation.
+			if (server == null)server = ((DownloadApplication) getApplication()).getServer();
+			if (server != null) {
+				builder.setMessage(server.get_last_error());
+			}
+			else{
+				builder.setMessage(R.string.err_unknown);
+			}
 			builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
+					//Ask to reconnect when connection is lost.
+					showDialogToConnect(false, null);
 				}
 			});
 			dialog = builder.create();
@@ -318,15 +327,17 @@ public class DownloadActivity extends Activity {
 		// The connection dialog
 		case CONNECTION_DIALOG_ID:
 			// On UI rotation this.server is set to null. Verifying is the server is null fixes the force close on UI rotate.
-			if (server == null){
-				server = ((DownloadApplication) getApplication()).getServer();
+			if (server != null){
+				String msg = MessageFormat.format(getString(R.string.connect_connecting), new Object[] { server.toString() });
+				((ProgressDialog) dialog).setMessage(msg);
 			}
-			String msg = MessageFormat.format(getString(R.string.connect_connecting), new Object[] { server.toString() });
-			((ProgressDialog) dialog).setMessage(msg);
 			break;
 		// The error dialog
 		case CONNECTION_ERROR_ID:
-			((AlertDialog) dialog).setMessage(currentErrorMsg);
+			// On UI rotation this.server is set to null. Verifying is the server is null fixes the force close on UI rotate.
+			if (server != null){
+				((AlertDialog) dialog).setMessage(server.get_last_error());
+			}
 			break;
 		}
 	}
@@ -425,6 +436,13 @@ public class DownloadActivity extends Activity {
 	protected void onResume() {
 		((DownloadApplication) getApplication()).resumeServer();
 		super.onResume();
+		//There are some case where the connected server does not show up in the title bar on top. This fixes thoses cases.
+		server = ((DownloadApplication) getApplication()).getServer();
+		if (server != null) {
+			if (server.isConnected()){
+				setTitle(getString(R.string.app_name) + ": " + server.getNickname());
+			}
+		}
 	}
 
 	/**
