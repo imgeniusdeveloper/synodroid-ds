@@ -236,6 +236,9 @@ public class DownloadActivity extends Activity {
 			if (!action.equals(Intent.ACTION_VIEW)) {
 				showDialogToConnect(true, null);
 			}
+			else{
+				handleIntent(intent);
+			}
 		}
 	}
 
@@ -401,6 +404,7 @@ public class DownloadActivity extends Activity {
 					server = servers.get(item);
 					// Change the server
 					((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+					dialog.dismiss();
 				}
 			});
 			AlertDialog connectDialog = builder.create();

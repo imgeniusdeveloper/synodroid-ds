@@ -156,14 +156,14 @@ public class SynoServer {
 						// Here we are connected
 						connected = true;
 						
+						// Send a connected message
+						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_CONNECTED);
 						// If the action's queue is not empty
 						if (actionQueueP != null) {
 							for (TaskAction taskAction : actionQueueP) {
 								executeAction(activityP, taskAction, false);
 							}
 						}
-						// Send a connected message
-						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_CONNECTED);
 						// If everything is fine then start to collect informations
 						while (connected) {
 							try {
