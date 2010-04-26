@@ -210,10 +210,8 @@ public class SynoServer {
 					}
 					// Programmation exception
 					catch (Exception e) {
-						// If the user didn't change the server
-						if (connected) {
-							fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, e.getMessage());
-						}
+						//This is most likely a connection timeout
+						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, e.getMessage());
 					}
 					// Set the connection to null to force connection next time
 					finally {
@@ -594,6 +592,7 @@ public class SynoServer {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			con.setRequestMethod(methodP);
+			con.setConnectTimeout(5000);
 			Log.d(DownloadActivity.DS_TAG, methodP + ": " + uriP + "?" + requestP);
 			// Add the parameters
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
