@@ -7,7 +7,7 @@
 >
   <application
     android:label="@string/app_name"
-    android:debuggable="true"
+    android:debuggable="false"
     android:allowTaskReparenting="false"
     android:icon="@drawable/icon_phone"
     android:name="DownloadApplication"
@@ -37,6 +37,17 @@
         <data
           scheme="http"
           android:mimeType="application/x-bittorrent" />
+      </intent-filter>
+      <intent-filter>
+        <action
+          android:name="android.intent.action.SEND" />
+        <category
+          android:name="android.intent.category.DEFAULT" />
+        <category
+          android:name="android.intent.category.BROWSABLE" />
+        <data
+          scheme="http"
+          android:mimeType="*/*" />
       </intent-filter>
       <intent-filter>
         <action

@@ -52,5 +52,7 @@ public class Task implements Serializable {
 	public String status;
 	// Time left
 	public String eta;
+	//Task is an outside url
+	public boolean outside_url = false;
 
 }

@@ -233,7 +233,7 @@ public class DownloadActivity extends Activity {
 			String action = intent.getAction();
 			// Show the dialog only if the intent's action is not to view a content ->
 			// add a new file
-			if (!action.equals(Intent.ACTION_VIEW)) {
+			if (!(action.equals(Intent.ACTION_VIEW)||action.equals(Intent.ACTION_SEND))) {
 				showDialogToConnect(true, null);
 			}
 			else{
@@ -271,10 +271,23 @@ public class DownloadActivity extends Activity {
 	 */
 	private void handleIntent(Intent intentP) {
 		String action = intentP.getAction();
-		if (action != null && action.equals(Intent.ACTION_VIEW)) {
-			Uri uri = intentP.getData();
+		if (action != null) {
+			Uri uri = null;
+			boolean out_url = false;
+			if (action.equals(Intent.ACTION_VIEW)){
+				uri = intentP.getData();
+			}
+			else if (action.equals(Intent.ACTION_SEND)){
+				String uriString = (String)intentP.getExtras().get(Intent.EXTRA_TEXT);
+				uri = Uri.parse(uriString);
+				out_url = true;
+			}
+			else {
+				return;
+			}
+			
 			if (uri != null) {
-				AddTaskAction addTask = new AddTaskAction(uri);
+				AddTaskAction addTask = new AddTaskAction(uri, out_url);
 				DownloadApplication app = (DownloadApplication) getApplication();
 				app.executeAction(this, addTask, true);
 			}

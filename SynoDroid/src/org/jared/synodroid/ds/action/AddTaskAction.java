@@ -37,11 +37,13 @@ public class AddTaskAction implements TaskAction {
 	 * Constructor to upload a file defined by an Uri
 	 * 
 	 * @param uriP
+	 * @param outside_url
 	 */
-	public AddTaskAction(Uri uriP) {
+	public AddTaskAction(Uri uriP, boolean outside_url) {
 		uri = uriP;
 		task = new Task();
 		task.fileName = uri.getLastPathSegment();
+		task.outside_url = outside_url;
 	}
 
 	/*
@@ -52,7 +54,13 @@ public class AddTaskAction implements TaskAction {
 	 * .DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception {
-		serverP.getDSMHandlerFactory().getDSHandler().upload(uri);
+		if (task.outside_url){
+			//Start task using url instead of reading file
+			serverP.getDSMHandlerFactory().getDSHandler().upload_url(uri);
+		}
+		else{
+			serverP.getDSMHandlerFactory().getDSHandler().upload(uri);
+		}
 	}
 
 	/*

@@ -63,6 +63,12 @@ public interface DSHandler {
   public void upload(final Uri uriP) throws Exception ;
   
   /**
+   * Upload a file defined by an Uri
+   * @param uriP
+   */
+  public void upload_url(final Uri uriP) throws Exception ;
+  
+  /**
    * Get task's details
    * @param uriP
    */

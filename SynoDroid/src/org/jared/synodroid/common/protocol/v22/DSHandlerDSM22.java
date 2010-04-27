@@ -116,6 +116,9 @@ class DSHandlerDSM22 implements DSHandler {
 					torrent.totalSize = item.getString("total_size").trim();
 					torrent.uploadRate = item.getString("upload_rate").trim();
 					torrent.creator = item.getString("username").trim();
+					if (torrent.creator == ""){
+						torrent.creator = server.getUser();
+					}
 					torrent.server = server;
 					result.add(torrent);
 				}
@@ -259,6 +262,59 @@ class DSHandlerDSM22 implements DSHandler {
 				// Set the content
 				filePart.setContent(buffer);
 				builder.addPart(filePart);
+				// Execute
+				synchronized (server) {
+					server.sendMultiPart(DM_URI, builder);
+				}
+			}
+		}
+	}
+	
+	public void upload_url(Uri uriP) throws Exception {
+		// If we are logged on
+		if (server.isConnected()) {
+			if (uriP.toString() != null) {
+				// Create the multipart
+				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				
+				// The field's part
+				builder.addPart(new Part("field").setContent("task_id".getBytes()));
+				// The direction's part
+				builder.addPart(new Part("direction").setContent("ASC".getBytes()));
+				
+				
+				if (uriP.toString().toLowerCase().startsWith("https:")){
+					// The url_http's part
+					builder.addPart(new Part("url_http").setContent("".getBytes()));
+					// The url_https's part
+					builder.addPart(new Part("url_https").setContent(uriP.toString().getBytes()));
+					// The url_ftp's part
+					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
+				}
+				else if (uriP.toString().toLowerCase().startsWith("http:")){
+					// The url_http's part
+					builder.addPart(new Part("url_http").setContent(uriP.toString().getBytes()));
+					// The url_https's part
+					builder.addPart(new Part("url_https").setContent("".getBytes()));
+					// The url_ftp's part
+					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
+				}
+				else if (uriP.toString().toLowerCase().startsWith("ftp:")){
+					// The url_http's part
+					builder.addPart(new Part("url_http").setContent("".getBytes()));
+					// The url_https's part
+					builder.addPart(new Part("url_https").setContent("".getBytes()));
+					// The url_ftp's part
+					builder.addPart(new Part("url_ftp").setContent(uriP.toString().getBytes()));	
+				}
+				else{
+					return;
+				}
+				// The url_ftp's part
+				builder.addPart(new Part("url").setContent(uriP.toString().getBytes()));
+				// The upload_type's part
+				builder.addPart(new Part("upload_type").setContent("url".getBytes()));
+				
 				// Execute
 				synchronized (server) {
 					server.sendMultiPart(DM_URI, builder);

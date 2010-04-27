@@ -267,8 +267,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		autoRefresh.setSummaryOn(R.string.hint_autorefresh_on);
 		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
 		generalCategory.addPreference(autoRefresh);
-		EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval).setInputType(
+		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval).setInputType(
 		    InputType.TYPE_CLASS_NUMBER);
+		autoRefreshValue.setDefaultValue("15");
 		generalCategory.addPreference(autoRefreshValue);
 		// Add dependencies. DON'T use 'setDependency()' when building Preferences
 		// at runtime
