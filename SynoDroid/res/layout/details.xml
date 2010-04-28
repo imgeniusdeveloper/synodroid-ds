@@ -23,16 +23,14 @@
         android:id="@+id/general_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
-      <TextView
-        android:id="@+id/textview2"
+      <ListView
+        android:id="@+id/transfert_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="this is another tab" />
-      <TextView
-        android:id="@+id/textview3"
+        android:layout_height="fill_parent" />
+      <ListView
+        android:id="@+id/files_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="this is a third tab" />
+        android:layout_height="fill_parent" />
     </FrameLayout>
   </LinearLayout>
 </TabHost>

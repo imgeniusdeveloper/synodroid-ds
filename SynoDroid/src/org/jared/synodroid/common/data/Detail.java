@@ -20,14 +20,76 @@ import java.io.Serializable;
 
 /**
  * A detail which consist in a name/value pair
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class Detail implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  // The name of this detail
-	public String name;
+	// The name of this detail
+	private String name;
 	// The value of this detail
-	public String value;
+	private String value;
+
+	/**
+	 * Default constructor
+	 */
+	public Detail() {
+	}
+
+	/**
+	 * Constructor which initialize the name
+	 * 
+	 * @param nameP
+	 * @param valueP
+	 */
+	public Detail(String nameP) {
+		name = nameP;
+	}
+
+	/**
+	 * Constructor which initialize the name/value
+	 * 
+	 * @param nameP
+	 * @param valueP
+	 */
+	public Detail(String nameP, String valueP) {
+		name = nameP;
+		value = valueP;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *          the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		if (value != null) {
+			return value;
+		}
+		return "";
+	}
+
+	/**
+	 * @param value
+	 *          the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
+
 }

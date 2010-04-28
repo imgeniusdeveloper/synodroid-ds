@@ -56,7 +56,7 @@ public class IconFacade {
 			id = R.drawable.dl_waiting;
 			break;
 		case TASK_FINISHED:
-			id = R.drawable.dl_finish;
+			id = R.drawable.dl_finished;
 			break;
 		case TASK_ERROR:
 			id = R.drawable.dl_error;

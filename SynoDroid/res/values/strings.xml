@@ -104,10 +104,32 @@
 <string name="detail_tab_general">General</string>
 <string name="detail_tab_transfer">Transfer</string>
 <string name="detail_tab_files">Files</string>
-<string name="detail_general_filename">Filename</string>
-<string name="detail_general_destination">Destination</string>
-<string name="detail_general_filesize">File size</string>
-<string name="detail_general_creationtime">Creation time</string>
-<string name="detail_general_url">URL</string>
-<string name="detail_general_username">Username</string>
+
+
+<string name="detail_filesize">File size</string>
+
+
+<string name="detail_username">User name</string>
+<string name="detail_filename">File name</string>
+<string name="detail_destination">Destination</string>
+
+<string name="detail_creationtime">Creation time</string>
+<string name="detail_url">Url</string>
+
+<string name="detail_originaltorrent">Original torrent</string>
+<string name="detail_status">Status</string>
+<string name="detail_transfered">Transfered (upload - download)</string>
+<string name="detail_speed">Speed (upload - download)</string>
+<string name="detail_peers">Peers (connected - total)</string>
+<string name="detail_seeders_leechers">Seeders - Leechers</string>
+<string name="detail_starttime">Start time - Left time</string>
+<string name="detail_pieces">Pieces (current - total)</string>
+<string name="detail_progress">Progress (upload  - download)</string>
+<string name="detail_status_waiting">Waiting</string>
+<string name="detail_status_downloading">Downloading</string>
+<string name="detail_status_seeding">Seeding</string>
+<string name="detail_status_paused">Paused</string>
+<string name="detail_status_finished">Finished</string>
+<string name="detail_status_hash_checking">Hash checking</string>
+<string name="detail_status_error">Error</string>
 </resources>

@@ -16,9 +16,8 @@
  */
 package org.jared.synodroid.common.protocol;
 
-import java.util.List;
+import java.util.HashMap;
 
-import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 
@@ -69,8 +68,8 @@ public interface DSHandler {
   public void upload_url(final Uri uriP) throws Exception ;
   
   /**
-   * Get task's details
+   * Get task's raw details
    * @param uriP
    */
-  public List<Detail> getDetails(final Task taskP) throws Exception ;
+  public HashMap<String, String> getDetails(final Task taskP) throws Exception ;
 }

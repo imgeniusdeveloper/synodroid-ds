@@ -18,6 +18,7 @@ package org.jared.synodroid.ds;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.jared.synodroid.common.Eula;
@@ -183,7 +184,7 @@ public class DownloadActivity extends Activity {
 			else if (msg.what == MSG_DETAILS_RETRIEVED) {
 				Intent next = new Intent();
 				next.setClass(DownloadActivity.this, DetailActivity.class);
-				next.putExtra("org.jared.synodroid.ds.Details", (ArrayList)msg.obj);
+				next.putExtra("org.jared.synodroid.ds.Details", (HashMap<String, String>)msg.obj);
 				DownloadActivity.this.startActivity(next);
 			}
 

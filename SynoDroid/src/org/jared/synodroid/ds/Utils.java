@@ -16,13 +16,35 @@
  */
 package org.jared.synodroid.ds;
 
+import java.util.Date;
+
 /**
  * As usual a utility class
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class Utils {
 
-	
+	/**
+	 * Compute the time left in the following format d h m s
+	 * 
+	 * @param etaP
+	 * @return
+	 */
+	public static String computeTimeLeft(String etaP) {
+		try {
+			if (etaP.equals("-1")) {
+				etaP = "0";
+			}
+			int eta = Integer.parseInt(etaP);
+			return computeTimeLeft(eta);
+		}
+		// Nothing to do : just return ""
+		catch (NumberFormatException ex) {
+		}
+		return "";
+	}
+
 	/**
 	 * Compute the time left in the following format d h m s
 	 * 
@@ -57,4 +79,24 @@ public class Utils {
 		return result;
 	}
 
+	/**
+	 * Return a localized date computed
+	 * 
+	 * @param secondP
+	 * @return
+	 */
+	public static String computeDate(String secondP) {
+		String result = "";
+		if (secondP != null && secondP.length() > 0) {
+			try {
+				long milli = Long.parseLong(secondP) * 1000;
+				Date date = new Date(milli);
+				result = date.toLocaleString();
+			}
+			// Nothing to do: not a number
+			catch (NumberFormatException ex) {
+			}
+		}
+		return result;
+	}
 }

@@ -133,10 +133,10 @@ public class DetailAdapter extends BaseAdapter {
 	private void bindView(LinearLayout viewP, final Detail detailP) {
   	// The name of the detail
 		TextView name = (TextView) viewP.findViewById(R.id.id_detail_name);
-		name.setText(detailP.name);
+		name.setText(detailP.getName());
 
 		// The value of the detail
 		TextView value = (TextView) viewP.findViewById(R.id.id_detail_value);
-		value.setText(detailP.value);
+		value.setText(detailP.getValue());
 	}
 }

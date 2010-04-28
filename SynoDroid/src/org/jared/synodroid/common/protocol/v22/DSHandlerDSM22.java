@@ -17,10 +17,9 @@
 package org.jared.synodroid.common.protocol.v22;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.jared.synodroid.common.SynoServer;
-import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.protocol.DSHandler;
@@ -199,8 +198,8 @@ class DSHandlerDSM22 implements DSHandler {
 	 * org.jared.synodroid.common.protocol.DSHandler#getDetails(org.jared.synodroid
 	 * .common.data.Task)
 	 */
-	public List<Detail> getDetails(Task taskP) throws Exception {
-		List<Detail> result = new ArrayList<Detail>();
+	public HashMap<String, String> getDetails(Task taskP) throws Exception {
+		HashMap<String, String> result = new HashMap<String, String>();
 		// If we are logged on
 		if (server.isConnected()) {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
@@ -213,10 +212,7 @@ class DSHandlerDSM22 implements DSHandler {
 					JSONObject data = json.getJSONObject("data");
 					JSONArray arrayNames = data.names();
 					for(int iLoop=0; iLoop<arrayNames.length(); iLoop++) {
-						Detail detail = new Detail();
-						result.add(detail);
-						detail.name = arrayNames.getString(iLoop);
-						detail.value = data.getString(detail.name);
+						result.put(arrayNames.getString(iLoop), data.getString(arrayNames.getString(iLoop)));
 					}
 				}
 				// Otherwise throw a exception
