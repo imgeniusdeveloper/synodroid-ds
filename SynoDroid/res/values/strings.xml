@@ -132,4 +132,9 @@
 <string name="detail_status_finished">Finished</string>
 <string name="detail_status_hash_checking">Hash checking</string>
 <string name="detail_status_error">Error</string>
+<string name="menu_about">About</string>
+<string name="app_contributors">&quot;Project's contributors:&quot;</string>
+
+<string name="button_ok">OK</string>
+<string name="eula_view">Licence...</string>
 </resources>
