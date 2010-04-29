@@ -51,7 +51,7 @@ import android.widget.Toast;
  * 
  * @author eric.taix at gmail.com
  */
-public class DownloadActivity extends Activity {
+public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
 
   public static final String DS_TAG = "Synodroid DS";
 
@@ -61,6 +61,8 @@ public class DownloadActivity extends Activity {
   private static final int CONNECTION_ERROR_ID = 2;
   // The contributors dialog
   private static final int CONTRIBUTORS_DIALOG_ID = 3;
+  // No server configured
+  private static final int NO_SERVER_DIALOG_ID = 4;
 
   // Specify the obj contains task
   public static final int MSG_TASKS_UPDATED = 1;
@@ -100,6 +102,8 @@ public class DownloadActivity extends Activity {
   private TextView totalDownView;
   // The synology server
   private SynoServer server;
+  // Flag to know is the EULA has been accepted
+  private boolean licenceAccepted = false;
 
   // Message handler which update the UI when the torrent list is updated
   private Handler handler = new Handler() {
@@ -209,12 +213,10 @@ public class DownloadActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    // Diplay the EULA if necessary
-    Eula.show(this, false);
+    licenceAccepted = Eula.show(this, false);
 
     // Request a specific feature: show a indeterminate progress in the
-    // title
-    // bar
+    // title bar
     requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
     // Create the main view of this activity
@@ -345,11 +347,26 @@ public class DownloadActivity extends Activity {
         builderCont.setCancelable(true).setPositiveButton(getString(R.string.button_ok), null);
         builderCont.setNegativeButton(getString(R.string.eula_view), new OnClickListener() {
           public void onClick(DialogInterface dialogP, int whichP) {
-            // Diplay the EULA 
+            // Diplay the EULA
             Eula.show(DownloadActivity.this, true);
           }
         });
         dialog = builderCont.create();
+        break;
+      // No server have been yet configured
+      case NO_SERVER_DIALOG_ID:
+        AlertDialog.Builder builderNoServer = new AlertDialog.Builder(this);
+        builderNoServer.setTitle(R.string.dialog_title_information);
+        builderNoServer.setMessage(getString(R.string.no_server_configured));
+        builderNoServer.setCancelable(true);
+        builderNoServer.setPositiveButton(getString(R.string.button_yesplease), new OnClickListener() {
+          // Launch the Preference activity
+          public void onClick(DialogInterface dialogP, int whichP) {
+            showPreferenceActivity();
+          }
+        });
+        builderNoServer.setNegativeButton(getString(R.string.button_nothanks), null);
+        dialog = builderNoServer.create();
         break;
 
     }
@@ -379,8 +396,6 @@ public class DownloadActivity extends Activity {
           ((AlertDialog) dialog).setMessage(server.get_last_error());
         }
         break;
-      // The contributors dialog
-
     }
   }
 
@@ -390,10 +405,6 @@ public class DownloadActivity extends Activity {
   public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(0, MENU_CONNECT, 0, getString(R.string.menu_connect)).setIcon(android.R.drawable.ic_menu_share);
     menu.add(0, MENU_REFRESH, 0, getString(R.string.menu_refresh)).setIcon(R.drawable.menu_refresh);
-    // menu.add(0, MENU_SEARCH, 0,
-    // getString(R.string.menu_search)).setIcon(android.R.drawable.ic_menu_search);
-    // menu.add(0, MENU_ACTIONS, 0,
-    // getString(R.string.menu_action)).setIcon(android.R.drawable.ic_menu_more);
     menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
     menu.add(0, MENU_ABOUT, 0, getString(R.string.menu_about)).setIcon(android.R.drawable.ic_menu_info_details);
     return true;
@@ -416,9 +427,7 @@ public class DownloadActivity extends Activity {
         return true;
         // Launch the parameters activity
       case MENU_PARAMETERS:
-        Intent next = new Intent();
-        next.setClass(this, DownloadPreferenceActivity.class);
-        startActivity(next);
+        showPreferenceActivity();
         return true;
         // Launch the about dialog
       case MENU_ABOUT:
@@ -429,41 +438,62 @@ public class DownloadActivity extends Activity {
   }
 
   /**
+   * Show the preference activity
+   */
+  private void showPreferenceActivity() {
+    Intent next = new Intent();
+    next.setClass(this, DownloadPreferenceActivity.class);
+    startActivity(next);
+  }
+
+  /**
    * Show the dialog to connect to a server
    */
-  public void showDialogToConnect(boolean autoConnectIfOnlyOnServerP, final List<TaskAction> actionQueueP) {
+  public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<TaskAction> actionQueueP) {
     final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(PreferenceManager
             .getDefaultSharedPreferences(this));
-    // If more than 1 server OR if we don't want to autoconnect then show
-    // the
-    // dialog
-    if (servers.size() > 1 || !autoConnectIfOnlyOnServerP) {
-      String[] serversTitle = new String[servers.size()];
-      for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
-        serversTitle[iLoop] = servers.get(iLoop).getNickname();
+    // If at least one server
+    if (servers.size() != 0) {
+      // If more than 1 server OR if we don't want to autoconnect then show
+      // the dialog
+      if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
+        String[] serversTitle = new String[servers.size()];
+        for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
+          serversTitle[iLoop] = servers.get(iLoop).getNickname();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.menu_connect));
+        // When the user select a server
+        builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int item) {
+            server = servers.get(item);
+            // Change the server
+            ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+            dialog.dismiss();
+          }
+        });
+        AlertDialog connectDialog = builder.create();
+        connectDialog.show();
       }
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setTitle(getString(R.string.menu_connect));
-      // When the user select a server
-      builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int item) {
-          server = servers.get(item);
+      else {
+        // Auto connect to the first server
+        if (servers.size() > 0) {
+          server = servers.get(0);
           // Change the server
           ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
-          dialog.dismiss();
         }
-      });
-      AlertDialog connectDialog = builder.create();
-      connectDialog.show();
-    }
-    // Auto connect to the first server
-    else {
-      if (servers.size() > 0) {
-        server = servers.get(0);
-        // Change the server
-        ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
       }
     }
+    // No server then show the dialog to configure a server
+    else {
+      // Only if the EULA has been accepted. If the EULA has not been
+      // accepted, it means that the EULA is currenlty being displayed so
+      // don't show the "Wizard" dialog
+      if (licenceAccepted) {
+        showDialog(NO_SERVER_DIALOG_ID);
+      }
+    }
+
   }
 
   /*
@@ -492,6 +522,10 @@ public class DownloadActivity extends Activity {
         setTitle(getString(R.string.app_name) + ": " + server.getNickname());
       }
     }
+    // No server then display the connect to dialog
+    else {
+      showDialogToConnect(true, null);      
+    }
   }
 
   /**
@@ -518,4 +552,13 @@ public class DownloadActivity extends Activity {
     AlertDialog connectDialog = builder.create();
     connectDialog.show();
   }
+
+  /**
+   * The Eual has just been accepted
+   */
+  public void onEulaAgreedTo() {
+    licenceAccepted = true;
+    showDialogToConnect(true, null);
+  }
+
 }

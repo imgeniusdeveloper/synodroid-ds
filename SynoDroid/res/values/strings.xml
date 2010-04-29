@@ -137,4 +137,8 @@
 
 <string name="button_ok">OK</string>
 <string name="eula_view">Licence...</string>
+<string name="button_yesplease">Yes please</string>
+<string name="button_nothanks">No thanks</string>
+<string name="dialog_title_information">Information</string>
+<string name="no_server_configured">No server has been yet configured or it is not well configured.\n\nWould you like to configure the system now ?</string>
 </resources>
