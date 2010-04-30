@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.jared.synodroid.common.data.Detail;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.ds.view.adapter.DetailAction;
 import org.jared.synodroid.ds.view.adapter.DetailAdapter;
 
 import android.app.TabActivity;
@@ -87,7 +88,12 @@ public class DetailActivity extends TabActivity {
 		// Creation time
 		result.add(new Detail(getString(R.string.detail_creationtime), Utils.computeDate(rawDetails.get("ctime"))));
 		// URL
-		result.add(new Detail(getString(R.string.detail_url), rawDetails.get("url")));
+		Detail urlDetail = new Detail(getString(R.string.detail_url), rawDetails.get("url"));
+		urlDetail.setAction(new DetailAction() {
+          public void execute(Detail detailsP) {
+          }
+        });
+		result.add(urlDetail);
 		// Username
 		result.add(new Detail(getString(R.string.detail_username), rawDetails.get("username")));
 		return result;

@@ -18,6 +18,8 @@ package org.jared.synodroid.common.data;
 
 import java.io.Serializable;
 
+import org.jared.synodroid.ds.view.adapter.DetailAction;
+
 /**
  * A detail which consist in a name/value pair
  * 
@@ -31,7 +33,9 @@ public class Detail implements Serializable {
 	private String name;
 	// The value of this detail
 	private String value;
-
+	// The detail action. By default null
+	private DetailAction action = null;
+	
 	/**
 	 * Default constructor
 	 */
@@ -91,5 +95,28 @@ public class Detail implements Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
+
+  /**
+   * @return the action
+   */
+  public DetailAction getAction() {
+    return action;
+  }
+
+  /**
+   * @param actionP the action to set
+   */
+  public void setAction(DetailAction actionP) {
+    action = actionP;
+  }
+	
+  /**
+   * Execute the action if it exist
+   */
+  public void executeAction() {
+    if (action != null) {
+      action.execute(this);
+    }
+  }
 
 }

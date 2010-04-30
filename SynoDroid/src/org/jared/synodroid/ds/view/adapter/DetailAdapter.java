@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -118,7 +119,7 @@ public class DetailAdapter extends BaseAdapter {
 			view = (LinearLayout) convertViewP;
 		}
 		else {
-			view = (LinearLayout) inflater.inflate(R.layout.details_template, parentP, false);
+			view = (LinearLayout) inflater.inflate(R.layout.details_relative_template, parentP, false);
 		}
 		bindView(view, details.get(positionP));
 		return view;
@@ -138,5 +139,15 @@ public class DetailAdapter extends BaseAdapter {
 		// The value of the detail
 		TextView value = (TextView) viewP.findViewById(R.id.id_detail_value);
 		value.setText(detailP.getValue());
+		
+		// The action's image
+        ImageView img = (ImageView) viewP.findViewById(R.id.id_detail_action);
+        if (detailP.getAction() != null) {
+          img.setVisibility(View.VISIBLE);
+        }
+        else {
+          img.setVisibility(View.INVISIBLE);
+        }
+		
 	}
 }
