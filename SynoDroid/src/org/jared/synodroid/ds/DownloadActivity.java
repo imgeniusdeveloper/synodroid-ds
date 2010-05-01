@@ -241,9 +241,8 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
       Intent intent = getIntent();
       String action = intent.getAction();
       // Show the dialog only if the intent's action is not to view a
-      // content ->
-      // add a new file
-      if (!(action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
+      // content -> add a new file
+      if (action!=null && !(action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
         showDialogToConnect(true, null);
       }
       else {
