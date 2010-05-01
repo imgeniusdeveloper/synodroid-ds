@@ -33,6 +33,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -104,6 +105,9 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
   private SynoServer server;
   // Flag to know is the EULA has been accepted
   private boolean licenceAccepted = false;
+  // Flag to tell app that the connect dialog is opened
+  private boolean connectDialogOpened = false;
+  
 
   // Message handler which update the UI when the torrent list is updated
   private Handler handler = new Handler() {
@@ -450,50 +454,57 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
    * Show the dialog to connect to a server
    */
   public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<TaskAction> actionQueueP) {
-    final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(PreferenceManager
-            .getDefaultSharedPreferences(this));
-    // If at least one server
-    if (servers.size() != 0) {
-      // If more than 1 server OR if we don't want to autoconnect then show
-      // the dialog
-      if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
-        String[] serversTitle = new String[servers.size()];
-        for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
-          serversTitle[iLoop] = servers.get(iLoop).getNickname();
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.menu_connect));
-        // When the user select a server
-        builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int item) {
-            server = servers.get(item);
-            // Change the server
-            ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
-            dialog.dismiss();
-          }
-        });
-        AlertDialog connectDialog = builder.create();
-        connectDialog.show();
-      }
-      else {
-        // Auto connect to the first server
-        if (servers.size() > 0) {
-          server = servers.get(0);
-          // Change the server
-          ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
-        }
-      }
+    if (!connectDialogOpened){  
+		final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(PreferenceManager
+	            .getDefaultSharedPreferences(this));
+	    // If at least one server
+	    if (servers.size() != 0) {
+	      // If more than 1 server OR if we don't want to autoconnect then show
+	      // the dialog
+	      if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
+	        String[] serversTitle = new String[servers.size()];
+	        for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
+	          serversTitle[iLoop] = servers.get(iLoop).getNickname();
+	        }
+	        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setTitle(getString(R.string.menu_connect));
+	        // When the user select a server
+	        builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
+	          public void onClick(DialogInterface dialog, int item) {
+	            server = servers.get(item);
+	            // Change the server
+	            ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+	            dialog.dismiss();
+	          }
+	        });
+	        AlertDialog connectDialog = builder.create();
+	        connectDialog.show();
+	        connectDialog.setOnDismissListener(new OnDismissListener(){
+	        	public void onDismiss(DialogInterface dialog) {
+					connectDialogOpened = false;
+				}
+	        });
+	        connectDialogOpened = true;
+	      }
+	      else {
+	        // Auto connect to the first server
+	        if (servers.size() > 0) {
+	          server = servers.get(0);
+	          // Change the server
+	          ((DownloadApplication) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+	        }
+	      }
+	    }
+	    // No server then show the dialog to configure a server
+	    else {
+	      // Only if the EULA has been accepted. If the EULA has not been
+	      // accepted, it means that the EULA is currenlty being displayed so
+	      // don't show the "Wizard" dialog
+	      if (licenceAccepted) {
+	        showDialog(NO_SERVER_DIALOG_ID);
+	      }
+	    }
     }
-    // No server then show the dialog to configure a server
-    else {
-      // Only if the EULA has been accepted. If the EULA has not been
-      // accepted, it means that the EULA is currenlty being displayed so
-      // don't show the "Wizard" dialog
-      if (licenceAccepted) {
-        showDialog(NO_SERVER_DIALOG_ID);
-      }
-    }
-
   }
 
   /*
