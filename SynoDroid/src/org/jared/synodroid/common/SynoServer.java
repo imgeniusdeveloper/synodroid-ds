@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.text.MessageFormat;
@@ -203,6 +204,7 @@ public class SynoServer {
 					}
 					// Connection error
 					catch (DSMException e) {
+						Log.d(DownloadActivity.DS_TAG, "DSMException occured", e);
 						// If the user didn't change the server
 						if (connected) {
 							fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, translateError(SynoServer.this.bindedActivity, e));
@@ -210,8 +212,10 @@ public class SynoServer {
 					}
 					// Programmation exception
 					catch (Exception e) {
+						Log.d(DownloadActivity.DS_TAG, "Exception occured", e);
 						//This is most likely a connection timeout
-						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, e.getMessage());
+						DSMException ex = new DSMException(e);
+						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, translateError(SynoServer.this.bindedActivity, ex));
 					}
 					// Set the connection to null to force connection next time
 					finally {
@@ -313,6 +317,9 @@ public class SynoServer {
 			}
 			else if (dsmExP.getRootException() instanceof SSLException) {
 				msg = MessageFormat.format(activityP.getString(R.string.connect_ssl_error), new Object[] { dsmExP.getCause().getMessage() });
+			}
+			else if (dsmExP.getRootException() instanceof SocketTimeoutException) {
+				msg = activityP.getString(R.string.connect_nohost);
 			}
 			else {
 				msg = dsmExP.getRootException().getMessage();
