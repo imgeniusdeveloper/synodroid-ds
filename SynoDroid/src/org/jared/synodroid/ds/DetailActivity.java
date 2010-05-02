@@ -17,13 +17,17 @@
 package org.jared.synodroid.ds;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.jared.synodroid.common.data.Detail;
+import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.ds.view.adapter.Detail;
+import org.jared.synodroid.ds.view.adapter.Detail2Progress;
+import org.jared.synodroid.ds.view.adapter.Detail2Text;
 import org.jared.synodroid.ds.view.adapter.DetailAction;
 import org.jared.synodroid.ds.view.adapter.DetailAdapter;
+import org.jared.synodroid.ds.view.adapter.DetailProgress;
+import org.jared.synodroid.ds.view.adapter.DetailText;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -43,7 +47,6 @@ public class DetailActivity extends TabActivity {
 	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,91 +62,166 @@ public class DetailActivity extends TabActivity {
 
 		// Get the details
 		Intent intent = getIntent();
-		HashMap<String, String> rawDetails = (HashMap<String, String>) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
+		TaskDetail details = (TaskDetail) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
 
 		// Build the general tab
 		ListView genListView = (ListView) findViewById(R.id.general_layout);
 		DetailAdapter genAdapter = new DetailAdapter(this);
 		genListView.setAdapter(genAdapter);
-		genAdapter.updateDetails(buildGeneralDetails(rawDetails));
+		genAdapter.updateDetails(buildGeneralDetails(details));
 
 		// Build the transfer tab
 		ListView transListView = (ListView) findViewById(R.id.transfert_layout);
 		DetailAdapter transAdapter = new DetailAdapter(this);
 		transListView.setAdapter(transAdapter);
-		transAdapter.updateDetails(buildTransferDetails(rawDetails));
+		transAdapter.updateDetails(buildTransferDetails(details));
 	}
 
 	/**
 	 * Return a sub detail list for the general's tab
 	 */
-	private List<Detail> buildGeneralDetails(HashMap<String, String> rawDetails) {
+	private List<Detail> buildGeneralDetails(TaskDetail details) {
 		ArrayList<Detail> result = new ArrayList<Detail>();
 		// FileName
-		result.add(new Detail(getString(R.string.detail_filename), rawDetails.get("filename")));
+		result.add(new DetailText(getString(R.string.detail_filename), details.fileName));
+		setTitle(details.fileName);
 		// Destination
-		result.add(new Detail(getString(R.string.detail_destination), rawDetails.get("destination")));
+		result.add(new DetailText(getString(R.string.detail_destination), details.destination));
 		// File size
-		result.add(new Detail(getString(R.string.detail_filesize), rawDetails.get("filesize")));
+		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize)));
 		// Creation time
-		result.add(new Detail(getString(R.string.detail_creationtime), Utils.computeDate(rawDetails.get("ctime"))));
+		result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
 		// URL
-		Detail urlDetail = new Detail(getString(R.string.detail_url), rawDetails.get("url"));
+		DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
 		urlDetail.setAction(new DetailAction() {
-          public void execute(Detail detailsP) {
-          }
-        });
+			public void execute(Detail detailsP) {
+			}
+		});
 		result.add(urlDetail);
 		// Username
-		result.add(new Detail(getString(R.string.detail_username), rawDetails.get("username")));
+		result.add(new DetailText(getString(R.string.detail_username), details.userName));
 		return result;
 	}
 
 	/**
 	 * Return a sub detail list for the general's tab
 	 */
-	private List<Detail> buildTransferDetails(HashMap<String, String> rawDetails) {
+	private List<Detail> buildTransferDetails(TaskDetail details) {
 		ArrayList<Detail> result = new ArrayList<Detail>();
 
-		// Status
-		result.add(new Detail(getString(R.string.detail_status), TaskStatus.getLabel(this, rawDetails.get("status"))));
-		// Transfered
-		String upProgress = "";
-		String transfered = rawDetails.get("transfered");
-		if (transfered != null) {
-			int index = transfered.indexOf("(");
-			if (index != -1) {
-				upProgress = transfered.substring(index + 1, transfered.length() - 1);
-				transfered = transfered.substring(0, index - 1);
+		// ------------ Status
+		result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
+		// ------------ Transfered
+		String transfered = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded);
+		transfered += " - " + getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded);
+		result.add(new DetailText(getString(R.string.detail_transfered), transfered));
+		// ------------- Progress
+		long downloaded = details.bytesDownloaded;
+		long filesize = details.fileSize;
+		int downPer = (int) ((downloaded * 100) / filesize);
+		long uploaded = details.bytesUploaded;
+		double ratio = (double) (details.seedingRatio / 100);
+		int upPerc = 100;
+		if (ratio != 0) {
+			upPerc = (int) ((uploaded * 100) / (filesize * ratio));
+		}
+		Detail2Progress progDetail = new Detail2Progress(getString(R.string.detail_progress));
+		progDetail.setProgress1(getString(R.string.detail_progress_upload) + " " + upPerc + "%", upPerc);
+		progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPer + "%", downPer);
+		progDetail.setAction(new DetailAction() {
+			public void execute(Detail detailsP) {
 			}
-			transfered = transfered.replace("/", "-");
+		});
+		result.add(progDetail);
+		// ------------ Speed
+		String speed = getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s";
+		speed += " - " + getString(R.string.detail_progress_download) + " " + details.speedDownload + " KB/s";
+		result.add(new DetailText(getString(R.string.detail_speed), speed));
+		// ------------ Peers
+		if (details.isTorrent) {
+			String peers = details.peersCurrent + " / " + details.peersTotal;
+			DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers));
+			int pProgress = 0;
+			if (details.peersTotal != 0) {
+				pProgress = (int) ((details.peersCurrent * 100) / details.peersTotal);
+			}
+			peersDetail.setProgress(peers, pProgress);
+			result.add(peersDetail);
 		}
-		result.add(new Detail(getString(R.string.detail_transfered), transfered));
-		// Progress
-		result.add(new Detail(getString(R.string.detail_progress), upProgress + " - " + rawDetails.get("progress")));
-		// Speed
-		String speed = rawDetails.get("speed");
-		if (speed != null) {
-			speed = speed.replace("KB/s", "KBS");
-			speed = speed.replace("/", "-");
-			speed = speed.replace("KBS", "KB/s");
+		// ------------ Seeders / Leechers
+		if (details.isTorrent) {
+			String seedStr = getString(R.string.detail_unvailable);
+			String leechStr = getString(R.string.detail_unvailable);
+			if (details.seeders != null) seedStr = details.seeders.toString();
+			if (details.leechers != null) leechStr = details.leechers.toString();
+			String seeders = seedStr + " - " + leechStr;
+			result.add(new DetailText(getString(R.string.detail_seeders_leechers), seeders));
 		}
-		result.add(new Detail(getString(R.string.detail_speed), speed));
-		// Peers
-		String peers = rawDetails.get("currpeer") + " - " + rawDetails.get("totalpeer");
-		result.add(new Detail(getString(R.string.detail_peers), peers));
-		// Seeders / Leechers
-		String seeders = rawDetails.get("seeders_leechers");
-		if (seeders != null) {
-			seeders = seeders.replace("/", " - ");
+		// ------------ ETAs
+		Detail2Text etaDetail = new Detail2Text(getString(R.string.detail_eta));
+		String etaUpload = "?";
+		String etaDownload = "?";
+		if (details.speedDownload != 0) {
+			long sizeLeft = filesize - downloaded;
+			long timeLeft = (long) (sizeLeft / (details.speedDownload * 1000));
+			etaDownload = Utils.computeTimeLeft(timeLeft);
 		}
-		result.add(new Detail(getString(R.string.detail_seeders_leechers), seeders));
-		// Starttime /left time
-		String time = Utils.computeDate(rawDetails.get("stime")) + " - " + Utils.computeTimeLeft(rawDetails.get("timeleft"));
-		result.add(new Detail(getString(R.string.detail_starttime), time));
-		// Pieces
-		String pieces = rawDetails.get("currpieces") + " - " + rawDetails.get("totalpieces");
-		result.add(new Detail(getString(R.string.detail_pieces), pieces));
+		else {
+			if (downPer == 100) {
+				etaDownload = getString(R.string.detail_finished);
+			}
+		}
+		Long timeLeftSize = null;
+		if (details.speedUpload != 0 && details.seedingRatio != 0) {
+			long sizeLeft = (long) ((filesize * ratio) - uploaded);
+			timeLeftSize = (long) (sizeLeft / (details.speedUpload * 1000));
+		}
+		// If the user defined a minimum seeding time AND we are in seeding mode
+		Long timeLeftTime = null;
+		if (details.seedingInterval != 0 && TaskStatus.valueOf(details.status) == TaskStatus.TASK_SEEDING) {
+			timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
+		}
+		// At least one time has been computed
+		if (timeLeftTime != null || timeLeftSize != null) {
+			// By default take the size time
+			Long time = timeLeftSize;
+			// Except if it is null
+			if (timeLeftSize == null) {
+				time = timeLeftTime;
+			}
+			else {
+				// If time is not null
+				if (timeLeftTime != null) {
+					// Get the higher value
+					if (timeLeftTime > timeLeftSize) {
+						time = timeLeftTime;
+					}
+				}
+			}
+			etaUpload = Utils.computeTimeLeft(time);
+		}
+		else if (upPerc == 100) {
+			etaUpload = getString(R.string.detail_finished);
+		}
+
+		etaDetail.setValue1(getString(R.string.detail_progress_upload) + " " + etaUpload);
+		etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
+		etaDetail.setAction(new DetailAction() {
+			public void execute(Detail detailsP) {
+			}
+		});
+		result.add(etaDetail);
+		// ------------ Pieces
+		String pieces = details.piecesCurrent + " / " + details.piecesTotal;
+		DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces));
+		int piProgress = 0;
+		if (details.piecesTotal != 0) {
+			piProgress = (int) ((details.piecesCurrent * 100) / details.piecesTotal);
+		}
+		piecesDetail.setProgress(pieces, piProgress);
+		result.add(piecesDetail);
+
 		return result;
 	}
+
 }

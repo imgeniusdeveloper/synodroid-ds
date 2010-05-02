@@ -118,13 +118,13 @@
 
 <string name="detail_originaltorrent">Original torrent</string>
 <string name="detail_status">Status</string>
-<string name="detail_transfered">Transfered (upload - download)</string>
-<string name="detail_speed">Speed (upload - download)</string>
-<string name="detail_peers">Peers (connected - total)</string>
+<string name="detail_transfered">Transfered</string>
+<string name="detail_speed">Speed</string>
+<string name="detail_peers">Peers (connected / total)</string>
 <string name="detail_seeders_leechers">Seeders - Leechers</string>
-<string name="detail_starttime">Start time - Left time</string>
-<string name="detail_pieces">Pieces (current - total)</string>
-<string name="detail_progress">Progress (upload  - download)</string>
+<string name="detail_eta">Estimated time arrival</string>
+<string name="detail_pieces">Pieces (current / total)</string>
+<string name="detail_progress">Progress</string>
 <string name="detail_status_waiting">Waiting</string>
 <string name="detail_status_downloading">Downloading</string>
 <string name="detail_status_seeding">Seeding</string>
@@ -141,4 +141,8 @@
 <string name="button_nothanks">No thanks</string>
 <string name="dialog_title_information">Information</string>
 <string name="no_server_configured">No server has been yet configured or it is not well configured.\n\nWould you like to configure the system now ?</string>
+<string name="detail_progress_upload">Upload:</string>
+<string name="detail_progress_download">Download:</string>
+<string name="detail_finished">Finished</string>
+<string name="detail_unvailable">unvailable</string>
 </resources>

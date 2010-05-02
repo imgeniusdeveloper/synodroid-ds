@@ -17,11 +17,13 @@
 package org.jared.synodroid.common.protocol.v22;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
+import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.protocol.DSHandler;
 import org.jared.synodroid.common.protocol.DSMException;
 import org.jared.synodroid.common.protocol.MultipartBuilder;
@@ -115,7 +117,7 @@ class DSHandlerDSM22 implements DSHandler {
 					torrent.totalSize = item.getString("total_size").trim();
 					torrent.uploadRate = item.getString("upload_rate").trim();
 					torrent.creator = item.getString("username").trim();
-					if (torrent.creator == ""){
+					if (torrent.creator == "") {
 						torrent.creator = server.getUser();
 					}
 					torrent.server = server;
@@ -198,8 +200,8 @@ class DSHandlerDSM22 implements DSHandler {
 	 * org.jared.synodroid.common.protocol.DSHandler#getDetails(org.jared.synodroid
 	 * .common.data.Task)
 	 */
-	public HashMap<String, String> getDetails(Task taskP) throws Exception {
-		HashMap<String, String> result = new HashMap<String, String>();
+	public TaskDetail getDetails(Task taskP) throws Exception {
+		TaskDetail result = new TaskDetail();
 		// If we are logged on
 		if (server.isConnected()) {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
@@ -210,9 +212,72 @@ class DSHandlerDSM22 implements DSHandler {
 				// If successful then build details list
 				if (success) {
 					JSONObject data = json.getJSONObject("data");
-					JSONArray arrayNames = data.names();
-					for(int iLoop=0; iLoop<arrayNames.length(); iLoop++) {
-						result.put(arrayNames.getString(iLoop), data.getString(arrayNames.getString(iLoop)));
+					if (data.has("stime"))
+						result.seedingDate = data.getString("stime");
+					if (data.has("totalpeer"))
+						result.peersTotal = Utils.toLong(data.getString("totalpeer"));
+					if (data.has("currpeer"))
+						result.peersCurrent = Utils.toLong(data.getString("currpeer"));
+					if (data.has("istorrent"))
+						result.isTorrent = data.getBoolean("istorrent");
+					if (data.has("speed")) {
+						Pattern p = Pattern.compile("(((\\d)*\\.(\\d)*) KB/s)");
+						Matcher m = p.matcher(data.getString("speed"));
+						if (m.find() && m.groupCount() >= 2) {
+							result.speedUpload = Utils.toDouble(m.group(2));
+						}
+						if (m.find() && m.groupCount() >= 2) {
+							result.speedDownload = Utils.toDouble(m.group(2));
+						}
+					}
+					if (data.has("filename"))
+						result.fileName = data.getString("filename");
+					if (data.has("username"))
+						result.userName = data.getString("username");
+					if (data.has("totalpieces"))
+						result.piecesTotal = Utils.toLong(data.getString("totalpieces"));
+					if (data.has("transfered")) {
+						Pattern p = Pattern.compile("((\\d*\\.\\d*)\\s[KMGT]B)");
+						Matcher m = p.matcher(data.getString("transfered"));
+						if (m.find() && m.groupCount() >= 1) {
+							result.bytesUploaded = Utils.fileSizeToBytes(m.group(1));
+						}
+						if (m.find() && m.groupCount() >= 1) {
+							result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
+						}
+					}
+					if (data.has("seedelapsed"))
+						result.seedingElapsed = data.getInt("seedelapsed");
+					if (data.has("isnzb"))
+						result.isNZB = data.getBoolean("isnzb");
+					if (data.has("destination"))
+						result.destination = data.getString("destination");
+					if (data.has(("url")))
+						result.url = data.getString("url");
+					if (data.has("ctime"))
+						result.creationDate = data.getString("ctime");
+					if (data.has("status"))
+						result.status = data.getString("status");
+					if (data.has("seeding_interval"))
+						result.seedingInterval = data.getInt("seeding_interval");
+					if (data.has("currpieces"))
+						result.piecesCurrent = Utils.toLong(data.getString("currpieces"));
+					if (data.has("id"))
+						result.taskId = data.getInt("id");
+					if (data.has("seeding_ratio"))
+						result.seedingRatio = data.getInt("seeding_ratio");
+					if (data.has("filesize"))
+						result.fileSize = Utils.fileSizeToBytes(data.getString("filesize"));
+					if (data.has("seeders_leechers")) {
+						Pattern p = Pattern.compile("(\\d+)(/)(\\d+)");
+						String v = data.getString("seeders_leechers");
+						Matcher m = p.matcher(v);
+						if (m.find()) {
+							if (m.groupCount() >= 1)
+								result.seeders = Utils.toLong(m.group(1));
+							if (m.groupCount() >= 3)
+								result.leechers = Utils.toLong(m.group(3));
+						}
 					}
 				}
 				// Otherwise throw a exception
@@ -265,21 +330,20 @@ class DSHandlerDSM22 implements DSHandler {
 			}
 		}
 	}
-	
+
 	public void upload_url(Uri uriP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
 			if (uriP.toString() != null) {
 				// Create the multipart
 				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
-				
+
 				// The field's part
 				builder.addPart(new Part("field").setContent("task_id".getBytes()));
 				// The direction's part
 				builder.addPart(new Part("direction").setContent("ASC".getBytes()));
-				
-				
-				if (uriP.toString().toLowerCase().startsWith("https:")){
+
+				if (uriP.toString().toLowerCase().startsWith("https:")) {
 					// The url_http's part
 					builder.addPart(new Part("url_http").setContent("".getBytes()));
 					// The url_https's part
@@ -287,7 +351,7 @@ class DSHandlerDSM22 implements DSHandler {
 					// The url_ftp's part
 					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
 				}
-				else if (uriP.toString().toLowerCase().startsWith("http:")){
+				else if (uriP.toString().toLowerCase().startsWith("http:")) {
 					// The url_http's part
 					builder.addPart(new Part("url_http").setContent(uriP.toString().getBytes()));
 					// The url_https's part
@@ -295,22 +359,22 @@ class DSHandlerDSM22 implements DSHandler {
 					// The url_ftp's part
 					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
 				}
-				else if (uriP.toString().toLowerCase().startsWith("ftp:")){
+				else if (uriP.toString().toLowerCase().startsWith("ftp:")) {
 					// The url_http's part
 					builder.addPart(new Part("url_http").setContent("".getBytes()));
 					// The url_https's part
 					builder.addPart(new Part("url_https").setContent("".getBytes()));
 					// The url_ftp's part
-					builder.addPart(new Part("url_ftp").setContent(uriP.toString().getBytes()));	
+					builder.addPart(new Part("url_ftp").setContent(uriP.toString().getBytes()));
 				}
-				else{
+				else {
 					return;
 				}
 				// The url_ftp's part
 				builder.addPart(new Part("url").setContent(uriP.toString().getBytes()));
 				// The upload_type's part
 				builder.addPart(new Part("upload_type").setContent("url".getBytes()));
-				
+
 				// Execute
 				synchronized (server) {
 					server.sendMultiPart(DM_URI, builder);

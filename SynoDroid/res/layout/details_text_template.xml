@@ -6,7 +6,7 @@
         <ImageView android:id="@+id/id_detail_action" 
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" 
-            android:layout_width="wrap_content" android:src="@drawable/ic_list_action" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_marginTop="5dip" android:paddingLeft="10dip">
+            android:src="@drawable/ic_list_action" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_marginTop="5dip" android:paddingLeft="5dip" android:cropToPadding="true" android:clickable="false" android:layout_width="wrap_content">
             </ImageView>
         <TextView android:layout_width="fill_parent" android:layout_weight="1" android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Title" android:id="@+id/id_detail_name" android:layout_alignParentLeft="true"

@@ -599,7 +599,7 @@ public class SynoServer {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			con.setRequestMethod(methodP);
-			con.setConnectTimeout(5000);
+			con.setConnectTimeout(20000);
 			Log.d(DownloadActivity.DS_TAG, methodP + ": " + uriP + "?" + requestP);
 			// Add the parameters
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());

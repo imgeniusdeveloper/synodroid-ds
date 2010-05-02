@@ -12,13 +12,13 @@ package org.jared.synodroid.ds;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
+import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.ds.action.AddTaskAction;
 import org.jared.synodroid.ds.action.TaskAction;
@@ -111,7 +111,6 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
 
   // Message handler which update the UI when the torrent list is updated
   private Handler handler = new Handler() {
-    @SuppressWarnings("unchecked")
     @Override
     public void handleMessage(Message msg) {
       // Update torrent
@@ -193,7 +192,7 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
       else if (msg.what == MSG_DETAILS_RETRIEVED) {
         Intent next = new Intent();
         next.setClass(DownloadActivity.this, DetailActivity.class);
-        next.putExtra("org.jared.synodroid.ds.Details", (HashMap<String, String>) msg.obj);
+        next.putExtra("org.jared.synodroid.ds.Details", (TaskDetail) msg.obj);
         DownloadActivity.this.startActivity(next);
       }
 

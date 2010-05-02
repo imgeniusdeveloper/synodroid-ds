@@ -16,7 +16,10 @@
  */
 package org.jared.synodroid.ds;
 
+import java.text.DecimalFormat;
 import java.util.Date;
+
+import android.util.Log;
 
 /**
  * As usual a utility class
@@ -51,24 +54,24 @@ public class Utils {
 	 * @param etaP
 	 * @return
 	 */
-	public static String computeTimeLeft(int etaP) {
+	public static String computeTimeLeft(long etaP) {
 		String result = "";
 		// Only if time left is known
 		if (etaP != -1) {
 			// Days
-			int d = etaP / (60 * 60 * 24);
+			long d = etaP / (60 * 60 * 24);
 			if (d > 0) {
 				result += d + "d ";
 				etaP -= d * (60 * 60 * 24);
 			}
 			// Hours
-			int h = etaP / (60 * 60);
+			long h = etaP / (60 * 60);
 			if (h > 0 || d > 0) {
 				result += h + "h ";
 				etaP -= h * (60 * 60);
 			}
 			// Minutes
-			int m = etaP / 60;
+			long m = etaP / 60;
 			if (m > 0 || h > 0 || m > 0) {
 				result += m + "m ";
 				etaP -= m * 60;
@@ -97,6 +100,128 @@ public class Utils {
 			catch (NumberFormatException ex) {
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * Utility method to convert a string into an int and log if an error occured
+	 * @param valueP
+	 * @return
+	 */
+	public static Long toLong(String valueP) {
+		Long result = null;
+		try {
+			result = Long.parseLong(valueP);
+		}
+		// Not a number
+		catch(NumberFormatException ex) {
+			result = 0l;
+			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+valueP, ex);
+		}		
+		return result;
+	}
+	
+	/**
+	 * Utility method to convert a string into an double and log if an error occured
+	 * @param valueP
+	 * @return
+	 */
+	public static double toDouble(String valueP) {
+		double result = 0;
+		try {
+			result = Double.parseDouble(valueP);
+		}
+		// Not a number
+		catch(NumberFormatException ex) {
+			result = 0.0d;
+			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+valueP, ex);
+		}		
+		return result;
+	}
+	
+	/**
+	 * Extract from percent string (with the caracter '%') the percentage int
+	 * value
+	 * 
+	 * @param percentP
+	 * @return
+	 */
+	public static int percent2int(String percentP) {
+		int result = 0;
+		if (percentP != null && percentP.length() > 0) {
+			String p = percentP.replace('%', ' ').trim();			
+			try {
+				result = (int)Double.parseDouble(p);
+			}
+			// Nothing to do: it is not an integer, os just return the default value
+			catch (NumberFormatException ex) {
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Convert a file size representation in a long size bytes
+	 * @param sizeP
+	 * @return
+	 */
+	public static long fileSizeToBytes(String sizeP) {
+		long result = 0;
+		sizeP = sizeP.trim();
+		// Search for the size unit separator
+		int index = sizeP.indexOf(" ");
+		String valStr = sizeP.substring(0, index-1);
+		String unitStr = sizeP.substring(index+1).toLowerCase();
+		try {
+			double size = Double.parseDouble(valStr);
+			if (unitStr.equals("kb")) {
+				size = size * 1000;
+			}
+			else if (unitStr.equals("mb")) {
+				size = size * 1000 * 1000;				
+			}
+			else if (unitStr.equals("gb")) {
+				size = size * 1000 * 1000 * 1000;				
+			}
+			else if (unitStr.equals("tb")) {
+				size = size * 1000 * 1000 * 1000 * 1000;				
+			}
+			result = (long)size;
+		}
+		// Not a number
+		catch(NumberFormatException ex) {
+			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+sizeP, ex);
+		}		
+		return result;
+	}
+	
+	/**
+	 * Convert a file size in bytes to a string representation
+	 * @param bytes
+	 * @return
+	 */
+	public static String bytesToFileSize(long bytes) {
+		DecimalFormat format = new DecimalFormat("#.##");
+		String result = "";
+		String unit = "B";
+		double val = bytes;
+		if (bytes > 1000l*1000l*1000l*1000l) {
+			val = val / (1000l*1000l*1000l*1000l);
+			unit = "TB";			
+		}
+		else if (bytes > 1000l*1000l*1000l) {
+			val = val / (1000l*1000l*1000l);
+			unit = "GB";			
+		}
+		else if (bytes > 1000l*1000l) {
+			val = val / (1000l*1000l);
+			unit = "MB";			
+		}
+		else if (bytes > 1000l) {
+			val = val / 1000l;
+			unit = "KB";
+		}
+		result = format.format(val) + " "+ unit;
 		return result;
 	}
 }

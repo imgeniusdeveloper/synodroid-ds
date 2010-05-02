@@ -14,25 +14,22 @@
  * limitations under the License.
  * 
  */
-package org.jared.synodroid.common.data;
+package org.jared.synodroid.ds.view.adapter;
 
 import java.io.Serializable;
 
-import org.jared.synodroid.ds.view.adapter.DetailAction;
 
 /**
  * A detail which consist in a name/value pair
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class Detail implements Serializable {
+public abstract class Detail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	// The name of this detail
 	private String name;
-	// The value of this detail
-	private String value;
 	// The detail action. By default null
 	private DetailAction action = null;
 	
@@ -52,16 +49,7 @@ public class Detail implements Serializable {
 		name = nameP;
 	}
 
-	/**
-	 * Constructor which initialize the name/value
-	 * 
-	 * @param nameP
-	 * @param valueP
-	 */
-	public Detail(String nameP, String valueP) {
-		name = nameP;
-		value = valueP;
-	}
+
 
 	/**
 	 * @return the name
@@ -76,24 +64,6 @@ public class Detail implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return the value
-	 */
-	public String getValue() {
-		if (value != null) {
-			return value;
-		}
-		return "";
-	}
-
-	/**
-	 * @param value
-	 *          the value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
 	}
 
   /**

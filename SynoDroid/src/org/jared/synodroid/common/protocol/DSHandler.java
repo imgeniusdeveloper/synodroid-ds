@@ -16,10 +16,9 @@
  */
 package org.jared.synodroid.common.protocol;
 
-import java.util.HashMap;
-
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
+import org.jared.synodroid.common.data.TaskDetail;
 
 import android.net.Uri;
 
@@ -71,5 +70,5 @@ public interface DSHandler {
    * Get task's raw details
    * @param uriP
    */
-  public HashMap<String, String> getDetails(final Task taskP) throws Exception ;
+  public TaskDetail getDetails(final Task taskP) throws Exception ;
 }

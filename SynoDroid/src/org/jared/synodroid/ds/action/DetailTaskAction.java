@@ -16,10 +16,9 @@
  */
 package org.jared.synodroid.ds.action;
 
-import java.util.HashMap;
-
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
@@ -40,8 +39,8 @@ public class DetailTaskAction implements TaskAction {
 	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception {
-		HashMap<String, String> rawDetails = serverP.getDSMHandlerFactory().getDSHandler().getDetails(task);
-  	serverP.fireMessage(activityP, DownloadActivity.MSG_DETAILS_RETRIEVED, rawDetails);
+		TaskDetail details = serverP.getDSMHandlerFactory().getDSHandler().getDetails(task);
+  	serverP.fireMessage(activityP, DownloadActivity.MSG_DETAILS_RETRIEVED, details);
   }
 
 	/* (non-Javadoc)
