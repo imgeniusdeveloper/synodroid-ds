@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
@@ -42,8 +43,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -107,7 +110,12 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
   private boolean licenceAccepted = false;
   // Flag to tell app that the connect dialog is opened
   private boolean connectDialogOpened = false;
-  
+  // The title text
+  private TextView titleText;
+  // The title progress
+  private ProgressBar titleProgress;
+  // The title icon
+  private ImageView titleIcon;
 
   // Message handler which update the UI when the torrent list is updated
   private Handler handler = new Handler() {
@@ -130,7 +138,7 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
         catch(IllegalArgumentException ex) {
         }
         // Hide the progress bar
-        setProgressBarIndeterminateVisibility(false);
+        titleProgress.setVisibility(View.INVISIBLE);
         // Update total rates
         totalUpView.setText(container.getTotalUp());
         totalDownView.setText(container.getTotalDown());
@@ -138,7 +146,8 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
       // An error message
       else if (msg.what == MSG_ERROR) {
         // Change the title
-        setTitle(getString(R.string.app_name));
+        titleText.setText(getString(R.string.app_name));
+        titleIcon.setVisibility(View.INVISIBLE);
         // No tasks
         ArrayList<Task> tasks = new ArrayList<Task>();
         // Get the adapter AND update datas
@@ -146,7 +155,7 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
         taskView.setOnItemClickListener(taskAdapter);
         taskAdapter.updateTasks(tasks);
         // Hide the progress bar
-        setProgressBarIndeterminateVisibility(false);
+        titleProgress.setVisibility(View.INVISIBLE);
         // Dissmiss the connection dialog
         try {
           dismissDialog(CONNECTION_DIALOG_ID);
@@ -166,7 +175,8 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
       // Connection is done
       else if (msg.what == MSG_CONNECTED) {
         // Change the title
-        setTitle(getString(R.string.app_name) + ": " + server.getNickname());
+        titleText.setText(server.getNickname());
+        titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.INVISIBLE);
       }
       // Connecting to the server
       else if (msg.what == MSG_CONNECTING) {
@@ -178,11 +188,11 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
       }
       // Operation pending
       else if (msg.what == MSG_OPERATION_PENDING) {
-        setProgressBarIndeterminateVisibility(true);
+        titleProgress.setVisibility(View.VISIBLE);
       }
       // Operation done
       else if (msg.what == MSG_OPERATION_DONE) {
-        setProgressBarIndeterminateVisibility(false);
+        titleProgress.setVisibility(View.INVISIBLE);
       }
       else if (msg.what == MSG_TOAST) {
         String text = (String) msg.obj;
@@ -198,6 +208,7 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
 
     }
   };
+
 
   /**
    * Handle a message. This method is thread safe and can be call from
@@ -218,18 +229,19 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
 
     licenceAccepted = Eula.show(this, false);
 
-    // Request a specific feature: show a indeterminate progress in the
-    // title bar
-    requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
     // Create the main view of this activity
     setContentView(R.layout.tasks);
-    setProgressBarIndeterminateVisibility(false);
     // Retrieve the listview
     taskView = (ListView) findViewById(R.id.task_list);
     totalUpView = (TextView) findViewById(R.id.id_total_upload);
     totalDownView = (TextView) findViewById(R.id.id_total_download);
 
+
+    // Retrieve title's text, icon and progress for future uses
+    titleText = (TextView)findViewById(R.id.id_title);
+    titleProgress = (ProgressBar)findViewById(R.id.id_progress);
+    titleIcon = (ImageView)findViewById(R.id.id_https);
+    
     // Create the task adapter
     TaskAdapter taskAdapter = new TaskAdapter(this);
     taskView.setAdapter(taskAdapter);
@@ -528,7 +540,8 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
     server = ((DownloadApplication) getApplication()).getServer();
     if (server != null) {
       if (server.isConnected()) {
-        setTitle(getString(R.string.app_name) + ": " + server.getNickname());
+        titleText.setText(server.getNickname());
+        titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.INVISIBLE);        
       }
     }
     // No server then display the connect to dialog
