@@ -145,4 +145,6 @@
 <string name="detail_progress_download">Download:</string>
 <string name="detail_finished">Finished</string>
 <string name="detail_unvailable">unvailable</string>
+<string name="not_yet_implemented">Feature not yet implemented</string>
+<string name="title_information">Information</string>
 </resources>

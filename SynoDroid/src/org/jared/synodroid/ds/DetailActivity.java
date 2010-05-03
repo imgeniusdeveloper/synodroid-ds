@@ -29,6 +29,7 @@ import org.jared.synodroid.ds.view.adapter.DetailAdapter;
 import org.jared.synodroid.ds.view.adapter.DetailProgress;
 import org.jared.synodroid.ds.view.adapter.DetailText;
 
+import android.app.AlertDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,7 +43,10 @@ import android.widget.TabHost;
  */
 public class DetailActivity extends TabActivity {
 
-	/*
+    // The "Not yet implemented" dialog
+	private AlertDialog notYetImplementedDialog;
+
+  /*
 	 * (non-Javadoc)
 	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -68,13 +72,23 @@ public class DetailActivity extends TabActivity {
 		ListView genListView = (ListView) findViewById(R.id.general_layout);
 		DetailAdapter genAdapter = new DetailAdapter(this);
 		genListView.setAdapter(genAdapter);
+		genListView.setOnItemClickListener(genAdapter);
 		genAdapter.updateDetails(buildGeneralDetails(details));
 
 		// Build the transfer tab
 		ListView transListView = (ListView) findViewById(R.id.transfert_layout);
 		DetailAdapter transAdapter = new DetailAdapter(this);
 		transListView.setAdapter(transAdapter);
+		transListView.setOnItemClickListener(transAdapter);
 		transAdapter.updateDetails(buildTransferDetails(details));
+		
+		// Create a "Not yet implemented" dialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.title_information))
+		       .setMessage(getString(R.string.not_yet_implemented))
+		       .setCancelable(false)
+		       .setPositiveButton(R.string.button_ok, null);
+		notYetImplementedDialog = builder.create();		
 	}
 
 	/**
@@ -86,7 +100,13 @@ public class DetailActivity extends TabActivity {
 		result.add(new DetailText(getString(R.string.detail_filename), details.fileName));
 		setTitle(details.fileName);
 		// Destination
-		result.add(new DetailText(getString(R.string.detail_destination), details.destination));
+		DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
+		destDetail.setAction(new DetailAction() {
+          public void execute(Detail detailsP) {
+            notYetImplementedDialog.show();
+          }
+        });
+		result.add(destDetail);
 		// File size
 		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize)));
 		// Creation time
@@ -95,6 +115,7 @@ public class DetailActivity extends TabActivity {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
+	            notYetImplementedDialog.show();
 			}
 		});
 		result.add(urlDetail);
@@ -130,6 +151,7 @@ public class DetailActivity extends TabActivity {
 		progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPer + "%", downPer);
 		progDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
+	            notYetImplementedDialog.show();			  
 			}
 		});
 		result.add(progDetail);
@@ -208,6 +230,7 @@ public class DetailActivity extends TabActivity {
 		etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
 		etaDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
+	            notYetImplementedDialog.show();			  
 			}
 		});
 		result.add(etaDetail);

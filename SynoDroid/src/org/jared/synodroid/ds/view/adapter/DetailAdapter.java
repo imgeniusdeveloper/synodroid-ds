@@ -26,6 +26,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +39,7 @@ import android.widget.TextView;
  * 
  * @author eric.taix at gmail.com
  */
-public class DetailAdapter extends BaseAdapter {
+public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
 	// List of detail
 	private List<Detail> details = new ArrayList<Detail>();
@@ -269,4 +270,16 @@ public class DetailAdapter extends BaseAdapter {
 		ProgressBar value = (ProgressBar) viewP.findViewById(R.id.id_detail_progress);
 		value.setProgress(detailP.getValue());
 	}
+	
+    /**
+     * Click on a item
+     */
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Detail detail = details.get(position);
+        if (detail != null) {
+          if (detail.getAction() != null) {
+            detail.executeAction();
+          }
+        }
+    }	
 }
