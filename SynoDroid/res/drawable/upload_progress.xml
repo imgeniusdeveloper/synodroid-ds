@@ -7,7 +7,7 @@
         android:centerColor="#ff080810"
         android:centerY="0.90"
         android:endColor="#ff485050"
-        android:angle="270" />
+        android:angle="270" /> 
     </shape>
   </item>
   <item android:id="@android:id/secondaryProgress">

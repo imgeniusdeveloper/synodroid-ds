@@ -6,6 +6,6 @@
                 android:topRightRadius="15dip" />
             <gradient android:angle="270" android:startColor="#FF606068" android:centerColor="#ff404048"
                 android:centerY="0.40" android:endColor="#FF000000" />
-        </shape>
+        </shape> 
     </item>
 </layer-list> 
