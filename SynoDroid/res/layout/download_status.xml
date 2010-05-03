@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_alignParentBottom="true"
+  android:id="@+id/rate_bar"
+  android:layout_alignParentRight="false"
+  android:layout_centerVertical="true"
+  android:layout_centerInParent="true"
+  android:layout_centerHorizontal="true"
+  android:layout_height="fill_parent" android:gravity="center_vertical|center_horizontal" android:layout_width="fill_parent">
+  <ImageView
+    android:id="@+id/ImageView01"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/dl_download"
+  ></ImageView>
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginRight="10dip"
+    android:text="0.00KB/s"
+    style="@style/TitleFont"
+    android:id="@+id/id_total_download"
+  ></TextView>
+  <ImageView
+    android:id="@+id/ImageView02"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/dl_upload"
+  ></ImageView>
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:text="0.00KB/s"
+    style="@style/TitleFont"
+    android:id="@+id/id_total_upload"
+  ></TextView>
+</LinearLayout>

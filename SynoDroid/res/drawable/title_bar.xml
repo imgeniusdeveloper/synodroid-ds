@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <corners android:bottomRightRadius="1dip" android:bottomLeftRadius="1dip" android:topLeftRadius="15dip"
+          <corners android:bottomRightRadius="1dip" android:bottomLeftRadius="1dip" android:topLeftRadius="15dip"
                 android:topRightRadius="15dip" />
             <gradient android:angle="270" android:startColor="#FF606068" android:centerColor="#ff404048"
                 android:centerY="0.40" android:endColor="#FF000000" />

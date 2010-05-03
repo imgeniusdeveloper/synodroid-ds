@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.ds.view.adapter.Detail;
 import org.jared.synodroid.ds.view.adapter.Detail2Progress;
 import org.jared.synodroid.ds.view.adapter.Detail2Text;
@@ -30,39 +31,47 @@ import org.jared.synodroid.ds.view.adapter.DetailProgress;
 import org.jared.synodroid.ds.view.adapter.DetailText;
 
 import android.app.AlertDialog;
-import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TabHost;
 
 /**
  * This activity displays a task's details
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class DetailActivity extends TabActivity {
+public class DetailActivity extends SynodroidActivity {
 
-    // The "Not yet implemented" dialog
+	// The "Not yet implemented" dialog
 	private AlertDialog notYetImplementedDialog;
 
-  /*
+	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.details);
 
 		// Create tabs and associate tab-content
-		TabHost tabHost = getTabHost();
-		tabHost.addTab(tabHost.newTabSpec("tab_test1").setIndicator(getString(R.string.detail_tab_general), getResources().getDrawable(R.drawable.icon_general)).setContent(R.id.general_layout));
-		tabHost.addTab(tabHost.newTabSpec("tab_test2").setIndicator(getString(R.string.detail_tab_transfer), getResources().getDrawable(R.drawable.icon_transfert)).setContent(R.id.transfert_layout));
-		tabHost.addTab(tabHost.newTabSpec("tab_test3").setIndicator(getString(R.string.detail_tab_files), getResources().getDrawable(R.drawable.icon_files)).setContent(R.id.files_layout));
-		// Set the default tab
-		tabHost.setCurrentTab(0);
+		// TabHost tabHost = getTabHost();
+		// tabHost.addTab(tabHost.newTabSpec("tab_test1").setIndicator(getString(R.string.detail_tab_general),
+		// getResources().getDrawable(R.drawable.icon_general)).setContent(R.id.general_layout));
+		// tabHost.addTab(tabHost.newTabSpec("tab_test2").setIndicator(getString(R.string.detail_tab_transfer),
+		// getResources().getDrawable(R.drawable.icon_transfert)).setContent(R.id.transfert_layout));
+		// tabHost.addTab(tabHost.newTabSpec("tab_test3").setIndicator(getString(R.string.detail_tab_files),
+		// getResources().getDrawable(R.drawable.icon_files)).setContent(R.id.files_layout));
+		// // Set the default tab
+		// tabHost.setCurrentTab(0);
 
 		// Get the details
 		Intent intent = getIntent();
@@ -81,14 +90,81 @@ public class DetailActivity extends TabActivity {
 		transListView.setAdapter(transAdapter);
 		transListView.setOnItemClickListener(transAdapter);
 		transAdapter.updateDetails(buildTransferDetails(details));
-		
+
 		// Create a "Not yet implemented" dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.title_information))
-		       .setMessage(getString(R.string.not_yet_implemented))
-		       .setCancelable(false)
-		       .setPositiveButton(R.string.button_ok, null);
-		notYetImplementedDialog = builder.create();		
+		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
+		notYetImplementedDialog = builder.create();
+
+		// Get the tabContent
+		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.id_tab_content);
+		frameLayout.bringChildToFront(genListView);
+
+		final ImageView sliderGen = (ImageView) findViewById(R.id.id_tab_slider_general);
+		final ImageView sliderTransf = (ImageView) findViewById(R.id.id_tab_slider_transfert);
+		
+		ImageView geneImg = (ImageView) findViewById(R.id.id_tab_transfert);
+		geneImg.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				runAnimation(sliderGen, sliderTransf);
+			}
+		});
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView(android
+	 * .view.ViewGroup)
+	 */
+	@Override
+	public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
+		inflaterP.inflate(R.layout.details_content, parentP, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#attachStatusView(android
+	 * .view.ViewGroup)
+	 */
+	@Override
+	public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
+		inflaterP.inflate(R.layout.details_status, parentP, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#attachTitleView(android
+	 * .view.ViewGroup)
+	 */
+	@Override
+	public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
+	}
+
+	public Animation runAnimation(final View source, final View dest) {
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_right);
+		animation.setFillEnabled(true);
+		animation.setAnimationListener(new AnimationListener() {
+			
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			public void onAnimationEnd(Animation animation) {
+				source.setVisibility(View.INVISIBLE);
+				dest.setVisibility(View.VISIBLE);
+			}
+		});
+//		((ImageView)target).sets
+		source.startAnimation(animation);
+		return animation;
 	}
 
 	/**
@@ -102,10 +178,10 @@ public class DetailActivity extends TabActivity {
 		// Destination
 		DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
 		destDetail.setAction(new DetailAction() {
-          public void execute(Detail detailsP) {
-            notYetImplementedDialog.show();
-          }
-        });
+			public void execute(Detail detailsP) {
+				notYetImplementedDialog.show();
+			}
+		});
 		result.add(destDetail);
 		// File size
 		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize)));
@@ -115,7 +191,7 @@ public class DetailActivity extends TabActivity {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-	            notYetImplementedDialog.show();
+				notYetImplementedDialog.show();
 			}
 		});
 		result.add(urlDetail);
@@ -151,7 +227,7 @@ public class DetailActivity extends TabActivity {
 		progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPer + "%", downPer);
 		progDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-	            notYetImplementedDialog.show();			  
+				notYetImplementedDialog.show();
 			}
 		});
 		result.add(progDetail);
@@ -174,8 +250,10 @@ public class DetailActivity extends TabActivity {
 		if (details.isTorrent) {
 			String seedStr = getString(R.string.detail_unvailable);
 			String leechStr = getString(R.string.detail_unvailable);
-			if (details.seeders != null) seedStr = details.seeders.toString();
-			if (details.leechers != null) leechStr = details.leechers.toString();
+			if (details.seeders != null)
+				seedStr = details.seeders.toString();
+			if (details.leechers != null)
+				leechStr = details.leechers.toString();
 			String seeders = seedStr + " - " + leechStr;
 			result.add(new DetailText(getString(R.string.detail_seeders_leechers), seeders));
 		}
@@ -230,7 +308,7 @@ public class DetailActivity extends TabActivity {
 		etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
 		etaDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-	            notYetImplementedDialog.show();			  
+				notYetImplementedDialog.show();
 			}
 		});
 		result.add(etaDetail);

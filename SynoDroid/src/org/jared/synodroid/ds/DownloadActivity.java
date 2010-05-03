@@ -21,13 +21,13 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.preference.PreferenceFacade;
+import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.ds.action.AddTaskAction;
 import org.jared.synodroid.ds.action.TaskAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -41,9 +41,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -55,7 +57,7 @@ import android.widget.Toast;
  * 
  * @author eric.taix at gmail.com
  */
-public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
+public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo {
 
   public static final String DS_TAG = "Synodroid DS";
 
@@ -116,7 +118,7 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
   private ProgressBar titleProgress;
   // The title icon
   private ImageView titleIcon;
-
+  
   // Message handler which update the UI when the torrent list is updated
   private Handler handler = new Handler() {
     @Override
@@ -225,17 +227,14 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 
     licenceAccepted = Eula.show(this, false);
 
-    // Create the main view of this activity
-    setContentView(R.layout.tasks);
     // Retrieve the listview
     taskView = (ListView) findViewById(R.id.task_list);
     totalUpView = (TextView) findViewById(R.id.id_total_upload);
     totalDownView = (TextView) findViewById(R.id.id_total_download);
-
 
     // Retrieve title's text, icon and progress for future uses
     titleText = (TextView)findViewById(R.id.id_title);
@@ -262,7 +261,31 @@ public class DownloadActivity extends Activity implements Eula.OnEulaAgreedTo {
     }
   }
 
-  /*
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.SynodroidActivity#getMainContentView()
+   */
+  @Override
+  public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
+  	inflaterP.inflate(R.layout.download_list, parentP, true);
+  }
+
+	/* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.SynodroidActivity#getStatusView()
+   */
+  @Override
+  public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
+  	inflaterP.inflate(R.layout.download_status, parentP, true);
+  }
+
+	/* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.SynodroidActivity#getTitleView()
+   */
+  @Override
+  public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
+  	inflaterP.inflate(R.layout.download_title, parentP, true);
+  }
+
+	/*
    * (non-Javadoc)
    * @see android.app.Activity#onStart()
    */

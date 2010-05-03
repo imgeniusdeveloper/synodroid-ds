@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:isScrollContainer="true"
+  android:layout_height="fill_parent"
+  android:layout_width="fill_parent"
+  android:id="@+id/task_list"
+  android:clickable="true"
+  android:choiceMode="singleChoice"
+  android:longClickable="true"
+  android:layout_above="@+id/bottom_bar"
+  android:layout_below="@+id/LinearLayout02"
+></ListView>
