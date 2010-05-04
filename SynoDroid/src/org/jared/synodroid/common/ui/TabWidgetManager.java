@@ -169,10 +169,8 @@ public class TabWidgetManager implements View.OnClickListener {
         animSlider.setAnimationListener(new AnimationListener() {
           public void onAnimationStart(Animation animation) {
           }
-
           public void onAnimationRepeat(Animation animation) {
           }
-
           public void onAnimationEnd(Animation animation) {
             setTab(toTab.getId());
             animPlaying = false;
@@ -218,6 +216,26 @@ public class TabWidgetManager implements View.OnClickListener {
     View view = (View) contentFrame.findViewWithTag(tab.getId() + TAG_FRAME);
     if (view != null) {
       view.setVisibility(visibilityP);
+    }
+  }
+  
+  /**
+   * Change the selected tab to the next one (on the right)
+   */
+  public void nextTab() {
+    if (currentIndex < tabs.size()-1) {
+      Tab tab = tabs.get(currentIndex+1);
+      slideTo(tab.getId());
+    }
+  }
+
+  /**
+   * Change the selected tab to the previous one (on the left)
+   */
+  public void previousTab() {
+    if (currentIndex > 0) {
+      Tab tab = tabs.get(currentIndex-1);
+      slideTo(tab.getId());
     }
   }
 }

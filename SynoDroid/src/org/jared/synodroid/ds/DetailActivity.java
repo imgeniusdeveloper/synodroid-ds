@@ -30,15 +30,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * This activity displays a task's details
@@ -51,17 +46,8 @@ public class DetailActivity extends SynodroidActivity {
   private AlertDialog notYetImplementedDialog;
   // The tab manager
   private TabWidgetManager tabManager;
-
-  
-  
-  /* (non-Javadoc)
-   * @see android.app.Activity#dispatchTouchEvent(android.view.MotionEvent)
-   */
-  @Override
-  public boolean dispatchTouchEvent(MotionEvent evP) {
-    // TODO Auto-generated method stub
-    return super.dispatchTouchEvent(evP);
-  }
+  // The title contains the file's name
+  private TextView title;
 
   /*
    * (non-Javadoc)
@@ -73,7 +59,6 @@ public class DetailActivity extends SynodroidActivity {
     // Get the details intent
     Intent intent = getIntent();
     TaskDetail details = (TaskDetail) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
-
     // Build the general tab
     ListView genListView = new ListView(this);
     DetailAdapter genAdapter = new DetailAdapter(this);
@@ -103,26 +88,14 @@ public class DetailActivity extends SynodroidActivity {
     // Call super onCreate after the tab intialization
     super.onCreate(savedInstanceState);
 
+    // Set the the title (the filename)
+    title.setText(details.fileName);
+    
     // Create a "Not yet implemented" dialog
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented))
             .setCancelable(false).setPositiveButton(R.string.button_ok, null);
     notYetImplementedDialog = builder.create();
-
-    // Get the tabContent
-    // FrameLayout frameLayout = (FrameLayout)
-    // findViewById(R.id.id_tab_content);
-    // frameLayout.bringChildToFront(genListView);
-
-    final ImageView sliderGen = (ImageView) findViewById(R.id.id_tab_slider_general);
-    final ImageView sliderTransf = (ImageView) findViewById(R.id.id_tab_slider_transfert);
-
-//    ImageView geneImg = (ImageView) findViewById(R.id.id_tab_transfert);
-//    geneImg.setOnClickListener(new View.OnClickListener() {
-//      public void onClick(View v) {
-//        runAnimation(sliderGen, sliderTransf);
-//      }
-//    });
   }
 
   /*
@@ -155,27 +128,8 @@ public class DetailActivity extends SynodroidActivity {
    */
   @Override
   public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
-  }
-
-  public Animation runAnimation(final View source, final View dest) {
-    Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_right);
-    animation.setFillEnabled(true);
-    animation.setAnimationListener(new AnimationListener() {
-
-      public void onAnimationStart(Animation animation) {
-      }
-
-      public void onAnimationRepeat(Animation animation) {
-      }
-
-      public void onAnimationEnd(Animation animation) {
-        source.setVisibility(View.INVISIBLE);
-        dest.setVisibility(View.VISIBLE);
-      }
-    });
-    // ((ImageView)target).sets
-    source.startAnimation(animation);
-    return animation;
+    RelativeLayout titleContainer = (RelativeLayout)inflaterP.inflate(R.layout.detail_title, parentP, true);
+    title = (TextView) titleContainer.findViewById(R.id.id_title);
   }
 
   /**
