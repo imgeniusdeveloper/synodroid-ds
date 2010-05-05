@@ -10,8 +10,7 @@
     android:allowTaskReparenting="false"
     android:icon="@drawable/icon_phone"
     android:name="org.jared.synodroid.Synodroid"
-    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-  android:debuggable="true">
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:debuggable="false">
     <activity
       android:label="@string/app_name"
       android:name="DownloadActivity"

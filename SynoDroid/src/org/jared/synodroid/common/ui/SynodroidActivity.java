@@ -21,10 +21,12 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -33,109 +35,139 @@ import android.widget.Toast;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public abstract class SynodroidActivity extends Activity implements ResponseHandler {
+public abstract class SynodroidActivity extends Activity implements ResponseHandler, OnClickListener {
 
-	// The inflater
-	private LayoutInflater inflater;
-	// The request view
-	private ImageView requestView;
-	// The rotate animation
-	private Animation animRequest;
+  // The inflater
+  private LayoutInflater inflater;
+  // The request view
+  private LinearLayout operationPending;
+  // The rotate animation
+  private Animation animRequest;
+  // The title click listener
+  private TitleClicklistener titleClickListener = null;
+  // The title's button
+  private ImageView titleButton;
+  
+  // A generic Handler which delegate to the activity
+  private Handler handler = new Handler() {
+    @Override
+    public void handleMessage(Message msgP) {
+      // An operation is pending
+      if (msgP.what == MSG_OPERATION_PENDING) {
+        operationPending.setVisibility(View.VISIBLE);
+      }
+      // Show a toast
+      else if (msgP.what == MSG_OPERATION_DONE) {
+        operationPending.setVisibility(View.INVISIBLE);
+      }
+      // Show a toast
+      else if (msgP.what == MSG_TOAST) {
+        String text = (String) msgP.obj;
+        Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
+        toast.show();
+      }
+      // Delegate to the sub class
+      else {
+        operationPending.setVisibility(View.INVISIBLE);
+        SynodroidActivity.this.handleMessage(msgP);
+      }
+    }
+  };
 
-	// A generic Handler which delegate to the activity
-	private Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msgP) {
-			// An operation is pending
-			if (msgP.what == MSG_OPERATION_PENDING) {
-				requestView.setVisibility(View.VISIBLE);
-				requestView.startAnimation(animRequest);
-			}
-			// Show a toast
-			else if (msgP.what == MSG_OPERATION_DONE) {
-				requestView.setVisibility(View.INVISIBLE);		
-			}
-			// Show a toast
-			else if (msgP.what == MSG_TOAST) {
-				String text = (String) msgP.obj;
-				Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
-				toast.show();
-			}
-			// Delegate to the sub class
-			else {
-				requestView.setVisibility(View.INVISIBLE);				
-				SynodroidActivity.this.handleMessage(msgP);
-			}
-		}
-	};
 
-	/**
-	 * Activity creation
-	 */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  /**
+   * Activity creation
+   */
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		// Create the main view of this activity
-		setContentView(R.layout.base_activity);
-		// Get the request view
-		requestView = (ImageView) findViewById(R.id.id_refresh);
-		animRequest = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely);
-		// Can not be set in the XML (LinearInterpolar is not public: arghhh)
-		animRequest.setInterpolator(new LinearInterpolator());
-		requestView.startAnimation(animRequest);
-		// Create the main inflater
-		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    // Create the main view of this activity
+    setContentView(R.layout.base_activity);
+    // Get the operation pending container (to be able to show/hide)
+    operationPending = (LinearLayout) findViewById(R.id.id_operation_pending_container);
+    // Get the operation's spinner
+    ImageView spinner = (ImageView) findViewById(R.id.id_operation_pending_img);
+    animRequest = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely);
+    // Can not be set in the XML (LinearInterpolar is not public: arghhh)
+    animRequest.setInterpolator(new LinearInterpolator());
+    spinner.startAnimation(animRequest);
+    // Create the main inflater
+    inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		// Retrieve the title bar
-		RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.id_title_bar);
-		attachTitleView(inflater, titleBar);
+    // Retrieve the title bar
+    RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.id_title_bar);
+    attachTitleView(inflater, titleBar);
 
-		// Retrieve the status bar
-		RelativeLayout statusBar = (RelativeLayout) findViewById(R.id.id_status_bar);
-		attachStatusView(inflater, statusBar);
+    // Retrieve the status bar
+    RelativeLayout statusBar = (RelativeLayout) findViewById(R.id.id_status_bar);
+    attachStatusView(inflater, statusBar);
 
-		// Retrieve the main content
-		RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.id_main_content);
-		attachMainContentView(inflater, mainContent);
-	}
+    // Retrieve the main content
+    RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.id_main_content);
+    attachMainContentView(inflater, mainContent);
+    
+    // Retrieve the top bar
+    LinearLayout topBar = (LinearLayout) findViewById(R.id.id_top_bar);
+    topBar.setOnClickListener(this);
+    
+    // Retrieve the title's button 
+    titleButton = (ImageView) findViewById(R.id.id_title_click_button);
+    titleButton.setVisibility(View.INVISIBLE);
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.ResponseHandler#handleReponse(android
-	 * .os.Message)
-	 */
-	public final void handleReponse(Message msgP) {
-		handler.sendMessage(msgP);
-	}
+  /* (non-Javadoc)
+   * @see android.view.View.OnClickListener#onClick(android.view.View)
+   */
+  public final void onClick(View viewP) {
+    if (titleClickListener != null) {
+      titleClickListener.onTitleClicked(viewP);
+    }
+  }
 
-	/**
-	 * Handle the message from a none UI thread. It is safe to interact with the
-	 * UI in this method
-	 */
-	public abstract void handleMessage(Message msgP);
+  /**
+   * @param titleClickListenerP the titleClickListener to set
+   */
+  public void setTitleClickListener(TitleClicklistener titleClickListenerP) {
+    titleClickListener = titleClickListenerP;
+    titleButton.setVisibility((titleClickListener != null ? View.VISIBLE: View.INVISIBLE));
+  }
 
-	/**
-	 * Return the view which will be added to the titleBar
-	 * 
-	 * @return
-	 */
-	public abstract void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP);
+  /*
+   * (non-Javadoc)
+   * @see
+   * org.jared.synodroid.common.protocol.ResponseHandler#handleReponse(
+   * android .os.Message)
+   */
+  public final void handleReponse(Message msgP) {
+    handler.sendMessage(msgP);
+  }
 
-	/**
-	 * Return the view which will be added to the statusBar
-	 * 
-	 * @return
-	 */
-	public abstract void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP);
+  /**
+   * Handle the message from a none UI thread. It is safe to interact with
+   * the UI in this method
+   */
+  public abstract void handleMessage(Message msgP);
 
-	/**
-	 * Return the view which will be added to the main content
-	 * 
-	 * @return
-	 */
-	public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
+  /**
+   * Return the view which will be added to the titleBar
+   * 
+   * @return
+   */
+  public abstract void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP);
+
+  /**
+   * Return the view which will be added to the statusBar
+   * 
+   * @return
+   */
+  public abstract void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP);
+
+  /**
+   * Return the view which will be added to the main content
+   * 
+   * @return
+   */
+  public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
 
 }
