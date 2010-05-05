@@ -21,6 +21,9 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -36,6 +39,8 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 	private LayoutInflater inflater;
 	// The request view
 	private ImageView requestView;
+	// The rotate animation
+	private Animation animRequest;
 
 	// A generic Handler which delegate to the activity
 	private Handler handler = new Handler() {
@@ -44,10 +49,11 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 			// An operation is pending
 			if (msgP.what == MSG_OPERATION_PENDING) {
 				requestView.setVisibility(View.VISIBLE);
+				requestView.startAnimation(animRequest);
 			}
 			// Show a toast
 			else if (msgP.what == MSG_OPERATION_DONE) {
-				requestView.setVisibility(View.INVISIBLE);				
+				requestView.setVisibility(View.INVISIBLE);		
 			}
 			// Show a toast
 			else if (msgP.what == MSG_TOAST) {
@@ -74,7 +80,10 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 		setContentView(R.layout.base_activity);
 		// Get the request view
 		requestView = (ImageView) findViewById(R.id.id_refresh);
-
+		animRequest = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely);
+		// Can not be set in the XML (LinearInterpolar is not public: arghhh)
+		animRequest.setInterpolator(new LinearInterpolator());
+		requestView.startAnimation(animRequest);
 		// Create the main inflater
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
