@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.jared.synodroid.ds.DownloadActivity;
+import org.jared.synodroid.Synodroid;
 
 import android.util.Log;
 
@@ -106,7 +106,7 @@ public class MultipartBuilder {
 			dos.close();
 		}
 		catch (IOException e) {
-			Log.e(DownloadActivity.DS_TAG, "Error while write multipart",e);
+			Log.e(Synodroid.DS_TAG, "Error while write multipart",e);
 		}
 	}
 

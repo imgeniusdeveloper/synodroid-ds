@@ -18,7 +18,7 @@ package org.jared.synodroid.ds.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.ds.DownloadActivity;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
 /**
@@ -38,7 +38,7 @@ public class PauseTaskAction implements TaskAction {
 	/* (non-Javadoc)
    * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
    */
-  public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception {
+  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
   	serverP.getDSMHandlerFactory().getDSHandler().stop(task);
   }
 

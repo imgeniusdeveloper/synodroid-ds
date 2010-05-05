@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Properties;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.TaskSort;
@@ -96,7 +97,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// rather than create it at runtime
 		final CheckBoxPreference asc = (CheckBoxPreference) generalCategory.findPreference("asc");
 		// Set listeners to update the server sort
-		final DownloadApplication app = (DownloadApplication) getApplication();
+		final Synodroid app = (Synodroid) getApplication();
 		orderPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				app.setServerSort((String) newValue, asc.isChecked());

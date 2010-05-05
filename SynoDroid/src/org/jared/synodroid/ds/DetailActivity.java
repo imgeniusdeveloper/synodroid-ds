@@ -17,6 +17,7 @@ import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.Tab;
+import org.jared.synodroid.common.ui.TabListener;
 import org.jared.synodroid.common.ui.TabWidgetManager;
 import org.jared.synodroid.ds.view.adapter.Detail;
 import org.jared.synodroid.ds.view.adapter.Detail2Progress;
@@ -29,6 +30,7 @@ import org.jared.synodroid.ds.view.adapter.DetailText;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -40,7 +42,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class DetailActivity extends SynodroidActivity {
+public class DetailActivity extends SynodroidActivity implements TabListener {
 
   // The "Not yet implemented" dialog
   private AlertDialog notYetImplementedDialog;
@@ -98,7 +100,14 @@ public class DetailActivity extends SynodroidActivity {
     notYetImplementedDialog = builder.create();
   }
 
-  /*
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os.Message)
+   */
+  @Override
+  public void handleMessage(Message msgP) {
+  }
+
+	/*
    * (non-Javadoc)
    * @see
    * org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView
@@ -288,6 +297,12 @@ public class DetailActivity extends SynodroidActivity {
     result.add(piecesDetail);
 
     return result;
+  }
+
+	/* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.String, java.lang.String)
+   */
+  public void selectedTabChanged(String oldTabId, String newTabIdP) {
   }
 
 }

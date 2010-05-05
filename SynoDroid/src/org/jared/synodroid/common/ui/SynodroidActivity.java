@@ -10,70 +10,123 @@
  */
 package org.jared.synodroid.common.ui;
 
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * The base class of an activity in Synodroid
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public abstract class SynodroidActivity extends Activity {
+public abstract class SynodroidActivity extends Activity implements ResponseHandler {
 
-  // The inflater
-  private LayoutInflater inflater;
+	// The inflater
+	private LayoutInflater inflater;
+	// The request view
+	private ImageView requestView;
 
-  /**
-   * Activity creation
-   */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+	// A generic Handler which delegate to the activity
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msgP) {
+			// An operation is pending
+			if (msgP.what == MSG_OPERATION_PENDING) {
+				requestView.setVisibility(View.VISIBLE);
+			}
+			// Show a toast
+			else if (msgP.what == MSG_OPERATION_DONE) {
+				requestView.setVisibility(View.INVISIBLE);				
+			}
+			// Show a toast
+			else if (msgP.what == MSG_TOAST) {
+				String text = (String) msgP.obj;
+				Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
+				toast.show();
+			}
+			// Delegate to the sub class
+			else {
+				requestView.setVisibility(View.INVISIBLE);				
+				SynodroidActivity.this.handleMessage(msgP);
+			}
+		}
+	};
 
-    // Create the main view of this activity
-    setContentView(R.layout.base_activity);
+	/**
+	 * Activity creation
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    // Create the main inflater
-    inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// Create the main view of this activity
+		setContentView(R.layout.base_activity);
+		// Get the request view
+		requestView = (ImageView) findViewById(R.id.id_refresh);
 
-    // Retrieve the title bar
-    RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.id_title_bar);
-    attachTitleView(inflater, titleBar);
+		// Create the main inflater
+		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    // Retrieve the status bar
-    RelativeLayout statusBar = (RelativeLayout) findViewById(R.id.id_status_bar);
-    attachStatusView(inflater, statusBar);
+		// Retrieve the title bar
+		RelativeLayout titleBar = (RelativeLayout) findViewById(R.id.id_title_bar);
+		attachTitleView(inflater, titleBar);
 
-    // Retrieve the main content
-    RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.id_main_content);
-    attachMainContentView(inflater, mainContent);
-  }
+		// Retrieve the status bar
+		RelativeLayout statusBar = (RelativeLayout) findViewById(R.id.id_status_bar);
+		attachStatusView(inflater, statusBar);
 
-  /**
-   * Return the view which will be added to the titleBar
-   * 
-   * @return
-   */
-  public abstract void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP);
+		// Retrieve the main content
+		RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.id_main_content);
+		attachMainContentView(inflater, mainContent);
+	}
 
-  /**
-   * Return the view which will be added to the statusBar
-   * 
-   * @return
-   */
-  public abstract void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.ResponseHandler#handleReponse(android
+	 * .os.Message)
+	 */
+	public final void handleReponse(Message msgP) {
+		handler.sendMessage(msgP);
+	}
 
-  /**
-   * Return the view which will be added to the main content
-   * 
-   * @return
-   */
-  public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
+	/**
+	 * Handle the message from a none UI thread. It is safe to interact with the
+	 * UI in this method
+	 */
+	public abstract void handleMessage(Message msgP);
+
+	/**
+	 * Return the view which will be added to the titleBar
+	 * 
+	 * @return
+	 */
+	public abstract void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP);
+
+	/**
+	 * Return the view which will be added to the statusBar
+	 * 
+	 * @return
+	 */
+	public abstract void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP);
+
+	/**
+	 * Return the view which will be added to the main content
+	 * 
+	 * @return
+	 */
+	public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
 
 }

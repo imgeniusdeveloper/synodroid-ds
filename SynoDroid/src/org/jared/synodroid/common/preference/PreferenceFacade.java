@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
-import org.jared.synodroid.ds.DownloadActivity;
 
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -131,7 +131,7 @@ public class PreferenceFacade {
 					result.add(server);
 				}
 				catch (Exception ex) {
-					Log.d(DownloadActivity.DS_TAG, "An exception occured while loading servers from preference", ex);
+					Log.d(Synodroid.DS_TAG, "An exception occured while loading servers from preference", ex);
 				}
 			}
 		});

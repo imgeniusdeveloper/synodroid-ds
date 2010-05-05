@@ -17,6 +17,7 @@
 package org.jared.synodroid.common.protocol.v22;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
+import org.jared.synodroid.common.data.TaskFile;
 import org.jared.synodroid.common.protocol.DSHandler;
 import org.jared.synodroid.common.protocol.DSMException;
 import org.jared.synodroid.common.protocol.MultipartBuilder;
@@ -61,9 +63,9 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jared.synodroid.common.Protocol#getAllTorrent()
+	 * @see org.jared.synodroid.common.Protocol#getAllTask()
 	 */
-	public TaskContainer getAllTorrent(String sortAttrP, boolean ascendingP) throws Exception {
+	public TaskContainer getAllTask(String sortAttrP, boolean ascendingP) throws Exception {
 		ArrayList<Task> result = new ArrayList<Task>();
 		TaskContainer container = new TaskContainer(result);
 		// If we are logged on
@@ -89,39 +91,39 @@ class DSHandlerDSM22 implements DSHandler {
 				JSONArray items = jso.getJSONArray("items");
 				for (int iLoop = 0; iLoop < items.length(); iLoop++) {
 					JSONObject item = items.getJSONObject(iLoop);
-					// Create the torrent item
-					Task torrent = new Task();
-					torrent.fileName = item.getString("filename").trim();
-					torrent.taskId = item.getInt("task_id");
-					torrent.downloadRate = item.getString("current_rate").trim();
-					torrent.downloadSize = item.getString("current_size").trim();
+					// Create the task item
+					Task task = new Task();
+					task.fileName = item.getString("filename").trim();
+					task.taskId = item.getInt("task_id");
+					task.downloadRate = item.getString("current_rate").trim();
+					task.downloadSize = item.getString("current_size").trim();
 					String prog = item.getString("progress").trim();
 					int index = prog.indexOf("%");
 					// If a value could be found ('%' found)
 					if (index != -1) {
 						prog = prog.substring(0, index);
 						try {
-							torrent.progress = (int) Float.parseFloat(prog);
+							task.progress = (int) Float.parseFloat(prog);
 						}
 						catch (NumberFormatException ex) {
 							// Set to unknown
-							torrent.progress = -1;
+							task.progress = -1;
 						}
 					}
 					// Set to unknown
 					else {
-						torrent.progress = -1;
+						task.progress = -1;
 					}
-					torrent.status = item.getString("status");
-					torrent.eta = Utils.computeTimeLeft(item.getInt("timeleft"));
-					torrent.totalSize = item.getString("total_size").trim();
-					torrent.uploadRate = item.getString("upload_rate").trim();
-					torrent.creator = item.getString("username").trim();
-					if (torrent.creator == "") {
-						torrent.creator = server.getUser();
+					task.status = item.getString("status");
+					task.eta = Utils.computeTimeLeft(item.getInt("timeleft"));
+					task.totalSize = item.getString("total_size").trim();
+					task.uploadRate = item.getString("upload_rate").trim();
+					task.creator = item.getString("username").trim();
+					if (task.creator == "") {
+						task.creator = server.getUser();
 					}
-					torrent.server = server;
-					result.add(torrent);
+					task.server = server;
+					result.add(task);
 				}
 			}
 			// Try to do something
@@ -138,20 +140,20 @@ class DSHandlerDSM22 implements DSHandler {
 	 * 
 	 * @see
 	 * org.jared.synodroid.common.protocol.DSHandler#delete(org.jared.synodroid
-	 * .common.data.Torrent)
+	 * .common.data.Task)
 	 */
-	public void delete(Task torrentP) throws Exception {
+	public void delete(Task taskP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
 			try {
-				QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + torrentP.taskId);
+				QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + taskP.taskId);
 				// Execute
 				synchronized (server) {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 				}
 			}
 			catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while deleting id:" + torrentP.taskId, e);
+				Log.e("SynoDroid DS", "Not expected exception occured while deleting id:" + taskP.taskId, e);
 				throw e;
 			}
 		}
@@ -162,12 +164,12 @@ class DSHandlerDSM22 implements DSHandler {
 	 * 
 	 * @see
 	 * org.jared.synodroid.common.protocol.DSHandler#resume(org.jared.synodroid
-	 * .common.data.Torrent)
+	 * .common.data.Task)
 	 */
-	public void resume(Task torrentP) throws Exception {
+	public void resume(Task taskP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "resume").add("idList", "" + torrentP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "resume").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
 				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
@@ -180,18 +182,52 @@ class DSHandlerDSM22 implements DSHandler {
 	 * 
 	 * @see
 	 * org.jared.synodroid.common.protocol.DSHandler#stop(org.jared.synodroid.
-	 * common.data.Torrent)
+	 * common.data.Task)
 	 */
-	public void stop(Task torrentP) throws Exception {
+	public void stop(Task taskP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "stop").add("idList", "" + torrentP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "stop").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
 				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 			}
 		}
 	}
+	
+	
+
+	/* (non-Javadoc)
+   * @see org.jared.synodroid.common.protocol.DSHandler#getFiles(org.jared.synodroid.common.data.Task)
+   */
+  public List<TaskFile> getFiles(Task taskP) throws Exception {
+  	ArrayList<TaskFile> result = new ArrayList<TaskFile>();
+		// If we are logged on
+		if (server.isConnected()) {
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getfilelist").add("taskid", "" + taskP.taskId);
+			// Execute
+			JSONObject json = null;
+			synchronized (server) {
+				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+			}
+			boolean success = json.getBoolean("success");
+			// If request succeded
+			if (success) {
+				JSONArray array = json.getJSONArray("items");
+				for (int iLoop = 0; iLoop < array.length(); iLoop++) {
+	        JSONObject obj = array.getJSONObject(iLoop);
+	        // Create the file
+	        TaskFile file = new TaskFile();
+	        file.name = obj.getString("name");
+	        file.filesize = obj.getString("size");
+	        file.download = obj.getBoolean("dl");
+	        result.add(file);
+        }
+				array.length();
+			}
+		}
+	  return result;
+  }
 
 	/*
 	 * (non-Javadoc)
@@ -331,7 +367,7 @@ class DSHandlerDSM22 implements DSHandler {
 		}
 	}
 
-	public void upload_url(Uri uriP) throws Exception {
+	public void uploadUrl(Uri uriP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
 			if (uriP.toString() != null) {

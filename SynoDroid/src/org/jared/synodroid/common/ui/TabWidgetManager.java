@@ -60,6 +60,8 @@ public class TabWidgetManager implements View.OnClickListener {
   private LinearLayout mainTabsView;
   // Flag to know if a animation is playing
   private boolean animPlaying = false;
+  // The tablistener
+  private TabListener tabListener;
 
   /**
    * The default constructor
@@ -191,11 +193,18 @@ public class TabWidgetManager implements View.OnClickListener {
     Tab fake = new Tab(tabId);
     int newIndex = tabs.indexOf(fake);
     // If the view was found AND if this is a new tab
+  	String oldId = null;
     if (newIndex != -1 && currentIndex != newIndex) {
       if (currentIndex != -1) {
+      	Tab oldTab = tabs.get(currentIndex);
+      	oldId = oldTab.getId();
         setSelected(currentIndex, View.INVISIBLE);
       }
       setSelected(newIndex, View.VISIBLE);
+      // If exist fire the tab event
+      if (tabListener != null) {
+      	tabListener.selectedTabChanged(oldId, tabId);
+      }
       // Change the current index
       currentIndex = newIndex;
     }
@@ -238,4 +247,20 @@ public class TabWidgetManager implements View.OnClickListener {
       slideTo(tab.getId());
     }
   }
+
+	/**
+   * @return the tabListener
+   */
+  public TabListener getTabListener() {
+  	return tabListener;
+  }
+
+	/**
+   * @param tabListener the tabListener to set
+   */
+  public void setTabListener(TabListener tabListenerP) {
+  	tabListener = tabListenerP;
+  }
+  
+  
 }

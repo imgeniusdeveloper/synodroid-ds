@@ -19,6 +19,8 @@ package org.jared.synodroid.ds;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import org.jared.synodroid.Synodroid;
+
 import android.util.Log;
 
 /**
@@ -116,7 +118,7 @@ public class Utils {
 		// Not a number
 		catch(NumberFormatException ex) {
 			result = 0l;
-			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+valueP, ex);
+			Log.e(Synodroid.DS_TAG, "Can't convert: "+valueP, ex);
 		}		
 		return result;
 	}
@@ -134,7 +136,7 @@ public class Utils {
 		// Not a number
 		catch(NumberFormatException ex) {
 			result = 0.0d;
-			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+valueP, ex);
+			Log.e(Synodroid.DS_TAG, "Can't convert: "+valueP, ex);
 		}		
 		return result;
 	}
@@ -190,7 +192,7 @@ public class Utils {
 		}
 		// Not a number
 		catch(NumberFormatException ex) {
-			Log.e(DownloadActivity.DS_TAG, "Can't convert: "+sizeP, ex);
+			Log.e(Synodroid.DS_TAG, "Can't convert: "+sizeP, ex);
 		}		
 		return result;
 	}

@@ -33,15 +33,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.protocol.DSMException;
 import org.jared.synodroid.common.protocol.DSMHandlerFactory;
 import org.jared.synodroid.common.protocol.MultipartBuilder;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.protocol.https.AcceptAllHostNameVerifier;
 import org.jared.synodroid.common.protocol.https.AcceptAllTrustManager;
-import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 import org.jared.synodroid.ds.action.TaskAction;
 import org.json.JSONObject;
@@ -92,7 +93,7 @@ public class SynoServer {
 	private List<String> cookies;
 
 	// Binded DownloadActivity
-	private DownloadActivity bindedActivity;
+	private ResponseHandler handler;
 	
 	private String lasterror;
 
@@ -141,8 +142,8 @@ public class SynoServer {
 	 * @return
 	 * @throws DSMException
 	 */
-	public void connect(final DownloadActivity activityP, final List<TaskAction> actionQueueP) {
-		bindActivity(activityP);
+	public void connect(final ResponseHandler handlerP, final List<TaskAction> actionQueueP) {
+		bindActivity(handlerP);
 
 		// If we are not already connected
 		if (!connected) {
@@ -151,33 +152,33 @@ public class SynoServer {
 				public void run() {
 					try {
 						// Send a connecting message
-						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_CONNECTING);
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_CONNECTING);
 						// Connect: try to...
 						dsmFactory.connect();
 						// Here we are connected
 						connected = true;
 						
 						// Send a connected message
-						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_CONNECTED);
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_CONNECTED);
 						// If the action's queue is not empty
 						if (actionQueueP != null) {
 							for (TaskAction taskAction : actionQueueP) {
-								executeAction(activityP, taskAction, false);
+								executeAction(handlerP, taskAction, false);
 							}
 						}
 						// If everything is fine then start to collect informations
 						while (connected) {
 							try {
-								Log.d(DownloadActivity.DS_TAG, "Refreshing torrents");
+								Log.d(Synodroid.DS_TAG, "Refreshing torrents");
 								// Update the progressbar
-								fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_OPERATION_PENDING);
+								fireMessage(SynoServer.this.handler, ResponseHandler.MSG_OPERATION_PENDING);
 								
 								// Retrieve update torrents list
-								TaskContainer container = dsmFactory.getDSHandler().getAllTorrent(sortAttribute, ascending);
+								TaskContainer container = dsmFactory.getDSHandler().getAllTask(sortAttribute, ascending);
 								// In case we are disconnected before the response is received
 								if (connected) {
 									// If everything is fine then send new torrent's list
-									fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_TASKS_UPDATED, container);
+									fireMessage(SynoServer.this.handler, ResponseHandler.MSG_TASKS_UPDATED, container);
 									// If auto refresh
 									synchronized (this) {
 										if (autoRefresh) {
@@ -198,24 +199,24 @@ public class SynoServer {
 							}
 							// Nothing to do. It may be a force refresh after an action!
 							catch (InterruptedException iex) {
-								Log.d(DownloadActivity.DS_TAG, "Been interrupted while sleeping...");
+								Log.d(Synodroid.DS_TAG, "Been interrupted while sleeping...");
 							}
 						}
 					}
 					// Connection error
 					catch (DSMException e) {
-						Log.d(DownloadActivity.DS_TAG, "DSMException occured", e);
+						Log.d(Synodroid.DS_TAG, "DSMException occured", e);
 						// If the user didn't change the server
 						if (connected) {
-							fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, translateError(SynoServer.this.bindedActivity, e));
+							fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, e));
 						}
 					}
 					// Programmation exception
 					catch (Exception e) {
-						Log.d(DownloadActivity.DS_TAG, "Exception occured", e);
+						Log.d(Synodroid.DS_TAG, "Exception occured", e);
 						//This is most likely a connection timeout
 						DSMException ex = new DSMException(e);
-						fireMessage(SynoServer.this.bindedActivity, DownloadActivity.MSG_ERROR, translateError(SynoServer.this.bindedActivity, ex));
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, ex));
 					}
 					// Set the connection to null to force connection next time
 					finally {
@@ -233,8 +234,8 @@ public class SynoServer {
 	 * 
 	 * @param activityP
 	 */
-	public void bindActivity(DownloadActivity activityP) {
-		bindedActivity = activityP;
+	public void bindActivity(ResponseHandler handlerP) {
+		handler = handlerP;
 	}
 
 	/**
@@ -262,19 +263,19 @@ public class SynoServer {
 	/**
 	 * Send a message
 	 */
-	public void fireMessage(DownloadActivity activityP, int msgP) {
-		fireMessage(activityP, msgP, null);
+	public void fireMessage(ResponseHandler handlerP, int msgP) {
+		fireMessage(handlerP, msgP, null);
 	}
 
 	/**
 	 * Send a message
 	 */
-	public void fireMessage(DownloadActivity activityP, int msgP, Object objP) {
+	public void fireMessage(ResponseHandler handlerP, int msgP, Object objP) {
 		// Send the connecting message
 		Message msg = new Message();
 		msg.what = msgP;
 		msg.obj = objP;
-		activityP.handleMessage(msg);
+		handlerP.handleReponse(msg);
 
 	}
 
@@ -283,9 +284,9 @@ public class SynoServer {
 	 * 
 	 * @param Log
 	 */
-	private String translateError(DownloadActivity activityP, DSMException dsmExP) {
+	private String translateError(ResponseHandler handlerP, DSMException dsmExP) {
 		String msg = "Can't display error";
-		msg = activityP.getString(R.string.connect_unknwon_reason);
+		msg = handlerP.getString(R.string.connect_unknwon_reason);
 		// Get the reason
 		String jsoReason = dsmExP.getJsonReason();
 		// If no JSON reason, try to find the reason in the root DSMException
@@ -296,30 +297,30 @@ public class SynoServer {
 		if (jsoReason != null) {
 			// Wrong user or password
 			if (jsoReason.equals("error_noprivilege")) {
-				msg = activityP.getString(R.string.connect_wrong_userpassword);
+				msg = handlerP.getString(R.string.connect_wrong_userpassword);
 			}
 			else if (jsoReason.equals("error_interrupt")) {
-				msg = activityP.getString(R.string.connect_already_connected);
+				msg = handlerP.getString(R.string.connect_already_connected);
 			}
 			else if (jsoReason.equals("error_cantlogin")) {
-				msg = activityP.getString(R.string.connect_cant);
+				msg = handlerP.getString(R.string.connect_cant);
 			}
 			else {
 				msg += ": " + jsoReason;
-				Log.d(DownloadActivity.DS_TAG, "JSON's error not trapped: " + jsoReason);
+				Log.d(Synodroid.DS_TAG, "JSON's error not trapped: " + jsoReason);
 			}
 
 		}
 		// Or if there's a wellknown exception
 		else if (dsmExP.getRootException() != null) {
 			if (dsmExP.getRootException() instanceof SocketException) {
-				msg = activityP.getString(R.string.connect_nohost);
+				msg = handlerP.getString(R.string.connect_nohost);
 			}
 			else if (dsmExP.getRootException() instanceof SSLException) {
-				msg = MessageFormat.format(activityP.getString(R.string.connect_ssl_error), new Object[] { dsmExP.getCause().getMessage() });
+				msg = MessageFormat.format(handlerP.getString(R.string.connect_ssl_error), new Object[] { dsmExP.getCause().getMessage() });
 			}
 			else if (dsmExP.getRootException() instanceof SocketTimeoutException) {
-				msg = activityP.getString(R.string.connect_nohost);
+				msg = handlerP.getString(R.string.connect_nohost);
 			}
 			else {
 				msg = dsmExP.getRootException().getMessage();
@@ -540,27 +541,27 @@ public class SynoServer {
 	 *          Flag to set if a refresh is needed after the completion of the
 	 *          action
 	 */
-	public void executeAction(final DownloadActivity activityP, final TaskAction actionP, final boolean forceRefreshP) {
+	public void executeAction(final ResponseHandler handlerP, final TaskAction actionP, final boolean forceRefreshP) {
 		Runnable runnable = new Runnable() {
 			public void run() {
 				// An operation is pending
-				fireMessage(activityP, DownloadActivity.MSG_OPERATION_PENDING);
-				Log.d(DownloadActivity.DS_TAG, "Executing action: " + actionP.getName());
+				fireMessage(handlerP, ResponseHandler.MSG_OPERATION_PENDING);
+				Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
 				try {
 					// If a Toast must be shown
 					if (actionP.isToastable()) {
 						int resId = actionP.getToastId();
-						String text = activityP.getString(resId, new Object[] { actionP.getTask().fileName });
-						fireMessage(activityP, DownloadActivity.MSG_TOAST, text);
+						String text = handlerP.getString(resId, new Object[] { actionP.getTask().fileName });
+						fireMessage(handlerP, ResponseHandler.MSG_TOAST, text);
 					}
-					actionP.execute(activityP, SynoServer.this);
+					actionP.execute(handlerP, SynoServer.this);
 				}
 				// Doesn't matter: just log it. Is it enough ?
 				catch (Exception e) {
 					Log.e("SynoDroid DS", "Unexpected error", e);
 				}
 				finally {
-					fireMessage(activityP, DownloadActivity.MSG_OPERATION_DONE);
+					fireMessage(handlerP, ResponseHandler.MSG_OPERATION_DONE);
 					// Interrup the collector's thread so it will refresh immediatelty
 					if (forceRefreshP) {
 						collector.interrupt();
@@ -585,7 +586,6 @@ public class SynoServer {
 	 */
 	public JSONObject sendJSONRequest(String uriP, String requestP, String methodP) throws Exception {
 		HttpURLConnection con = null;
-
 		try {
 			// Prepare the connection
 			con = (HttpURLConnection) new URL(getUrl() + uriP).openConnection();
@@ -600,7 +600,7 @@ public class SynoServer {
 			con.setDoInput(true);
 			con.setRequestMethod(methodP);
 			con.setConnectTimeout(20000);
-			Log.d(DownloadActivity.DS_TAG, methodP + ": " + uriP + "?" + requestP);
+			Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
 			// Add the parameters
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 			wr.write(requestP);
@@ -622,13 +622,13 @@ public class SynoServer {
 			}
 			br.close();
 
-			Log.d(DownloadActivity.DS_TAG, "Response is: " + sb.toString());
+			Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 			JSONObject respJSO = new JSONObject(sb.toString());
 			return respJSO;
 		}
 		// Unexpected exception
 		catch (Exception ex) {
-			Log.e(DownloadActivity.DS_TAG, "Unexpected error", ex);
+			Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
 			throw ex;
 		}
 		// Finally close everything
@@ -676,12 +676,12 @@ public class SynoServer {
 			}
 			br.close();
 
-			Log.d(DownloadActivity.DS_TAG, "Response is: " + sb.toString());
+			Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 			JSONObject respJSO = new JSONObject(sb.toString());
-			Log.d(DownloadActivity.DS_TAG, "Multipart response is: " + code + "/" + resp + "/" + respJSO);
+			Log.d(Synodroid.DS_TAG, "Multipart response is: " + code + "/" + resp + "/" + respJSO);
 		}
 		catch (Exception e) {
-			Log.e(DownloadActivity.DS_TAG, "Error while sending multipart", e);
+			Log.e(Synodroid.DS_TAG, "Error while sending multipart", e);
 		}
 	}
 

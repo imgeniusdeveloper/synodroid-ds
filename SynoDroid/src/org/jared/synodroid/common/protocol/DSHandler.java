@@ -16,9 +16,12 @@
  */
 package org.jared.synodroid.common.protocol;
 
+import java.util.List;
+
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
+import org.jared.synodroid.common.data.TaskFile;
 
 import android.net.Uri;
 
@@ -31,7 +34,7 @@ public interface DSHandler {
 	 * Return all torrent
 	 * @return
 	 */
-	public TaskContainer getAllTorrent(String sortAttrP, boolean ascendingP) throws Exception; 
+	public TaskContainer getAllTask(String sortAttrP, boolean ascendingP) throws Exception; 
 
 	/**
 	 * Stop a torrent
@@ -64,11 +67,20 @@ public interface DSHandler {
    * Upload a file defined by an Uri
    * @param uriP
    */
-  public void upload_url(final Uri uriP) throws Exception ;
+  public void uploadUrl(final Uri uriP) throws Exception ;
   
   /**
    * Get task's raw details
    * @param uriP
    */
   public TaskDetail getDetails(final Task taskP) throws Exception ;
+  
+  /**
+   * Get the file list of the specified task
+   * @param taskP
+   * @return
+   * @throws Exception
+   */
+  
+  public List<TaskFile> getFiles(final Task taskP) throws Exception;
 }

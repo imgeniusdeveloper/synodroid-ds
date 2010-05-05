@@ -12,18 +12,37 @@
     android:layout_alignParentTop="true"
     android:id="@+id/id_top_bar"
   >
-    <RelativeLayout
+    <LinearLayout
+      android:id="@+id/LinearLayout01"
+      android:layout_height="wrap_content"
       android:layout_width="fill_parent"
-      android:layout_height="40dip"
       android:background="@drawable/title_bar"
-      android:id="@+id/id_title_bar"
     >
-    </RelativeLayout>
+      <ImageView
+        android:id="@+id/id_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/refresh"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+      ></ImageView>
+      <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:id="@+id/id_title_bar"
+      >
+      </RelativeLayout>
+    </LinearLayout>
     <View
       android:layout_width="wrap_content"
       android:background="@drawable/border_top"
-      android:id="@+id/id_title_top_border" android:layout_height="1dip"></View>
-  </LinearLayout>
+      android:id="@+id/id_title_top_border"
+      android:layout_height="1dip"
+    ></View>
+  
+
+</LinearLayout>
   <LinearLayout
     android:layout_alignParentBottom="true"
     android:layout_height="wrap_content"

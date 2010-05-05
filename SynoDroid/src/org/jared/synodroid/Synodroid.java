@@ -14,13 +14,16 @@
  * limitations under the License.
  * 
  */
-package org.jared.synodroid.ds;
+package org.jared.synodroid;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.ds.DownloadActivity;
+import org.jared.synodroid.ds.R;
+import org.jared.synodroid.ds.R.string;
 import org.jared.synodroid.ds.action.DeleteTaskAction;
 import org.jared.synodroid.ds.action.TaskAction;
 
@@ -35,8 +38,11 @@ import android.content.DialogInterface;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class DownloadApplication extends Application {
+public class Synodroid extends Application {
 
+	public static final String DS_TAG = "Synodroid DS";
+
+	
 	// The current server
 	private SynoServer currentServer = null;
 

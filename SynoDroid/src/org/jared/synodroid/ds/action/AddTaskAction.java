@@ -18,7 +18,7 @@ package org.jared.synodroid.ds.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.ds.DownloadActivity;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
 import android.net.Uri;
@@ -53,10 +53,10 @@ public class AddTaskAction implements TaskAction {
 	 * org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.ds
 	 * .DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception {
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
 		if (task.outside_url){
 			//Start task using url instead of reading file
-			serverP.getDSMHandlerFactory().getDSHandler().upload_url(uri);
+			serverP.getDSMHandlerFactory().getDSHandler().uploadUrl(uri);
 		}
 		else{
 			serverP.getDSMHandlerFactory().getDSHandler().upload(uri);

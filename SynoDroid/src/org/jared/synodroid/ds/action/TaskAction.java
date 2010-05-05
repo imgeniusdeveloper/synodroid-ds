@@ -18,7 +18,7 @@ package org.jared.synodroid.ds.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.ds.DownloadActivity;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 
 /**
  * General interface to execute an action on the Synology's server
@@ -31,7 +31,7 @@ public interface TaskAction {
 	 * @param activityP
 	 * @param serverP
 	 */
-	public void execute(DownloadActivity activityP, SynoServer serverP) throws Exception;
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception;
 	
 	/**
 	 * Return the name of the action

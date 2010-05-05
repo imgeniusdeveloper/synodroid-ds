@@ -16,12 +16,12 @@
  */
 package org.jared.synodroid.common.protocol.v22;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.protocol.DSHandler;
 import org.jared.synodroid.common.protocol.DSMException;
 import org.jared.synodroid.common.protocol.DSMHandlerFactory;
 import org.jared.synodroid.common.protocol.QueryBuilder;
-import org.jared.synodroid.ds.DownloadActivity;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -70,7 +70,7 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 		String reason = null;
 		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, server.getPassword());
 		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
-		Log.d(DownloadActivity.DS_TAG, "JSON response is:" + respJSO);
+		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);
 		// If no success or not login success
 		if (result == null || !result.equals(LOGIN_RESULT_SUCCESS)) {
