@@ -23,9 +23,7 @@ package org.jared.synodroid.common.ui;
 public class Tab {
 
   // The tab' unique id
-  private String id;
-  // The label of the tab
-  private String label;
+  private String id;;
   // The normal icon id
   private int iconNormal;
   // The selected icon id
@@ -45,9 +43,8 @@ public class Tab {
    * @param label
    * @param iconP
    */
-  public Tab(String idP, String labelP, int iconNormalP, int iconSelectedP) {
+  public Tab(String idP, int iconNormalP, int iconSelectedP) {
     this(idP);
-    label = labelP;
     iconNormal = iconNormalP;
     iconSelected = iconSelectedP;
   }
@@ -64,20 +61,6 @@ public class Tab {
    */
   public void setId(String idP) {
     id = idP;
-  }
-
-  /**
-   * @return the label
-   */
-  public String getLabel() {
-    return label;
-  }
-
-  /**
-   * @param labelP the label to set
-   */
-  public void setLabel(String labelP) {
-    label = labelP;
   }
 
   /**

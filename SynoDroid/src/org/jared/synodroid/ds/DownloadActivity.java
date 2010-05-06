@@ -24,6 +24,8 @@ import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
+import org.jared.synodroid.common.ui.Tab;
+import org.jared.synodroid.common.ui.TabWidgetManager;
 import org.jared.synodroid.common.ui.TitleClicklistener;
 import org.jared.synodroid.ds.action.AddTaskAction;
 import org.jared.synodroid.ds.action.SynoAction;
@@ -34,6 +36,7 @@ import org.jared.synodroid.ds.view.adapter.TaskAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -50,6 +53,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -95,6 +99,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private TextView titleText;
   // The title icon
   private ImageView titleIcon;
+  // The tab manager
+  private TabWidgetManager tabManager;
 
   /**
    * Handle the message
@@ -179,14 +185,28 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    
+    // Retrieve the listview
+    RelativeLayout downloadContent = (RelativeLayout) inflater.inflate(R.layout.download_list, null, false);
+    taskView = (ListView) downloadContent.findViewById(R.id.id_task_list);
+    totalUpView = (TextView) downloadContent.findViewById(R.id.id_total_upload);
+    totalDownView = (TextView) downloadContent.findViewById(R.id.id_total_download);
+    
+    // Create the tab maanger
+    tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
+    Tab refreshTab = new Tab("REFRESH", R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
+    tabManager.addTab(refreshTab, downloadContent);
+    Tab paramTab = new Tab("PARAMS", R.drawable.ic_tab_parameters, R.drawable.ic_tab_parameters_selected);
+    tabManager.addTab(paramTab, new View(this));
+    Tab aboutTab = new Tab("ABOUT", R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
+    tabManager.addTab(aboutTab, new View(this));
+    
     super.onCreate(savedInstanceState);
 
     licenceAccepted = Eula.show(this, false);
 
-    // Retrieve the listview
-    taskView = (ListView) findViewById(R.id.task_list);
-    totalUpView = (TextView) findViewById(R.id.id_total_upload);
-    totalDownView = (TextView) findViewById(R.id.id_total_download);
+
 
     // Retrieve title's text, icon and progress for future uses
     titleText = (TextView) findViewById(R.id.id_title);
@@ -213,6 +233,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     
     // The user is able to click on the title bar to connect to a server
     setTitleClickListener(this);
+    
+
   }
 
   /*
@@ -232,7 +254,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
-    inflaterP.inflate(R.layout.download_list, parentP, true);
+    parentP.addView(tabManager.getContentView());
   }
 
   /*
@@ -241,7 +263,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
-    inflaterP.inflate(R.layout.download_status, parentP, true);
+    parentP.addView(tabManager.getTabView());
   }
 
   /*
