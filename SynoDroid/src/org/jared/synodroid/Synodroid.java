@@ -23,8 +23,8 @@ import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
-import org.jared.synodroid.ds.R.string;
 import org.jared.synodroid.ds.action.DeleteTaskAction;
+import org.jared.synodroid.ds.action.GetAllTaskAction;
 import org.jared.synodroid.ds.action.SynoAction;
 
 import android.app.AlertDialog;
@@ -77,6 +77,9 @@ public class Synodroid extends Application {
 		if (currentServer != null) {
 			currentServer.disconnect();
 		}
+        // Set the recurrent action
+        GetAllTaskAction recurrentAction = new GetAllTaskAction(serverP.getSortAttribute(), serverP.isAscending());
+        serverP.setRecurrentAction(recurrentAction);
 		// Then connect the new one
 		currentServer = serverP;
 		currentServer.connect(activityP, actionQueueP);

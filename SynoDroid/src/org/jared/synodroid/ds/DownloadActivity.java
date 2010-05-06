@@ -22,6 +22,7 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.preference.PreferenceFacade;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.TitleClicklistener;
 import org.jared.synodroid.ds.action.AddTaskAction;
@@ -60,8 +61,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
-  // The error message ID
-  private static final int CONNECTION_ERROR_ID = 2;
   // The contributors dialog
   private static final int CONTRIBUTORS_DIALOG_ID = 3;
   // No server configured
@@ -102,7 +101,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   public void handleMessage(Message msg) {
     // Update torrent
-    if (msg.what == MSG_TASKS_UPDATED) {
+    if (msg.what == ResponseHandler.MSG_TASKS_UPDATED) {
       TaskContainer container = (TaskContainer) msg.obj;
       List<Task> tasks = container.getTasks();
       // Get the adapter
@@ -122,7 +121,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       totalDownView.setText(container.getTotalDown());
     }
     // An error message
-    else if (msg.what == MSG_ERROR) {
+    else if (msg.what == ResponseHandler.MSG_ERROR) {
       // Change the title
       titleText.setText(getString(R.string.app_name));
       titleIcon.setVisibility(View.GONE);
@@ -145,24 +144,29 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       // Save the last error inside the server to surive UI rotation and
       // pause/resume.
       if (server == null) server = ((Synodroid) getApplication()).getServer();
-      if (server != null) server.set_last_error((String) msg.obj);
-      showDialog(CONNECTION_ERROR_ID);
+      if (server != null) server.setLastError((String) msg.obj);
+      showError(server.getLastError(), new Dialog.OnClickListener() {
+        public void onClick(DialogInterface dialogP, int whichP) {
+          // Ask to reconnect when connection is lost.
+          showDialogToConnect(false, null);
+        }
+      });
     }
     // Connection is done
-    else if (msg.what == MSG_CONNECTED) {
+    else if (msg.what == ResponseHandler.MSG_CONNECTED) {
       // Change the title
       titleText.setText(server.getNickname());
       titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
     }
     // Connecting to the server
-    else if (msg.what == MSG_CONNECTING) {
+    else if (msg.what == ResponseHandler.MSG_CONNECTING) {
       // Clear the prevous task list
       TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
       taskAdapter.updateTasks(new ArrayList<Task>());
       // Show the connection dialog
       showDialog(CONNECTION_DIALOG_ID);
     }
-    else if (msg.what == MSG_DETAILS_RETRIEVED) {
+    else if (msg.what == ResponseHandler.MSG_DETAILS_RETRIEVED) {
       Intent next = new Intent();
       next.setClass(DownloadActivity.this, DetailActivity.class);
       next.putExtra("org.jared.synodroid.ds.Details", (TaskDetail) msg.obj);
@@ -315,29 +319,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         ((ProgressDialog) dialog).setMessage("Connecting. Please wait...");
         ((ProgressDialog) dialog).setIndeterminate(true);
         break;
-      // The error dialog
-      case CONNECTION_ERROR_ID:
-        AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-        // The error messages are stored in the server instead of the
-        // Activity because the activity variable are not loaded properly
-        // on UI rotation.
-        if (server == null) server = ((Synodroid) getApplication()).getServer();
-        if (server != null) {
-          builder.setMessage(server.get_last_error());
-        }
-        else {
-          builder.setMessage(R.string.err_unknown);
-        }
-        builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                    // Ask to reconnect when connection is lost.
-                    showDialogToConnect(false, null);
-                  }
-                });
-        dialog = builder.create();
-        break;
       // The contributors dialog
       case CONTRIBUTORS_DIALOG_ID:
         AlertDialog.Builder builderCont = new AlertDialog.Builder(this);
@@ -387,14 +368,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         if (server != null) {
           String msg = MessageFormat.format(getString(R.string.connect_connecting), new Object[] { server.toString() });
           ((ProgressDialog) dialog).setMessage(msg);
-        }
-        break;
-      // The error dialog
-      case CONNECTION_ERROR_ID:
-        // On UI rotation this.server is set to null. Verifying is the
-        // server is null fixes the force close on UI rotate.
-        if (server != null) {
-          ((AlertDialog) dialog).setMessage(server.get_last_error());
         }
         break;
     }

@@ -37,7 +37,7 @@ public class GetAllTaskAction implements SynoAction {
    */
   public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
     TaskContainer container = serverP.getDSMHandlerFactory().getDSHandler().getAllTask(sortAttr, ascending);
-    serverP.fireMessage(handlerP, DownloadActivity.MSG_DETAILS_FILES_RETRIEVED, container);
+    serverP.fireMessage(handlerP, DownloadActivity.MSG_TASKS_UPDATED, container);
   }
 
   /* (non-Javadoc)

@@ -171,8 +171,10 @@ public class TabWidgetManager implements View.OnClickListener {
         animSlider.setAnimationListener(new AnimationListener() {
           public void onAnimationStart(Animation animation) {
           }
+
           public void onAnimationRepeat(Animation animation) {
           }
+
           public void onAnimationEnd(Animation animation) {
             setTab(toTab.getId());
             animPlaying = false;
@@ -193,17 +195,17 @@ public class TabWidgetManager implements View.OnClickListener {
     Tab fake = new Tab(tabId);
     int newIndex = tabs.indexOf(fake);
     // If the view was found AND if this is a new tab
-  	String oldId = null;
+    String oldId = null;
     if (newIndex != -1 && currentIndex != newIndex) {
       if (currentIndex != -1) {
-      	Tab oldTab = tabs.get(currentIndex);
-      	oldId = oldTab.getId();
+        Tab oldTab = tabs.get(currentIndex);
+        oldId = oldTab.getId();
         setSelected(currentIndex, View.INVISIBLE);
       }
       setSelected(newIndex, View.VISIBLE);
       // If exist fire the tab event
       if (tabListener != null) {
-      	tabListener.selectedTabChanged(oldId, tabId);
+        tabListener.selectedTabChanged(oldId, tabId);
       }
       // Change the current index
       currentIndex = newIndex;
@@ -221,19 +223,25 @@ public class TabWidgetManager implements View.OnClickListener {
     ImageView img = (ImageView) selectedTabFrame.findViewWithTag(tab.getId() + TAG_SELECTED_SUFFIX);
     if (img != null) {
       img.setVisibility(visibilityP);
+      // If the tab have a different images (normal + selected)
+      int imgSelected = tab.getIconSelected();
+      if (imgSelected != 0) {
+        ImageView icon = (ImageView)normalTabFrame.findViewWithTag(tab.getId() + TAG_NORMAL_SUFFIX);
+        icon.setImageResource((visibilityP == View.VISIBLE ? tab.getIconSelected() : tab.getIconNormal()));
+      }
     }
     View view = (View) contentFrame.findViewWithTag(tab.getId() + TAG_FRAME);
     if (view != null) {
       view.setVisibility(visibilityP);
     }
   }
-  
+
   /**
    * Change the selected tab to the next one (on the right)
    */
   public void nextTab() {
-    if (currentIndex < tabs.size()-1) {
-      Tab tab = tabs.get(currentIndex+1);
+    if (currentIndex < tabs.size() - 1) {
+      Tab tab = tabs.get(currentIndex + 1);
       slideTo(tab.getId());
     }
   }
@@ -243,24 +251,23 @@ public class TabWidgetManager implements View.OnClickListener {
    */
   public void previousTab() {
     if (currentIndex > 0) {
-      Tab tab = tabs.get(currentIndex-1);
+      Tab tab = tabs.get(currentIndex - 1);
       slideTo(tab.getId());
     }
   }
 
-	/**
+  /**
    * @return the tabListener
    */
   public TabListener getTabListener() {
-  	return tabListener;
+    return tabListener;
   }
 
-	/**
+  /**
    * @param tabListener the tabListener to set
    */
   public void setTabListener(TabListener tabListenerP) {
-  	tabListener = tabListenerP;
+    tabListener = tabListenerP;
   }
-  
-  
+
 }

@@ -14,7 +14,9 @@ import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -47,33 +49,32 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
   private TitleClicklistener titleClickListener = null;
   // The title's button
   private ImageView titleButton;
-  
+  // The error dialog
+  private AlertDialog errorDialog;
+  // The error dialog listener
+  private DialogInterface.OnClickListener errorDialogListener;
+
   // A generic Handler which delegate to the activity
   private Handler handler = new Handler() {
     @Override
     public void handleMessage(Message msgP) {
-      // An operation is pending
-      if (msgP.what == MSG_OPERATION_PENDING) {
-        operationPending.setVisibility(View.VISIBLE);
+      // According to the message
+      switch (msgP.what) {
+        case MSG_OPERATION_PENDING:
+          operationPending.setVisibility(View.VISIBLE);
+          break;
+        case MSG_TOAST:
+          String text = (String) msgP.obj;
+          Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
+          toast.show();
+        default:
+          operationPending.setVisibility(View.INVISIBLE);
+          break;
       }
-      // Show a toast
-      else if (msgP.what == MSG_OPERATION_DONE) {
-        operationPending.setVisibility(View.INVISIBLE);
-      }
-      // Show a toast
-      else if (msgP.what == MSG_TOAST) {
-        String text = (String) msgP.obj;
-        Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
-        toast.show();
-      }
-      // Delegate to the sub class
-      else {
-        operationPending.setVisibility(View.INVISIBLE);
-        SynodroidActivity.this.handleMessage(msgP);
-      }
+      // Delegate to the sub class in case it have something to do
+      SynodroidActivity.this.handleMessage(msgP);
     }
   };
-
 
   /**
    * Activity creation
@@ -82,6 +83,8 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    createDialogs();
+    
     // Create the main view of this activity
     setContentView(R.layout.base_activity);
     // Get the operation pending container (to be able to show/hide)
@@ -106,17 +109,18 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
     // Retrieve the main content
     RelativeLayout mainContent = (RelativeLayout) findViewById(R.id.id_main_content);
     attachMainContentView(inflater, mainContent);
-    
+
     // Retrieve the top bar
     LinearLayout topBar = (LinearLayout) findViewById(R.id.id_top_bar);
     topBar.setOnClickListener(this);
-    
-    // Retrieve the title's button 
+
+    // Retrieve the title's button
     titleButton = (ImageView) findViewById(R.id.id_title_click_button);
     titleButton.setVisibility(View.INVISIBLE);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see android.view.View.OnClickListener#onClick(android.view.View)
    */
   public final void onClick(View viewP) {
@@ -130,7 +134,7 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
    */
   public void setTitleClickListener(TitleClicklistener titleClickListenerP) {
     titleClickListener = titleClickListenerP;
-    titleButton.setVisibility((titleClickListener != null ? View.VISIBLE: View.INVISIBLE));
+    titleButton.setVisibility((titleClickListener != null ? View.VISIBLE : View.INVISIBLE));
   }
 
   /*
@@ -170,4 +174,35 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
    */
   public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
 
+  /**
+   * Create all required dialogs
+   */
+  private void createDialogs() {
+    // The error dialog
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    // By default the message is "Error Unknown"
+    builder.setMessage(R.string.err_unknown);
+    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                // If a listener as been defined
+                if (errorDialogListener != null) {
+                  errorDialogListener.onClick(dialog, id);
+                }
+              }
+            });
+    errorDialog = builder.create();
+  }
+
+  /**
+   * Show an error message 
+   * @param msgP The message to display
+   * @param listenerP A listener which will be called when the user will click on the OK button
+   */
+  public void showError(String msgP, DialogInterface.OnClickListener listenerP) {
+    errorDialog.setMessage(msgP);
+    errorDialogListener = listenerP;
+    errorDialog.show();
+  }
 }

@@ -257,14 +257,14 @@ public class SynoServer {
   /**
    * Saves the last error for future retrieval
    */
-  public void set_last_error(String error) {
+  public void setLastError(String error) {
     lasterror = error;
   }
 
   /**
    * Disconnect from the server
    */
-  public String get_last_error() {
+  public String getLastError() {
     return lasterror;
   }
 
