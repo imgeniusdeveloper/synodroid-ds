@@ -98,6 +98,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
     builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented))
             .setCancelable(false).setPositiveButton(R.string.button_ok, null);
     notYetImplementedDialog = builder.create();
+    
+    // Add a tab listener
+    tabManager.setTabListener(this);
+    
+    // Launch the gets file list
   }
 
   /* (non-Javadoc)

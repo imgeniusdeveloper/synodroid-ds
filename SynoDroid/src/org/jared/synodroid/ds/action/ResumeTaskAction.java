@@ -26,7 +26,7 @@ import org.jared.synodroid.ds.R;
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
-public class ResumeTaskAction implements TaskAction {
+public class ResumeTaskAction implements SynoAction {
 
 	// The torrent to resume
 	private Task task;

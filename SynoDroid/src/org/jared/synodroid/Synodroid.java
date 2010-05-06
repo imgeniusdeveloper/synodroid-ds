@@ -25,7 +25,7 @@ import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 import org.jared.synodroid.ds.R.string;
 import org.jared.synodroid.ds.action.DeleteTaskAction;
-import org.jared.synodroid.ds.action.TaskAction;
+import org.jared.synodroid.ds.action.SynoAction;
 
 import android.app.AlertDialog;
 import android.app.Application;
@@ -72,7 +72,7 @@ public class Synodroid extends Application {
 	 * @param activityP
 	 * @param serverP
 	 */
-	public void setServer(DownloadActivity activityP, SynoServer serverP, List<TaskAction> actionQueueP) {
+	public void setServer(DownloadActivity activityP, SynoServer serverP, List<SynoAction> actionQueueP) {
 		// First disconnect the old server
 		if (currentServer != null) {
 			currentServer.disconnect();
@@ -137,7 +137,7 @@ public class Synodroid extends Application {
 	 * @param actionP
 	 * @param forceRefreshP
 	 */
-	public void executeAction(final DownloadActivity activityP, final TaskAction actionP, final boolean forceRefreshP) {
+	public void executeAction(final DownloadActivity activityP, final SynoAction actionP, final boolean forceRefreshP) {
 		if (currentServer != null) {
 			// First verify if it is a DeleteTaskAction and if the task is not finished
 			TaskStatus status = null;
@@ -148,7 +148,7 @@ public class Synodroid extends Application {
 				Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(R.string.dialog_message_confirm).setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes,
 				    new DialogInterface.OnClickListener() {
 					    public void onClick(DialogInterface dialog, int which) {
-						    currentServer.executeAction(activityP, actionP, forceRefreshP);
+						    currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
 					    }
 				    }).create();
 				// d.setOwnerActivity(this); // why can't the builder do this?
@@ -156,12 +156,12 @@ public class Synodroid extends Application {
 			}
 			// Ok no problem do it
 			else {
-				currentServer.executeAction(activityP, actionP, forceRefreshP);
+				currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
 			}
 		}
 		// If an action have to be executed but with no current connection
 		else {
-			ArrayList<TaskAction> actionQueue = new ArrayList<TaskAction>();
+			ArrayList<SynoAction> actionQueue = new ArrayList<SynoAction>();
 			actionQueue.add(actionP);
 			activityP.showDialogToConnect(true, actionQueue);
 		}

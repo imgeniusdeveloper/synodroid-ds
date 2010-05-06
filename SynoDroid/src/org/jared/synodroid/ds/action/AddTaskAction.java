@@ -28,7 +28,7 @@ import android.net.Uri;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class AddTaskAction implements TaskAction {
+public class AddTaskAction implements SynoAction {
 
 	private Uri uri;
 	private Task task;

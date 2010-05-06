@@ -40,6 +40,8 @@ public interface ResponseHandler {
 	public static final int MSG_CONNECTED = 10006;
 	// Task's details retrieved
 	public static final int MSG_DETAILS_RETRIEVED = 10007;
+	// Task's files retrieved
+	public static final int MSG_DETAILS_FILES_RETRIEVED = 10008;
 
 
 	/**

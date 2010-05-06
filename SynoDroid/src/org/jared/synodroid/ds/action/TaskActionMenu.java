@@ -37,7 +37,7 @@ public class TaskActionMenu {
 	// The text to display
 	private String title;
 	// The action to execute if this TaskAction is selected
-	private TaskAction action;
+	private SynoAction action;
 	// Flag to know if this action is eanbled
 	private boolean enabled;
 	
@@ -85,7 +85,7 @@ public class TaskActionMenu {
 	 * Private constructor to avoid instanciation
 	 * @param taskP
 	 */
-	private TaskActionMenu(Task taskP, String titleP, TaskAction actionP, boolean enabledP) {
+	private TaskActionMenu(Task taskP, String titleP, SynoAction actionP, boolean enabledP) {
 		task = taskP;
 		title = titleP;
 		action = actionP;
@@ -109,7 +109,7 @@ public class TaskActionMenu {
 	/**
    * @return the action
    */
-  public TaskAction getAction() {
+  public SynoAction getAction() {
   	return action;
   }
 

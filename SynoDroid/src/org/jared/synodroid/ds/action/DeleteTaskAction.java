@@ -26,7 +26,7 @@ import org.jared.synodroid.ds.R;
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
-public class DeleteTaskAction implements TaskAction {
+public class DeleteTaskAction implements SynoAction {
 
 	// The task to resume
 	private Task task;

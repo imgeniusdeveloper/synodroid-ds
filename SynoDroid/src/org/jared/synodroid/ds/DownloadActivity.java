@@ -25,7 +25,7 @@ import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.TitleClicklistener;
 import org.jared.synodroid.ds.action.AddTaskAction;
-import org.jared.synodroid.ds.action.TaskAction;
+import org.jared.synodroid.ds.action.SynoAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
@@ -450,7 +450,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   /**
    * Show the dialog to connect to a server
    */
-  public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<TaskAction> actionQueueP) {
+  public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<SynoAction> actionQueueP) {
     if (!connectDialogOpened) {
       final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(PreferenceManager
               .getDefaultSharedPreferences(this));

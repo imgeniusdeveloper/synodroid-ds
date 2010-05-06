@@ -26,7 +26,7 @@ import org.jared.synodroid.ds.R;
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
-public class PauseTaskAction implements TaskAction {
+public class PauseTaskAction implements SynoAction {
 
 	// The torrent to stop
 	private Task task;
