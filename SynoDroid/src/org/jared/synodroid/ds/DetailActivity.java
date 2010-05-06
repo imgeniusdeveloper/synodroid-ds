@@ -80,11 +80,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
     // Build the TabManager
     tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-    Tab genTab = new Tab("GENERAL", "General", R.drawable.ic_tab_general_pressed, R.drawable.ic_tab_general_focused);
+    Tab genTab = new Tab("GENERAL", "General", R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
     tabManager.addTab(genTab, genListView);
-    Tab transTab = new Tab("TRANSFERT", "Transfert", R.drawable.ic_tab_transfer, R.drawable.ic_tab_general_focused);
+    Tab transTab = new Tab("TRANSFERT", "Transfert", R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
     tabManager.addTab(transTab, transListView);
-    Tab filesTab = new Tab("FILES", "Files", R.drawable.ic_tab_files, R.drawable.ic_tab_general_focused);
+    Tab filesTab = new Tab("FILES", "Files", R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
     tabManager.addTab(filesTab, filesListView);
 
     // Call super onCreate after the tab intialization
