@@ -205,7 +205,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     Tab paramTab = new Tab(TAB_PARAMS, R.drawable.ic_tab_parameters, R.drawable.ic_tab_parameters_selected);
     tabManager.addTab(paramTab, new View(this));
     Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
-    tabManager.addTab(aboutTab, new View(this));
+    View about = inflater.inflate(R.layout.about, null, false);
+    tabManager.addTab(aboutTab, about);
     
     tabManager.setTabListener(this);
     
