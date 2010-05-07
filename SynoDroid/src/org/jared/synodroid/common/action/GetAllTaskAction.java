@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.jared.synodroid.ds.action;
+package org.jared.synodroid.common.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;

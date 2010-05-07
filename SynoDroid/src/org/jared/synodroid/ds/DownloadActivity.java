@@ -17,18 +17,18 @@ import java.util.List;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.action.AddTaskAction;
+import org.jared.synodroid.common.action.GetAllTaskAction;
+import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
-import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.Tab;
 import org.jared.synodroid.common.ui.TabWidgetManager;
 import org.jared.synodroid.common.ui.TitleClicklistener;
-import org.jared.synodroid.ds.action.AddTaskAction;
-import org.jared.synodroid.ds.action.SynoAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
@@ -172,10 +172,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       // Show the connection dialog
       showDialog(CONNECTION_DIALOG_ID);
     }
-    else if (msg.what == ResponseHandler.MSG_DETAILS_RETRIEVED) {
+    else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
       Intent next = new Intent();
       next.setClass(DownloadActivity.this, DetailActivity.class);
-      next.putExtra("org.jared.synodroid.ds.Details", (TaskDetail) msg.obj);
+      next.putExtra("org.jared.synodroid.ds.Details", (Task) msg.obj);
       DownloadActivity.this.startActivity(next);
     }
   }
@@ -218,7 +218,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     taskView.setOnItemClickListener(taskAdapter);
 
     // First bind the current activity to the current server if exist
-    if (!((Synodroid) getApplication()).bindActivity(this)) {
+    if (!((Synodroid) getApplication()).bindResponseHandler(this)) {
       Intent intent = getIntent();
       String action = intent.getAction();
       // Show the dialog only if the intent's action is not to view a
@@ -516,18 +516,22 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   protected void onResume() {
-    ((Synodroid) getApplication()).resumeServer();
     super.onResume();
     // There are some case where the connected server does not show up in
     // the title bar on top. This fixes thoses cases.
     server = ((Synodroid) getApplication()).getServer();
     if (server != null) {
       if (server.isConnected()) {
+        // Launch the gets task's details recurrent action
+        Synodroid app = (Synodroid) getApplication();
+        app.setRecurrentAction(this, new GetAllTaskAction(server.getSortAttribute(), server.isAscending()));
+        app.resumeServer();
+        // Set the title
         titleText.setText(server.getNickname());
         titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.INVISIBLE);
       }
     }
-    // No server then display the connect to dialog
+    // No server then display the connection dialog
     else {
       showDialogToConnect(true, null);
     }

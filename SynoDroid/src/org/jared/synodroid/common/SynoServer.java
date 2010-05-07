@@ -28,6 +28,7 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
 
 import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.protocol.DSMException;
@@ -37,7 +38,6 @@ import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.protocol.https.AcceptAllHostNameVerifier;
 import org.jared.synodroid.common.protocol.https.AcceptAllTrustManager;
 import org.jared.synodroid.ds.R;
-import org.jared.synodroid.ds.action.SynoAction;
 import org.json.JSONObject;
 
 import android.os.Message;
@@ -134,7 +134,8 @@ public class SynoServer {
   /**
    * @param recurrentActionP the recurrentAction to set
    */
-  public void setRecurrentAction(SynoAction recurrentActionP) {
+  public void setRecurrentAction(ResponseHandler handlerP, SynoAction recurrentActionP) {
+    bindResponseHandler(handlerP);
     recurrentAction = recurrentActionP;
   }
 
@@ -146,7 +147,7 @@ public class SynoServer {
    * @throws DSMException
    */
   public void connect(final ResponseHandler handlerP, final List<SynoAction> actionQueueP) {
-    bindActivity(handlerP);
+    bindResponseHandler(handlerP);
 
     // If we are not already connected
     if (!connected) {
@@ -242,7 +243,7 @@ public class SynoServer {
    * 
    * @param activityP
    */
-  public void bindActivity(ResponseHandler handlerP) {
+  public void bindResponseHandler(ResponseHandler handlerP) {
     handler = handlerP;
   }
 

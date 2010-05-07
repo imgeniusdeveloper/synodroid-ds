@@ -13,8 +13,12 @@ package org.jared.synodroid.ds;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.action.DetailTaskAction;
+import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.Tab;
 import org.jared.synodroid.common.ui.TabListener;
@@ -50,6 +54,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
   private TabWidgetManager tabManager;
   // The title contains the file's name
   private TextView title;
+  // The adapter for general informations
+  private DetailAdapter genAdapter;
+  // The adapter for transfert informations
+  private DetailAdapter transAdapter;
+  // The task to retrieve details from
+  private Task task;
 
   /*
    * (non-Javadoc)
@@ -57,23 +67,19 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
-
-    // Get the details intent
-    Intent intent = getIntent();
-    TaskDetail details = (TaskDetail) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
     // Build the general tab
     ListView genListView = new ListView(this);
-    DetailAdapter genAdapter = new DetailAdapter(this);
+    genAdapter = new DetailAdapter(this);
     genListView.setAdapter(genAdapter);
     genListView.setOnItemClickListener(genAdapter);
-    genAdapter.updateDetails(buildGeneralDetails(details));
+    //genAdapter.updateDetails(buildGeneralDetails(details));
 
     // Build the transfer tab
     ListView transListView = new ListView(this);
-    DetailAdapter transAdapter = new DetailAdapter(this);
+    transAdapter = new DetailAdapter(this);
     transListView.setAdapter(transAdapter);
     transListView.setOnItemClickListener(transAdapter);
-    transAdapter.updateDetails(buildTransferDetails(details));
+    //transAdapter.updateDetails(buildTransferDetails(details));
 
     // Build the file tab
     ListView filesListView = new ListView(this);
@@ -89,9 +95,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
     // Call super onCreate after the tab intialization
     super.onCreate(savedInstanceState);
-
-    // Set the the title (the filename)
-    title.setText(details.fileName);
     
     // Create a "Not yet implemented" dialog
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -102,7 +105,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
     // Add a tab listener
     tabManager.setTabListener(this);
     
-    // Launch the gets file list
+    // Get the details intent
+    Intent intent = getIntent();
+    task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
+    // Set the the title (the filename)
+    title.setText(task.fileName);
+
   }
 
   /* (non-Javadoc)
@@ -110,9 +118,37 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
    */
   @Override
   public void handleMessage(Message msgP) {
+    // Details updated
+    if (msgP.what == ResponseHandler.MSG_DETAILS_RETRIEVED) {
+      TaskDetail details = (TaskDetail)msgP.obj;
+      genAdapter.updateDetails(buildGeneralDetails(details));
+      transAdapter.updateDetails(buildTransferDetails(details));
+    }
   }
 
-	/*
+  /* (non-Javadoc)
+   * @see android.app.Activity#onPause()
+   */
+  @Override
+  protected void onPause() {
+    super.onPause();
+    Synodroid app = (Synodroid) getApplication();
+    app.pauseServer();
+  }
+
+  /* (non-Javadoc)
+   * @see android.app.Activity#onResume()
+   */
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // Launch the gets task's details recurrent action
+    Synodroid app = (Synodroid) getApplication();
+    app.setRecurrentAction(this, new DetailTaskAction(task));
+    app.resumeServer();
+  }
+
+  /*
    * (non-Javadoc)
    * @see
    * org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView

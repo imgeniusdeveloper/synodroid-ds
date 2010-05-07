@@ -30,7 +30,7 @@ public class Task implements Serializable {
   private static final long serialVersionUID = 1L;
 
 	// The server from which is torrent is retrieved
-	public SynoServer server;
+	public transient SynoServer server;
 	
 	// The unique ID of the torrent
 	public int taskId;

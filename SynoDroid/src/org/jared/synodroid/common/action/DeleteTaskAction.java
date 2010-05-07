@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  */
-package org.jared.synodroid.ds.action;
+package org.jared.synodroid.common.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
@@ -22,16 +22,16 @@ import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
 /**
- * Resume a torrent
+ * Delete a torrent
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
-public class ResumeTaskAction implements SynoAction {
+public class DeleteTaskAction implements SynoAction {
 
-	// The torrent to resume
+	// The task to resume
 	private Task task;
 	
-	public ResumeTaskAction(Task taskP) {
+	public DeleteTaskAction(Task taskP) {
 		task = taskP;
 	}
 
@@ -39,21 +39,21 @@ public class ResumeTaskAction implements SynoAction {
    * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
    */
   public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-  	serverP.getDSMHandlerFactory().getDSHandler().resume(task);
+  	serverP.getDSMHandlerFactory().getDSHandler().delete(task);
   }
 
 	/* (non-Javadoc)
    * @see org.jared.synodroid.common.SynoAction#getName()
    */
   public String getName() {
-	  return "Resume task "+task.taskId;
+	  return "Delete task "+task.taskId;
   }
 
 	/* (non-Javadoc)
    * @see org.jared.synodroid.common.SynoAction#getToastId()
    */
   public int getToastId() {
-	  return R.string.action_resuming;
+	  return R.string.action_deleting;
   }
 
 	/* (non-Javadoc)

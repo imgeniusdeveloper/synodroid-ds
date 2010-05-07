@@ -20,12 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.action.DeleteTaskAction;
+import org.jared.synodroid.common.action.GetAllTaskAction;
+import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
-import org.jared.synodroid.ds.action.DeleteTaskAction;
-import org.jared.synodroid.ds.action.GetAllTaskAction;
-import org.jared.synodroid.ds.action.SynoAction;
 
 import android.app.AlertDialog;
 import android.app.Application;
@@ -79,7 +80,7 @@ public class Synodroid extends Application {
 		}
         // Set the recurrent action
         GetAllTaskAction recurrentAction = new GetAllTaskAction(serverP.getSortAttribute(), serverP.isAscending());
-        serverP.setRecurrentAction(recurrentAction);
+        serverP.setRecurrentAction(activityP, recurrentAction);
 		// Then connect the new one
 		currentServer = serverP;
 		currentServer.connect(activityP, actionQueueP);
@@ -97,14 +98,24 @@ public class Synodroid extends Application {
 	/**
 	 * Bind an activity to the current server
 	 * 
-	 * @param activityP
+	 * @param handlerP
 	 */
-	public boolean bindActivity(DownloadActivity activityP) {
+	public boolean bindResponseHandler(ResponseHandler handlerP) {
 		if (currentServer != null) {
-			currentServer.bindActivity(activityP);
+			currentServer.bindResponseHandler(handlerP);
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Change the recurrent action
+	 * @param actionP
+	 */
+	public void setRecurrentAction(ResponseHandler handlerP, SynoAction actionP) {
+      if (currentServer != null) {
+        currentServer.setRecurrentAction(handlerP, actionP);
+      }	  
 	}
 
 	/**

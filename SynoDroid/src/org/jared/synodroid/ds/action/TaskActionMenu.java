@@ -19,6 +19,10 @@ package org.jared.synodroid.ds.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jared.synodroid.common.action.DeleteTaskAction;
+import org.jared.synodroid.common.action.PauseTaskAction;
+import org.jared.synodroid.common.action.ResumeTaskAction;
+import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.R;
@@ -55,32 +59,32 @@ public class TaskActionMenu {
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new DetailTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_PAUSED:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new DetailTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_ERROR:
           result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
           result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
           result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new DetailTaskAction(taskP), false));
+          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
           break;
 		case TASK_FINISHED:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new DetailTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_HASH_CHECKING:
 		case TASK_WAITING:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), false));
-			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new DetailTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
 			break;
 		}
 		return result;
