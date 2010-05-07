@@ -27,6 +27,7 @@ import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
 import org.jared.synodroid.common.ui.Tab;
+import org.jared.synodroid.common.ui.TabListener;
 import org.jared.synodroid.common.ui.TabWidgetManager;
 import org.jared.synodroid.common.ui.TitleClicklistener;
 import org.jared.synodroid.ds.action.TaskActionMenu;
@@ -61,8 +62,12 @@ import android.widget.TextView;
  * 
  * @author eric.taix at gmail.com
  */
-public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo, TitleClicklistener {
+public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo, TitleClicklistener, TabListener {
 
+  private static final String TAB_ABOUT = "ABOUT";
+  private static final String TAB_PARAMS = "PARAMS";
+  private static final String TAB_TASKS = "TASKS";
+  
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
   // The contributors dialog
@@ -195,12 +200,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     
     // Create the tab maanger
     tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-    Tab refreshTab = new Tab("REFRESH", R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
+    Tab refreshTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
     tabManager.addTab(refreshTab, downloadContent);
-    Tab paramTab = new Tab("PARAMS", R.drawable.ic_tab_parameters, R.drawable.ic_tab_parameters_selected);
+    Tab paramTab = new Tab(TAB_PARAMS, R.drawable.ic_tab_parameters, R.drawable.ic_tab_parameters_selected);
     tabManager.addTab(paramTab, new View(this));
-    Tab aboutTab = new Tab("ABOUT", R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
+    Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
     tabManager.addTab(aboutTab, new View(this));
+    
+    tabManager.setTabListener(this);
     
     super.onCreate(savedInstanceState);
 
@@ -568,6 +575,15 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   public void onEulaAgreedTo() {
     licenceAccepted = true;
     showDialogToConnect(true, null);
+  }
+
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.String, java.lang.String)
+   */
+  public void selectedTabChanged(String oldTabIdP, String newTabIdP) {
+    if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
+      ((Synodroid) getApplication()).forceRefresh();
+    }
   }
 
 }

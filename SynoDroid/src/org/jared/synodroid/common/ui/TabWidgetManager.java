@@ -156,7 +156,7 @@ public class TabWidgetManager implements View.OnClickListener {
     if (!animPlaying) {
       Tab fake = new Tab(tabIdP);
       int index = tabs.indexOf(fake);
-      if (index != -1 && index != currentIndex) {
+      if (index != -1 /*&& index != currentIndex*/) {
         // Retrieve tabs
         Tab fromTab = tabs.get(currentIndex);
         final Tab toTab = tabs.get(index);
@@ -196,7 +196,7 @@ public class TabWidgetManager implements View.OnClickListener {
     int newIndex = tabs.indexOf(fake);
     // If the view was found AND if this is a new tab
     String oldId = null;
-    if (newIndex != -1 && currentIndex != newIndex) {
+    if (newIndex != -1 /*&& currentIndex != newIndex*/) {
       if (currentIndex != -1) {
         Tab oldTab = tabs.get(currentIndex);
         oldId = oldTab.getId();
