@@ -22,8 +22,7 @@
                 android:id="@+id/id_title_click_button"
                 android:src="@drawable/ic_list_action"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="10dip"
-                android:layout_centerVertical="false" android:layout_height="wrap_content" android:layout_marginTop="5dip"></ImageView>
+                android:layout_centerVertical="false" android:layout_height="wrap_content" android:layout_marginTop="5dip" android:layout_marginLeft="6dip"></ImageView>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
