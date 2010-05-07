@@ -16,14 +16,23 @@
             android:layout_width="fill_parent"
             android:background="@drawable/title_bar"
             android:visibility="visible"
-            android:orientation="horizontal">
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/id_title_click_button"
+                android:src="@drawable/ic_list_action"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dip"
+                android:layout_centerVertical="false" android:layout_height="wrap_content" android:layout_marginTop="5dip"></ImageView>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/id_operation_pending_container"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="5dip"
-                android:visibility="invisible" android:layout_alignParentLeft="true" android:layout_marginLeft="10dip" android:layout_marginTop="12dip">
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dip"
+                android:visibility="invisible"
+                android:layout_centerVertical="false"
+                android:orientation="horizontal" android:layout_marginTop="10dip">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,22 +45,16 @@
             <RelativeLayout
                 android:layout_height="40dip"
                 android:id="@+id/id_title_bar"
-                android:layout_width="fill_parent" android:layout_toRightOf="@+id/id_operation_pending_container" android:layout_toLeftOf="@+id/id_title_click_button">
+                android:layout_width="fill_parent"
+                android:layout_toRightOf="@+id/id_title_click_button"
+                android:layout_toLeftOf="@+id/id_operation_pending_container">
             </RelativeLayout>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:id="@+id/id_title_click_button"
-                android:src="@drawable/ic_list_action"
-                android:layout_alignParentRight="true" android:layout_height="wrap_content" android:layout_marginRight="10dip" android:layout_marginTop="5dip"></ImageView>
         </RelativeLayout>
         <View
             android:layout_width="wrap_content"
             android:background="@drawable/border_top"
             android:id="@+id/id_title_top_border"
             android:layout_height="1dip"></View>
-
-
     </LinearLayout>
     <LinearLayout
         android:layout_alignParentBottom="true"
