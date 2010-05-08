@@ -52,6 +52,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -206,6 +207,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     tabManager.addTab(paramTab, new View(this));
     Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
     View about = inflater.inflate(R.layout.about, null, false);
+    Button eulaBtn = (Button)about.findViewById(R.id.id_eula_view);
+    eulaBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+        // Diplay the EULA
+        Eula.show(DownloadActivity.this, true);
+			}
+		});
     tabManager.addTab(aboutTab, about);
     
     tabManager.setTabListener(this);
