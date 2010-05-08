@@ -136,7 +136,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	private void bindView(LinearLayout viewP, final Task torrentP) {
 		// Torrent's status icon
 		ImageView image = (ImageView) viewP.findViewById(R.id.id_torrent_icon);
-		IconFacade.bindTorrentStatus(image, torrentP);
+		IconFacade.bindTorrentStatus(activity, image, torrentP);
 
 		// The name of the torrent
 		TextView torrentName = (TextView) viewP.findViewById(R.id.id_torrent_name);

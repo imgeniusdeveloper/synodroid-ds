@@ -24,9 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,8 +40,6 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
   private LayoutInflater inflater;
   // The request view
   private LinearLayout operationPending;
-  // The rotate animation
-  private Animation animRequest;
   // The title click listener
   private TitleClicklistener titleClickListener = null;
   // The title's button
@@ -89,12 +84,6 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
     setContentView(R.layout.base_activity);
     // Get the operation pending container (to be able to show/hide)
     operationPending = (LinearLayout) findViewById(R.id.id_operation_pending_container);
-    // Get the operation's spinner
-    ImageView spinner = (ImageView) findViewById(R.id.id_operation_pending_img);
-    animRequest = AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely);
-    // Can not be set in the XML (LinearInterpolar is not public: arghhh)
-    animRequest.setInterpolator(new LinearInterpolator());
-    spinner.startAnimation(animRequest);
     // Create the main inflater
     inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

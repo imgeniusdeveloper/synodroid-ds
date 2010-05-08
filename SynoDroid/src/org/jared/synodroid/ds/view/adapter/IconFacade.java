@@ -20,6 +20,10 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.R;
 
+import android.content.Context;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 /**
@@ -36,9 +40,10 @@ public class IconFacade {
 	 * @param viewP
 	 * @param siteP
 	 */
-	public static void bindTorrentStatus(ImageView viewP, Task torrentP) {
+	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
 		TaskStatus status = TaskStatus.valueOf(torrentP.status);
 		int id = 0;
+		Animation animation = null;
 		switch (status) {
 		case TASK_DOWNLOADING:
 			id = R.drawable.dl_download;
@@ -50,10 +55,11 @@ public class IconFacade {
 			id = R.drawable.dl_paused;
 			break;
 		case TASK_WAITING:
-			id = R.drawable.dl_waiting;
-			break;
 		case TASK_HASH_CHECKING:
 			id = R.drawable.dl_waiting;
+			animation = AnimationUtils.loadAnimation(ctxP, R.anim.rotate_indefinitely);
+			// Can not be set in the XML (LinearInterpolar is not public: arghhh)
+			animation.setInterpolator(new LinearInterpolator());
 			break;
 		case TASK_FINISHED:
 			id = R.drawable.dl_finished;
@@ -63,5 +69,15 @@ public class IconFacade {
 			break;
 		}
 		viewP.setImageResource(id);
+		if (animation != null) {
+			viewP.startAnimation(animation);
+		}
+		// Stop the previous
+		else {
+			Animation previousAnimation = viewP.getAnimation();
+			if (previousAnimation != null) {
+				previousAnimation.setDuration(0);
+			}
+		}
 	}
 }

@@ -32,21 +32,15 @@
                 android:visibility="invisible"
                 android:layout_centerVertical="false"
                 android:orientation="horizontal" android:layout_marginTop="10dip">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/refresh"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginRight="5dip"
-                    android:id="@+id/id_operation_pending_img"></ImageView>
-            </LinearLayout>
+                
+            <ProgressBar android:id="@+id/ProgressBar01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminate="true" style="?android:progressBarStyleSmall"></ProgressBar>
+</LinearLayout>
             <RelativeLayout
                 android:layout_height="40dip"
                 android:id="@+id/id_title_bar"
                 android:layout_width="fill_parent"
                 android:layout_toRightOf="@+id/id_title_click_button"
-                android:layout_toLeftOf="@+id/id_operation_pending_container">
+                android:layout_toLeftOf="@+id/id_operation_pending_container" android:gravity="center_horizontal">
             </RelativeLayout>
         </RelativeLayout>
         <View
