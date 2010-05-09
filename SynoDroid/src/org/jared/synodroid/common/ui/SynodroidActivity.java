@@ -62,6 +62,7 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
           String text = (String) msgP.obj;
           Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
           toast.show();
+          break;
         default:
           operationPending.setVisibility(View.INVISIBLE);
           break;

@@ -52,7 +52,17 @@ public class Task implements Serializable {
 	public String status;
 	// Time left
 	public String eta;
-	//Task is an outside url
+	// Task is an outside url
 	public boolean outside_url = false;
+	// Flag to know if this task is a torrent.
+	// CAREFUL: this attribut is not retrieve from the getAll JSON method.
+	// First you have to call getTaskDetail to retrieve this information and set manually this attribut. In fact this attribut 
+	// is a convenient way to store this value for the next activity
+	public boolean isTorrent;
+	// Flag to know if this task is a NZB
+	// CAREFUL: this attribut is not retrieve from the getAll JSON method.
+	// First you have to call getTaskDetail to retrieve this information and set manually this attribut. In fact this attribut 
+	// is a convenient way to store this value for the next activity
+	public boolean isNZB;
 
 }

@@ -150,4 +150,5 @@
 <string name="not_yet_implemented">Feature not yet implemented</string>
 <string name="title_information">Information</string>
 <string name="detail_unknown">Unknown</string>
+<string name="action_files">Retrieving files of '%s'</string>
 </resources>

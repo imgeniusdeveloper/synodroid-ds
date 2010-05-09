@@ -16,8 +16,10 @@ import java.util.List;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DetailTaskAction;
+import org.jared.synodroid.common.action.GetFilesAction;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskDetail;
+import org.jared.synodroid.common.data.TaskFile;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
@@ -31,6 +33,7 @@ import org.jared.synodroid.ds.view.adapter.DetailAction;
 import org.jared.synodroid.ds.view.adapter.DetailAdapter;
 import org.jared.synodroid.ds.view.adapter.DetailProgress;
 import org.jared.synodroid.ds.view.adapter.DetailText;
+import org.jared.synodroid.ds.view.adapter.FileDetailAdapter;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -49,6 +52,9 @@ import android.widget.TextView;
  */
 public class DetailActivity extends SynodroidActivity implements TabListener {
 
+	private static final String TAB_FILES = "FILES";
+	private static final String TAB_TRANSFERT = "TRANSFERT";
+	private static final String TAB_GENERAL = "GENERAL";
 	// The "Not yet implemented" dialog
 	private AlertDialog notYetImplementedDialog;
 	// The tab manager
@@ -61,6 +67,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private DetailAdapter transAdapter;
 	// The task to retrieve details from
 	private Task task;
+	// The adapter for task's files
+	private FileDetailAdapter fileAdapter;
 
 	/*
 	 * (non-Javadoc)
@@ -69,31 +77,31 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// Get the details intent
+		Intent intent = getIntent();
+		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
+
 		// Build the general tab
 		ListView genListView = new ListView(this);
 		genAdapter = new DetailAdapter(this);
 		genListView.setAdapter(genAdapter);
 		genListView.setOnItemClickListener(genAdapter);
-		// genAdapter.updateDetails(buildGeneralDetails(details));
 
 		// Build the transfer tab
 		ListView transListView = new ListView(this);
 		transAdapter = new DetailAdapter(this);
 		transListView.setAdapter(transAdapter);
 		transListView.setOnItemClickListener(transAdapter);
-		// transAdapter.updateDetails(buildTransferDetails(details));
-
-		// Build the file tab
-		ListView filesListView = new ListView(this);
 
 		// Build the TabManager
 		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-		Tab genTab = new Tab("GENERAL", R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
+		Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
 		tabManager.addTab(genTab, genListView);
-		Tab transTab = new Tab("TRANSFERT", R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
+		Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
 		tabManager.addTab(transTab, transListView);
-		Tab filesTab = new Tab("FILES", R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
-		tabManager.addTab(filesTab, filesListView);
+		// Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files,
+		// R.drawable.ic_tab_files_selected);
+		// tabManager.addTab(filesTab, filesListView);
 
 		// Call super onCreate after the tab intialization
 		super.onCreate(savedInstanceState);
@@ -106,12 +114,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// Add a tab listener
 		tabManager.setTabListener(this);
 
-		// Get the details intent
-		Intent intent = getIntent();
-		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
 		// Set the the title (the filename)
 		title.setText(task.fileName);
-
 	}
 
 	/*
@@ -121,6 +125,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 * org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os
 	 * .Message)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void handleMessage(Message msgP) {
 		switch (msgP.what) {
@@ -129,12 +134,28 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			TaskDetail details = (TaskDetail) msgP.obj;
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
+			// Set the flags for torrent / NZB
+			task.isTorrent = details.isTorrent;
+			task.isNZB = details.isNZB;
+			// If torrent or NZB then add the file's tab
+			if (task.isTorrent || task.isNZB) {
+				// Build the file tab
+				ListView filesListView = new ListView(this);
+				fileAdapter = new FileDetailAdapter(this, task);
+				filesListView.setAdapter(fileAdapter);
+				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
+				tabManager.addTab(filesTab, filesListView);
+			}
 			break;
 		case ResponseHandler.MSG_ERROR:
 			SynoServer server = ((Synodroid) getApplication()).getServer();
 			if (server != null)
 				server.setLastError((String) msgP.obj);
 			showError(server.getLastError(), null);
+			break;
+		case ResponseHandler.MSG_DETAILS_FILES_RETRIEVED:
+			List<TaskFile> files = (List<TaskFile>) msgP.obj;
+			fileAdapter.updateFiles(files);
 			break;
 		}
 	}
@@ -400,6 +421,14 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 * String, java.lang.String)
 	 */
 	public void selectedTabChanged(String oldTabId, String newTabIdP) {
+		// If showing the Files tab then retrieve task's files
+		if (newTabIdP.equals(TAB_FILES)) {
+			Synodroid application = (Synodroid) getApplication();
+			SynoServer server = application.getServer();
+			if (server != null) {
+				server.executeAsynchronousAction(this, new GetFilesAction(task), false);
+			}
+		}
 	}
 
 }

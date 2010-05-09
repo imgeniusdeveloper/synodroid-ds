@@ -1,0 +1,173 @@
+/**
+ * Copyright 2010 Eric Taix
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ * 
+ */
+package org.jared.synodroid.ds.view.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskFile;
+import org.jared.synodroid.ds.DetailActivity;
+import org.jared.synodroid.ds.R;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+
+/**
+ * An adaptor for task's files. This adaptor aims to create a view for each
+ * detail in the listView
+ * 
+ * @author eric.taix at gmail.com
+ */
+public class FileDetailAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+
+	// The task
+	private Task task;
+	// List of file
+	private List<TaskFile> files = new ArrayList<TaskFile>();
+	// The XML view inflater
+	private final LayoutInflater inflater;
+	// The main activity
+	private DetailActivity activity;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param activityP
+	 *          The current activity
+	 * @param torrentsP
+	 *          List of torrent
+	 */
+	public FileDetailAdapter(DetailActivity activityP, Task taskP) {
+		task = taskP;
+		activity = activityP;
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	/**
+	 * Update the torrents list
+	 * 
+	 * @param torrentsP
+	 */
+	public void updateFiles(List<TaskFile> filesP) {
+		files = filesP;
+		notifyDataSetChanged();
+	}
+
+	/**
+	 * Return the count of element
+	 * 
+	 * @return The number of torrent in the list
+	 */
+	public int getCount() {
+		if (files != null) {
+			return files.size();
+		}
+		else {
+			return 0;
+		}
+	}
+
+	/**
+	 * Return the torrent at the defined index
+	 * 
+	 * @param indexP
+	 *          The index to use starting from 0
+	 * @return Instance of Torrent
+	 */
+	public Object getItem(int indexP) {
+		if (files != null) {
+			if (indexP < files.size()) {
+				return files.get(indexP);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Return the item id of the item at index X
+	 * 
+	 * @param indexP
+	 */
+	public long getItemId(int indexP) {
+		return indexP;
+	}
+
+	/**
+	 * Return the view used for the item at position indexP. Always try to reuse
+	 * an old view
+	 */
+	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
+		TaskFile file = files.get(positionP);
+		RelativeLayout view = null;
+		if (convertViewP != null) {
+			view = (RelativeLayout) convertViewP;
+		}
+		// Create a new instance according to the class of the detail
+		else {
+			view = (RelativeLayout) inflater.inflate(R.layout.file_template, parentP, false);
+		}
+		// Binds datas
+		bindData(view, file);
+
+		return view;
+	}
+
+	/**
+	 * Bind commons torrent's data with widget
+	 * 
+	 * @param viewP
+	 * @param torrentP
+	 */
+	private void bindData(View viewP, final TaskFile fileP) {
+		// The filename
+		TextView fileText = (TextView) viewP.findViewById(R.id.id_file_name);
+		fileText.setText(fileP.name);
+		
+		// The file size
+		TextView fileSize = (TextView) viewP.findViewById(R.id.id_file_size);
+		fileSize.setText(fileP.filesize);
+		
+		// Is the file has to be download
+		CheckBox downloadFile = (CheckBox) viewP.findViewById(R.id.id_file_to_download);
+		downloadFile.setVisibility((task.isTorrent ? View.VISIBLE : View.GONE));
+		downloadFile.setChecked(fileP.download);
+		downloadFile.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+			}
+		});
+	}
+
+	/**
+	 * Click on a item
+	 */
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		TaskFile file = files.get(position);
+		if (file != null) {
+		}
+	}
+}
