@@ -104,9 +104,10 @@ public class Utils {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Utility method to convert a string into an int and log if an error occured
+	 * 
 	 * @param valueP
 	 * @return
 	 */
@@ -116,15 +117,17 @@ public class Utils {
 			result = Long.parseLong(valueP);
 		}
 		// Not a number
-		catch(NumberFormatException ex) {
+		catch (NumberFormatException ex) {
 			result = 0l;
-			Log.e(Synodroid.DS_TAG, "Can't convert: "+valueP, ex);
-		}		
+			Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+		}
 		return result;
 	}
-	
+
 	/**
-	 * Utility method to convert a string into an double and log if an error occured
+	 * Utility method to convert a string into an double and log if an error
+	 * occured
+	 * 
 	 * @param valueP
 	 * @return
 	 */
@@ -134,13 +137,13 @@ public class Utils {
 			result = Double.parseDouble(valueP);
 		}
 		// Not a number
-		catch(NumberFormatException ex) {
+		catch (NumberFormatException ex) {
 			result = 0.0d;
-			Log.e(Synodroid.DS_TAG, "Can't convert: "+valueP, ex);
-		}		
+			Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+		}
 		return result;
 	}
-	
+
 	/**
 	 * Extract from percent string (with the caracter '%') the percentage int
 	 * value
@@ -151,9 +154,9 @@ public class Utils {
 	public static int percent2int(String percentP) {
 		int result = 0;
 		if (percentP != null && percentP.length() > 0) {
-			String p = percentP.replace('%', ' ').trim();			
+			String p = percentP.replace('%', ' ').trim();
 			try {
-				result = (int)Double.parseDouble(p);
+				result = (int) Double.parseDouble(p);
 			}
 			// Nothing to do: it is not an integer, os just return the default value
 			catch (NumberFormatException ex) {
@@ -161,69 +164,75 @@ public class Utils {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Convert a file size representation in a long size bytes
+	 * 
 	 * @param sizeP
 	 * @return
 	 */
 	public static long fileSizeToBytes(String sizeP) {
-		long result = 0;
+		long result = -1;
 		sizeP = sizeP.trim();
 		// Search for the size unit separator
 		int index = sizeP.indexOf(" ");
-		String valStr = sizeP.substring(0, index-1);
-		String unitStr = sizeP.substring(index+1).toLowerCase();
-		try {
-			double size = Double.parseDouble(valStr);
-			if (unitStr.equals("kb")) {
-				size = size * 1000;
+		if (index != -1) {
+			String valStr = sizeP.substring(0, index - 1);
+			String unitStr = sizeP.substring(index + 1).toLowerCase();
+			try {
+				double size = Double.parseDouble(valStr);
+				if (unitStr.equals("kb")) {
+					size = size * 1000;
+				}
+				else if (unitStr.equals("mb")) {
+					size = size * 1000 * 1000;
+				}
+				else if (unitStr.equals("gb")) {
+					size = size * 1000 * 1000 * 1000;
+				}
+				else if (unitStr.equals("tb")) {
+					size = size * 1000 * 1000 * 1000 * 1000;
+				}
+				result = (long) size;
 			}
-			else if (unitStr.equals("mb")) {
-				size = size * 1000 * 1000;				
+			// Not a number
+			catch (NumberFormatException ex) {
+				Log.e(Synodroid.DS_TAG, "Can't convert: " + sizeP, ex);
 			}
-			else if (unitStr.equals("gb")) {
-				size = size * 1000 * 1000 * 1000;				
-			}
-			else if (unitStr.equals("tb")) {
-				size = size * 1000 * 1000 * 1000 * 1000;				
-			}
-			result = (long)size;
 		}
-		// Not a number
-		catch(NumberFormatException ex) {
-			Log.e(Synodroid.DS_TAG, "Can't convert: "+sizeP, ex);
-		}		
 		return result;
 	}
-	
+
 	/**
 	 * Convert a file size in bytes to a string representation
+	 * 
 	 * @param bytes
 	 * @return
 	 */
-	public static String bytesToFileSize(long bytes) {
+	public static String bytesToFileSize(long bytes, String unknownStringP) {
 		DecimalFormat format = new DecimalFormat("#.##");
-		String result = "";
-		String unit = "B";
-		double val = bytes;
-		if (bytes > 1000l*1000l*1000l*1000l) {
-			val = val / (1000l*1000l*1000l*1000l);
-			unit = "TB";			
+		String result = unknownStringP;
+		if (bytes != -1) {
+			String unit = "B";
+			double val = bytes;
+			if (bytes > 1000l * 1000l * 1000l * 1000l) {
+				val = val / (1000l * 1000l * 1000l * 1000l);
+				unit = "TB";
+			}
+			else if (bytes > 1000l * 1000l * 1000l) {
+				val = val / (1000l * 1000l * 1000l);
+				unit = "GB";
+			}
+			else if (bytes > 1000l * 1000l) {
+				val = val / (1000l * 1000l);
+				unit = "MB";
+			}
+			else if (bytes > 1000l) {
+				val = val / 1000l;
+				unit = "KB";
+			}
+			result = format.format(val) + " " + unit;
 		}
-		else if (bytes > 1000l*1000l*1000l) {
-			val = val / (1000l*1000l*1000l);
-			unit = "GB";			
-		}
-		else if (bytes > 1000l*1000l) {
-			val = val / (1000l*1000l);
-			unit = "MB";			
-		}
-		else if (bytes > 1000l) {
-			val = val / 1000l;
-			unit = "KB";
-		}
-		result = format.format(val) + " "+ unit;
 		return result;
 	}
 }

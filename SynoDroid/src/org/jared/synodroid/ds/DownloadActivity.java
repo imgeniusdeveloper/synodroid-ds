@@ -536,8 +536,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // There are some case where the connected server does not show up in
     // the title bar on top. This fixes thoses cases.
     server = ((Synodroid) getApplication()).getServer();
-    if (server != null) {
-      if (server.isConnected()) {
+    if (server != null && server.isConnected()) {
         // Launch the gets task's details recurrent action
         Synodroid app = (Synodroid) getApplication();
         app.setRecurrentAction(this, new GetAllTaskAction(server.getSortAttribute(), server.isAscending()));
@@ -545,7 +544,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         // Set the title
         titleText.setText(server.getNickname());
         titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.INVISIBLE);
-      }
     }
     // No server then display the connection dialog
     else {

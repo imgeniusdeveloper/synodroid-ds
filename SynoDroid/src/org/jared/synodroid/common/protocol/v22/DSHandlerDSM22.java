@@ -318,7 +318,15 @@ class DSHandlerDSM22 implements DSHandler {
 				}
 				// Otherwise throw a exception
 				else {
-					throw new DSMException(json.getString("reason"));
+					String reason = "";
+					if (json.has("reason")) {
+						reason = json.getString("reason");
+					}
+					else if (json.has("errno")){
+						JSONObject err = json.getJSONObject("errno");
+						reason = err.getString("key");
+					}
+					throw new DSMException(reason);
 				}
 			}
 		}

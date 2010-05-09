@@ -44,16 +44,17 @@ public class TaskActionMenu {
 	private SynoAction action;
 	// Flag to know if this action is eanbled
 	private boolean enabled;
-	
+
 	/**
 	 * Generate a list of actions according to a task's state
+	 * 
 	 * @param taskP
 	 * @return
 	 */
 	public static List<TaskActionMenu> createActions(Context ctxP, Task taskP) {
 		ArrayList<TaskActionMenu> result = new ArrayList<TaskActionMenu>();
 		TaskStatus status = TaskStatus.valueOf(taskP.status);
-		switch(status) {
+		switch (status) {
 		case TASK_DOWNLOADING:
 		case TASK_SEEDING:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
@@ -68,11 +69,11 @@ public class TaskActionMenu {
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_ERROR:
-          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
-          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
-          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-          result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
-          break;
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
 		case TASK_FINISHED:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
@@ -89,9 +90,10 @@ public class TaskActionMenu {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Private constructor to avoid instanciation
+	 * 
 	 * @param taskP
 	 */
 	private TaskActionMenu(Task taskP, String titleP, SynoAction actionP, boolean enabledP) {
@@ -102,31 +104,31 @@ public class TaskActionMenu {
 	}
 
 	/**
-   * @return the task
-   */
-  public Task getTask() {
-  	return task;
-  }
+	 * @return the task
+	 */
+	public Task getTask() {
+		return task;
+	}
 
 	/**
-   * @return the title
-   */
-  public String getTitle() {
-  	return title;
-  }
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
 
 	/**
-   * @return the action
-   */
-  public SynoAction getAction() {
-  	return action;
-  }
+	 * @return the action
+	 */
+	public SynoAction getAction() {
+		return action;
+	}
 
 	/**
-   * @return the enabled
-   */
-  public boolean isEnabled() {
-  	return enabled;
-  }
-	
+	 * @return the enabled
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
 }

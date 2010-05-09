@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DetailTaskAction;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskDetail;
@@ -48,302 +49,357 @@ import android.widget.TextView;
  */
 public class DetailActivity extends SynodroidActivity implements TabListener {
 
-  // The "Not yet implemented" dialog
-  private AlertDialog notYetImplementedDialog;
-  // The tab manager
-  private TabWidgetManager tabManager;
-  // The title contains the file's name
-  private TextView title;
-  // The adapter for general informations
-  private DetailAdapter genAdapter;
-  // The adapter for transfert informations
-  private DetailAdapter transAdapter;
-  // The task to retrieve details from
-  private Task task;
+	// The "Not yet implemented" dialog
+	private AlertDialog notYetImplementedDialog;
+	// The tab manager
+	private TabWidgetManager tabManager;
+	// The title contains the file's name
+	private TextView title;
+	// The adapter for general informations
+	private DetailAdapter genAdapter;
+	// The adapter for transfert informations
+	private DetailAdapter transAdapter;
+	// The task to retrieve details from
+	private Task task;
 
-  /*
-   * (non-Javadoc)
-   * @see android.app.Activity#onCreate(android.os.Bundle)
-   */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    // Build the general tab
-    ListView genListView = new ListView(this);
-    genAdapter = new DetailAdapter(this);
-    genListView.setAdapter(genAdapter);
-    genListView.setOnItemClickListener(genAdapter);
-    //genAdapter.updateDetails(buildGeneralDetails(details));
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// Build the general tab
+		ListView genListView = new ListView(this);
+		genAdapter = new DetailAdapter(this);
+		genListView.setAdapter(genAdapter);
+		genListView.setOnItemClickListener(genAdapter);
+		// genAdapter.updateDetails(buildGeneralDetails(details));
 
-    // Build the transfer tab
-    ListView transListView = new ListView(this);
-    transAdapter = new DetailAdapter(this);
-    transListView.setAdapter(transAdapter);
-    transListView.setOnItemClickListener(transAdapter);
-    //transAdapter.updateDetails(buildTransferDetails(details));
+		// Build the transfer tab
+		ListView transListView = new ListView(this);
+		transAdapter = new DetailAdapter(this);
+		transListView.setAdapter(transAdapter);
+		transListView.setOnItemClickListener(transAdapter);
+		// transAdapter.updateDetails(buildTransferDetails(details));
 
-    // Build the file tab
-    ListView filesListView = new ListView(this);
+		// Build the file tab
+		ListView filesListView = new ListView(this);
 
-    // Build the TabManager
-    tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-    Tab genTab = new Tab("GENERAL", R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
-    tabManager.addTab(genTab, genListView);
-    Tab transTab = new Tab("TRANSFERT", R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
-    tabManager.addTab(transTab, transListView);
-    Tab filesTab = new Tab("FILES", R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
-    tabManager.addTab(filesTab, filesListView);
+		// Build the TabManager
+		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
+		Tab genTab = new Tab("GENERAL", R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
+		tabManager.addTab(genTab, genListView);
+		Tab transTab = new Tab("TRANSFERT", R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
+		tabManager.addTab(transTab, transListView);
+		Tab filesTab = new Tab("FILES", R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
+		tabManager.addTab(filesTab, filesListView);
 
-    // Call super onCreate after the tab intialization
-    super.onCreate(savedInstanceState);
-    
-    // Create a "Not yet implemented" dialog
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented))
-            .setCancelable(false).setPositiveButton(R.string.button_ok, null);
-    notYetImplementedDialog = builder.create();
-    
-    // Add a tab listener
-    tabManager.setTabListener(this);
-    
-    // Get the details intent
-    Intent intent = getIntent();
-    task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
-    // Set the the title (the filename)
-    title.setText(task.fileName);
+		// Call super onCreate after the tab intialization
+		super.onCreate(savedInstanceState);
 
-  }
+		// Create a "Not yet implemented" dialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
+		notYetImplementedDialog = builder.create();
 
-  /* (non-Javadoc)
-   * @see org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os.Message)
-   */
-  @Override
-  public void handleMessage(Message msgP) {
-    // Details updated
-    if (msgP.what == ResponseHandler.MSG_DETAILS_RETRIEVED) {
-      TaskDetail details = (TaskDetail)msgP.obj;
-      genAdapter.updateDetails(buildGeneralDetails(details));
-      transAdapter.updateDetails(buildTransferDetails(details));
-    }
-  }
+		// Add a tab listener
+		tabManager.setTabListener(this);
 
-  /* (non-Javadoc)
-   * @see android.app.Activity#onPause()
-   */
-  @Override
-  protected void onPause() {
-    super.onPause();
-    Synodroid app = (Synodroid) getApplication();
-    app.pauseServer();
-  }
+		// Get the details intent
+		Intent intent = getIntent();
+		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
+		// Set the the title (the filename)
+		title.setText(task.fileName);
 
-  /* (non-Javadoc)
-   * @see android.app.Activity#onResume()
-   */
-  @Override
-  protected void onResume() {
-    super.onResume();
-    // Launch the gets task's details recurrent action
-    Synodroid app = (Synodroid) getApplication();
-    app.setRecurrentAction(this, new DetailTaskAction(task));
-    app.resumeServer();
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView
-   * (android .view.ViewGroup)
-   */
-  @Override
-	public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
-	  parentP.addView(tabManager.getContentView());
 	}
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.jared.synodroid.common.ui.SynodroidActivity#attachStatusView(android
-   * .view.ViewGroup)
-   */
-  @Override
-  public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
-    parentP.addView(tabManager.getTabView());
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os
+	 * .Message)
+	 */
+	@Override
+	public void handleMessage(Message msgP) {
+		switch (msgP.what) {
+		// Details updated
+		case ResponseHandler.MSG_DETAILS_RETRIEVED:
+			TaskDetail details = (TaskDetail) msgP.obj;
+			genAdapter.updateDetails(buildGeneralDetails(details));
+			transAdapter.updateDetails(buildTransferDetails(details));
+			break;
+		case ResponseHandler.MSG_ERROR:
+			SynoServer server = ((Synodroid) getApplication()).getServer();
+			if (server != null)
+				server.setLastError((String) msgP.obj);
+			showError(server.getLastError(), null);
+			break;
+		}
+	}
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.jared.synodroid.common.ui.SynodroidActivity#attachTitleView(android
-   * .view.ViewGroup)
-   */
-  @Override
-  public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
-    RelativeLayout titleContainer = (RelativeLayout)inflaterP.inflate(R.layout.detail_title, parentP, true);
-    title = (TextView) titleContainer.findViewById(R.id.id_title);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Synodroid app = (Synodroid) getApplication();
+		app.pauseServer();
+	}
 
-  /**
-   * Return a sub detail list for the general's tab
-   */
-  private List<Detail> buildGeneralDetails(TaskDetail details) {
-    ArrayList<Detail> result = new ArrayList<Detail>();
-    // FileName
-    result.add(new DetailText(getString(R.string.detail_filename), details.fileName));
-    setTitle(details.fileName);
-    // Destination
-    DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
-    destDetail.setAction(new DetailAction() {
-      public void execute(Detail detailsP) {
-        notYetImplementedDialog.show();
-      }
-    });
-    result.add(destDetail);
-    // File size
-    result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize)));
-    // Creation time
-    result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
-    // URL
-    DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
-    urlDetail.setAction(new DetailAction() {
-      public void execute(Detail detailsP) {
-        notYetImplementedDialog.show();
-      }
-    });
-    result.add(urlDetail);
-    // Username
-    result.add(new DetailText(getString(R.string.detail_username), details.userName));
-    return result;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// Launch the gets task's details recurrent action
+		Synodroid app = (Synodroid) getApplication();
+		app.setRecurrentAction(this, new DetailTaskAction(task));
+		app.resumeServer();
+	}
 
-  /**
-   * Return a sub detail list for the general's tab
-   */
-  private List<Detail> buildTransferDetails(TaskDetail details) {
-    ArrayList<Detail> result = new ArrayList<Detail>();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView
+	 * (android .view.ViewGroup)
+	 */
+	@Override
+	public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
+		parentP.addView(tabManager.getContentView());
+	}
 
-    // ------------ Status
-    result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
-    // ------------ Transfered
-    String transfered = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded);
-    transfered += " - " + getString(R.string.detail_progress_download) + " "
-            + Utils.bytesToFileSize(details.bytesDownloaded);
-    result.add(new DetailText(getString(R.string.detail_transfered), transfered));
-    // ------------- Progress
-    long downloaded = details.bytesDownloaded;
-    long filesize = details.fileSize;
-    int downPer = (int) ((downloaded * 100) / filesize);
-    long uploaded = details.bytesUploaded;
-    double ratio = (double) (details.seedingRatio / 100);
-    int upPerc = 100;
-    if (ratio != 0) {
-      upPerc = (int) ((uploaded * 100) / (filesize * ratio));
-    }
-    Detail2Progress progDetail = new Detail2Progress(getString(R.string.detail_progress));
-    progDetail.setProgress1(getString(R.string.detail_progress_upload) + " " + upPerc + "%", upPerc);
-    progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPer + "%", downPer);
-    progDetail.setAction(new DetailAction() {
-      public void execute(Detail detailsP) {
-        notYetImplementedDialog.show();
-      }
-    });
-    result.add(progDetail);
-    // ------------ Speed
-    String speed = getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s";
-    speed += " - " + getString(R.string.detail_progress_download) + " " + details.speedDownload + " KB/s";
-    result.add(new DetailText(getString(R.string.detail_speed), speed));
-    // ------------ Peers
-    if (details.isTorrent) {
-      String peers = details.peersCurrent + " / " + details.peersTotal;
-      DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers));
-      int pProgress = 0;
-      if (details.peersTotal != 0) {
-        pProgress = (int) ((details.peersCurrent * 100) / details.peersTotal);
-      }
-      peersDetail.setProgress(peers, pProgress);
-      result.add(peersDetail);
-    }
-    // ------------ Seeders / Leechers
-    if (details.isTorrent) {
-      String seedStr = getString(R.string.detail_unvailable);
-      String leechStr = getString(R.string.detail_unvailable);
-      if (details.seeders != null) seedStr = details.seeders.toString();
-      if (details.leechers != null) leechStr = details.leechers.toString();
-      String seeders = seedStr + " - " + leechStr;
-      result.add(new DetailText(getString(R.string.detail_seeders_leechers), seeders));
-    }
-    // ------------ ETAs
-    Detail2Text etaDetail = new Detail2Text(getString(R.string.detail_eta));
-    String etaUpload = "?";
-    String etaDownload = "?";
-    if (details.speedDownload != 0) {
-      long sizeLeft = filesize - downloaded;
-      long timeLeft = (long) (sizeLeft / (details.speedDownload * 1000));
-      etaDownload = Utils.computeTimeLeft(timeLeft);
-    }
-    else {
-      if (downPer == 100) {
-        etaDownload = getString(R.string.detail_finished);
-      }
-    }
-    Long timeLeftSize = null;
-    if (details.speedUpload != 0 && details.seedingRatio != 0) {
-      long sizeLeft = (long) ((filesize * ratio) - uploaded);
-      timeLeftSize = (long) (sizeLeft / (details.speedUpload * 1000));
-    }
-    // If the user defined a minimum seeding time AND we are in seeding
-    // mode
-    Long timeLeftTime = null;
-    if (details.seedingInterval != 0 && TaskStatus.valueOf(details.status) == TaskStatus.TASK_SEEDING) {
-      timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
-    }
-    // At least one time has been computed
-    if (timeLeftTime != null || timeLeftSize != null) {
-      // By default take the size time
-      Long time = timeLeftSize;
-      // Except if it is null
-      if (timeLeftSize == null) {
-        time = timeLeftTime;
-      }
-      else {
-        // If time is not null
-        if (timeLeftTime != null) {
-          // Get the higher value
-          if (timeLeftTime > timeLeftSize) {
-            time = timeLeftTime;
-          }
-        }
-      }
-      etaUpload = Utils.computeTimeLeft(time);
-    }
-    else if (upPerc == 100) {
-      etaUpload = getString(R.string.detail_finished);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#attachStatusView(android
+	 * .view.ViewGroup)
+	 */
+	@Override
+	public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
+		parentP.addView(tabManager.getTabView());
+	}
 
-    etaDetail.setValue1(getString(R.string.detail_progress_upload) + " " + etaUpload);
-    etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
-    etaDetail.setAction(new DetailAction() {
-      public void execute(Detail detailsP) {
-        notYetImplementedDialog.show();
-      }
-    });
-    result.add(etaDetail);
-    // ------------ Pieces
-    String pieces = details.piecesCurrent + " / " + details.piecesTotal;
-    DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces));
-    int piProgress = 0;
-    if (details.piecesTotal != 0) {
-      piProgress = (int) ((details.piecesCurrent * 100) / details.piecesTotal);
-    }
-    piecesDetail.setProgress(pieces, piProgress);
-    result.add(piecesDetail);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.SynodroidActivity#attachTitleView(android
+	 * .view.ViewGroup)
+	 */
+	@Override
+	public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
+		RelativeLayout titleContainer = (RelativeLayout) inflaterP.inflate(R.layout.detail_title, parentP, true);
+		title = (TextView) titleContainer.findViewById(R.id.id_title);
+	}
 
-    return result;
-  }
+	/**
+	 * Return a sub detail list for the general's tab
+	 */
+	private List<Detail> buildGeneralDetails(TaskDetail details) {
+		ArrayList<Detail> result = new ArrayList<Detail>();
+		// FileName
+		result.add(new DetailText(getString(R.string.detail_filename), details.fileName));
+		setTitle(details.fileName);
+		// Destination
+		DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
+		destDetail.setAction(new DetailAction() {
+			public void execute(Detail detailsP) {
+				notYetImplementedDialog.show();
+			}
+		});
+		result.add(destDetail);
+		// File size
+		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize, getString(R.string.detail_unknown))));
+		// Creation time
+		result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
+		// URL
+		DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
+		urlDetail.setAction(new DetailAction() {
+			public void execute(Detail detailsP) {
+				notYetImplementedDialog.show();
+			}
+		});
+		result.add(urlDetail);
+		// Username
+		result.add(new DetailText(getString(R.string.detail_username), details.userName));
+		return result;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.String, java.lang.String)
-   */
-  public void selectedTabChanged(String oldTabId, String newTabIdP) {
-  }
+	/**
+	 * Return a sub detail list for the general's tab
+	 */
+	private List<Detail> buildTransferDetails(TaskDetail details) {
+		ArrayList<Detail> result = new ArrayList<Detail>();
+
+		// ------------ Status
+		result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
+		// ------------ Transfered
+		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
+		if (details.isTorrent) {
+			transfered = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " - " + transfered;
+		}
+		result.add(new DetailText(getString(R.string.detail_transfered), transfered));
+		// ------------- Progress
+		long downloaded = details.bytesDownloaded;
+		long filesize = details.fileSize;
+		String downPerStr = getString(R.string.detail_unknown);
+		int downPer = 0;
+		if (filesize != -1) {
+			downPer = (int) ((downloaded * 100) / filesize);
+			downPerStr = "" + downPer + "%";
+		}
+		long uploaded = details.bytesUploaded;
+		double ratio = (double) (details.seedingRatio / 100);
+		int upPerc = 0;
+		String upPercStr = getString(R.string.detail_unknown);
+		if (ratio != 0 && filesize != -1) {
+			upPerc = (int) ((uploaded * 100) / (filesize * ratio));
+			upPercStr = "" + upPerc + "%";
+		}
+		// If it is a torrent
+		Detail proDetail = null;
+		if (details.isTorrent) {
+			Detail2Progress progDetail = new Detail2Progress(getString(R.string.detail_progress));
+			proDetail = progDetail;
+			progDetail.setProgress1(getString(R.string.detail_progress_upload) + " " + upPercStr, upPerc);
+			progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
+			progDetail.setAction(new DetailAction() {
+				public void execute(Detail detailsP) {
+					notYetImplementedDialog.show();
+				}
+			});
+		}
+		else {
+			DetailProgress progDetail = new DetailProgress(getString(R.string.detail_progress));
+			proDetail = progDetail;
+			progDetail.setProgress(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
+		}
+		result.add(proDetail);
+		// ------------ Speed
+		String speed = getString(R.string.detail_progress_download) + " " + details.speedDownload + " KB/s";
+		if (details.isTorrent) {
+			speed = getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s" + " - " + speed;
+		}
+		result.add(new DetailText(getString(R.string.detail_speed), speed));
+		// ------------ Peers
+		if (details.isTorrent) {
+			String peers = details.peersCurrent + " / " + details.peersTotal;
+			DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers));
+			int pProgress = 0;
+			if (details.peersTotal != 0) {
+				pProgress = (int) ((details.peersCurrent * 100) / details.peersTotal);
+			}
+			peersDetail.setProgress(peers, pProgress);
+			result.add(peersDetail);
+		}
+		// ------------ Seeders / Leechers
+		if (details.isTorrent) {
+			String seedStr = getString(R.string.detail_unvailable);
+			String leechStr = getString(R.string.detail_unvailable);
+			if (details.seeders != null)
+				seedStr = details.seeders.toString();
+			if (details.leechers != null)
+				leechStr = details.leechers.toString();
+			String seeders = seedStr + " - " + leechStr;
+			result.add(new DetailText(getString(R.string.detail_seeders_leechers), seeders));
+		}
+		// ------------ ETAs
+		String etaUpload = getString(R.string.detail_unknown);
+		String etaDownload = getString(R.string.detail_unknown);
+		if (details.speedDownload != 0) {
+			long sizeLeft = filesize - downloaded;
+			long timeLeft = (long) (sizeLeft / (details.speedDownload * 1000));
+			etaDownload = Utils.computeTimeLeft(timeLeft);
+		}
+		else {
+			if (downPer == 100) {
+				etaDownload = getString(R.string.detail_finished);
+			}
+		}
+		Long timeLeftSize = null;
+		if (details.speedUpload != 0 && details.seedingRatio != 0) {
+			long sizeLeft = (long) ((filesize * ratio) - uploaded);
+			timeLeftSize = (long) (sizeLeft / (details.speedUpload * 1000));
+		}
+		// If the user defined a minimum seeding time AND we are in seeding
+		// mode
+		Long timeLeftTime = null;
+		if (details.seedingInterval != 0 && TaskStatus.valueOf(details.status) == TaskStatus.TASK_SEEDING) {
+			timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
+		}
+		// At least one time has been computed
+		if (timeLeftTime != null || timeLeftSize != null) {
+			// By default take the size time
+			Long time = timeLeftSize;
+			// Except if it is null
+			if (timeLeftSize == null) {
+				time = timeLeftTime;
+			}
+			else {
+				// If time is not null
+				if (timeLeftTime != null) {
+					// Get the higher value
+					if (timeLeftTime > timeLeftSize) {
+						time = timeLeftTime;
+					}
+				}
+			}
+			etaUpload = Utils.computeTimeLeft(time);
+		}
+		else if (upPerc == 100) {
+			etaUpload = getString(R.string.detail_finished);
+		}
+		Detail etaDet = null;
+		// If it is a torrent then show the upload ETA
+		if (details.isTorrent) {
+			Detail2Text etaDetail = new Detail2Text(getString(R.string.detail_eta));
+			etaDet = etaDetail;
+			etaDetail.setValue1(getString(R.string.detail_progress_upload) + " " + etaUpload);
+			etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
+			etaDetail.setAction(new DetailAction() {
+				public void execute(Detail detailsP) {
+					notYetImplementedDialog.show();
+				}
+			});
+		}
+		// Otherwise only show the download ETA
+		else {
+			DetailText etaDetail = new DetailText(getString(R.string.detail_eta));
+			etaDet = etaDetail;
+			etaDetail.setValue(getString(R.string.detail_progress_download) + " " + etaDownload);
+		}
+		result.add(etaDet);
+		// ------------ Pieces
+		if (details.isTorrent) {
+			String pieces = details.piecesCurrent + " / " + details.piecesTotal;
+			DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces));
+			int piProgress = 0;
+			if (details.piecesTotal != 0) {
+				piProgress = (int) ((details.piecesCurrent * 100) / details.piecesTotal);
+			}
+			piecesDetail.setProgress(pieces, piProgress);
+			result.add(piecesDetail);
+		}
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.
+	 * String, java.lang.String)
+	 */
+	public void selectedTabChanged(String oldTabId, String newTabIdP) {
+	}
 
 }
