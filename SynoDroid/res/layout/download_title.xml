@@ -5,32 +5,35 @@
   android:layout_height="wrap_content"
   android:orientation="vertical"
   android:layout_alignParentTop="true"
-android:layout_width="fill_parent">
-  <RelativeLayout
-    android:id="@+id/title_bar"
-    android:layout_width="fill_parent"
-    android:layout_height="40dip"
-  >
-    <ImageView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:id="@+id/id_https"
-      android:layout_centerVertical="true"
-      android:src="@drawable/icon_https"
-      android:visibility="invisible"
-      android:layout_marginLeft="10dip"
-    ></ImageView>
-    
-    <TextView
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:id="@+id/id_title"
-      style="@style/TitleFont"
-      android:layout_toRightOf="@+id/id_https"
-      android:singleLine="true"
-      android:layout_centerVertical="true"
-      android:text="@string/app_name" android:layout_alignParentLeft="false" android:layout_alignParentRight="true" android:layout_marginRight="10dip" android:layout_width="fill_parent" android:layout_marginLeft="10dip"/>
+  android:layout_width="fill_parent">
+    <RelativeLayout
+      android:id="@+id/title_bar"
+      android:layout_width="fill_parent"
+      android:layout_height="40dip">
+      <TextView
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/id_title"
+        style="@style/TitleFont"
+        android:singleLine="true"
+        android:layout_centerVertical="true"
+        android:text="@string/app_name" 
+        android:layout_alignParentLeft="true" 
+        android:layout_alignParentRight="false" 
+        android:layout_marginRight="10dip" 
+        android:layout_width="fill_parent" 
+        android:layout_marginLeft="10dip"/>
+      <ImageView 
+      	android:layout_width="wrap_content" 
+      	android:layout_height="wrap_content" 
+      	android:layout_toLeftOf="@+id/id_title"
+        android:layout_alignParentRight="true" 
+      	android:id="@+id/id_https" 
+      	android:layout_centerVertical="true" 
+      	android:src="@drawable/icon_https" 
+      	android:visibility="invisible" 
+      	android:layout_marginLeft="10dip">
+      </ImageView>
   </RelativeLayout>
   
 </LinearLayout>
