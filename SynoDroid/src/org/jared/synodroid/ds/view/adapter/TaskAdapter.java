@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
@@ -184,7 +185,10 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Task task = tasks.get(position);
 		if (task != null) {
-			activity.onTaskClicked(task);
+			TaskStatus status = TaskStatus.valueOf(task.status);
+			if (status != TaskStatus.TASK_HASH_CHECKING && status != TaskStatus.TASK_WAITING){
+				activity.onTaskClicked(task);
+			}
 		}
 	}
 

@@ -78,9 +78,12 @@
 
 <string name="action_resume">Resume</string>
 <string name="action_pause">Pause</string>
-
+<string name="action_clear">Clear</string>
+<string name="action_cancel">Cancel</string>
+<string name="action_retry">Retry</string>
 <string name="action_delete">Delete</string>
 <string name="action_details">Show details...</string>
+
 <string name="dialog_title_confirm">Confirm</string>
 <string name="button_yes">Yes</string>
 <string name="button_no">No</string>
