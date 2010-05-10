@@ -219,10 +219,7 @@ public class SynoServer {
 					// Connection error
 					catch (DSMException e) {
 						Log.d(Synodroid.DS_TAG, "DSMException occured", e);
-						// If the user didn't change the server
-						if (connected) {
-							fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, e));
-						}
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, e));
 					}
 					// Programmation exception
 					catch (Exception e) {

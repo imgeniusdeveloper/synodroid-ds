@@ -33,7 +33,7 @@ android:layout_height="wrap_content">
     <TextView android:layout_weight="1" android:singleLine="true" android:ellipsize="marquee" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/id_detail_value1" android:layout_width="wrap_content" android:layout_below="@+id/id_detail_name" android:text="Here is the value 1 a bit long" android:minWidth="150dip" android:layout_marginBottom="2dip" android:layout_marginTop="2dip"/><ProgressBar
       android:id="@+id/id_detail_progress1"
       android:layout_toLeftOf="@+id/id_detail_action"
-      android:indeterminate="false" android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" android:max="100" android:layout_width="150dip" android:layout_toRightOf="@+id/id_detail_value1" android:layout_alignBottom="@+id/id_detail_value1" android:progressDrawable="@drawable/upload_progress"></ProgressBar>
+      android:indeterminate="false" android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" android:max="100" android:layout_width="150dip" android:layout_toRightOf="@+id/id_detail_value1" android:layout_alignBottom="@+id/id_detail_value1" android:progressDrawable="@drawable/download_progress"></ProgressBar>
     
     <TextView android:layout_weight="1" android:singleLine="true" android:ellipsize="marquee" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/id_detail_value2" android:layout_width="wrap_content" android:layout_below="@+id/id_detail_value1" android:text="Here is the value 2 much longer than the first one" android:layout_alignRight="@+id/id_detail_value1"/><ProgressBar
       android:id="@+id/id_detail_progress2"

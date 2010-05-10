@@ -62,7 +62,7 @@ public class IconFacade {
 			animation.setInterpolator(new LinearInterpolator());
 			break;
 		case TASK_FINISHED:
-			id = R.drawable.dl_finished;
+			id = R.drawable.dl_finished5;
 			break;
 		case TASK_ERROR:
 			id = R.drawable.dl_error;
