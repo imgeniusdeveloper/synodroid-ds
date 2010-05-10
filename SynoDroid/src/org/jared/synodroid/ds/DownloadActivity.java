@@ -30,6 +30,7 @@ import org.jared.synodroid.common.ui.Tab;
 import org.jared.synodroid.common.ui.TabListener;
 import org.jared.synodroid.common.ui.TabWidgetManager;
 import org.jared.synodroid.common.ui.TitleClicklistener;
+import org.jared.synodroid.ds.action.ShowDetailsAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
@@ -47,11 +48,13 @@ import android.os.Bundle;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -142,6 +145,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       // Get the adapter AND update datas
       TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
       taskView.setOnItemClickListener(taskAdapter);
+      taskView.setOnItemLongClickListener(taskAdapter);
       taskAdapter.updateTasks(tasks);
       // Dissmiss the connection dialog
       try {
@@ -232,7 +236,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     TaskAdapter taskAdapter = new TaskAdapter(this);
     taskView.setAdapter(taskAdapter);
     taskView.setOnItemClickListener(taskAdapter);
-
+    taskView.setOnItemLongClickListener(taskAdapter);
+    
     // First bind the current activity to the current server if exist
     if (!((Synodroid) getApplication()).bindResponseHandler(this)) {
       Intent intent = getIntent();
@@ -250,7 +255,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // The user is able to click on the title bar to connect to a server
     setTitleClickListener(this);
     
-
   }
 
   /*
@@ -557,6 +561,16 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    * @param taskP
    */
   public void onTaskClicked(final Task taskP) {
+	  Synodroid app = (Synodroid) getApplication();
+      app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
+  }
+  
+  /**
+   * A task as been long clicked by the user
+   * 
+   * @param taskP
+   */
+  public void onTaskLongClicked(final Task taskP) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle(getString(R.string.dialog_title_action));
     final ActionAdapter adapter = new ActionAdapter(this, taskP);
@@ -592,5 +606,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       ((Synodroid) getApplication()).forceRefresh();
     }
   }
-
+  
+  public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {  
+	super.onCreateContextMenu(menu, v, menuInfo);  
+  }  
 }

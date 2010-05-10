@@ -41,7 +41,7 @@ import android.widget.TextView;
  * 
  * @author eric.taix at gmail.com
  */
-public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
 	// List of torrent
 	private List<Task> tasks = new ArrayList<Task>();
@@ -190,6 +190,18 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 				activity.onTaskClicked(task);
 			}
 		}
+	}
+
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		Task task = tasks.get(position);
+		if (task != null) {
+			TaskStatus status = TaskStatus.valueOf(task.status);
+			if (status != TaskStatus.TASK_HASH_CHECKING && status != TaskStatus.TASK_WAITING){
+				activity.onTaskLongClicked(task);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
