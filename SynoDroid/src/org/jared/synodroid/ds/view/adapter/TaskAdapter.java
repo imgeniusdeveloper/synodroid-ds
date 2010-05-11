@@ -154,7 +154,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		// The progress bar
 		ProgressBar progress = (ProgressBar) viewP.findViewById(R.id.id_torrent_progress);
 		// If a known value
-		if (torrentP.progress != -1) {
+		if (torrentP.progress != -1 && torrentP.progress != 100) {
 			progress.setProgress(torrentP.progress);
 			progress.setVisibility(View.VISIBLE);
 		}
