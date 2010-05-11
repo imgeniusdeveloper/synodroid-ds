@@ -151,10 +151,10 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		TextView torrentCurrentSize = (TextView) viewP.findViewById(R.id.id_torrent_username);
 		torrentCurrentSize.setText(torrentP.creator);
 
-		// The progress bar
+		// The progress bar 
 		ProgressBar progress = (ProgressBar) viewP.findViewById(R.id.id_torrent_progress);
 		// If a known value
-		if (torrentP.progress != -1 && torrentP.progress != 100) {
+		if (torrentP.progress != -1 && (torrentP.progress != 100 || torrentP.status.equals(TaskStatus.TASK_SEEDING.name()))) {
 			progress.setProgress(torrentP.progress);
 			progress.setVisibility(View.VISIBLE);
 		}
