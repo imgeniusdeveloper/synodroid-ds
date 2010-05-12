@@ -17,6 +17,7 @@ import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DetailTaskAction;
 import org.jared.synodroid.common.action.GetFilesAction;
+import org.jared.synodroid.common.action.UpdateTaskAction;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskFile;
@@ -69,6 +70,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private Task task;
 	// The adapter for task's files
 	private FileDetailAdapter fileAdapter;
+	// The file ListView
+	private ListView filesListView;
 
 	/*
 	 * (non-Javadoc)
@@ -92,6 +95,10 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		transAdapter = new DetailAdapter(this);
 		transListView.setAdapter(transAdapter);
 		transListView.setOnItemClickListener(transAdapter);
+
+		filesListView = new ListView(this);
+		fileAdapter = new FileDetailAdapter(this, task);
+		filesListView.setAdapter(fileAdapter);
 
 		// Build the TabManager
 		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
@@ -140,11 +147,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			// If torrent or NZB then add the file's tab
 			if (task.isTorrent || task.isNZB) {
 				// Build the file tab
-				ListView filesListView = new ListView(this);
-				fileAdapter = new FileDetailAdapter(this, task);
-				filesListView.setAdapter(fileAdapter);
+				fileAdapter = (FileDetailAdapter) filesListView.getAdapter();
 				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
-				tabManager.addTab(filesTab, filesListView);
+				// If the tab does not already exist ! 
+				if (tabManager.getTab(filesTab) == null) {
+					tabManager.addTab(filesTab, filesListView);
+				}
 			}
 			break;
 		case ResponseHandler.MSG_ERROR:
@@ -168,6 +176,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		// Try to update the details
+		updateTask();
 		Synodroid app = (Synodroid) getApplication();
 		app.pauseServer();
 	}
@@ -426,8 +436,27 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			Synodroid application = (Synodroid) getApplication();
 			SynoServer server = application.getServer();
 			if (server != null) {
+				// Clear the list just before updating items
+				fileAdapter.updateFiles(new ArrayList<TaskFile>());
 				server.executeAsynchronousAction(this, new GetFilesAction(task), false);
 			}
+		}
+
+		// If the user comes from the Files tab then save the modifications
+		if (oldTabId.equals(TAB_FILES)) {
+			updateTask();
+		}
+	}
+
+	/**
+	 * Update the current task
+	 */
+	private void updateTask() {
+		List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
+		if (modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) {
+			Synodroid app = (Synodroid) getApplication();
+			UpdateTaskAction update = new UpdateTaskAction(task, modifiedTaskFiles, 100, 0);
+			app.getServer().executeAsynchronousAction(this, update, false);
 		}
 	}
 

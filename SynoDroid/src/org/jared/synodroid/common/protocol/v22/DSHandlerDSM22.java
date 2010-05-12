@@ -194,14 +194,16 @@ class DSHandlerDSM22 implements DSHandler {
 			}
 		}
 	}
-	
-	
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.protocol.DSHandler#getFiles(org.jared.synodroid.common.data.Task)
-   */
-  public List<TaskFile> getFiles(Task taskP) throws Exception {
-  	ArrayList<TaskFile> result = new ArrayList<TaskFile>();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#getFiles(org.jared.synodroid
+	 * .common.data.Task)
+	 */
+	public List<TaskFile> getFiles(Task taskP) throws Exception {
+		ArrayList<TaskFile> result = new ArrayList<TaskFile>();
 		// If we are logged on
 		if (server.isConnected()) {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getfilelist").add("taskid", "" + taskP.taskId);
@@ -215,19 +217,19 @@ class DSHandlerDSM22 implements DSHandler {
 			if (success) {
 				JSONArray array = json.getJSONArray("items");
 				for (int iLoop = 0; iLoop < array.length(); iLoop++) {
-	        JSONObject obj = array.getJSONObject(iLoop);
-	        // Create the file
-	        TaskFile file = new TaskFile();
-	        file.name = obj.getString("name");
-	        file.filesize = obj.getString("size");
-	        file.download = obj.getBoolean("dl");
-	        result.add(file);
-        }
+					JSONObject obj = array.getJSONObject(iLoop);
+					// Create the file
+					TaskFile file = new TaskFile();
+					file.name = obj.getString("name");
+					file.filesize = obj.getString("size");
+					file.download = obj.getBoolean("dl");
+					result.add(file);
+				}
 				array.length();
 			}
 		}
-	  return result;
-  }
+		return result;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -242,92 +244,93 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
 			// Execute
+			JSONObject json = null;
 			synchronized (server) {
-				JSONObject json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
-				boolean success = json.getBoolean("success");
-				// If successful then build details list
-				if (success) {
-					JSONObject data = json.getJSONObject("data");
-					if (data.has("stime"))
-						result.seedingDate = data.getString("stime");
-					if (data.has("totalpeer"))
-						result.peersTotal = Utils.toLong(data.getString("totalpeer"));
-					if (data.has("currpeer"))
-						result.peersCurrent = Utils.toLong(data.getString("currpeer"));
-					if (data.has("istorrent"))
-						result.isTorrent = data.getBoolean("istorrent");
-					if (data.has("speed")) {
-						Pattern p = Pattern.compile("(((\\d)*\\.(\\d)*) KB/s)");
-						Matcher m = p.matcher(data.getString("speed"));
-						if (m.find() && m.groupCount() >= 2) {
-							result.speedUpload = Utils.toDouble(m.group(2));
-						}
-						if (m.find() && m.groupCount() >= 2) {
-							result.speedDownload = Utils.toDouble(m.group(2));
-						}
+				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+			}
+			boolean success = json.getBoolean("success");
+			// If successful then build details list
+			if (success) {
+				JSONObject data = json.getJSONObject("data");
+				if (data.has("stime"))
+					result.seedingDate = data.getString("stime");
+				if (data.has("totalpeer"))
+					result.peersTotal = Utils.toLong(data.getString("totalpeer"));
+				if (data.has("currpeer"))
+					result.peersCurrent = Utils.toLong(data.getString("currpeer"));
+				if (data.has("istorrent"))
+					result.isTorrent = data.getBoolean("istorrent");
+				if (data.has("speed")) {
+					Pattern p = Pattern.compile("(((\\d)*\\.(\\d)*) KB/s)");
+					Matcher m = p.matcher(data.getString("speed"));
+					if (m.find() && m.groupCount() >= 2) {
+						result.speedUpload = Utils.toDouble(m.group(2));
 					}
-					if (data.has("filename"))
-						result.fileName = data.getString("filename");
-					if (data.has("username"))
-						result.userName = data.getString("username");
-					if (data.has("totalpieces"))
-						result.piecesTotal = Utils.toLong(data.getString("totalpieces"));
-					if (data.has("transfered")) {
-						Pattern p = Pattern.compile("((\\d*\\.\\d*)\\s[KMGT]B)");
-						Matcher m = p.matcher(data.getString("transfered"));
-						if (m.find() && m.groupCount() >= 1) {
-							result.bytesUploaded = Utils.fileSizeToBytes(m.group(1));
-						}
-						if (m.find() && m.groupCount() >= 1) {
-							result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
-						}
-					}
-					if (data.has("seedelapsed"))
-						result.seedingElapsed = data.getInt("seedelapsed");
-					if (data.has("isnzb"))
-						result.isNZB = data.getBoolean("isnzb");
-					if (data.has("destination"))
-						result.destination = data.getString("destination");
-					if (data.has(("url")))
-						result.url = data.getString("url");
-					if (data.has("ctime"))
-						result.creationDate = data.getString("ctime");
-					if (data.has("status"))
-						result.status = data.getString("status");
-					if (data.has("seeding_interval"))
-						result.seedingInterval = data.getInt("seeding_interval");
-					if (data.has("currpieces"))
-						result.piecesCurrent = Utils.toLong(data.getString("currpieces"));
-					if (data.has("id"))
-						result.taskId = data.getInt("id");
-					if (data.has("seeding_ratio"))
-						result.seedingRatio = data.getInt("seeding_ratio");
-					if (data.has("filesize"))
-						result.fileSize = Utils.fileSizeToBytes(data.getString("filesize"));
-					if (data.has("seeders_leechers")) {
-						Pattern p = Pattern.compile("(\\d+)(/)(\\d+)");
-						String v = data.getString("seeders_leechers");
-						Matcher m = p.matcher(v);
-						if (m.find()) {
-							if (m.groupCount() >= 1)
-								result.seeders = Utils.toLong(m.group(1));
-							if (m.groupCount() >= 3)
-								result.leechers = Utils.toLong(m.group(3));
-						}
+					if (m.find() && m.groupCount() >= 2) {
+						result.speedDownload = Utils.toDouble(m.group(2));
 					}
 				}
-				// Otherwise throw a exception
-				else {
-					String reason = "";
-					if (json.has("reason")) {
-						reason = json.getString("reason");
+				if (data.has("filename"))
+					result.fileName = data.getString("filename");
+				if (data.has("username"))
+					result.userName = data.getString("username");
+				if (data.has("totalpieces"))
+					result.piecesTotal = Utils.toLong(data.getString("totalpieces"));
+				if (data.has("transfered")) {
+					Pattern p = Pattern.compile("((\\d*\\.\\d*)\\s[KMGT]B)");
+					Matcher m = p.matcher(data.getString("transfered"));
+					if (m.find() && m.groupCount() >= 1) {
+						result.bytesUploaded = Utils.fileSizeToBytes(m.group(1));
 					}
-					else if (json.has("errno")){
-						JSONObject err = json.getJSONObject("errno");
-						reason = err.getString("key");
+					if (m.find() && m.groupCount() >= 1) {
+						result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
 					}
-					throw new DSMException(reason);
 				}
+				if (data.has("seedelapsed"))
+					result.seedingElapsed = data.getInt("seedelapsed");
+				if (data.has("isnzb"))
+					result.isNZB = data.getBoolean("isnzb");
+				if (data.has("destination"))
+					result.destination = data.getString("destination");
+				if (data.has(("url")))
+					result.url = data.getString("url");
+				if (data.has("ctime"))
+					result.creationDate = data.getString("ctime");
+				if (data.has("status"))
+					result.status = data.getString("status");
+				if (data.has("seeding_interval"))
+					result.seedingInterval = data.getInt("seeding_interval");
+				if (data.has("currpieces"))
+					result.piecesCurrent = Utils.toLong(data.getString("currpieces"));
+				if (data.has("id"))
+					result.taskId = data.getInt("id");
+				if (data.has("seeding_ratio"))
+					result.seedingRatio = data.getInt("seeding_ratio");
+				if (data.has("filesize"))
+					result.fileSize = Utils.fileSizeToBytes(data.getString("filesize"));
+				if (data.has("seeders_leechers")) {
+					Pattern p = Pattern.compile("(\\d+)(/)(\\d+)");
+					String v = data.getString("seeders_leechers");
+					Matcher m = p.matcher(v);
+					if (m.find()) {
+						if (m.groupCount() >= 1)
+							result.seeders = Utils.toLong(m.group(1));
+						if (m.groupCount() >= 3)
+							result.leechers = Utils.toLong(m.group(3));
+					}
+				}
+			}
+			// Otherwise throw a exception
+			else {
+				String reason = "";
+				if (json.has("reason")) {
+					reason = json.getString("reason");
+				}
+				else if (json.has("errno")) {
+					JSONObject err = json.getJSONObject("errno");
+					reason = err.getString("key");
+				}
+				throw new DSMException(reason);
 			}
 		}
 		return result;
@@ -426,4 +429,48 @@ class DSHandlerDSM22 implements DSHandler {
 			}
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid
+	 * .common.data.Task, java.util.List, int, int)
+	 */
+	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {
+		// Create the JSON request
+		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "applytask").
+		add("taskid", "" + taskP.taskId).add("update", "1");
+		JSONObject data = new JSONObject();
+		JSONArray datas = new JSONArray();
+		for (TaskFile taskFile : filesP) {
+			JSONObject file = new JSONObject();
+			file.put("name", taskFile.name);
+			file.put("dl", taskFile.download);
+			datas.put(file);
+		}
+		data.put("data", datas);
+		updateTaskRequest.add("fsel", data.toString());
+		updateTaskRequest.add("seeding_ratio", "" + seedingRatioP);
+		updateTaskRequest.add("seeding_interval", "" + seedingIntervalP);
+		// Execute it to the server
+		JSONObject json = null;
+		synchronized (server) {
+			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(), "POST");
+		}
+		boolean success = json.getBoolean("success");
+		// If not successful then throw an exception
+		if (!success) {
+			String reason = "";
+			if (json.has("reason")) {
+				reason = json.getString("reason");
+			}
+			else if (json.has("errno")) {
+				JSONObject err = json.getJSONObject("errno");
+				reason = err.getString("key");
+			}
+			throw new DSMException(reason);
+		}
+	}
+
 }

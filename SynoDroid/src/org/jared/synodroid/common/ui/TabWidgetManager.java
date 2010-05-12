@@ -110,6 +110,21 @@ public class TabWidgetManager implements View.OnClickListener {
     }
   }
 
+  /**
+   * Return the view corresponding to the tabP parameter or null if the tab does not exist
+   * @param tabP
+   * @return
+   */
+  public View getTab(Tab tabP) {
+  	int index = tabs.indexOf(tabP);
+  	if (index != -1) {
+  		return views.get(index);
+  	}
+  	else {
+  		return null;
+  	}
+  }
+  
   /*
    * (non-Javadoc)
    * @see android.view.View.OnClickListener#onClick(android.view.View)

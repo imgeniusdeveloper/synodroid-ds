@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskFile;
+import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.DetailActivity;
 import org.jared.synodroid.ds.R;
 
@@ -28,7 +29,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -42,10 +42,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  * 
  * @author eric.taix at gmail.com
  */
-public class FileDetailAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class FileDetailAdapter extends BaseAdapter {
 
 	// The task
 	private Task task;
+	// List of task to update
+	private List<TaskFile> modifiedTasks = new ArrayList<TaskFile>();
 	// List of file
 	private List<TaskFile> files = new ArrayList<TaskFile>();
 	// The XML view inflater
@@ -132,7 +134,6 @@ public class FileDetailAdapter extends BaseAdapter implements AdapterView.OnItem
 		}
 		// Binds datas
 		bindData(view, file);
-
 		return view;
 	}
 
@@ -146,28 +147,43 @@ public class FileDetailAdapter extends BaseAdapter implements AdapterView.OnItem
 		// The filename
 		TextView fileText = (TextView) viewP.findViewById(R.id.id_file_name);
 		fileText.setText(fileP.name);
-		
+
 		// The file size
 		TextView fileSize = (TextView) viewP.findViewById(R.id.id_file_size);
 		fileSize.setText(fileP.filesize);
-		
+
 		// Is the file has to be download
 		CheckBox downloadFile = (CheckBox) viewP.findViewById(R.id.id_file_to_download);
+		downloadFile.setTag(fileP.name);
 		downloadFile.setVisibility((task.isTorrent ? View.VISIBLE : View.GONE));
 		downloadFile.setChecked(fileP.download);
 		downloadFile.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				
+				String tag = (String) buttonView.getTag();
+				TaskFile file = new TaskFile();
+				file.name = tag;
+				int index = files.indexOf(file);
+				if (index != -1) {
+					file = files.get(index);
+					if (isChecked != file.download) {
+						fileP.download = isChecked;
+						modifiedTasks.add(file);
+					}
+				}
 			}
 		});
+		// Changing the checkbox state is only able if the download is not finished
+		downloadFile.setEnabled((task.status.equals(TaskStatus.TASK_DOWNLOADING.name()) ? true : false));
 	}
 
 	/**
-	 * Click on a item
+	 * Return the modified tasks list and then reset the modified list
+	 * 
+	 * @return
 	 */
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		TaskFile file = files.get(position);
-		if (file != null) {
-		}
+	public List<TaskFile> getModifiedTaskList() {
+		List<TaskFile> result = modifiedTasks;
+		modifiedTasks = new ArrayList<TaskFile>();
+		return result;
 	}
 }

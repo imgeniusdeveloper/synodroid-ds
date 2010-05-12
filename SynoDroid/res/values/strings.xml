@@ -6,7 +6,7 @@
     <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
 <string name="connect_cant_connect">"Can't connect to {0}. Error is '{1}'."</string>
-<string name="connect_unknwon_reason">&quot;Can't connect for an unknown reason&quot;</string>
+<string name="unknow_reason">&quot;An error occured for an unknown reason&quot;</string>
 <string name="connect_wrong_userpassword">"Wrong user or password. Please try again."</string>
 <string name="connect_already_connected">"You're connected to another computer. Please reconnect."</string>
 <string name="connect_nohost">&quot;Can't contact host. Please verify your parameters.&quot;</string>
@@ -154,4 +154,5 @@
 <string name="title_information">Information</string>
 <string name="detail_unknown">Unknown</string>
 <string name="action_files">Retrieving files of \'%s\'</string>
+<string name="action_updating">&quot;Updating file %s&quot;</string>
 </resources>

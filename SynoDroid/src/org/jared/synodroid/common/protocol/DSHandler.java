@@ -80,7 +80,15 @@ public interface DSHandler {
    * @param taskP
    * @return
    * @throws Exception
-   */
-  
+   */  
   public List<TaskFile> getFiles(final Task taskP) throws Exception;
+  
+  /**
+   * Update a task
+   * @param taskP The task to update
+   * @param filesP the file list (only modified files)
+   * @param seedingRatioP The new seeding ratio in %
+   * @param seedingIntervalP The new seeding interval (in minutes)
+   */
+  public void updateTask(final Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception;
 }

@@ -195,6 +195,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
+    
+    licenceAccepted = Eula.show(this, false);
+  	
     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     
     // Retrieve the listview
@@ -224,10 +227,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     
     super.onCreate(savedInstanceState);
 
-    licenceAccepted = Eula.show(this, false);
-
-
-
     // Retrieve title's text, icon and progress for future uses
     titleText = (TextView) findViewById(R.id.id_title);
     titleIcon = (ImageView) findViewById(R.id.id_https);
@@ -254,7 +253,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     
     // The user is able to click on the title bar to connect to a server
     setTitleClickListener(this);
-    
   }
 
   /*

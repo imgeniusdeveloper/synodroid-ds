@@ -316,7 +316,7 @@ public class SynoServer {
 	 */
 	private String translateError(ResponseHandler handlerP, DSMException dsmExP) {
 		String msg = "Can't display error";
-		msg = handlerP.getString(R.string.connect_unknwon_reason);
+		msg = handlerP.getString(R.string.unknow_reason);
 		// Get the reason
 		String jsoReason = dsmExP.getJsonReason();
 		// If no JSON reason, try to find the reason in the root DSMException
@@ -326,13 +326,13 @@ public class SynoServer {
 		// If there's is a wellknown reason
 		if (jsoReason != null) {
 			// Wrong user or password
-			if (jsoReason.equals("error_noprivilege")) {
+			if (jsoReason.equals("error_cantlogin")) {
 				msg = handlerP.getString(R.string.connect_wrong_userpassword);
 			}
 			else if (jsoReason.equals("error_interrupt")) {
 				msg = handlerP.getString(R.string.connect_already_connected);
 			}
-			else if (jsoReason.equals("error_cantlogin")) {
+			else if (jsoReason.equals("error_noprivilege")) {
 				msg = handlerP.getString(R.string.connect_cant);
 			}
 			else {
@@ -600,9 +600,14 @@ public class SynoServer {
 					}
 					actionP.execute(handlerP, SynoServer.this);
 				}
-				// Doesn't matter: just log it. Is it enough ?
+				catch(DSMException ex) {
+					Log.e("SynoDroid DS", "Unexpected DSM error", ex);
+					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));					
+				}
 				catch (Exception e) {
 					Log.e("SynoDroid DS", "Unexpected error", e);
+					DSMException ex = new DSMException(e);
+					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));
 				}
 				finally {
 					fireMessage(handlerP, ResponseHandler.MSG_OPERATION_DONE);
