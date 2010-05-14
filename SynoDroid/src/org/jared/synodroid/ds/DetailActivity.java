@@ -72,6 +72,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private FileDetailAdapter fileAdapter;
 	// The file ListView
 	private ListView filesListView;
+	private String cur_tab = TAB_GENERAL;
+	private boolean showFileTab = false;
 
 	/*
 	 * (non-Javadoc)
@@ -100,19 +102,22 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		fileAdapter = new FileDetailAdapter(this, task);
 		filesListView.setAdapter(fileAdapter);
 
+		if (savedInstanceState != null){
+			showFileTab = savedInstanceState.getBoolean("showFileTab", false);
+		}
 		// Build the TabManager
 		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
 		Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
 		tabManager.addTab(genTab, genListView);
 		Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
 		tabManager.addTab(transTab, transListView);
-		// Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files,
-		// R.drawable.ic_tab_files_selected);
-		// tabManager.addTab(filesTab, filesListView);
-
+		if (showFileTab){
+			Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
+			tabManager.addTab(filesTab, filesListView);
+		}
 		// Call super onCreate after the tab intialization
 		super.onCreate(savedInstanceState);
-
+		
 		// Create a "Not yet implemented" dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
@@ -150,6 +155,10 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				if (tabManager.getTab(filesTab) == null) {
 					tabManager.addTab(filesTab, filesListView);
 				}
+				showFileTab = true;
+			}
+			else{
+				showFileTab = false;
 			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
@@ -445,6 +454,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (oldTabId.equals(TAB_FILES)) {
 			updateTask();
 		}
+		cur_tab = newTabIdP;
 	}
 
 	/**
@@ -459,4 +469,23 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		}
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	    // Save UI state changes to the savedInstanceState.
+	    // This bundle will be passed to onCreate if the process is
+	    // killed and restarted.
+		savedInstanceState.putString("tabID", cur_tab);
+		savedInstanceState.putBoolean("showFileTab", showFileTab);
+	    // etc.
+	    super.onSaveInstanceState(savedInstanceState);
+	}
+	  
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	    super.onRestoreInstanceState(savedInstanceState);
+	    // Restore UI state from the savedInstanceState.
+	    // This bundle has also been passed to onCreate.
+	    cur_tab = savedInstanceState.getString("tabID");
+	    tabManager.slideTo(cur_tab);
+	}
 }

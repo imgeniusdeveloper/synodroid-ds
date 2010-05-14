@@ -116,6 +116,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private ImageView titleIcon;
   // The tab manager
   private TabWidgetManager tabManager;
+  // Current tab
+  private String cur_tab = TAB_TASKS;
 
   /**
    * Handle the message
@@ -223,8 +225,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     Button eulaBtn = (Button)about.findViewById(R.id.id_eula_view);
     eulaBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-        // Diplay the EULA
-        Eula.show(DownloadActivity.this, true);
+		        // Diplay the EULA
+		        Eula.show(DownloadActivity.this, true);
 			}
 		});
     tabManager.addTab(aboutTab, about);
@@ -557,9 +559,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         Synodroid app = (Synodroid) getApplication();
         app.setRecurrentAction(this, new GetAllTaskAction(server.getSortAttribute(), server.isAscending()));
         app.resumeServer();
-        // Set the title
-        titleText.setText(server.getNickname());
-        titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.INVISIBLE);
     }
     // No server then display the connection dialog
     else {
@@ -617,9 +616,35 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
       ((Synodroid) getApplication()).forceRefresh();
     }
+    cur_tab = newTabIdP;
   }
   
   public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {  
 	super.onCreateContextMenu(menu, v, menuInfo);  
-  }  
+  }
+  
+  @Override
+  public void onSaveInstanceState(Bundle savedInstanceState) {
+    // Save UI state changes to the savedInstanceState.
+    // This bundle will be passed to onCreate if the process is
+    // killed and restarted.
+	savedInstanceState.putBoolean("connectDialogOpened", connectDialogOpened);
+	savedInstanceState.putInt("titleIcon", titleIcon.getVisibility());
+    savedInstanceState.putString("titleText", (String) titleText.getText());
+    savedInstanceState.putString("tabID", cur_tab);
+    // etc.
+    super.onSaveInstanceState(savedInstanceState);
+  }
+  
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    // Restore UI state from the savedInstanceState.
+    // This bundle has also been passed to onCreate.
+    connectDialogOpened = savedInstanceState.getBoolean("connectDialogOpened");
+    titleIcon.setVisibility(savedInstanceState.getInt("titleIcon"));
+    titleText.setText(savedInstanceState.getString("titleText"));
+    cur_tab = savedInstanceState.getString("tabID");
+    tabManager.slideTo(cur_tab);
+  }
 }
