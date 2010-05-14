@@ -18,11 +18,13 @@ import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.AddTaskAction;
+import org.jared.synodroid.common.action.DeleteTaskAction;
 import org.jared.synodroid.common.action.GetAllTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
+import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
@@ -95,8 +97,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   public static final int MENU_PARAMETERS = 4;
   // Menu refresh
   public static final int MENU_REFRESH = 5;
-  // Menu about
+//Menu about
   public static final int MENU_ABOUT = 6;
+//Menu about
+  public static final int MENU_CLEAR = 7;
   
   // The torrent listview
   private ListView taskView;
@@ -433,10 +437,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    * Create the option menu of this activity
    */
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_CONNECT, 0, getString(R.string.menu_connect)).setIcon(android.R.drawable.ic_menu_share);
-    menu.add(0, MENU_REFRESH, 0, getString(R.string.menu_refresh)).setIcon(R.drawable.menu_refresh);
+    //Menu connect is deprecated since you can connect from the title
+	//menu.add(0, MENU_CONNECT, 0, getString(R.string.menu_connect)).setIcon(android.R.drawable.ic_menu_share);
+    //Menu refresh is deprecated since clicking on the tab forces the refresh anyway
+	//menu.add(0, MENU_REFRESH, 0, getString(R.string.menu_refresh)).setIcon(R.drawable.menu_refresh);
     menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
-    menu.add(0, MENU_ABOUT, 0, getString(R.string.menu_about)).setIcon(android.R.drawable.ic_menu_info_details);
+    menu.add(0, MENU_CLEAR, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+    //Menu About has been deprecated since its part of the tab manager
+    //menu.add(0, MENU_ABOUT, 0, getString(R.string.menu_about)).setIcon(android.R.drawable.ic_menu_info_details);
     return true;
   }
 
@@ -451,8 +459,15 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       case MENU_SEARCH:
         return true;
       case MENU_REFRESH:
-        ((Synodroid) getApplication()).forceRefresh();
-        return true;
+          ((Synodroid) getApplication()).forceRefresh();
+          return true;
+      case MENU_CLEAR:
+    	  Synodroid app = (Synodroid) getApplication();
+    	  Task task = new Task();
+  		  task.taskId = -1;
+  		  task.status = "TASK_FINISHED";
+          app.executeAction(DownloadActivity.this, new DeleteTaskAction(task), false);
+          return true;
       case MENU_ACTIONS:
         return true;
         // Launch the parameters activity

@@ -46,13 +46,19 @@ public class DeleteTaskAction implements SynoAction {
    * @see org.jared.synodroid.common.SynoAction#getName()
    */
   public String getName() {
-	  return "Delete task "+task.taskId;
+	  if (task.taskId == -1){
+		  return "Removing all completed tasks...";
+	  }
+	  return "Removing task "+task.taskId;
   }
 
 	/* (non-Javadoc)
    * @see org.jared.synodroid.common.SynoAction#getToastId()
    */
   public int getToastId() {
+	  if (task.taskId == -1){
+		  return R.string.action_clearall;
+	  }
 	  return R.string.action_deleting;
   }
 

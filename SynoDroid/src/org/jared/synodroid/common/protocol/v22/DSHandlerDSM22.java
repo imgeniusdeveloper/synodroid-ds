@@ -146,7 +146,13 @@ class DSHandlerDSM22 implements DSHandler {
 		// If we are logged on
 		if (server.isConnected()) {
 			try {
-				QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + taskP.taskId);
+				String tID = "";
+				String action = "clear";
+				if (taskP.taskId != -1){
+					tID += taskP.taskId;
+					action = "delete";
+				}
+				QueryBuilder getAllRequest = new QueryBuilder().add("action", action).add("idList", tID);
 				// Execute
 				synchronized (server) {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
@@ -268,6 +274,9 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					if (m.find() && m.groupCount() >= 2) {
 						result.speedDownload = Utils.toDouble(m.group(2));
+					}
+					else{
+						result.speedDownload = result.speedUpload;
 					}
 				}
 				if (data.has("filename"))

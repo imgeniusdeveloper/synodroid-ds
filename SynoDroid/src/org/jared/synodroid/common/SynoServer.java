@@ -748,7 +748,7 @@ public class SynoServer {
 	public void forceRefresh() {
 		collector.interrupt();
 	}
-
+	
 	/**
 	 * Pause the server's thread
 	 */
