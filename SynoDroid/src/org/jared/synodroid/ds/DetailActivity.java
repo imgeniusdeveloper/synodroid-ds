@@ -139,9 +139,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// Details updated
 		case ResponseHandler.MSG_DETAILS_RETRIEVED:
 			TaskDetail details = (TaskDetail) msgP.obj;
-			genAdapter.updateDetails(buildGeneralDetails(details));
-			transAdapter.updateDetails(buildTransferDetails(details));
-			// Set the flags for torrent / NZB
 			task.isTorrent = details.isTorrent;
 			task.isNZB = details.isNZB;
 			// If torrent or NZB then add the file's tab
@@ -154,6 +151,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 					tabManager.addTab(filesTab, filesListView);
 				}
 			}
+			genAdapter.updateDetails(buildGeneralDetails(details));
+			transAdapter.updateDetails(buildTransferDetails(details));
 			break;
 		case ResponseHandler.MSG_ERROR:
 			SynoServer server = ((Synodroid) getApplication()).getServer();

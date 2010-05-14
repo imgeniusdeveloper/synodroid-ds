@@ -285,6 +285,9 @@ class DSHandlerDSM22 implements DSHandler {
 					if (m.find() && m.groupCount() >= 1) {
 						result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
 					}
+					else{
+						result.bytesDownloaded = result.bytesUploaded;
+					}
 				}
 				if (data.has("seedelapsed"))
 					result.seedingElapsed = data.getInt("seedelapsed");
