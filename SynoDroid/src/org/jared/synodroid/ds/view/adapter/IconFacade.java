@@ -68,7 +68,6 @@ public class IconFacade {
 			id = R.drawable.dl_error;
 			break;
 		}
-		viewP.setImageResource(id);
 		if (animation != null) {
 			viewP.startAnimation(animation);
 		}
@@ -77,7 +76,9 @@ public class IconFacade {
 			Animation previousAnimation = viewP.getAnimation();
 			if (previousAnimation != null) {
 				previousAnimation.setDuration(0);
+				viewP.clearAnimation();
 			}
 		}
+		viewP.setImageResource(id);
 	}
 }
