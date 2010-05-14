@@ -67,24 +67,38 @@ public class Eula {
       final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
       builder.setTitle(R.string.eula_title);
       builder.setCancelable(!forceToShow);
-      builder.setPositiveButton(R.string.eula_accept, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          accept(preferences);
-          if (activity instanceof OnEulaAgreedTo) {
-            ((OnEulaAgreedTo) activity).onEulaAgreedTo();
-          }
-        }
-      });
-      builder.setNegativeButton(R.string.eula_refuse, new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          refuse(preferences,activity);
-        }
-      });
-      builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-        public void onCancel(DialogInterface dialog) {
-          refuse(preferences,activity);
-        }
-      });
+      if (!forceToShow){
+	      builder.setPositiveButton(R.string.eula_accept, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) {
+	          accept(preferences);
+	          if (activity instanceof OnEulaAgreedTo) {
+	            ((OnEulaAgreedTo) activity).onEulaAgreedTo();
+	          }
+	        }
+	      });
+	      builder.setNegativeButton(R.string.eula_refuse, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) {
+	          refuse(preferences,activity);
+	        }
+	      });
+	      builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+	        public void onCancel(DialogInterface dialog) {
+	          refuse(preferences,activity);
+	        }
+	      });
+      }
+      else{
+    	  builder.setPositiveButton(R.string.eula_hide, new DialogInterface.OnClickListener() {
+  	        public void onClick(DialogInterface dialog, int which) {
+  	          //DO NOTHING JUST HIDE IT ...
+  	        }
+  	      });
+    	  builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+  	        public void onCancel(DialogInterface dialog) {
+  	        //DO NOTHING JUST HIDE IT ...
+  	        }
+  	      });
+      }
       builder.setMessage(readEula(activity));
       builder.create().show();
       return false;

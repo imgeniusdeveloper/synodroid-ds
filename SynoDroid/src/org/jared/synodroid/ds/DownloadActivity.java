@@ -589,7 +589,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   }
 
   /**
-   * The Eual has just been accepted
+   * The Eula has just been accepted
    */
   public void onEulaAgreedTo() {
     licenceAccepted = true;
