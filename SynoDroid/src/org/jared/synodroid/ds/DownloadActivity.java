@@ -35,12 +35,14 @@ import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.net.Uri;
@@ -71,7 +73,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private static final String TAB_ABOUT = "ABOUT";
   private static final String TAB_PARAMS = "PARAMS";
   private static final String TAB_TASKS = "TASKS";
-  
+  private static final String PREFERENCE_AUTO = "auto";
+  private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
+
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
   // The contributors dialog
@@ -91,7 +95,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   public static final int MENU_REFRESH = 5;
   // Menu about
   public static final int MENU_ABOUT = 6;
-
+  
   // The torrent listview
   private ListView taskView;
   // The total upload rate view
@@ -456,7 +460,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   private void showPreferenceActivity() {
     Intent next = new Intent();
+    final SharedPreferences preferences = this.getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
     next.setClass(this, DownloadPreferenceActivity.class);
+    preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
     startActivity(next);
   }
 

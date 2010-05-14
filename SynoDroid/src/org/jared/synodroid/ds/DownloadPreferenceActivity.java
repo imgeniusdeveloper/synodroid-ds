@@ -19,6 +19,7 @@ package org.jared.synodroid.ds;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jared.synodroid.Synodroid;
@@ -30,8 +31,10 @@ import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences.Editor;
@@ -59,6 +62,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	public static final int MENU_CREATE = 1;
 	// Menu Delete
 	public static final int MENU_DELETE = 2;
+	private static final String PREFERENCE_AUTO = "auto";
+	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
 
 	// Store the current max server id
 	private int maxServerId = 0;
@@ -116,6 +121,15 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		serversCategory.removeAll();
 		maxServerId = 0;
 		PreferenceFacade.processLoadingServers(prefScreen.getSharedPreferences(), this);
+		
+		final SharedPreferences preferences = this.getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+	    if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)){
+	    	Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
+	    	if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId+".nickname")){
+	    		createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
+	    	}
+	    	preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
+	    }
 	}
 
 	/**
