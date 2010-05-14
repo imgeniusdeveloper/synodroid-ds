@@ -388,6 +388,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         builderNoServer.setPositiveButton(getString(R.string.button_yesplease), new OnClickListener() {
           // Launch the Preference activity
           public void onClick(DialogInterface dialogP, int whichP) {
+        	final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+        	preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();    
             showPreferenceActivity();
           }
         });
@@ -460,9 +462,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   private void showPreferenceActivity() {
     Intent next = new Intent();
-    final SharedPreferences preferences = this.getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
     next.setClass(this, DownloadPreferenceActivity.class);
-    preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
     startActivity(next);
   }
 
