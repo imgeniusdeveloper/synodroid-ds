@@ -122,7 +122,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		maxServerId = 0;
 		PreferenceFacade.processLoadingServers(prefScreen.getSharedPreferences(), this);
 		
-		final SharedPreferences preferences = this.getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
 	    if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)){
 	    	Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
 	    	if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId+".nickname")){

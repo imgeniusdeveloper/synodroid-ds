@@ -75,6 +75,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private static final String TAB_TASKS = "TASKS";
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
+  private static final String PREFERENCE_LAST_LINK = "lastlink";
+  private static final String PREFERENCE_LAST_LINK_VALUE = "lastlink.value";
 
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
@@ -248,7 +250,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       // Show the dialog only if the intent's action is not to view a
       // content -> add a new file
       if (action != null && !(action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
-        showDialogToConnect(true, null);
+    	  SharedPreferences preferences = getSharedPreferences(PREFERENCE_LAST_LINK, Activity.MODE_PRIVATE);
+          preferences.edit().putString(PREFERENCE_LAST_LINK_VALUE, "").commit();
+          showDialogToConnect(true, null);
       }
       else {
         handleIntent(intent);
@@ -324,6 +328,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   private void handleIntent(Intent intentP) {
     String action = intentP.getAction();
+    SharedPreferences preferences = getSharedPreferences(PREFERENCE_LAST_LINK, Activity.MODE_PRIVATE);
     if (action != null) {
       Uri uri = null;
       boolean out_url = false;
@@ -331,9 +336,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         uri = intentP.getData();
       }
       else if (action.equals(Intent.ACTION_SEND)) {
-        String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
-        uri = Uri.parse(uriString);
-        out_url = true;
+    	String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
+    	if (!preferences.getString(PREFERENCE_LAST_LINK_VALUE, "").equals(uriString)){
+    		uri = Uri.parse(uriString);
+            out_url = true;
+    	}
       }
       else {
         return;
@@ -343,6 +350,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         AddTaskAction addTask = new AddTaskAction(uri, out_url);
         Synodroid app = (Synodroid) getApplication();
         app.executeAction(this, addTask, true);
+        preferences.edit().putString(PREFERENCE_LAST_LINK_VALUE, uri.toString()).commit();
       }
     }
   }
