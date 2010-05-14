@@ -60,7 +60,7 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
           break;
         case MSG_TOAST:
           String text = (String) msgP.obj;
-          Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
+          Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_SHORT);
           toast.show();
           break;
         default:
