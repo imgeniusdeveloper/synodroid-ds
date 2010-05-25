@@ -24,7 +24,6 @@ import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
-import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.common.ui.SynodroidActivity;
@@ -374,6 +373,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       case CONNECTION_DIALOG_ID:
         dialog = new ProgressDialog(this);
         dialog.setTitle("");
+        dialog.setCancelable(false);
         ((ProgressDialog) dialog).setMessage("Connecting. Please wait...");
         ((ProgressDialog) dialog).setIndeterminate(true);
         break;
@@ -515,7 +515,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
             public void onClick(DialogInterface dialog, int item) {
               server = servers.get(item);
               // Change the server
-              ((Synodroid) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+              ((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
               dialog.dismiss();
             }
           });
@@ -533,7 +533,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
           if (servers.size() > 0) {
             server = servers.get(0);
             // Change the server
-            ((Synodroid) getApplication()).setServer(DownloadActivity.this, server, actionQueueP);
+            ((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
           }
         }
       }
