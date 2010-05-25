@@ -188,4 +188,16 @@ public class Synodroid extends Application {
     }
   }
 
+  /**
+   * Execute an asynchronous action if the server is currently connected
+   * @param handlerP
+   * @param actionP
+   * @param forceRefreshP
+   */
+  public void executeAsynchronousAction(ResponseHandler handlerP, SynoAction actionP, final boolean forceRefreshP) {
+    if (currentServer != null) {
+      currentServer.executeAsynchronousAction(handlerP, actionP, forceRefreshP);
+    }
+  }
+  
 }

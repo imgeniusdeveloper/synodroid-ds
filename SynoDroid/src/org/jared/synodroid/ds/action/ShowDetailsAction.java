@@ -55,7 +55,7 @@ public class ShowDetailsAction implements SynoAction {
    * @see org.jared.synodroid.common.SynoAction#isToastable()
    */
   public boolean isToastable() {
-    return true;
+    return false;
   }
 
   /*

@@ -17,6 +17,7 @@ import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DetailTaskAction;
 import org.jared.synodroid.common.action.GetFilesAction;
+import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.action.UpdateTaskAction;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskDetail;
@@ -200,7 +201,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		super.onResume();
 		// Launch the gets task's details recurrent action
 		Synodroid app = (Synodroid) getApplication();
-		app.setRecurrentAction(this, new DetailTaskAction(task));
+		SynoAction detailAction = new DetailTaskAction(task);
+		app.executeAsynchronousAction(this, detailAction, false);
+		app.setRecurrentAction(this, detailAction);
 		app.resumeServer();
 	}
 

@@ -1,12 +1,10 @@
 /**
- * Copyright 2010 Eric Taix Licensed under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
- * law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Copyright 2010 Eric Taix Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
  */
 package org.jared.synodroid.common;
 
@@ -44,8 +42,8 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * This class represents a Synology server. It manages the connection and
- * also the automatic refresh to retrieve the torrent list.
+ * This class represents a Synology server. It manages the connection and also the automatic refresh to retrieve the
+ * torrent list.
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -96,8 +94,7 @@ public class SynoServer {
   private String lasterror;
 
   /**
-   * Static intialization of the SSL factory to accept each certificate,
-   * even if a certificate is self signed
+   * Static intialization of the SSL factory to accept each certificate, even if a certificate is self signed
    */
   static {
     SSLContext sc;
@@ -119,8 +116,7 @@ public class SynoServer {
   }
 
   /**
-   * Constructor which set all server's informations. No connection are
-   * made when calling the constructor.
+   * Constructor which set all server's informations. No connection are made when calling the constructor.
    */
   public SynoServer(String nicknameP, SynoProtocol protocolP, String hostP, int portP, String userP, String passwordP) {
     nickname = nicknameP;
@@ -134,6 +130,9 @@ public class SynoServer {
   }
 
   /**
+   * Set a new recurrent action. The collector thread is interrupted to executed the new recurrent action immediatly
+   * 
+   * @param handlerP The handler which will receive the response
    * @param recurrentActionP the recurrentAction to set
    */
   public void setRecurrentAction(ResponseHandler handlerP, SynoAction recurrentActionP) {
@@ -142,8 +141,8 @@ public class SynoServer {
   }
 
   /**
-   * Connect to the server. It is a requirement to connect to the NAS
-   * server before any attempt to call a method of this class.
+   * Connect to the server. It is a requirement to connect to the NAS server before any attempt to call a method of this
+   * class.
    * 
    * @return
    * @throws DSMException
@@ -571,8 +570,7 @@ public class SynoServer {
    * Execute an asynchronous action on this server
    * 
    * @param actionP The action to execute
-   * @param forceRefreshP Flag to set if a refresh is needed after the
-   *        completion of the action
+   * @param forceRefreshP Flag to set if a refresh is needed after the completion of the action
    */
   public void executeAsynchronousAction(final ResponseHandler handlerP, final SynoAction actionP,
           final boolean forceRefreshP) {
@@ -735,7 +733,9 @@ public class SynoServer {
    * Force a refresh by interrupting the sleep
    */
   public void forceRefresh() {
-    collector.interrupt();
+    if (collector != null) {
+      collector.interrupt();
+    }
   }
 
   /**
@@ -784,6 +784,7 @@ public class SynoServer {
 
   /**
    * Does the collector thread is alive
+   * 
    * @return
    */
   public boolean isAlive() {
@@ -792,5 +793,5 @@ public class SynoServer {
     }
     return false;
   }
-  
+
 }
