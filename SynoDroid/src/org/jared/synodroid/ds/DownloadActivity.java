@@ -219,11 +219,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     
     // Create the tab maanger
     tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-    Tab refreshTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
-    tabManager.addTab(refreshTab, downloadContent);
-    Tab paramTab = new Tab(TAB_PARAMS, R.drawable.ic_tab_parameters, R.drawable.ic_tab_parameters_selected);
-    tabManager.addTab(paramTab, new View(this));
+    Tab torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
+    torrentTab.setLogo(R.drawable.download_logo, R.string.logo_download);
+    tabManager.addTab(torrentTab, downloadContent);
+    Tab emuleTab = new Tab(TAB_PARAMS, R.drawable.ic_tab_emule, R.drawable.ic_tab_emule_selected);
+    emuleTab.setLogo(R.drawable.emule_logo, R.string.logo_emule);
+    tabManager.addTab(emuleTab, null);
     Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
+    aboutTab.setLogo(R.drawable.about_logo, R.string.logo_about);
     View about = inflater.inflate(R.layout.about, null, false);
     Button eulaBtn = (Button)about.findViewById(R.id.id_eula_view);
     eulaBtn.setOnClickListener(new View.OnClickListener() {

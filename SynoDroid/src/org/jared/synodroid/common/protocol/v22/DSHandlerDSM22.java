@@ -148,7 +148,7 @@ class DSHandlerDSM22 implements DSHandler {
 			try {
 				String tID = "";
 				String action = "clear";
-				if (taskP.taskId != -1){
+				if (taskP.taskId != -1) {
 					tID += taskP.taskId;
 					action = "delete";
 				}
@@ -248,7 +248,8 @@ class DSHandlerDSM22 implements DSHandler {
 		TaskDetail result = new TaskDetail();
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add(
+			    "update", "1");
 			// Execute
 			JSONObject json = null;
 			synchronized (server) {
@@ -275,7 +276,7 @@ class DSHandlerDSM22 implements DSHandler {
 					if (m.find() && m.groupCount() >= 2) {
 						result.speedDownload = Utils.toDouble(m.group(2));
 					}
-					else{
+					else {
 						result.speedDownload = result.speedUpload;
 					}
 				}
@@ -294,7 +295,7 @@ class DSHandlerDSM22 implements DSHandler {
 					if (m.find() && m.groupCount() >= 1) {
 						result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
 					}
-					else{
+					else {
 						result.bytesDownloaded = result.bytesUploaded;
 					}
 				}
@@ -451,18 +452,21 @@ class DSHandlerDSM22 implements DSHandler {
 	 */
 	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {
 		// Create the JSON request
-		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "applytask").
-		add("taskid", "" + taskP.taskId).add("update", "1");
-		JSONObject data = new JSONObject();
-		JSONArray datas = new JSONArray();
-		for (TaskFile taskFile : filesP) {
-			JSONObject file = new JSONObject();
-			file.put("name", taskFile.name);
-			file.put("dl", taskFile.download);
-			datas.put(file);
+		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "applytask").add("taskid", "" + taskP.taskId)
+		    .add("update", "1");
+		// If files update is needed
+		if (filesP != null && filesP.size() > 0) {
+			JSONObject data = new JSONObject();
+			JSONArray datas = new JSONArray();
+			for (TaskFile taskFile : filesP) {
+				JSONObject file = new JSONObject();
+				file.put("name", taskFile.name);
+				file.put("dl", taskFile.download);
+				datas.put(file);
+			}
+			data.put("data", datas);
+			updateTaskRequest.add("fsel", data.toString());
 		}
-		data.put("data", datas);
-		updateTaskRequest.add("fsel", data.toString());
 		updateTaskRequest.add("seeding_ratio", "" + seedingRatioP);
 		updateTaskRequest.add("seeding_interval", "" + seedingIntervalP);
 		// Execute it to the server

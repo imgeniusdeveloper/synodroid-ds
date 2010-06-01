@@ -28,7 +28,10 @@ public class Tab {
   private int iconNormal;
   // The selected icon id
   private int iconSelected;
-  
+  // The logo icon
+  private int logoId;
+  // The logo's text id
+  private int logoTextId;
   /**
    * The minimal constructor
    * @param idP
@@ -117,7 +120,29 @@ public class Tab {
     else if (!id.equals(other.id)) return false;
     return true;
   }
-  
-  
+
+  /**
+   * Set the logo (image and text to be displayed during the slide animation)
+   * @param logoIdP
+   * @param logoTextIdP
+   */
+  public void setLogo(int logoIdP, int logoTextIdP) {
+  	logoId = logoIdP;
+  	logoTextId = logoTextIdP;
+  }
+
+	/**
+   * @return the logoId
+   */
+  public int getLogoId() {
+  	return logoId;
+  }
+
+	/**
+   * @return the logoTextId
+   */
+  public int getLogoTextId() {
+  	return logoTextId;
+  }
   
 }

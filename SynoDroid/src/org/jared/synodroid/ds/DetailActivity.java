@@ -38,13 +38,18 @@ import org.jared.synodroid.ds.view.adapter.DetailText;
 import org.jared.synodroid.ds.view.adapter.FileDetailAdapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 /**
@@ -57,6 +62,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private static final String TAB_FILES = "FILES";
 	private static final String TAB_TRANSFERT = "TRANSFERT";
 	private static final String TAB_GENERAL = "GENERAL";
+	private static final int TASK_PARAMETERS_DIALOG = 1;
+
 	// The "Not yet implemented" dialog
 	private AlertDialog notYetImplementedDialog;
 	// The tab manager
@@ -73,8 +80,18 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private FileDetailAdapter fileAdapter;
 	// The file ListView
 	private ListView filesListView;
-	private String cur_tab = TAB_GENERAL;
+	// The current active tab
+	private String currentTab = TAB_GENERAL;
+	// Flag to know if files tab must be shown
 	private boolean showFileTab = false;
+	// The seeding ratio
+	private int seedingRatio;
+	// The seeding time
+	private int seedingTime;
+	// Flag to know of the user changed seeding parameters
+	private boolean seedingChanged = false;
+	// The values of seeding time
+	private int[] seedingTimes;
 
 	/*
 	 * (non-Javadoc)
@@ -83,6 +100,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		// Create the seeding time int array
+		String[] timesArray = getResources().getStringArray(R.array.seeding_time_array_values);
+		seedingTimes = new int[timesArray.length];
+		for (int iLoop = 0; iLoop < timesArray.length; iLoop++) {
+			seedingTimes[iLoop] = Integer.parseInt(timesArray[iLoop]);
+		}
+
 		// Get the details intent
 		Intent intent = getIntent();
 		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
@@ -103,7 +127,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		fileAdapter = new FileDetailAdapter(this, task);
 		filesListView.setAdapter(fileAdapter);
 
-		if (savedInstanceState != null){
+		if (savedInstanceState != null) {
 			showFileTab = savedInstanceState.getBoolean("showFileTab", false);
 		}
 		// Build the TabManager
@@ -112,16 +136,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		tabManager.addTab(genTab, genListView);
 		Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
 		tabManager.addTab(transTab, transListView);
-		if (showFileTab){
+		if (showFileTab) {
 			Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
 			tabManager.addTab(filesTab, filesListView);
 		}
 		// Call super onCreate after the tab intialization
 		super.onCreate(savedInstanceState);
-		
+
 		// Create a "Not yet implemented" dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
+		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented))
+		    .setCancelable(false).setPositiveButton(R.string.button_ok, null);
 		notYetImplementedDialog = builder.create();
 
 		// Add a tab listener
@@ -129,6 +154,78 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
 		// Set the the title (the filename)
 		title.setText(task.fileName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		// Create the task's parameters dialog
+		case TASK_PARAMETERS_DIALOG:
+			final Dialog dialog = new Dialog(this);
+			dialog.setContentView(R.layout.seeding_parameters);
+			dialog.setTitle(getString(R.string.seeding_parameters_time));
+			final EditText seedRatio = (EditText) dialog.findViewById(R.id.seedingPercentage);
+			final Spinner seedTime = (Spinner) dialog.findViewById(R.id.seedingTime);
+			Button btnCancel = (Button) dialog.findViewById(R.id.CancelBtn);
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					dialog.hide();
+				}
+			});
+			Button btnOk = (Button) dialog.findViewById(R.id.OkBtn);
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					seedingChanged = true;
+					try {
+						int seedR = Integer.parseInt(seedRatio.getText().toString());
+						seedingRatio = seedR;
+						int pos = seedTime.getSelectedItemPosition();
+						seedingTime = seedingTimes[pos];
+						dialog.hide();
+						// At the end, update the task.
+						updateTask(true);
+					}
+					// The ratio is not an integer
+					catch (NumberFormatException ex) {
+						// Nothing to do: the input method does not allow to set a float or
+						// a string
+					}
+				}
+			});
+			return dialog;
+		}
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onPrepareDialog(int, android.app.Dialog)
+	 */
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		switch (id) {
+		// Create the task's parameters dialog
+		case TASK_PARAMETERS_DIALOG:
+			final EditText seedRatio = (EditText) dialog.findViewById(R.id.seedingPercentage);
+			final Spinner seedTime = (Spinner) dialog.findViewById(R.id.seedingTime);
+			seedRatio.setText("" + seedingRatio);
+			// Try to find the right value
+			int pos = 0;
+			for (int iLoop = 0; iLoop < seedingTimes.length; iLoop++) {
+				if (seedingTimes[iLoop] == seedingTime) {
+					pos = iLoop;
+					break;
+				}
+			}
+			seedTime.setSelection(pos);
+			break;
+		}
 	}
 
 	/*
@@ -152,13 +249,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				// Build the file tab
 				fileAdapter = (FileDetailAdapter) filesListView.getAdapter();
 				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
-				// If the tab does not already exist ! 
+				// If the tab does not already exist !
 				if (tabManager.getTab(filesTab) == null) {
 					tabManager.addTab(filesTab, filesListView);
 				}
 				showFileTab = true;
 			}
-			else{
+			else {
 				showFileTab = false;
 			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
@@ -186,7 +283,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	protected void onPause() {
 		super.onPause();
 		// Try to update the details
-		updateTask();
+		updateTask(false);
 		Synodroid app = (Synodroid) getApplication();
 		app.pauseServer();
 	}
@@ -260,7 +357,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		});
 		result.add(destDetail);
 		// File size
-		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize, getString(R.string.detail_unknown))));
+		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize,
+		    getString(R.string.detail_unknown))));
 		// Creation time
 		result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
 		// URL
@@ -285,9 +383,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// ------------ Status
 		result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
 		// ------------ Transfered
-		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
+		String transfered = getString(R.string.detail_progress_download) + " "
+		    + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
 		if (details.isTorrent) {
-			transfered = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " - " + transfered;
+			transfered = getString(R.string.detail_progress_upload) + " "
+			    + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " - " + transfered;
 		}
 		result.add(new DetailText(getString(R.string.detail_transfered), transfered));
 		// ------------- Progress
@@ -300,7 +400,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			downPerStr = "" + downPer + "%";
 		}
 		long uploaded = details.bytesUploaded;
-		double ratio = (double) (details.seedingRatio / 100);
+		double ratio = ((double) (details.seedingRatio)) / 100.0d;
 		int upPerc = 0;
 		String upPercStr = getString(R.string.detail_unknown);
 		if (ratio != 0 && filesize != -1) {
@@ -316,7 +416,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
 			progDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
-					notYetImplementedDialog.show();
+					showDialog(TASK_PARAMETERS_DIALOG);
 				}
 			});
 		}
@@ -377,6 +477,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		Long timeLeftTime = null;
 		if (details.seedingInterval != 0 && TaskStatus.valueOf(details.status) == TaskStatus.TASK_SEEDING) {
 			timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
+			if (timeLeftTime < 0) {
+				timeLeftTime = null;
+			}
 		}
 		// At least one time has been computed
 		if (timeLeftTime != null || timeLeftSize != null) {
@@ -400,6 +503,10 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		else if (upPerc == 100) {
 			etaUpload = getString(R.string.detail_finished);
 		}
+		// In case the user set the seedin time to forever
+		if (details.seedingInterval == -1) {
+			etaUpload = getString(R.string.detail_forever);
+		}
 		Detail etaDet = null;
 		// If it is a torrent then show the upload ETA
 		if (details.isTorrent) {
@@ -409,7 +516,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
 			etaDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
-					notYetImplementedDialog.show();
+					showDialog(TASK_PARAMETERS_DIALOG);
 				}
 			});
 		}
@@ -431,6 +538,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			piecesDetail.setProgress(pieces, piProgress);
 			result.add(piecesDetail);
 		}
+		// Update seeding parameters
+		seedingRatio = details.seedingRatio;
+		seedingTime = details.seedingInterval;
 		return result;
 	}
 
@@ -452,43 +562,44 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				server.executeAsynchronousAction(this, new GetFilesAction(task), false);
 			}
 		}
-
 		// If the user comes from the Files tab then save the modifications
 		if (oldTabId.equals(TAB_FILES)) {
-			updateTask();
+			updateTask(false);
 		}
-		cur_tab = newTabIdP;
+		currentTab = newTabIdP;
 	}
 
 	/**
 	 * Update the current task
 	 */
-	private void updateTask() {
+	private void updateTask(boolean forceRefreshP) {
 		List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
-		if (modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) {
+		if ((modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) || (seedingChanged)) {
 			Synodroid app = (Synodroid) getApplication();
-			UpdateTaskAction update = new UpdateTaskAction(task, modifiedTaskFiles, 100, 0);
-			app.getServer().executeAsynchronousAction(this, update, false);
+			UpdateTaskAction update = new UpdateTaskAction(task, modifiedTaskFiles, seedingRatio, seedingTime);
+			app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
+			seedingChanged = false;
 		}
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-	    // Save UI state changes to the savedInstanceState.
-	    // This bundle will be passed to onCreate if the process is
-	    // killed and restarted.
-		savedInstanceState.putString("tabID", cur_tab);
+		// Save UI state changes to the savedInstanceState.
+		// This bundle will be passed to onCreate if the process is
+		// killed and restarted.
+		savedInstanceState.putString("tabID", currentTab);
 		savedInstanceState.putBoolean("showFileTab", showFileTab);
-	    // etc.
-	    super.onSaveInstanceState(savedInstanceState);
+		// etc.
+		super.onSaveInstanceState(savedInstanceState);
 	}
-	  
+
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-	    super.onRestoreInstanceState(savedInstanceState);
-	    // Restore UI state from the savedInstanceState.
-	    // This bundle has also been passed to onCreate.
-	    cur_tab = savedInstanceState.getString("tabID");
-	    tabManager.slideTo(cur_tab);
+		super.onRestoreInstanceState(savedInstanceState);
+		// Restore UI state from the savedInstanceState.
+		// This bundle has also been passed to onCreate.
+		currentTab = savedInstanceState.getString("tabID");
+		tabManager.slideTo(currentTab);
 	}
+
 }
