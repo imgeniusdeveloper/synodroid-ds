@@ -1,8 +1,6 @@
 #summary How to start a download using synodroid
 #labels Featured
 
-= Start a download using synodroid =
-
 == Android Share Feature ==
 
 The easiest way to start a download using synodroid-ds is to use the share feature of android.
