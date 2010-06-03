@@ -142,7 +142,7 @@
 <string name="detail_status_error">Error</string>
 <string name="menu_about">About</string>
 <string name="app_contributors">&quot;Project's contributors:&quot;</string>
-
+<string name="app_status_project">Check the status of our project:</string>
 <string name="button_ok">OK</string>
 <string name="eula_view">Licence...</string>
 <string name="button_yesplease">Yes please</string>

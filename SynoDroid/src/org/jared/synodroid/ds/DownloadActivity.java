@@ -50,6 +50,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -235,6 +237,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		        Eula.show(DownloadActivity.this, true);
 			}
 		});
+    TextView message = (TextView)about.findViewById(R.id.about_code);
+    message.setText(Html.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
+    message.setMovementMethod(LinkMovementMethod.getInstance());
     tabManager.addTab(aboutTab, about);
     
     tabManager.setTabListener(this);
