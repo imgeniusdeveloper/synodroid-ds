@@ -10,7 +10,6 @@
  */
 package org.jared.synodroid.ds;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,25 +82,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
-  // The contributors dialog
-  private static final int CONTRIBUTORS_DIALOG_ID = 3;
   // No server configured
-  private static final int NO_SERVER_DIALOG_ID = 4;
+  private static final int NO_SERVER_DIALOG_ID = 2;
 
-  // Menu connection
-  public static final int MENU_CONNECT = 1;
-  // Menu search
-  public static final int MENU_SEARCH = 2;
-  // Menu actions
-  public static final int MENU_ACTIONS = 3;
   // Menu parameters
-  public static final int MENU_PARAMETERS = 4;
-  // Menu refresh
-  public static final int MENU_REFRESH = 5;
-//Menu about
-  public static final int MENU_ABOUT = 6;
-//Menu about
-  public static final int MENU_CLEAR = 7;
+  public static final int MENU_PARAMETERS = 1;
+  // Menu Clear
+  public static final int MENU_CLEAR = 2;
   
   // The torrent listview
   private ListView taskView;
@@ -176,8 +163,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       if (server != null) server.setLastError((String) msg.obj);
       showError(server.getLastError(), new Dialog.OnClickListener() {
         public void onClick(DialogInterface dialogP, int whichP) {
-          // Ask to reconnect when connection is lost.
-          showDialogToConnect(false, null);
+	        // Ask to reconnect when connection is lost.
+	        if (server != null){
+	        	if (!server.isConnected()) {
+	        		showDialogToConnect(false, null);
+	        	}
+          	}
         }
       });
     }
@@ -265,7 +256,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       if (action != null && !(action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
     	  SharedPreferences preferences = getSharedPreferences(PREFERENCE_LAST_LINK, Activity.MODE_PRIVATE);
           preferences.edit().putString(PREFERENCE_LAST_LINK_VALUE, "").commit();
-          showDialogToConnect(true, null);
       }
       else {
         handleIntent(intent);
@@ -388,22 +378,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         ((ProgressDialog) dialog).setMessage("Connecting. Please wait...");
         ((ProgressDialog) dialog).setIndeterminate(true);
         break;
-      // The contributors dialog
-      case CONTRIBUTORS_DIALOG_ID:
-        AlertDialog.Builder builderCont = new AlertDialog.Builder(this);
-        builderCont.setIcon(R.drawable.icon_phone).setTitle(R.string.app_name);
-        String text = getString(R.string.app_contributors) + "\n\n";
-        text += "- Eric Taix\n" + "- Steve Garon\n";
-        builderCont.setMessage(text);
-        builderCont.setCancelable(true).setPositiveButton(getString(R.string.button_ok), null);
-        builderCont.setNegativeButton(getString(R.string.eula_view), new OnClickListener() {
-          public void onClick(DialogInterface dialogP, int whichP) {
-            // Diplay the EULA
-            Eula.show(DownloadActivity.this, true);
-          }
-        });
-        dialog = builderCont.create();
-        break;
       // No server have been yet configured
       case NO_SERVER_DIALOG_ID:
         AlertDialog.Builder builderNoServer = new AlertDialog.Builder(this);
@@ -427,35 +401,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   }
 
   /**
-   * Update the dialog according to the internal state of the activity
-   */
-  @Override
-  protected void onPrepareDialog(int id, Dialog dialog) {
-    switch (id) {
-      // The connection dialog
-      case CONNECTION_DIALOG_ID:
-        // On UI rotation this.server is set to null. Verifying is the
-        // server is null fixes the force close on UI rotate.
-        if (server != null) {
-          String msg = MessageFormat.format(getString(R.string.connect_connecting), new Object[] { server.toString() });
-          ((ProgressDialog) dialog).setMessage(msg);
-        }
-        break;
-    }
-  }
-
-  /**
    * Create the option menu of this activity
    */
   public boolean onCreateOptionsMenu(Menu menu) {
-    //Menu connect is deprecated since you can connect from the title
-	//menu.add(0, MENU_CONNECT, 0, getString(R.string.menu_connect)).setIcon(android.R.drawable.ic_menu_share);
-    //Menu refresh is deprecated since clicking on the tab forces the refresh anyway
-	//menu.add(0, MENU_REFRESH, 0, getString(R.string.menu_refresh)).setIcon(R.drawable.menu_refresh);
     menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
     menu.add(0, MENU_CLEAR, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-    //Menu About has been deprecated since its part of the tab manager
-    //menu.add(0, MENU_ABOUT, 0, getString(R.string.menu_about)).setIcon(android.R.drawable.ic_menu_info_details);
     return true;
   }
 
@@ -464,14 +414,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONNECT:
-        showDialogToConnect(false, null);
-        return true;
-      case MENU_SEARCH:
-        return true;
-      case MENU_REFRESH:
-          ((Synodroid) getApplication()).forceRefresh();
-          return true;
       case MENU_CLEAR:
     	  Synodroid app = (Synodroid) getApplication();
     	  Task task = new Task();
@@ -479,15 +421,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   		  task.status = "TASK_FINISHED";
           app.executeAction(DownloadActivity.this, new DeleteTaskAction(task), false);
           return true;
-      case MENU_ACTIONS:
-        return true;
-        // Launch the parameters activity
       case MENU_PARAMETERS:
         showPreferenceActivity();
-        return true;
-        // Launch the about dialog
-      case MENU_ABOUT:
-        showDialog(CONTRIBUTORS_DIALOG_ID);
         return true;
     }
     return false;
@@ -515,6 +450,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         // show
         // the dialog
         if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
+          connectDialogOpened = true;
           String[] serversTitle = new String[servers.size()];
           for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
             serversTitle[iLoop] = servers.get(iLoop).getNickname();
@@ -537,7 +473,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
               connectDialogOpened = false;
             }
           });
-          connectDialogOpened = true;
         }
         else {
           // Auto connect to the first server
