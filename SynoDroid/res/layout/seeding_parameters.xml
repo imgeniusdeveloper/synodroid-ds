@@ -7,7 +7,5 @@
 
 
 
-<LinearLayout android:id="@+id/LinearLayout03" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginTop="30dip" android:gravity="center_horizontal"><Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/button_ok" android:minWidth="120dip" android:id="@+id/OkBtn"></Button>
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10dip" android:minWidth="120dip" android:text="@string/button_cancel" android:id="@+id/CancelBtn"></Button>
-</LinearLayout>
+
 </LinearLayout>

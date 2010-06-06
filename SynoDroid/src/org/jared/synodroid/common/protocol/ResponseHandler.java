@@ -44,6 +44,8 @@ public interface ResponseHandler {
 	public static final int MSG_DETAILS_FILES_RETRIEVED = 10008;
 	// Show a task details
 	public static final int MSG_SHOW_DETAILS = 10009;
+	// Shared directories retrieved
+	public static final int MSG_SHARED_DIRECTORIES_RETRIEVED = 100010;
 
 
 	/**

@@ -214,4 +214,9 @@
 <item>-1</item>
 </string-array>
 <string name="detail_forever">Forever</string>
+<string name="action_enum_shared">Retrieving shared directories</string>
+<string name="shared_dir_title">Select a shared directory</string>
+<string name="shared_note">Note: this parameter will affect all non finished downloads.</string>
+<string name="action_set_shared">Setting shared directory</string>
+<string name="menu_destination">Destination</string>
 </resources>

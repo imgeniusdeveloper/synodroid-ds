@@ -583,7 +583,8 @@ public class SynoServer {
           // If a Toast must be shown
           if (actionP.isToastable()) {
             int resId = actionP.getToastId();
-            String text = handlerP.getString(resId, new Object[] { actionP.getTask().fileName });
+            String fileName = (actionP.getTask() != null ? actionP.getTask().fileName : "");
+            String text = handlerP.getString(resId, new Object[] { fileName });
             fireMessage(handlerP, ResponseHandler.MSG_TOAST, text);
           }
           actionP.execute(handlerP, SynoServer.this);

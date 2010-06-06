@@ -18,6 +18,7 @@ package org.jared.synodroid.common.protocol;
 
 import java.util.List;
 
+import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
@@ -92,4 +93,17 @@ public interface DSHandler {
    */
   public void updateTask(final Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception;
   
+  /**
+   * Retrieve all shared directories according to the user's autorizations
+   * @return
+   * @throws Exception
+   */
+  public List<SharedDirectory> enumSharedDirectory() throws Exception;
+  
+  /**
+   * Set the new shared directory for all non finished downloads
+   * @param directoryP
+   * @throws Exception
+   */
+  public void setSharedDirectory(Task taskP, String directoryP) throws Exception;
 }
