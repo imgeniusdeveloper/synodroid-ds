@@ -14,6 +14,7 @@ import java.util.List;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DetailTaskAction;
+import org.jared.synodroid.common.action.DownloadOriginalLinkAction;
 import org.jared.synodroid.common.action.GetFilesAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.action.UpdateTaskAction;
@@ -65,6 +66,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
   private static final int TASK_PARAMETERS_DIALOG = 1;
 
   // The "Not yet implemented" dialog
+  @SuppressWarnings("unused")
   private AlertDialog notYetImplementedDialog;
   // The tab manager
   private TabWidgetManager tabManager;
@@ -338,9 +340,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
     result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
     // URL
     DetailText urlDetail = new DetailText(getString(R.string.detail_url), details.url);
+    final String taskLink = details.url;
     urlDetail.setAction(new DetailAction() {
       public void execute(Detail detailsP) {
-        notYetImplementedDialog.show();
+        Synodroid app = (Synodroid) getApplication();
+        app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(taskLink), false);
       }
     });
     result.add(urlDetail);

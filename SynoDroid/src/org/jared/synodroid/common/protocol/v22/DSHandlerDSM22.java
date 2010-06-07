@@ -52,6 +52,13 @@ class DSHandlerDSM22 implements DSHandler {
     server = serverP;
   }
 
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.protocol.DSHandler#getBaseURL()
+   */
+  public String getBaseURL() {
+    return server.getUrl()+"/"+DM_URI;
+  }
+
   /*
    * (non-Javadoc)
    * @see org.jared.synodroid.common.Protocol#getAllTask()
@@ -499,4 +506,22 @@ class DSHandlerDSM22 implements DSHandler {
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.protocol.DSHandler#getOriginalLink(org.jared.synodroid.common.data.Task)
+   */
+  public String getOriginalFile(String linkP) throws Exception {
+    String result = null;
+    // If we are logged on
+    if (server.isConnected()) {
+      QueryBuilder setShared = new QueryBuilder().add("torrent", linkP);
+      // Execute
+      synchronized (server) {
+        result = server.download(DM_URI, setShared.toString());
+      }
+    }
+    return result;
+  }
+
+  
+  
 }

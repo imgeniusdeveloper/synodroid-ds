@@ -219,4 +219,5 @@
 <string name="shared_note">Note: this parameter will affect all non finished downloads.</string>
 <string name="action_set_shared">Setting shared directory</string>
 <string name="menu_destination">Destination</string>
+<string name="action_download_original_file">Downloading original file</string>
 </resources>

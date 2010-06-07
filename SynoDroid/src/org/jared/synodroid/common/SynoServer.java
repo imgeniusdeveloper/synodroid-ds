@@ -9,9 +9,11 @@
 package org.jared.synodroid.common;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -612,6 +614,35 @@ public class SynoServer {
   }
 
   /**
+   * Create a connection and add all required cookies information
+   * @param uriP
+   * @param requestP
+   * @param methodP
+   * @return
+   * @throws MalformedURLException
+   * @throws IOException
+   */
+  private HttpURLConnection createConnection(String uriP, String requestP, String methodP) throws MalformedURLException, IOException {
+    // Prepare the connection
+    HttpURLConnection con = (HttpURLConnection) new URL(getUrl() + uriP).openConnection();
+    // con.setConnectTimeout(20000);
+    // Add cookies if exist
+    if (cookies != null) {
+      for (String cookie : cookies) {
+        con.addRequestProperty("Cookie", cookie);
+        Log.d(Synodroid.DS_TAG, "Added cookie: " + cookie);
+      }
+    }
+    con.setDoOutput(true);
+    con.setDoInput(true);
+    con.setUseCaches(false);
+    con.setRequestMethod(methodP);
+    con.setConnectTimeout(20000);
+    Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
+    return con;
+  }
+  
+  /**
    * Send a request to the server.
    * 
    * @param uriP The part of the URI ie: /webman/doit.cgi
@@ -623,21 +654,8 @@ public class SynoServer {
   public JSONObject sendJSONRequest(String uriP, String requestP, String methodP) throws Exception {
     HttpURLConnection con = null;
     try {
-      // Prepare the connection
-      con = (HttpURLConnection) new URL(getUrl() + uriP).openConnection();
-      // con.setConnectTimeout(20000);
-      // Add cookies if exist
-      if (cookies != null) {
-        for (String cookie : cookies) {
-          con.addRequestProperty("Cookie", cookie);
-          Log.d(Synodroid.DS_TAG, "Added cookie: " + cookie);
-        }
-      }
-      con.setDoOutput(true);
-      con.setDoInput(true);
-      con.setRequestMethod(methodP);
-      con.setConnectTimeout(20000);
-      Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
+      // Create the connection
+      con = createConnection(uriP, requestP, methodP);
       // Add the parameters
       OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
       wr.write(requestP);
@@ -683,19 +701,8 @@ public class SynoServer {
   public void sendMultiPart(String uriP, MultipartBuilder multiPartP) {
     HttpURLConnection conn;
     try {
-      // Open a HTTP connection to the URL
-      URL url = new URL(getUrl() + uriP);
-      conn = (HttpURLConnection) url.openConnection();
-      // Add cookies if exist
-      if (cookies != null) {
-        for (String cookie : cookies) {
-          conn.addRequestProperty("Cookie", cookie);
-        }
-      }
-      conn.setDoInput(true);
-      conn.setDoOutput(true);
-      conn.setUseCaches(false);
-      conn.setRequestMethod("POST");
+      // Create the connection
+      conn = createConnection(uriP, "", "POST");
       conn.setRequestProperty("Connection", "Keep-Alive");
       conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + multiPartP.getBoundary());
 
@@ -723,6 +730,47 @@ public class SynoServer {
     }
   }
 
+  public String download(String uriP, String requestP) throws Exception {
+    HttpURLConnection con = null;
+    try {
+      // Create the connection
+      con = createConnection(uriP, requestP, "GET");
+      // Add the parameters
+      OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
+      wr.write(requestP);
+      // Send the request
+      wr.flush();
+
+      // Try to retrieve the session cookie
+      Map<String, List<String>> headers = con.getHeaderFields();
+      List<String> newCookie = headers.get("set-cookie");
+      if (newCookie != null) {
+        cookies = newCookie;
+        Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+      }
+      // Now read the reponse and build a string with it
+      BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+      StringBuffer sb = new StringBuffer();
+      String line;
+      while ((line = br.readLine()) != null) {
+        sb.append(line);
+      }
+      br.close();
+      return sb.toString();
+    }
+    // Unexpected exception
+    catch(Exception ex) {
+      Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
+      throw ex;
+    }
+    // Finally close everything
+    finally {
+      if (con != null) {
+        con.disconnect();
+      }
+    }
+  }
+  
   /**
    * @return the connected
    */
