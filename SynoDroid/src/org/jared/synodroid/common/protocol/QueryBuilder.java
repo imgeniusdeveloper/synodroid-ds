@@ -16,6 +16,8 @@
  */
 package org.jared.synodroid.common.protocol;
 
+import java.net.URLEncoder;
+
 /**
  * Utility class which help to create a query string
  * @author Eric Taix (eric.taix at gmail.com)
@@ -44,7 +46,9 @@ public class QueryBuilder {
 			query.append(SEPARATOR);
 		}
 		// Append the parameter
-		query.append(keyP).append("=").append(valueP);
+		String val = URLEncoder.encode(valueP);
+		String key = URLEncoder.encode(keyP);
+		query.append(key).append("=").append(val);
 		return this;
 	}
 	

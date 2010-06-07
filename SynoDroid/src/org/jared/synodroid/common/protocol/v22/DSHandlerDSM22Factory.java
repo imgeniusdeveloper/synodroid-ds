@@ -68,7 +68,8 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 	public void connect() throws Exception {
 		String result = null;
 		String reason = null;
-		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, server.getPassword());
+		String pass = server.getPassword();
+		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
 		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
 		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);

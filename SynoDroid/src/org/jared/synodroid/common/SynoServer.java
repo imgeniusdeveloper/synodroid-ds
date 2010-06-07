@@ -385,14 +385,14 @@ public class SynoServer {
    * @return the user
    */
   public String getUser() {
-    return user.replaceAll("\\+", "%2B").replaceAll("\\*", "%2A").replaceAll("\\&", "%26").replaceAll("=", "%3D");
+    return user;
   }
 
   /**
    * @return the password
    */
   public String getPassword() {
-    return password.replaceAll("\\+", "%2B").replaceAll("\\*", "%2A").replaceAll("\\&", "%26").replaceAll("=", "%3D");
+    return password;
   }
 
   /**
