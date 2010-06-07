@@ -127,6 +127,9 @@ public class TabWidgetManager implements View.OnClickListener {
 		if (tabs.size() == 1) {
 			setTab(tabP.getId());
 		}
+		
+		// Set or reset the logoView in front of all other views
+        logoView.bringToFront();
 	}
 
 	/**
@@ -200,7 +203,6 @@ public class TabWidgetManager implements View.OnClickListener {
 				final Tab toTab = tabs.get(index);
 				// Show the logo
 				if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
-					setSelected(currentIndex, View.INVISIBLE);
 					logoimage.setImageResource(toTab.getLogoId());
 					logoText.setText(activity.getString(toTab.getLogoTextId()));
 					logoView.setVisibility(View.VISIBLE);
