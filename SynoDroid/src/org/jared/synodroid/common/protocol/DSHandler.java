@@ -123,6 +123,6 @@ public interface DSHandler {
    * Download a specific URL
    * @param urlP
    */
-  public String getOriginalFile(String linkP) throws Exception;  
+  public StringBuffer getOriginalFile(Task taskP) throws Exception;  
   
 }

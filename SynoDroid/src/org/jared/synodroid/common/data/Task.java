@@ -55,14 +55,18 @@ public class Task implements Serializable {
 	// Task is an outside url
 	public boolean outside_url = false;
 	// Flag to know if this task is a torrent.
-	// CAREFUL: this attribut is not retrieve from the getAll JSON method.
+	// CAREFUL: this attribut is not retrieved from the getAll JSON method.
 	// First you have to call getTaskDetail to retrieve this information and set manually this attribut. In fact this attribut 
 	// is a convenient way to store this value for the next activity
 	public boolean isTorrent;
 	// Flag to know if this task is a NZB
-	// CAREFUL: this attribut is not retrieve from the getAll JSON method.
+	// CAREFUL: this attribut is not retrieved from the getAll JSON method.
 	// First you have to call getTaskDetail to retrieve this information and set manually this attribut. In fact this attribut 
 	// is a convenient way to store this value for the next activity
 	public boolean isNZB;
+	// The original link
+	// CAREFUL: this attribut is not retrieved from the getAll JSON method.
+	// It is filled when clicking to the get original file link, by using the "details.url" value
+	public String originalLink;
 
 }

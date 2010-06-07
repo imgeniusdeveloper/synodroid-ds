@@ -730,7 +730,7 @@ public class SynoServer {
     }
   }
 
-  public String download(String uriP, String requestP) throws Exception {
+  public StringBuffer download(String uriP, String requestP) throws Exception {
     HttpURLConnection con = null;
     try {
       // Create the connection
@@ -756,7 +756,7 @@ public class SynoServer {
         sb.append(line);
       }
       br.close();
-      return sb.toString();
+      return sb;
     }
     // Unexpected exception
     catch(Exception ex) {

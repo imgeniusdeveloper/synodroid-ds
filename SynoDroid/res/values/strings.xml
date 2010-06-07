@@ -220,4 +220,6 @@
 <string name="action_set_shared">Setting shared directory</string>
 <string name="menu_destination">Destination</string>
 <string name="action_download_original_file">Downloading original file</string>
+<string name="action_download_original_saved">File has been saved to your external storage (/sdcard/download)</string>
+<string name="action_download_original_failed">Unable to save file, likeky because external storage is not mounted</string>
 </resources>

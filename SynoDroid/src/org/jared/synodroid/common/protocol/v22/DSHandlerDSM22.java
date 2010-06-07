@@ -509,14 +509,15 @@ class DSHandlerDSM22 implements DSHandler {
   /* (non-Javadoc)
    * @see org.jared.synodroid.common.protocol.DSHandler#getOriginalLink(org.jared.synodroid.common.data.Task)
    */
-  public String getOriginalFile(String linkP) throws Exception {
-    String result = null;
+  public StringBuffer getOriginalFile(Task taskP) throws Exception {
+  	StringBuffer result = null;
     // If we are logged on
     if (server.isConnected()) {
-      QueryBuilder setShared = new QueryBuilder().add("torrent", linkP);
+      QueryBuilder getOriginal = new QueryBuilder().add("action","torrent").add("id",""+taskP.taskId).add("_rn",""+System.currentTimeMillis());
       // Execute
       synchronized (server) {
-        result = server.download(DM_URI, setShared.toString());
+      	String uri = DM_URI+ "/" + taskP.originalLink;
+      	result = server.download(uri, getOriginal.toString());
       }
     }
     return result;
