@@ -17,7 +17,7 @@ import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.AddTaskAction;
-import org.jared.synodroid.common.action.DeleteTaskAction;
+import org.jared.synodroid.common.action.ClearAllTaskAction;
 import org.jared.synodroid.common.action.EnumShareAction;
 import org.jared.synodroid.common.action.GetAllTaskAction;
 import org.jared.synodroid.common.action.SetShared;
@@ -450,11 +450,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		Synodroid app = (Synodroid) getApplication();
 		switch (item.getItemId()) {
 		case MENU_CLEAR:
-
-			Task task = new Task();
-			task.taskId = -1;
-			task.status = "TASK_FINISHED";
-			app.executeAction(DownloadActivity.this, new DeleteTaskAction(task), false);
+			app.executeAction(DownloadActivity.this, new ClearAllTaskAction(), false);
 			return true;
 		case MENU_PARAMETERS:
 			showPreferenceActivity();

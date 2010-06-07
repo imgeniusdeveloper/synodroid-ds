@@ -63,6 +63,12 @@ public interface DSHandler {
   public void delete(final Task taskP) throws Exception;
 
   /**
+   * Clear all finished tasks
+   * @throws Exception
+   */
+  public void clearAll() throws Exception;
+  
+  /**
    * Upload a file defined by an Uri
    * 
    * @param uriP

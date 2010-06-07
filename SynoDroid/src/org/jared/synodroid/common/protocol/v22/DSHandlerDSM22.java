@@ -141,13 +141,7 @@ class DSHandlerDSM22 implements DSHandler {
     // If we are logged on
     if (server.isConnected()) {
       try {
-        String tID = "";
-        String action = "clear";
-        if (taskP.taskId != -1) {
-          tID += taskP.taskId;
-          action = "delete";
-        }
-        QueryBuilder getAllRequest = new QueryBuilder().add("action", action).add("idList", tID);
+        QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + taskP.taskId);
         // Execute
         synchronized (server) {
           server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
@@ -160,7 +154,27 @@ class DSHandlerDSM22 implements DSHandler {
     }
   }
 
-  /*
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.protocol.DSHandler#clearAll()
+   */
+  public void clearAll() throws Exception {
+    // If we are logged on
+    if (server.isConnected()) {
+      try {
+        QueryBuilder getAllRequest = new QueryBuilder().add("action", "clear");
+        // Execute
+        synchronized (server) {
+          server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+        }
+      }
+      catch(Exception e) {
+        Log.e("SynoDroid DS", "Not expected exception occured while clearing tasks", e);
+        throw e;
+      }
+    }
+  }
+
+	/*
    * (non-Javadoc)
    * @see org.jared.synodroid.common.protocol.DSHandler#resume(org.jared.synodroid .common.data.Task)
    */
