@@ -11,6 +11,7 @@
 <string name="connect_already_connected">"You're connected to another computer. Please reconnect."</string>
 <string name="connect_nohost">&quot;Can't contact host. Please verify your parameters.&quot;</string>
 <string name="connect_error_title">"Error"</string>
+<string name="connect_connecting2">"Connecting. Please wait..."</string>
 <string name="connect_connecting">"Connecting to \n{0}\nPlease wait..."</string>
 <string name="connect_ssl_error">"SSL error: {0}"</string>
 <string name="action_deleting">&quot;Removing file %s&quot;</string>

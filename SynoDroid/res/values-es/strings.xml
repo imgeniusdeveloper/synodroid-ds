@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Synodroid</string>
+    <string name="app_opensource">Opensource project</string>
+    <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
+
+<string name="connect_cant_connect">"No se puede conectar a {0}. El error es '{1}'."</string>
+<string name="unknow_reason">&quot;Se ha producido un error por una razón desconocida&quot;</string>
+<string name="connect_wrong_userpassword">"Usuario o contraseña incorrecta. Pruebe de nuevo."</string>
+<string name="connect_already_connected">"Está conectado desde otro ordenador. Por favor reconecte."</string>
+<string name="connect_nohost">&quot;No se puede conectar al servidor. Verifique sus parámetros.&quot;</string>
+<string name="connect_error_title">"Error"</string>
+<string name="connect_connecting">"Conectando a \n{0}\nPor favor espere..."</string>
+<string name="connect_ssl_error">"Error SSL: {0}"</string>
+<string name="action_deleting">&quot;Eliminando archivo %s&quot;</string>
+<string name="action_clearall">&quot;Limpiando todas las tareas completas...&quot;</string>
+<string name="action_pausing">&quot;Pausando archivo %s&quot;</string>
+<string name="action_resuming">&quot;Reanudando el archivo %s&quot;</string>
+<string name="menu_connect">Conectar a</string>
+<string name="menu_search">Buscar</string>
+<string name="menu_clearall">Limpiar tareas completadas</string>
+<string name="dialog_title_action">Acción</string>
+<string name="menu_parameter">Parámetros</string>
+<string name="err_unknown">Error desconocido</string>
+
+<string name="connect_cant">&quot;No estás autorizado a utilizar este servicio&quot;</string>
+<string name="label_nickname">Nickname</string>
+<string name="label_protocol">Protocolo</string>
+<string name="label_host">Servidor</string>
+<string name="label_port">Puerto</string>
+<string name="label_username">Usuario</string>
+<string name="label_password">Contraseña</string>
+<string name="label_refreshinterval">Intervalo de refresco</string>
+<string name="hint_nickname">Establece el nickname</string>
+<string name="hint_protocol">Establece el protocolo a usar</string>
+<string name="hint_host">Establece el servidor o la IP</string>
+<string name="hint_port">Establece el puerto</string>
+<string name="hint_username">Usuario</string>
+<string name="hint_password">Contraseña</string>
+
+
+<string name="hint_refreshinterval">Tiempo de refresco en segundos</string>
+<string name="button_cancel">Cancelar</string>
+<string name="hint_dsm_version">&quot;Establece tu versión DSM&quot;</string>
+<string-array name="dsm_version_array"><item>DSM 2.2</item>
+<item>DSM 2.3</item>
+</string-array>
+<string name="title_preference">Preferencias</string>
+<string name="label_autorefresh">Refresco automático</string>
+<string name="hint_autorefresh_on">Refresco automático habilitado</string>
+<string name="hint_autorefresh_off">Refresco automático deshabilitado</string>
+<string name="title_cat_servers">Servidores</string>
+<string name="title_cat_general">Opciones Generales</string>
+
+
+<string name="menu_delete_server">Borrar servidor(es)</string>
+<string-array name="sorts_array"><item>Por fecha de creación</item>
+<item>Por usuario</item>
+</string-array>
+<string name="label_process_sort">Ordenar tareas</string>
+<string name="hint_process_sort">Seleccione cómo ordenar las tareas</string>
+
+
+<string-array name="sort_array_values"><item>fecha</item>
+<item>usuario</item>
+</string-array>
+<string name="button_delete">Borrar</string>
+<string name="menu_add_server">Añadir un servidor</string>
+<string name="label_default_server_prefix">Servidor </string>
+<string name="hint_default_server">Click para editar</string>
+<string name="menu_refresh">Refrescar</string>
+<string name="title_cat_connection">Parámetros de conexión</string>
+<string name="title_cat_server">Parámetros generales</string>
+
+<string name="action_resume">Reanudar</string>
+<string name="action_pause">Pausar</string>
+<string name="action_clear">Limpiar</string>
+<string name="action_cancel">Cancelar</string>
+<string name="action_retry">Reintentar</string>
+<string name="action_delete">Borrar</string>
+<string name="action_details">Mostrar detalles...</string>
+
+<string name="dialog_title_confirm">Confirmación</string>
+<string name="button_yes">Si</string>
+<string name="button_no">No</string>
+<string name="dialog_message_confirm">&quot;Las operaciones sobre al archivo no se han completado. ¿Desea continuar?&quot;</string>
+<string name="label_sort_taskid">Por fecha de creación</string>
+<string name="label_sort_filename">Por nombre de archivo</string>
+<string name="label_sort_totalsize">Por tamaño total</string>
+<string name="label_sort_currentsize">Por tamaño actual</string>
+<string name="label_sort_progress">Por progreso</string>
+<string name="label_sort_uploadrate">Por ratio de subida</string>
+<string name="label_sort_currentrate">Por ratio de bajada</string>
+<string name="label_sort_timeleft">Por tiempo restante</string>
+<string name="label_sort_status">Por estatus</string>
+<string name="label_sort_username">Por nombre de usuario</string>
+<string name="label_asc_sort">Por orden ascendente</string>
+<string name="hint_asc_sort_on">La ordenación es ascendente</string>
+<string name="hint_asc_sort_off">La ordenación es descendente</string>
+<string name="eula_title">Licencia</string>
+<string name="eula_accept">Aceptar</string>
+<string name="eula_hide">Ocultar</string>
+<string name="eula_refuse">Rechazar</string>
+<string name="action_detailing">Recuperando los detalles de \'%s\'</string>
+<string name="action_adding">Añadiendo archivo %s</string>
+<string name="detail_tab_general">General</string>
+<string name="detail_tab_transfer">Transferir</string>
+<string name="detail_tab_files">Archivos</string>
+
+
+<string name="detail_filesize">Tamaño del archivo</string>
+
+
+<string name="detail_username">Nombre usuario</string>
+<string name="detail_filename">Nombre del fichero</string>
+<string name="detail_destination">Destino</string>
+
+<string name="detail_creationtime">Hora de creación</string>
+<string name="detail_url">Url</string>
+
+<string name="detail_originaltorrent">Torrent original</string>
+<string name="detail_status">Estatus</string>
+<string name="detail_transfered">Transferido</string>
+<string name="detail_speed">Velocidad</string>
+<string name="detail_peers">Pares (conectados / total)</string>
+<string name="detail_seeders_leechers">Semillas - Sanguijuelas</string>
+<string name="detail_eta">Tiempo estimado de finalización</string>
+<string name="detail_pieces">Piezas (actuales / total)</string>
+<string name="detail_progress">Progreso</string>
+<string name="detail_status_waiting">Esperando</string>
+<string name="detail_status_downloading">Descargando</string>
+<string name="detail_status_seeding">Compartiendo</string>
+<string name="detail_status_paused">Pausado</string>
+<string name="detail_status_finished">Finalizado</string>
+<string name="detail_status_hash_checking">Chequeando Hash</string>
+<string name="detail_status_error">Error</string>
+<string name="menu_about">Sobre</string>
+<string name="app_contributors">&quot;Participantes en el proyecto:&quot;</string>
+<string name="app_status_project">Chequea el estado de nuestro proyecto:</string>
+<string name="button_ok">OK</string>
+<string name="eula_view">Licencia...</string>
+<string name="button_yesplease">Si por favor</string>
+<string name="button_nothanks">No gracias</string>
+<string name="dialog_title_information">Información</string>
+<string name="no_server_configured">No se ha configurado ningun servidor todavía o no se ha configurado correctamante.\n\n¿Desea configurar el sistema ahora?</string>
+<string name="detail_progress_upload">Subido:</string>
+<string name="detail_progress_download">Descargado:</string>
+<string name="detail_finished">Finalizado</string>
+<string name="detail_unvailable">no disponible</string>
+<string name="not_yet_implemented">Característica no implementada todavía</string>
+<string name="title_information">Información</string>
+<string name="detail_unknown">Desconocido</string>
+<string name="action_files">Recuperando archivos \'%s\'</string>
+<string name="action_updating">&quot;Actualizando archivo %s&quot;</string>
+
+<string name="seeding_time">Tiempo compartiendo</string>
+<string name="seeding_ratio">Ratio de compartición (%)</string>
+<string name="seeding_parameters_time">Parámetros de compartición</string>
+<string-array name="seeding_time_array">
+<item>Ignorar</item>
+<item>90 mins</item>
+<item>2 horas</item>
+<item>3 horas</item>
+<item>4 horas</item>
+<item>5 horas</item>
+<item>6 horas</item>
+<item>7 horas</item>
+<item>8 horas</item>
+<item>9 horas</item>
+<item>10 horas</item>
+<item>12 horas</item>
+<item>16 horas</item>
+<item>20 horas</item>
+<item>24 horas</item>
+<item>30 horas</item>
+<item>36 horas</item>
+<item>48 horas</item>
+<item>60 horas</item>
+<item>72 horas</item>
+<item>96 horas</item>
+<item>Para siempre</item>
+</string-array>
+
+<string name="logo_download">Torrent, NZB, Url</string>
+<string name="logo_emule">eMule (no implementado)</string>
+<string name="logo_about">Sobre</string>
+<string-array name="seeding_time_array_values">
+<item>0</item>
+<item>90</item>
+<item>120</item>
+<item>180</item>
+<item>240</item>
+<item>300</item>
+<item>360</item>
+<item>420</item>
+<item>480</item>
+<item>540</item>
+<item>600</item>
+<item>720</item>
+<item>960</item>
+<item>1200</item>
+<item>1440</item>
+<item>1800</item>
+<item>2160</item>
+<item>2880</item>
+<item>3600</item>
+<item>4320</item>
+<item>5760</item>
+<item>-1</item>
+</string-array>
+<string name="detail_forever">Para siempre</string>
+
+</resources>
+

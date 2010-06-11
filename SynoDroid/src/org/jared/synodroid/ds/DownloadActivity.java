@@ -408,7 +408,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			dialog = new ProgressDialog(this);
 			dialog.setTitle("");
 			dialog.setCancelable(false);
-			((ProgressDialog) dialog).setMessage("Connecting. Please wait...");
+			((ProgressDialog) dialog).setMessage(getString(R.string.connect_connecting2));
 			((ProgressDialog) dialog).setIndeterminate(true);
 			break;
 		// No server have been yet configured
