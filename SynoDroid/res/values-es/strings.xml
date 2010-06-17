@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     
     <string name="app_name">Synodroid</string>
@@ -6,17 +6,18 @@
     <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
 <string name="connect_cant_connect">"No se puede conectar a {0}. El error es '{1}'."</string>
-<string name="unknow_reason">&quot;Se ha producido un error por una razón desconocida&quot;</string>
+<string name="unknow_reason">"Se ha producido un error por una razón desconocida"</string>
 <string name="connect_wrong_userpassword">"Usuario o contraseña incorrecta. Pruebe de nuevo."</string>
 <string name="connect_already_connected">"Está conectado desde otro ordenador. Por favor reconecte."</string>
-<string name="connect_nohost">&quot;No se puede conectar al servidor. Verifique sus parámetros.&quot;</string>
+<string name="connect_nohost">"No se puede conectar al servidor. Verifique sus parámetros."</string>
 <string name="connect_error_title">"Error"</string>
-<string name="connect_connecting">"Conectando a \n{0}\nPor favor espere..."</string>
+<string name="connect_connecting2">"Conectando. Espere por favor"</string>
+<string name="connect_connecting">"Conectando a \n{0}\nEspere por favor..."</string>
 <string name="connect_ssl_error">"Error SSL: {0}"</string>
-<string name="action_deleting">&quot;Eliminando archivo %s&quot;</string>
-<string name="action_clearall">&quot;Limpiando todas las tareas completas...&quot;</string>
-<string name="action_pausing">&quot;Pausando archivo %s&quot;</string>
-<string name="action_resuming">&quot;Reanudando el archivo %s&quot;</string>
+<string name="action_deleting">"Eliminando archivo %s"</string>
+<string name="action_clearall">"Limpiando todas las tareas completas..."</string>
+<string name="action_pausing">"Pausando archivo %s"</string>
+<string name="action_resuming">"Reanudando el archivo %s"</string>
 <string name="menu_connect">Conectar a</string>
 <string name="menu_search">Buscar</string>
 <string name="menu_clearall">Limpiar tareas completadas</string>
@@ -24,7 +25,7 @@
 <string name="menu_parameter">Parámetros</string>
 <string name="err_unknown">Error desconocido</string>
 
-<string name="connect_cant">&quot;No estás autorizado a utilizar este servicio&quot;</string>
+<string name="connect_cant">"No estás autorizado a utilizar este servicio"</string>
 <string name="label_nickname">Nickname</string>
 <string name="label_protocol">Protocolo</string>
 <string name="label_host">Servidor</string>
@@ -42,7 +43,7 @@
 
 <string name="hint_refreshinterval">Tiempo de refresco en segundos</string>
 <string name="button_cancel">Cancelar</string>
-<string name="hint_dsm_version">&quot;Establece tu versión DSM&quot;</string>
+<string name="hint_dsm_version">"Establece tu versión DSM"</string>
 <string-array name="dsm_version_array"><item>DSM 2.2</item>
 <item>DSM 2.3</item>
 </string-array>
@@ -84,7 +85,7 @@
 <string name="dialog_title_confirm">Confirmación</string>
 <string name="button_yes">Si</string>
 <string name="button_no">No</string>
-<string name="dialog_message_confirm">&quot;Las operaciones sobre al archivo no se han completado. ¿Desea continuar?&quot;</string>
+<string name="dialog_message_confirm">"Las operaciones sobre al archivo no se han completado. ¿Desea continuar?"</string>
 <string name="label_sort_taskid">Por fecha de creación</string>
 <string name="label_sort_filename">Por nombre de archivo</string>
 <string name="label_sort_totalsize">Por tamaño total</string>
@@ -136,7 +137,7 @@
 <string name="detail_status_hash_checking">Chequeando Hash</string>
 <string name="detail_status_error">Error</string>
 <string name="menu_about">Sobre</string>
-<string name="app_contributors">&quot;Participantes en el proyecto:&quot;</string>
+<string name="app_contributors">"Participantes en el proyecto:"</string>
 <string name="app_status_project">Chequea el estado de nuestro proyecto:</string>
 <string name="button_ok">OK</string>
 <string name="eula_view">Licencia...</string>
@@ -152,7 +153,7 @@
 <string name="title_information">Información</string>
 <string name="detail_unknown">Desconocido</string>
 <string name="action_files">Recuperando archivos \'%s\'</string>
-<string name="action_updating">&quot;Actualizando archivo %s&quot;</string>
+<string name="action_updating">"Actualizando archivo %s"</string>
 
 <string name="seeding_time">Tiempo compartiendo</string>
 <string name="seeding_ratio">Ratio de compartición (%)</string>
@@ -210,6 +211,7 @@
 <item>-1</item>
 </string-array>
 <string name="detail_forever">Para siempre</string>
-
+<string name="action_download_original_file">Descargando archivo original</string>
+<string name="action_download_original_saved">El archivo se ha descargado en tu almacenamiento externo (/sdcard/download)</string>
+<string name="action_download_original_failed">Imposible guardar archivo.Posiblemente por el almacenamiento externo no está montado</string>
 </resources>
-
