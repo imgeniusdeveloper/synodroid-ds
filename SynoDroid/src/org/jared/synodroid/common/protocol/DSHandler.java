@@ -126,6 +126,13 @@ public interface DSHandler {
   public void setSharedDirectory(Task taskP, String directoryP) throws Exception;
   
   /**
+   * Get the global current shared directory
+   * @return
+   * @throws Exception
+   */
+  public String getSharedDirectory() throws Exception;
+  
+  /**
    * Download a specific URL
    * @param urlP
    */

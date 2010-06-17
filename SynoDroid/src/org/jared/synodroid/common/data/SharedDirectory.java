@@ -14,6 +14,8 @@ public class SharedDirectory {
   public String name;
   // The description of the directory
   public String description;
+  // Is this directory is the current global shared directory ?
+  public boolean isCurrent = false;
 
   /**
    * Constructor with define the public name

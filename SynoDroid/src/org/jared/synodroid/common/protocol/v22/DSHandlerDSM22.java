@@ -521,6 +521,40 @@ class DSHandlerDSM22 implements DSHandler {
   }
 
   /* (non-Javadoc)
+   * @see org.jared.synodroid.common.protocol.DSHandler#getSharedDirectory()
+   */
+  public String getSharedDirectory() throws Exception {
+    String result = null;
+    // If we are logged on
+    if (server.isConnected()) {
+      QueryBuilder getShared = new QueryBuilder().add("action", "shareget");
+      // Execute
+      JSONObject json;
+      synchronized (server) {
+        json = server.sendJSONRequest(DM_URI, getShared.toString(), "GET");
+      }
+      boolean success = json.getBoolean("success");
+      // If request succeded
+      if (success) {
+        result = json.getString("shareName");
+      }
+      // If not successful then throw an exception
+      else {
+        String reason = "";
+        if (json.has("reason")) {
+          reason = json.getString("reason");
+        }
+        else if (json.has("errno")) {
+          JSONObject err = json.getJSONObject("errno");
+          reason = err.getString("key");
+        }
+        throw new DSMException(reason);
+      }
+    }
+    return result;
+  }
+
+  /* (non-Javadoc)
    * @see org.jared.synodroid.common.protocol.DSHandler#getOriginalLink(org.jared.synodroid.common.data.Task)
    */
   public StringBuffer getOriginalFile(Task taskP) throws Exception {
