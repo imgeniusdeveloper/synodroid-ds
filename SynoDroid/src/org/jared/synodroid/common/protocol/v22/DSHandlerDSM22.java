@@ -161,7 +161,7 @@ class DSHandlerDSM22 implements DSHandler {
     // If we are logged on
     if (server.isConnected()) {
       try {
-        QueryBuilder getAllRequest = new QueryBuilder().add("action", "clear");
+        QueryBuilder getAllRequest = new QueryBuilder().add("action", "clear").add("idList", "");
         // Execute
         synchronized (server) {
           server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
