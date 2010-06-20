@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:versionCode="100"
-  android:versionName="1.0.100"
+  android:versionCode="101"
+  android:versionName="1.0.101"
   android:installLocation="auto"
   package="org.jared.synodroid.ds">
   <application
@@ -11,7 +11,7 @@
     android:icon="@drawable/icon_phone"
     android:name="org.jared.synodroid.Synodroid"
     android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
-    android:debuggable="true">
+    android:debuggable="false">
     <activity
       android:label="@string/app_name"
       android:name="DownloadActivity"

@@ -56,7 +56,7 @@ public class TabWidgetManager implements View.OnClickListener {
 	// The normal tabs frame
 	private LinearLayout normalTabFrame;
 	// The main content view
-	private FrameLayout mainContentView;
+	private LinearLayout mainContentView;
 	// The main tabs view
 	private LinearLayout mainTabsView;
 	// Flag to know if a animation is playing
@@ -78,7 +78,7 @@ public class TabWidgetManager implements View.OnClickListener {
 		sliderDrawable = sliderDrawableP;
 		// Get the main inflater
 		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mainContentView = (FrameLayout) inflater.inflate(R.layout.tabs_content, null, false);
+		mainContentView = (LinearLayout) inflater.inflate(R.layout.tabs_content, null, false);
 		contentFrame = (FrameLayout) mainContentView.findViewById(R.id.id_tab_content);
 		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
 		selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
