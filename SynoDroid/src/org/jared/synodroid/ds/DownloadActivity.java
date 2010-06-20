@@ -78,9 +78,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private static final String TAB_TASKS = "TASKS";
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
-  private static final String PREFERENCE_LAST_LINK = "lastlink";
-  private static final String PREFERENCE_LAST_LINK_VALUE = "lastlink.value";
-
+  
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
   // No server configured
@@ -279,20 +277,15 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     taskView.setOnItemClickListener(taskAdapter);
     taskView.setOnItemLongClickListener(taskAdapter);
 
-    // First bind the current activity to the current server if exist
-    if (!((Synodroid) getApplication()).bindResponseHandler(this)) {
-      Intent intent = getIntent();
-      String action = intent.getAction();
-      // Show the dialog only if the intent's action is not to view a
-      // content -> add a new file
-      if (action != null && !(action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCE_LAST_LINK, Activity.MODE_PRIVATE);
-        preferences.edit().putString(PREFERENCE_LAST_LINK_VALUE, "").commit();
-      }
-      else {
-        handleIntent(intent);
-      }
-    }
+	Intent intent = getIntent();
+	String action = intent.getAction();
+	// Show the dialog only if the intent's action is not to view a
+	// content -> add a new file
+	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
+	  handleIntent(intent);
+	  intent.setAction(Intent.ACTION_MAIN);
+	}
+    
 
     // The user is able to click on the title bar to connect to a server
     setTitleClickListener(this);
@@ -348,9 +341,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   @Override
   protected void onNewIntent(Intent intentP) {
-    super.onNewIntent(intentP);
-    Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
-    handleIntent(intentP);
+	super.onNewIntent(intentP);
+	if ((intentP.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+		Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
+	    handleIntent(intentP);	
+	}
   }
 
   /**
@@ -360,7 +355,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   private void handleIntent(Intent intentP) {
     String action = intentP.getAction();
-    SharedPreferences preferences = getSharedPreferences(PREFERENCE_LAST_LINK, Activity.MODE_PRIVATE);
     if (action != null) {
       Uri uri = null;
       boolean out_url = false;
@@ -372,10 +366,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         if (uriString == null) {
           return;
         }
-        if (!preferences.getString(PREFERENCE_LAST_LINK_VALUE, "").equals(uriString)) {
-          uri = Uri.parse(uriString);
-          out_url = true;
-        }
+        uri = Uri.parse(uriString);
+        out_url = true;
       }
       else {
         return;
@@ -385,7 +377,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         AddTaskAction addTask = new AddTaskAction(uri, out_url);
         Synodroid app = (Synodroid) getApplication();
         app.executeAction(this, addTask, true);
-        preferences.edit().putString(PREFERENCE_LAST_LINK_VALUE, uri.toString()).commit();
       }
     }
   }
@@ -547,6 +538,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // the title bar on top. This fixes thoses cases.
     server = ((Synodroid) getApplication()).getServer();
     if (server != null && server.isConnected()) {
+      titleText.setText(server.getNickname());
+      titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
+      
       // Launch the gets task's details recurrent action
       Synodroid app = (Synodroid) getApplication();
       app.setRecurrentAction(this, new GetAllTaskAction(server.getSortAttribute(), server.isAscending()));
@@ -621,9 +615,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // Save UI state changes to the savedInstanceState.
     // This bundle will be passed to onCreate if the process is
     // killed and restarted.
-    savedInstanceState.putBoolean("connectDialogOpened", connectDialogOpened);
-    savedInstanceState.putInt("titleIcon", titleIcon.getVisibility());
-    savedInstanceState.putString("titleText", (String) titleText.getText());
     savedInstanceState.putString("tabID", cur_tab);
     // etc.
     super.onSaveInstanceState(savedInstanceState);
@@ -634,9 +625,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     super.onRestoreInstanceState(savedInstanceState);
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
-    connectDialogOpened = savedInstanceState.getBoolean("connectDialogOpened");
-    titleIcon.setVisibility(savedInstanceState.getInt("titleIcon"));
-    titleText.setText(savedInstanceState.getString("titleText"));
     cur_tab = savedInstanceState.getString("tabID");
     tabManager.slideTo(cur_tab);
   }

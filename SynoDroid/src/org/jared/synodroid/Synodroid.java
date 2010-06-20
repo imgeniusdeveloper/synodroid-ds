@@ -91,11 +91,13 @@ public class Synodroid extends Application {
    * @param handlerP
    */
   public boolean bindResponseHandler(ResponseHandler handlerP) {
-    if (currentServer != null) {
+    if (currentServer == null) {
+      return false;
+    }
+    else{
       currentServer.bindResponseHandler(handlerP);
       return true;
     }
-    return false;
   }
 
   /**
