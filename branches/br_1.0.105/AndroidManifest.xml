@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:versionCode="101"
+  android:versionName="1.0.101"
+  android:installLocation="auto"
+  package="org.jared.synodroid.ds">
+  <application
+    android:label="@string/app_name"
+    android:allowTaskReparenting="false"
+    android:icon="@drawable/icon_phone"
+    android:name="org.jared.synodroid.Synodroid"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+    android:debuggable="false">
+    <activity
+      android:label="@string/app_name"
+      android:name="DownloadActivity"
+      android:launchMode="singleTask">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"></action>
+        <category android:name="android.intent.category.LAUNCHER"></category>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:mimeType="application/x-bittorrent"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:mimeType="*/*"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:pathPattern=".*\\.torrent" />
+      </intent-filter>
+      
+      
+      
+    </activity>
+    <activity android:name="DownloadPreferenceActivity"
+      android:launchMode="singleTop">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"></action>
+        <category android:name="android.intent.category.PREFERENCE"></category>
+      </intent-filter>
+    </activity>
+    <activity android:name="DetailActivity"
+      android:launchMode="singleTop">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"></action>
+        <category android:name="android.intent.category.DEFAULT"></category>
+      </intent-filter>
+    </activity>
+</application>
+  <uses-sdk android:minSdkVersion="3" />
+  <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+</manifest>

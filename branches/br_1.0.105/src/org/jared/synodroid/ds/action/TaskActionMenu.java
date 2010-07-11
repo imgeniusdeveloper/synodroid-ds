@@ -1,0 +1,139 @@
+/**
+ * Copyright 2010 Eric Taix
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ * 
+ */
+package org.jared.synodroid.ds.action;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jared.synodroid.common.action.DeleteTaskAction;
+import org.jared.synodroid.common.action.PauseTaskAction;
+import org.jared.synodroid.common.action.ResumeTaskAction;
+import org.jared.synodroid.common.action.SynoAction;
+import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskStatus;
+import org.jared.synodroid.ds.R;
+
+import android.content.Context;
+
+/**
+ * An utility class which declare all available actions for a task
+ * 
+ * @author eric.taix at gmail.com
+ */
+public class TaskActionMenu {
+
+	// The task associated to this action
+	private Task task;
+	// The text to display
+	private String title;
+	// The action to execute if this TaskAction is selected
+	private SynoAction action;
+	// Flag to know if this action is eanbled
+	private boolean enabled;
+
+	/**
+	 * Generate a list of actions according to a task's state
+	 * 
+	 * @param taskP
+	 * @return
+	 */
+	public static List<TaskActionMenu> createActions(Context ctxP, Task taskP) {
+		ArrayList<TaskActionMenu> result = new ArrayList<TaskActionMenu>();
+		TaskStatus status = TaskStatus.valueOf(taskP.status);
+		switch (status) {
+		case TASK_DOWNLOADING:
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
+		case TASK_SEEDING:
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_cancel), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
+		case TASK_PAUSED:
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
+		case TASK_ERROR:
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_retry), new ResumeTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
+		case TASK_FINISHED:
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_clear), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			break;
+		case TASK_HASH_CHECKING:
+		case TASK_WAITING:
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
+			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
+			break;
+		}
+		return result;
+	}
+
+	/**
+	 * Private constructor to avoid instanciation
+	 * 
+	 * @param taskP
+	 */
+	private TaskActionMenu(Task taskP, String titleP, SynoAction actionP, boolean enabledP) {
+		task = taskP;
+		title = titleP;
+		action = actionP;
+		enabled = enabledP;
+	}
+
+	/**
+	 * @return the task
+	 */
+	public Task getTask() {
+		return task;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @return the action
+	 */
+	public SynoAction getAction() {
+		return action;
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+}
