@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="fill_parent" android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical">
+    <RelativeLayout android:id="@+id/RelativeLayout01" android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+        <LinearLayout android:id="@+id/LinearLayout02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_alignParentTop="true"><RelativeLayout android:id="@+id/title_bar" android:layout_width="fill_parent" android:layout_height="40dip" android:background="@drawable/title_bar">
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true" android:id="@+id/id_https" android:layout_centerVertical="true" android:src="@drawable/icon_https" android:layout_marginRight="5dip" android:visibility="invisible" android:layout_marginLeft="10dip"></ImageView>
+            <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/id_progress" android:indeterminate="true" android:layout_alignParentRight="true" style="?android:attr/progressBarStyleSmall" android:layout_centerVertical="true" android:layout_marginRight="5dip" android:visibility="invisible" />
+            <TextView android:layout_height="wrap_content" android:layout_gravity="center_vertical" android:id="@+id/id_title" style="@style/TitleFont" android:layout_toLeftOf="@+id/id_progress" android:layout_toRightOf="@+id/id_https" android:layout_width="wrap_content" android:singleLine="true" android:layout_centerVertical="true" android:text="@string/app_name" />
+        </RelativeLayout><View
+  android:id="@+id/View01"
+  android:layout_width="wrap_content"
+  android:background="@drawable/border_top"
+  android:layout_height="6dip"
+></View></LinearLayout>
+        <LinearLayout android:layout_alignParentBottom="true" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/bottom_bar"
+            android:orientation="vertical" android:layout_alignParentLeft="true"><View android:id="@+id/View01" android:layout_width="wrap_content" android:background="@drawable/border_top" android:layout_height="6dip"></View>
+            <RelativeLayout style="?android:attr/windowTitleBackgroundStyle"
+                 android:layout_width="fill_parent" android:background="@drawable/status_bar" android:layout_height="40dip">
+                <LinearLayout android:layout_alignParentBottom="true" android:id="@+id/rate_bar"
+                    android:layout_width="wrap_content" android:layout_alignParentRight="false" android:layout_centerVertical="true" android:gravity="center_vertical" android:layout_centerInParent="true" android:layout_centerHorizontal="true" android:layout_height="fill_parent">
+                    <ImageView android:id="@+id/ImageView01" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:src="@drawable/dl_download"></ImageView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" android:layout_marginRight="10dip" android:text="0.00KB/s"
+                        style="@style/TitleFont" android:id="@+id/id_total_download"></TextView>
+                    <ImageView android:id="@+id/ImageView02" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:src="@drawable/dl_upload"></ImageView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|center_horizontal" android:text="0.00KB/s" style="@style/TitleFont"
+                        android:id="@+id/id_total_upload"></TextView>
+                </LinearLayout>
+            </RelativeLayout><View android:id="@+id/View01" android:layout_width="wrap_content" android:background="@drawable/border_top" android:layout_height="6dip"></View>
+        
+
+</LinearLayout>
+        <ListView android:isScrollContainer="true" android:layout_height="fill_parent" android:layout_width="fill_parent"
+            android:id="@+id/task_list" android:clickable="true" android:choiceMode="singleChoice"
+            android:longClickable="true" android:layout_above="@+id/bottom_bar" android:layout_below="@+id/LinearLayout02"></ListView>
+    
+</RelativeLayout>
+</LinearLayout>
