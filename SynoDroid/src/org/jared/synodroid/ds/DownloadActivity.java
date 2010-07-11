@@ -282,8 +282,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	// Show the dialog only if the intent's action is not to view a
 	// content -> add a new file
 	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
-	  handleIntent(intent);
-	  intent.setAction(Intent.ACTION_MAIN);
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){	
+			handleIntent(intent);
+		}
 	}
     
 
