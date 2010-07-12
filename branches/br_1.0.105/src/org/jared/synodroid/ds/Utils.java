@@ -119,7 +119,7 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0l;
-			Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+			//Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
@@ -139,7 +139,7 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0.0d;
-			Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+			//Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}

@@ -389,9 +389,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), originalLink);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-				Synodroid app = (Synodroid) getApplication();
-				task.originalLink = originalLink;
-				app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
+				if (task.isTorrent || task.isNZB){
+					Synodroid app = (Synodroid) getApplication();
+					task.originalLink = originalLink;
+					app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
+				}				
 			}
 		});
 		result.add(urlDetail);
