@@ -74,7 +74,7 @@ import android.widget.TextView;
 public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo, TitleClicklistener, TabListener {
 
   private static final String TAB_ABOUT = "ABOUT";
-  private static final String TAB_EMULE = "EMULE";
+  //private static final String TAB_EMULE = "EMULE";
   private static final String TAB_TASKS = "TASKS";
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
@@ -244,9 +244,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     Tab torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
     torrentTab.setLogo(R.drawable.download_logo, R.string.logo_download);
     tabManager.addTab(torrentTab, downloadContent);
-    Tab emuleTab = new Tab(TAB_EMULE, R.drawable.ic_tab_emule, R.drawable.ic_tab_emule_selected);
-    emuleTab.setLogo(R.drawable.emule_logo, R.string.logo_emule);
-    tabManager.addTab(emuleTab, null);
+    //Tab emuleTab = new Tab(TAB_EMULE, R.drawable.ic_tab_emule, R.drawable.ic_tab_emule_selected);
+    //emuleTab.setLogo(R.drawable.emule_logo, R.string.logo_emule);
+    //tabManager.addTab(emuleTab, null);
     Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
     aboutTab.setLogo(R.drawable.about_logo, R.string.logo_about);
     View about = inflater.inflate(R.layout.about, null, false);
