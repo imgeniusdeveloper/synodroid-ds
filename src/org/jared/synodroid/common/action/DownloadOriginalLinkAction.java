@@ -45,7 +45,8 @@ public class DownloadOriginalLinkAction implements SynoAction {
 	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
 		StringBuffer data = serverP.getDSMHandlerFactory().getDSHandler().getOriginalFile(task);
 		OriginalFile ori = new OriginalFile();
-		ori.fileName = task.originalLink;
+		String [] temp = task.originalLink.split("/");
+		ori.fileName = temp[(temp.length)-1];
 		ori.rawData = data;
 		serverP.fireMessage(handlerP, ResponseHandler.MSG_ORIGINAL_FILE_RETRIEVED, ori);
 	}
