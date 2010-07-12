@@ -211,7 +211,14 @@
 <item>-1</item>
 </string-array>
 <string name="detail_forever">Para siempre</string>
+<string name="action_enum_shared">Recuperando directorios compartidos</string>
+<string name="shared_dir_title">Seleccione un directorio</string>
+<string name="shared_note">Nota: este parámetro afectará a todas las descargas pendientes</string>
+<string name="action_set_shared">Estableciendo directorio compartido</string>
+<string name="menu_destination">Destinato</string>
 <string name="action_download_original_file">Descargando archivo original</string>
-<string name="action_download_original_saved">El archivo se ha descargado en tu almacenamiento externo (/sdcard/download)</string>
-<string name="action_download_original_failed">Imposible guardar archivo.Posiblemente por el almacenamiento externo no está montado</string>
+<string name="action_download_original_saved">El fichero se ha guardado en el almacenamiento externo(/sdcard/download)</string>
+<string name="action_download_original_failed">Imposile guardar el archivo. Posiblemente el el almacenamiento externo esté desmontado</string>
+<string name="lang_es">Castellano</string>
+<string name="translator">&quot;Traductor(es):&quot;</string>
 </resources>
