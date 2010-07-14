@@ -74,6 +74,7 @@ public class TaskActionMenu {
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_ERROR:
+		case TASK_ERROR_BROKEN_LINK:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_retry), new ResumeTaskAction(taskP), true));
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
