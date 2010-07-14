@@ -65,6 +65,7 @@ public class IconFacade {
 			id = R.drawable.dl_finished;
 			break;
 		case TASK_ERROR:
+		case TASK_ERROR_BROKEN_LINK:
 			id = R.drawable.dl_error;
 			break;
 		}
