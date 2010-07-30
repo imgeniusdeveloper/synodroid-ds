@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:installLocation="auto"
-  package="org.jared.synodroid.ds" android:versionCode="118" android:versionName="1.0.118">
+  package="org.jared.synodroid.ds" android:versionCode="119" android:versionName="1.0.119">
   <application
     android:label="@string/app_name"
     android:allowTaskReparenting="false"
@@ -19,12 +19,6 @@
         <category android:name="android.intent.category.LAUNCHER"></category>
       </intent-filter>
       <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:mimeType="application/x-bittorrent"/>
-      </intent-filter>
-      <intent-filter>
         <action android:name="android.intent.action.SEND" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
@@ -36,9 +30,24 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:pathPattern=".*\\.torrent" />
       </intent-filter>
-      
-      
-      
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:pathPattern=".*\\.nzb" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:mimeType="application/x-bittorrent"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:mimeType="application/x-nzb"/>
+      </intent-filter>
     </activity>
     <activity android:name="DownloadPreferenceActivity"
       android:launchMode="singleTop">
