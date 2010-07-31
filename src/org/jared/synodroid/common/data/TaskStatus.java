@@ -25,7 +25,7 @@ import android.content.Context;
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public enum TaskStatus {
-  TASK_WAITING, TASK_DOWNLOADING, TASK_SEEDING, TASK_PAUSED, TASK_FINISHED, TASK_HASH_CHECKING, TASK_ERROR, TASK_ERROR_BROKEN_LINK;
+  TASK_WAITING, TASK_DOWNLOADING, TASK_SEEDING, TASK_PAUSED, TASK_FINISHED, TASK_HASH_CHECKING, TASK_ERROR, TASK_ERROR_BROKEN_LINK, TASK_ERROR_DISK_FULL;
 
 
   /**
@@ -45,6 +45,7 @@ public enum TaskStatus {
   	case TASK_HASH_CHECKING: return ctxP.getString(R.string.detail_status_hash_checking);
   	case TASK_ERROR: 
   	case TASK_ERROR_BROKEN_LINK:
+  	case TASK_ERROR_DISK_FULL:
   	default: return ctxP.getString(R.string.detail_status_error);
   	}
   }
