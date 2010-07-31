@@ -11,7 +11,7 @@
 <string name="connect_already_connected">&quot;Vous venez de vous connecter depuis un autre poste. Reconnectez-vous.&quot;</string>
 <string name="connect_nohost">&quot;Impossible de contacter le server. Veuillez vérifier vos paramêtres.&quot;</string>
 <string name="connect_error_title">"Erreur"</string>
-<string name="connect_connecting2">"Connection en cours. Veuillez patienter..."</string>
+<string name="connect_connecting2">"Connexion en cours. Veuillez patienter..."</string>
 <string name="connect_connecting">&quot;Connection à \n{0}\n en cours. Veuiller patienter...&quot;</string>
 <string name="connect_ssl_error">"Erreur SSL: {0}"</string>
 <string name="action_deleting">&quot;Suppression du fichier %s&quot;</string>
