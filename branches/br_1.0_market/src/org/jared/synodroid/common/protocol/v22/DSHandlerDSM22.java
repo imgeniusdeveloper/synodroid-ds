@@ -117,7 +117,7 @@ class DSHandlerDSM22 implements DSHandler {
           task.totalSize = item.getString("total_size").trim();
           task.uploadRate = item.getString("upload_rate").trim();
           task.creator = item.getString("username").trim();
-          if (task.creator == "") {
+          if (task.creator.equals("")) {
             task.creator = server.getUser();
           }
           task.server = server;
