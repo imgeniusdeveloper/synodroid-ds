@@ -41,7 +41,7 @@
 <string name="hint_password">Mot de passe</string>
 
 
-<string name="hint_refreshinterval">Intervallee de rafraichissement en secondes</string>
+<string name="hint_refreshinterval">Intervalle de rafraichissement en secondes</string>
 <string-array name="protocols_array"><item>HTTP</item>
 <item>HTTPS</item>
 </string-array>
