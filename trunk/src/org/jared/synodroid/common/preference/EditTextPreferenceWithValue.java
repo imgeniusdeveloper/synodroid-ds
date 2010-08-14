@@ -48,6 +48,7 @@ public class EditTextPreferenceWithValue extends EditTextPreference {
 	public EditTextPreferenceWithValue(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setLayoutResource(R.layout.preference_with_value);
+		setSingleLine(true);
 	}
 
 	/**
@@ -58,6 +59,7 @@ public class EditTextPreferenceWithValue extends EditTextPreference {
 	public EditTextPreferenceWithValue(Context context) {
 		super(context);
 		setLayoutResource(R.layout.preference_with_value);
+		setSingleLine(true);
 	}
 
 	/**
@@ -71,6 +73,20 @@ public class EditTextPreferenceWithValue extends EditTextPreference {
 		EditText text = getEditText();
 		if (text != null) {
 			text.setInputType(inputType);
+		}
+		return this;
+	}
+
+	/**
+	 * Set the EditText to be a single line
+	 * 
+	 * @param singleP
+	 * @return
+	 */
+	public EditTextPreferenceWithValue setSingleLine(boolean singleP) {
+		EditText text = getEditText();
+		if (text != null) {
+			text.setSingleLine(singleP);
 		}
 		return this;
 	}
