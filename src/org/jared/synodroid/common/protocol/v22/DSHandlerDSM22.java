@@ -282,11 +282,14 @@ class DSHandlerDSM22 implements DSHandler {
           if (m.find() && m.groupCount() >= 1) {
             result.bytesUploaded = Utils.fileSizeToBytes(m.group(1));
           }
+          // If you could find another matching group, it means downmload informations are present
           if (m.find() && m.groupCount() >= 1) {
             result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
           }
+          // Otherwise download informations were the first matching (no upload information)
           else {
             result.bytesDownloaded = result.bytesUploaded;
+            result.bytesUploaded =0;
           }
         }
         if (data.has("seedelapsed")) result.seedingElapsed = data.getInt("seedelapsed");
