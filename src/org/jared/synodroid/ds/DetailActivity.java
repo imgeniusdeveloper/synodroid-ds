@@ -41,11 +41,13 @@ import org.jared.synodroid.ds.view.adapter.DetailProgress;
 import org.jared.synodroid.ds.view.adapter.DetailText;
 import org.jared.synodroid.ds.view.adapter.FileDetailAdapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -53,6 +55,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -70,6 +74,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private static final String TAB_FILES = "FILES";
 	private static final String TAB_TRANSFERT = "TRANSFERT";
 	private static final String TAB_GENERAL = "GENERAL";
+	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+	private static final String PREFERENCE_GENERAL = "general_cat";
 
 	private static final int TASK_PARAMETERS_DIALOG = 1;
 
@@ -110,6 +116,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
+	    
 		// Create the seeding time int array
 		String[] timesArray = getResources().getStringArray(R.array.seeding_time_array_values);
 		seedingTimes = new int[timesArray.length];
@@ -325,6 +333,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		//Check for fullscreen
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+			//Set fullscreen or not
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+		}
+		else{
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+		
 		// Launch the gets task's details recurrent action
 		Synodroid app = (Synodroid) getApplication();
 		SynoAction detailAction = new DetailTaskAction(task);

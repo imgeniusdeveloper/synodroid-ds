@@ -225,4 +225,7 @@
 <string name="action_download_original_failed">Unable to save file, likeky because external storage is not mounted</string>
 <string name="lang_es">Spanish</string>
 <string name="translator">&quot;Translator(s):&quot;</string>
+<string name="fullscreen_preference">Full screen</string>
+<string name="summary_fullscreen_preference">Hides the notification bar</string>
+
 </resources>
