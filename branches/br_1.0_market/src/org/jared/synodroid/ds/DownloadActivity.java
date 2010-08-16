@@ -59,6 +59,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,7 +80,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private static final String TAB_TASKS = "TASKS";
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
-  
+  private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+  private static final String PREFERENCE_GENERAL = "general_cat";
+	
   // The connection dialog ID
   private static final int CONNECTION_DIALOG_ID = 1;
   // No server configured
@@ -229,6 +233,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   @Override
   public void onCreate(Bundle savedInstanceState) {
 
+	getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
     licenceAccepted = Eula.show(this, false);
 
     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -266,7 +271,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     tabManager.setTabListener(this);
 
     super.onCreate(savedInstanceState);
-
+	
     // Retrieve title's text, icon and progress for future uses
     titleText = (TextView) findViewById(R.id.id_title);
     titleIcon = (ImageView) findViewById(R.id.id_https);
@@ -535,6 +540,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   @Override
   protected void onResume() {
     super.onResume();
+    SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+	if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+		//Set fullscreen or not
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+	}
+	else{
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
     // There are some case where the connected server does not show up in
     // the title bar on top. This fixes thoses cases.
     server = ((Synodroid) getApplication()).getServer();
