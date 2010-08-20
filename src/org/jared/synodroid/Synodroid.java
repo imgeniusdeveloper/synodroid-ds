@@ -11,6 +11,8 @@ package org.jared.synodroid;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.CrashReportDialog;
+import org.acra.CrashReportingApplication;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DeleteTaskAction;
 import org.jared.synodroid.common.action.GetAllTaskAction;
@@ -21,21 +23,52 @@ import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 
 /**
  * The application (single instance) which implements utility methods to access to the current server
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class Synodroid extends Application {
+public class Synodroid extends CrashReportingApplication {
+
+  private static final String GOOGLEDOC_FORM_ID = "dENyc3VzSFNwdzZScVJ0T3RPNk9tbVE6MQ";
 
   public static final String DS_TAG = "Synodroid DS";
 
   // The current server
   private SynoServer currentServer = null;
+
+  
+  
+  /* (non-Javadoc)
+   * @see org.acra.CrashReportingApplication#getFormId()
+   */
+  @Override
+  public String getFormId() {
+    return GOOGLEDOC_FORM_ID;
+  }
+
+  /* (non-Javadoc)
+   * @see org.acra.CrashReportingApplication#getCrashResources()
+   */
+  @Override
+  public Bundle getCrashResources() {
+    Bundle result = new Bundle();
+    result.putInt(RES_NOTIF_TICKER_TEXT, R.string.crash_notif_ticker_text);
+    result.putInt(RES_NOTIF_TITLE, R.string.crash_notif_title);
+    result.putInt(RES_NOTIF_TEXT, R.string.crash_notif_text);
+    result.putInt(RES_NOTIF_ICON, android.R.drawable.stat_notify_error); // optional. default is a warning sign
+    result.putInt(RES_DIALOG_TEXT, R.string.crash_dialog_text);
+    result.putInt(RES_DIALOG_ICON, android.R.drawable.ic_dialog_info); //optional. default is a warning sign
+    result.putInt(RES_DIALOG_TITLE, R.string.crash_dialog_title); // optional. default is your application name 
+    result.putInt(RES_DIALOG_COMMENT_PROMPT, R.string.crash_dialog_comment_prompt); // optional. when defined, adds a user text field input with this text resource as a label
+    result.putInt(RES_DIALOG_OK_TOAST, R.string.crash_dialog_ok_toast); // optional. Displays a Toast when the user accepts to send a report ("Thank you !" for example)
+    return result;
+
+  }
 
   /*
    * (non-Javadoc)
@@ -53,6 +86,7 @@ public class Synodroid extends Application {
   @Override
   public void onTerminate() {
     super.onTerminate();
+    CrashReportDialog a;
   }
 
   /**
