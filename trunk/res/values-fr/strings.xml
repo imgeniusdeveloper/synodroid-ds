@@ -225,4 +225,15 @@
 <string name="action_download_original_failed">&quot;Impossible de sauvegarder le fichier. Votre stockage externe n'est peut-être pas branché.&quot;</string>
 <string name="lang_es">Espagnol</string>
 <string name="translator">&quot;Traducteur(s):&quot;</string>
+
+<string name="crash_notif_ticker_text">Erreur inattendue, merci d\'envoyer un rapport...</string>
+<string name="crash_notif_title">Synodroid s\'est fermé...</string>
+<string name="crash_notif_text">Merci de cliquer ici pour nous aider à résoudre le problème.</string>
+        
+<string name="crash_dialog_title">Synodroid s\'est fermé</string>
+<string name="crash_dialog_text">Une erreur inattendue est survenue, forcant l\'application à s\'arrêter.
+    Merci de nous aider à résoudre le problème en envoyant les données d\'erreur:
+        vous avez juste à cliquer sur  \'OK\'.</string>
+<string name="crash_dialog_comment_prompt">Vous pouvez ajouter votre adresse email et vos commentaires concernant le problème:</string>
+<string name="crash_dialog_ok_toast">Merci !</string>
 </resources>

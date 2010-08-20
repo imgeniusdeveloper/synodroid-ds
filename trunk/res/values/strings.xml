@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">Synodroid</string>
-    <string name="app_opensource">Opensource project</string>
-    <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
+<string name="app_name">Synodroid</string>
+<string name="app_opensource">Opensource project</string>
+<string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
 <string name="connect_cant_connect">"Can't connect to {0}. Error is '{1}'."</string>
 <string name="unknow_reason">&quot;An error occured for an unknown reason&quot;</string>
@@ -225,4 +225,15 @@
 <string name="action_download_original_failed">Unable to save file, likeky because external storage is not mounted</string>
 <string name="lang_es">Spanish</string>
 <string name="translator">&quot;Translator(s):&quot;</string>
+
+<string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+<string name="crash_notif_title">Synodroid has crashed...</string>
+<string name="crash_notif_text">Please click here to help fix the issue.</string>
+        
+<string name="crash_dialog_title">Synodroid has crashed</string>
+<string name="crash_dialog_text">An unexpected error occurred forcing the
+        application to stop. Please help us fix this by sending us error data,
+        all you have to do is click \'OK\'.</string>
+<string name="crash_dialog_comment_prompt">You might add you email address and your comments about the problem below:</string>
+<string name="crash_dialog_ok_toast">Thank you !</string>
 </resources>
