@@ -44,4 +44,5 @@
       android:layout_toLeftOf="@+id/id_detail_checked" />
 
   </RelativeLayout>
+
 </LinearLayout>

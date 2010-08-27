@@ -266,12 +266,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     message.setText(Html
             .fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
     message.setMovementMethod(LinkMovementMethod.getInstance());
+    
     tabManager.addTab(aboutTab, about);
 
     tabManager.setTabListener(this);
+    super.setTabmanager(tabManager);
 
     super.onCreate(savedInstanceState);
-	
+    
     // Retrieve title's text, icon and progress for future uses
     titleText = (TextView) findViewById(R.id.id_title);
     titleIcon = (ImageView) findViewById(R.id.id_https);
@@ -281,7 +283,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     taskView.setAdapter(taskAdapter);
     taskView.setOnItemClickListener(taskAdapter);
     taskView.setOnItemLongClickListener(taskAdapter);
-
+    //taskView.setOnClickListener(DownloadActivity.this); 
+    taskView.setOnTouchListener(gestureListener);
+    about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
+    
 	Intent intent = getIntent();
 	String action = intent.getAction();
 	// Show the dialog only if the intent's action is not to view a
