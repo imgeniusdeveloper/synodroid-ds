@@ -326,8 +326,8 @@ public class TabWidgetManager implements View.OnClickListener {
 	 * Change the selected tab to the next one (on the right)
 	 */
 	public void nextTab() {
-		nextIndex = currentIndex + 1;
 		if (currentIndex < tabs.size() - 1) {
+			nextIndex = currentIndex + 1;
 			Tab tab = tabs.get(nextIndex);
 			slideTo(tab.getId());
 		}
@@ -337,8 +337,8 @@ public class TabWidgetManager implements View.OnClickListener {
 	 * Change the selected tab to the previous one (on the left)
 	 */
 	public void previousTab() {
-		nextIndex = currentIndex - 1;
 		if (currentIndex > 0) {
+			nextIndex = currentIndex - 1;
 			Tab tab = tabs.get(nextIndex);
 			slideTo(tab.getId());
 		}
