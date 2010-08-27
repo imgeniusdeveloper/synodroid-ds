@@ -76,8 +76,8 @@ import android.widget.TextView;
 public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo, TitleClicklistener, TabListener {
 
   private static final String TAB_ABOUT = "ABOUT";
-  //private static final String TAB_EMULE = "EMULE";
-  private static final String TAB_TASKS = "TASKS";
+  //private static final String TAB_EMULE = 2;
+  private static final String TAB_TASKS = "TASK";
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
   private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
@@ -113,9 +113,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   private ImageView titleIcon;
   // The tab manager
   private TabWidgetManager tabManager;
-  // Current tab
-  private String cur_tab = TAB_TASKS;
-
+  
   /**
    * Handle the message
    */
@@ -233,8 +231,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   @Override
   public void onCreate(Bundle savedInstanceState) {
 
-	getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
-    licenceAccepted = Eula.show(this, false);
+	getWindow().requestFeature(Window.FEATURE_NO_TITLE); 
+	licenceAccepted = Eula.show(this, false);
 
     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -585,8 +583,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    * @param taskP
    */
   public void onTaskClicked(final Task taskP) {
-    Synodroid app = (Synodroid) getApplication();
-    app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
+	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
+		Synodroid app = (Synodroid) getApplication();
+		app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
+	}
   }
 
   /**
@@ -595,23 +595,25 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    * @param taskP
    */
   public void onTaskLongClicked(final Task taskP) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle(getString(R.string.dialog_title_action));
-    final ActionAdapter adapter = new ActionAdapter(this, taskP);
-    builder.setAdapter(adapter, new OnClickListener() {
-      public void onClick(DialogInterface dialog, int which) {
-        TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
-        // Only if TaskActionMenu is enabled: it seems that even if the
-        // item is
-        // disable the user can tap it
-        if (taskAction.isEnabled()) {
-          Synodroid app = (Synodroid) getApplication();
-          app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
-        }
-      }
-    });
-    AlertDialog connectDialog = builder.create();
-    connectDialog.show();
+	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
+	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle(getString(R.string.dialog_title_action));
+	    final ActionAdapter adapter = new ActionAdapter(this, taskP);
+	    builder.setAdapter(adapter, new OnClickListener() {
+	      public void onClick(DialogInterface dialog, int which) {
+	        TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
+	        // Only if TaskActionMenu is enabled: it seems that even if the
+	        // item is
+	        // disable the user can tap it
+	        if (taskAction.isEnabled()) {
+	          Synodroid app = (Synodroid) getApplication();
+	          app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
+	        }
+	      }
+	    });
+	    AlertDialog connectDialog = builder.create();
+	    connectDialog.show();
+    }
   }
 
   /**
@@ -630,7 +632,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
       ((Synodroid) getApplication()).forceRefresh();
     }
-    cur_tab = newTabIdP;
   }
 
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -642,7 +643,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // Save UI state changes to the savedInstanceState.
     // This bundle will be passed to onCreate if the process is
     // killed and restarted.
-    savedInstanceState.putString("tabID", cur_tab);
+    savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
     // etc.
     super.onSaveInstanceState(savedInstanceState);
   }
@@ -652,7 +653,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     super.onRestoreInstanceState(savedInstanceState);
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
-    cur_tab = savedInstanceState.getString("tabID");
-    tabManager.slideTo(cur_tab);
+    int curTabId = savedInstanceState.getInt("tabID");
+    tabManager.slideTo(tabManager.getNameAtId(curTabId));
   }
 }
