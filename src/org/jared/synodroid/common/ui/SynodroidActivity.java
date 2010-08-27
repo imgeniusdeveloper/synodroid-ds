@@ -45,7 +45,7 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
     private GestureDetector gestureDetector;
     public View.OnTouchListener gestureListener;
     public TabWidgetManager tabManager;
-	
+    
   // The inflater
   private LayoutInflater inflater;
   // The request view
@@ -253,7 +253,8 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 	        } catch (Exception e) {
 	            // nothing
 	        }
-	        return false;
+	        
+	        return true;
 	    }
   }
 }

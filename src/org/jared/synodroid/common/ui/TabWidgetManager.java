@@ -39,6 +39,8 @@ public class TabWidgetManager implements View.OnClickListener {
 
 	// The current visible frame
 	private int currentIndex = -1;
+	// The current visible frame
+	private int nextIndex = -1;
 	// The tabs list
 	private ArrayList<Tab> tabs = new ArrayList<Tab>();
 	// The view list
@@ -258,6 +260,7 @@ public class TabWidgetManager implements View.OnClickListener {
 			}
 			// Change the current index
 			currentIndex = newIndex;
+			nextIndex = newIndex;
 		}
 	}
 
@@ -289,12 +292,43 @@ public class TabWidgetManager implements View.OnClickListener {
 		}
 	}
 
+	public int getSlideToIndex(){
+		return nextIndex;
+	}
+	
+	public String getSlideToTabName(){
+		try{
+			Tab tab = tabs.get(nextIndex);
+			return tab.getId();
+		}catch(Exception e) {}
+		return "";
+	}
+	
+	public int getCurrentTabIndex(){
+		return currentIndex;
+	}
+	
+	public Tab getCurrentTab(){
+		return tabs.get(currentIndex);
+	}
+	
+	public String getNameAtId(int x){
+		Tab tab = tabs.get(x);
+		return tab.getId();
+	}
+	
+	public String getCurrentTabName(){
+		Tab tab = tabs.get(currentIndex);
+		return tab.getId();
+	}
+	
 	/**
 	 * Change the selected tab to the next one (on the right)
 	 */
 	public void nextTab() {
+		nextIndex = currentIndex + 1;
 		if (currentIndex < tabs.size() - 1) {
-			Tab tab = tabs.get(currentIndex + 1);
+			Tab tab = tabs.get(nextIndex);
 			slideTo(tab.getId());
 		}
 	}
@@ -303,8 +337,9 @@ public class TabWidgetManager implements View.OnClickListener {
 	 * Change the selected tab to the previous one (on the left)
 	 */
 	public void previousTab() {
+		nextIndex = currentIndex - 1;
 		if (currentIndex > 0) {
-			Tab tab = tabs.get(currentIndex - 1);
+			Tab tab = tabs.get(nextIndex);
 			slideTo(tab.getId());
 		}
 	}

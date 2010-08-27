@@ -96,8 +96,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private FileDetailAdapter fileAdapter;
 	// The file ListView
 	private ListView filesListView;
-	// The current active tab
-	private String currentTab = TAB_GENERAL;
 	// Flag to know if files tab must be shown
 	private boolean showFileTab = false;
 	// The seeding ratio
@@ -117,8 +115,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
-	    
-		// Create the seeding time int array
+	    // Create the seeding time int array
 		String[] timesArray = getResources().getStringArray(R.array.seeding_time_array_values);
 		seedingTimes = new int[timesArray.length];
 		for (int iLoop = 0; iLoop < timesArray.length; iLoop++) {
@@ -413,7 +410,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), originalLink);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-				if (task.isTorrent || task.isNZB){
+				if ((task.isTorrent || task.isNZB) && tabManager.getSlideToTabName().equals(TAB_GENERAL)){
 					Synodroid app = (Synodroid) getApplication();
 					task.originalLink = originalLink;
 					app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
@@ -466,7 +463,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
 			progDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
-					showDialog(TASK_PARAMETERS_DIALOG);
+					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
+						showDialog(TASK_PARAMETERS_DIALOG);
+					}
 				}
 			});
 		}
@@ -566,7 +565,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
 			etaDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
-					showDialog(TASK_PARAMETERS_DIALOG);
+					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
+						showDialog(TASK_PARAMETERS_DIALOG);
+					}
 				}
 			});
 		}
@@ -616,7 +617,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (oldTabId.equals(TAB_FILES)) {
 			updateTask(false);
 		}
-		currentTab = newTabIdP;
 	}
 
 	/**
@@ -637,7 +637,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// Save UI state changes to the savedInstanceState.
 		// This bundle will be passed to onCreate if the process is
 		// killed and restarted.
-		savedInstanceState.putString("tabID", currentTab);
+		savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
 		savedInstanceState.putBoolean("showFileTab", showFileTab);
 		// etc.
 		super.onSaveInstanceState(savedInstanceState);
@@ -648,8 +648,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		super.onRestoreInstanceState(savedInstanceState);
 		// Restore UI state from the savedInstanceState.
 		// This bundle has also been passed to onCreate.
-		currentTab = savedInstanceState.getString("tabID");
-		tabManager.slideTo(currentTab);
+		int curTabId = savedInstanceState.getInt("tabID");
+		tabManager.slideTo(tabManager.getNameAtId(curTabId));
 	}
 
 }
