@@ -267,6 +267,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
             .fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
     message.setMovementMethod(LinkMovementMethod.getInstance());
     
+    ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
+    donate.setOnClickListener(new View.OnClickListener() {
+		public void onClick(View v) {
+			Intent i = new Intent("android.intent.action.VIEW", Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
+			startActivity(i);
+		}
+	});
+    
     tabManager.addTab(aboutTab, about);
 
     tabManager.setTabListener(this);
