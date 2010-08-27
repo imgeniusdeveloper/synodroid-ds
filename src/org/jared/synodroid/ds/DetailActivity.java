@@ -57,6 +57,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -134,7 +135,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		genAdapter = new DetailAdapter(this);
 		genListView.setAdapter(genAdapter);
 		genListView.setOnItemClickListener(genAdapter);
-
+		
 		// Build the transfer tab
 		ListView transListView = new ListView(this);
 		transAdapter = new DetailAdapter(this);
@@ -144,7 +145,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		filesListView = new ListView(this);
 		fileAdapter = new FileDetailAdapter(this, task);
 		filesListView.setAdapter(fileAdapter);
-
+		
 		if (savedInstanceState != null) {
 			showFileTab = savedInstanceState.getBoolean("showFileTab", false);
 		}
@@ -159,8 +160,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			tabManager.addTab(filesTab, filesListView);
 		}
 		// Call super onCreate after the tab intialization
+		super.setTabmanager(tabManager);
 		super.onCreate(savedInstanceState);
 
+		genListView.setOnTouchListener(gestureListener);
+		transListView.setOnTouchListener(gestureListener);
+		filesListView.setOnTouchListener(gestureListener);
+		
 		// Create a "Not yet implemented" dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
