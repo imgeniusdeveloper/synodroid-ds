@@ -101,16 +101,16 @@ class DSHandlerDSM22 implements DSHandler {
           if (index != -1) {
             prog = prog.substring(0, index);
             try {
-              task.progress = (int) Float.parseFloat(prog);
+              task.downloadProgress = (int) Float.parseFloat(prog);
             }
             catch(NumberFormatException ex) {
               // Set to unknown
-              task.progress = -1;
+              task.downloadProgress = -1;
             }
           }
           // Set to unknown
           else {
-            task.progress = -1;
+            task.downloadProgress = -1;
           }
           task.status = item.getString("status");
           task.eta = Utils.computeTimeLeft(item.getInt("timeleft"));

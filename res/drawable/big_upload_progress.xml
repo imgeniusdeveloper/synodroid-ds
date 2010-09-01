@@ -6,7 +6,7 @@
   >
     <shape>
       <corners
-        android:radius="2dip" />
+        android:radius="6dip" />
       <gradient
         android:startColor="#ff9c9e9c"
         android:centerColor="#ff6b756b"
@@ -21,7 +21,7 @@
     <clip>
       <shape>
         <corners
-          android:radius="2dip" />
+          android:radius="6dip" />
         <stroke
           android:width="40dip"
           android:color="#ff0000ff"
@@ -36,7 +36,7 @@
     <clip>
       <shape>
         <corners
-          android:radius="2dip" />
+          android:radius="6dip" />
         <gradient
           android:startColor="#ffffd300"
           android:centerColor="#ffffbe00"

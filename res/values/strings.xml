@@ -236,4 +236,7 @@
         all you have to do is click \'OK\'.</string>
 <string name="crash_dialog_comment_prompt">You might add you email address and your comments about the problem below:</string>
 <string name="crash_dialog_ok_toast">Thank you !</string>
+<string name="label_showupload">Show upload progress</string>
+<string name="hint_showupload_on">Upload progress is shown</string>
+<string name="hint_showupload_off">Upload progress is not shown</string>
 </resources>

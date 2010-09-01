@@ -36,6 +36,7 @@ import android.util.Log;
 public class PreferenceFacade {
 
 	public static final String REFRESHVALUE_SUFFIX = ".refreshvalue";
+	public static final String SHOWUPLOAD_SUFFIX = ".showupload";
 	public static final String REFRESHSTATE_SUFFIX = ".refreshstate";
 	public static final String PASSWORD_SUFFIX = ".password";
 	public static final String USER_SUFFIX = ".user";
@@ -76,6 +77,7 @@ public class PreferenceFacade {
 							props.setProperty(PASSWORD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + PASSWORD_SUFFIX)));
 							props.setProperty(REFRESHSTATE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + REFRESHSTATE_SUFFIX)));
 							props.setProperty(REFRESHVALUE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + REFRESHVALUE_SUFFIX)));
+							props.setProperty(SHOWUPLOAD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + SHOWUPLOAD_SUFFIX)));
 							// Process the current server's item
 							processorP.process(id, SERVER_PREFIX + id, props);
 						}
@@ -117,6 +119,9 @@ public class PreferenceFacade {
 					// DSM version
 					DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
 					server.setDsmVersion(vers);
+					// Show upload
+					boolean showUpload = Boolean.parseBoolean(propertiesP.getProperty(PreferenceFacade.SHOWUPLOAD_SUFFIX));
+					server.setShowUpload(showUpload);
 					// Refresh
 					Integer refreshInterval = Integer.parseInt(propertiesP.getProperty(PreferenceFacade.REFRESHVALUE_SUFFIX));
 					server.setRefreshInterval(refreshInterval);

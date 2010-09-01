@@ -73,5 +73,12 @@ public class DetailTaskAction implements SynoAction {
   public Task getTask() {
     return task;
   }
-
+ 
+	/**
+   * @param task the task to set
+   */
+  public void setTask(Task taskP) {
+  	task = taskP;
+  }
+ 
 }

@@ -14,8 +14,6 @@ import org.jared.synodroid.ds.R;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -23,6 +21,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 
 /**
  * A tab manager which is able to manage multiple tabs.
@@ -74,8 +73,8 @@ public class TabWidgetManager implements View.OnClickListener {
     contentFrame = (WorkspaceView) mainContentView.findViewById(R.id.id_tab_content);
     contentFrame.setTouchSlop(32);
     // Load background image (for test purpose only)
-    Bitmap backGd = BitmapFactory.decodeResource(activityP.getResources(), R.drawable.background1);
-    contentFrame.loadWallpaper(backGd);
+//    Bitmap backGd = BitmapFactory.decodeResource(activityP.getResources(), R.drawable.background2);
+//    contentFrame.loadWallpaper(backGd);
     mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
     selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
     normalTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_normal_tabs);

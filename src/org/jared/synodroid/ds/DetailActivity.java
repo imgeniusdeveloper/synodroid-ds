@@ -263,7 +263,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			}
 			else {
 				showFileTab = false;
-			} 
+			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
 			break;
@@ -282,7 +282,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			File path = Environment.getExternalStorageDirectory();
 			path = new File(path, "download");
 			File file = new File(path, oriFile.fileName);
-			try { 
+			try {
 				// Make sure the Pictures directory exists.
 				path.mkdirs();
 				StringBuffer rawData = oriFile.rawData;
@@ -389,11 +389,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), originalLink);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-				if (task.isTorrent || task.isNZB){
+				if (task.isTorrent || task.isNZB) {
 					Synodroid app = (Synodroid) getApplication();
 					task.originalLink = originalLink;
 					app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
-				}				
+				}
 			}
 		});
 		result.add(urlDetail);
@@ -408,12 +408,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private List<Detail> buildTransferDetails(TaskDetail details) {
 		ArrayList<Detail> result = new ArrayList<Detail>();
 
+		// Set the result to be returned to the previous activity
+		Intent previous = new Intent();
+		previous.putExtra("org.jared.synodroid.ds.Details", details);
+		setResult(RESULT_OK, previous);
+		
 		// ------------ Status
 		result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
 		// ------------ Transfered
 		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
 		if (details.isTorrent) {
-			transfered = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " - " + transfered;
+			transfered = transfered + " - " + getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown));
 		}
 		result.add(new DetailText(getString(R.string.detail_transfered), transfered));
 		// ------------- Progress
@@ -425,12 +430,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			downPer = (int) ((downloaded * 100) / filesize);
 			downPerStr = "" + downPer + "%";
 		}
-		long uploaded = details.bytesUploaded;
-		double ratio = ((double) (details.seedingRatio)) / 100.0d;
+
 		int upPerc = 0;
 		String upPercStr = getString(R.string.detail_unknown);
-		if (ratio != 0 && filesize != -1) {
-			upPerc = (int) ((uploaded * 100) / (filesize * ratio));
+		Integer uploadPercentage = Utils.computeUploadPercent(details);
+		if (uploadPercentage != null) {
+			upPerc = uploadPercentage.intValue();
 			upPercStr = "" + upPerc + "%";
 		}
 		// If it is a torrent
@@ -438,8 +443,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (details.isTorrent) {
 			Detail2Progress progDetail = new Detail2Progress(getString(R.string.detail_progress));
 			proDetail = progDetail;
-			progDetail.setProgress1(getString(R.string.detail_progress_upload) + " " + upPercStr, upPerc);
-			progDetail.setProgress2(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
+			progDetail.setProgress1(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
+			progDetail.setProgress2(getString(R.string.detail_progress_upload) + " " + upPercStr, upPerc);
 			progDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
 					showDialog(TASK_PARAMETERS_DIALOG);
@@ -447,7 +452,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			});
 		}
 		else {
-			DetailProgress progDetail = new DetailProgress(getString(R.string.detail_progress));
+			DetailProgress progDetail = new DetailProgress(getString(R.string.detail_progress), R.layout.details_progress_template1);
 			proDetail = progDetail;
 			progDetail.setProgress(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
 		}
@@ -455,13 +460,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// ------------ Speed
 		String speed = getString(R.string.detail_progress_download) + " " + details.speedDownload + " KB/s";
 		if (details.isTorrent) {
-			speed = getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s" + " - " + speed;
+			speed = speed + " - " + getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s";
 		}
 		result.add(new DetailText(getString(R.string.detail_speed), speed));
 		// ------------ Peers
 		if (details.isTorrent) {
 			String peers = details.peersCurrent + " / " + details.peersTotal;
-			DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers));
+			DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers), R.layout.details_progress_template2);
 			int pProgress = 0;
 			if (details.peersTotal != 0) {
 				pProgress = (int) ((details.peersCurrent * 100) / details.peersTotal);
@@ -494,6 +499,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			}
 		}
 		Long timeLeftSize = null;
+		long uploaded = details.bytesUploaded;
+		double ratio = ((double) (details.seedingRatio)) / 100.0d;
 		if (details.speedUpload != 0 && details.seedingRatio != 0) {
 			long sizeLeft = (long) ((filesize * ratio) - uploaded);
 			timeLeftSize = (long) (sizeLeft / (details.speedUpload * 1000));
@@ -538,8 +545,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (details.isTorrent) {
 			Detail2Text etaDetail = new Detail2Text(getString(R.string.detail_eta));
 			etaDet = etaDetail;
-			etaDetail.setValue1(getString(R.string.detail_progress_upload) + " " + etaUpload);
-			etaDetail.setValue2(getString(R.string.detail_progress_download) + " " + etaDownload);
+			etaDetail.setValue1(getString(R.string.detail_progress_download) + " " + etaDownload);
+			etaDetail.setValue2(getString(R.string.detail_progress_upload) + " " + etaUpload);
 			etaDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
 					showDialog(TASK_PARAMETERS_DIALOG);
@@ -556,7 +563,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// ------------ Pieces
 		if (details.isTorrent) {
 			String pieces = details.piecesCurrent + " / " + details.piecesTotal;
-			DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces));
+			DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces), R.layout.details_progress_template2);
 			int piProgress = 0;
 			if (details.piecesTotal != 0) {
 				piProgress = (int) ((details.piecesCurrent * 100) / details.piecesTotal);
