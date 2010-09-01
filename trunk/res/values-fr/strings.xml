@@ -236,4 +236,8 @@
         vous avez juste à cliquer sur  \'OK\'.</string>
 <string name="crash_dialog_comment_prompt">Vous pouvez ajouter votre adresse email et vos commentaires concernant le problème:</string>
 <string name="crash_dialog_ok_toast">Merci !</string>
+<string name="label_showupload">Afficher la progression d\'émission</string>
+<string name="hint_showupload_on">La progression est affichée</string>
+<string name="hint_showupload_off">La progression est cachée</string>
+
 </resources>

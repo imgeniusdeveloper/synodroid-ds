@@ -231,15 +231,6 @@ public class WorkspaceView extends ViewGroup {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
     final int width = MeasureSpec.getSize(widthMeasureSpec);
-    final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-//    if (widthMode != MeasureSpec.EXACTLY) {
-//      throw new IllegalStateException("Workspace can only be used in EXACTLY mode.");
-//    }
-
-    final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-//    if (heightMode != MeasureSpec.EXACTLY) {
-//      throw new IllegalStateException("Workspace can only be used in EXACTLY mode.");
-//    }
 
     // The children are given the same width and height as the workspace
     final int count = getChildCount();

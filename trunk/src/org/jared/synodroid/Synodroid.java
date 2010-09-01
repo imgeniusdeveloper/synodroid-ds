@@ -11,11 +11,10 @@ package org.jared.synodroid;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.CrashReportDialog;
 import org.acra.CrashReportingApplication;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.DeleteTaskAction;
-import org.jared.synodroid.common.action.GetAllTaskAction;
+import org.jared.synodroid.common.action.GetAllAndOneDetailTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.ResponseHandler;
@@ -67,7 +66,6 @@ public class Synodroid extends CrashReportingApplication {
     result.putInt(RES_DIALOG_COMMENT_PROMPT, R.string.crash_dialog_comment_prompt); // optional. when defined, adds a user text field input with this text resource as a label
     result.putInt(RES_DIALOG_OK_TOAST, R.string.crash_dialog_ok_toast); // optional. Displays a Toast when the user accepts to send a report ("Thank you !" for example)
     return result;
-
   }
 
   /*
@@ -86,7 +84,6 @@ public class Synodroid extends CrashReportingApplication {
   @Override
   public void onTerminate() {
     super.onTerminate();
-    CrashReportDialog a;
   }
 
   /**
@@ -102,7 +99,7 @@ public class Synodroid extends CrashReportingApplication {
         currentServer.disconnect();
       }
       // Set the recurrent action
-      GetAllTaskAction recurrentAction = new GetAllTaskAction(serverP.getSortAttribute(), serverP.isAscending());
+      GetAllAndOneDetailTaskAction recurrentAction = new GetAllAndOneDetailTaskAction(serverP.getSortAttribute(), serverP.isAscending(), activityP.getTaskAdapter());
       serverP.setRecurrentAction(activityP, recurrentAction);
       // Then connect the new one
       currentServer = serverP;
@@ -224,6 +221,18 @@ public class Synodroid extends CrashReportingApplication {
     }
   }
 
+  /**
+   * Change the sort
+   * 
+   * @param sorAttrP
+   * @param ascendingP
+   */
+  public void setServerShowUpload(boolean showUploadP) {
+    if (currentServer != null) {
+      currentServer.setShowUpload(showUploadP);
+      currentServer.forceRefresh();
+    }
+  }
   /**
    * Execute an asynchronous action if the server is currently connected
    * @param handlerP

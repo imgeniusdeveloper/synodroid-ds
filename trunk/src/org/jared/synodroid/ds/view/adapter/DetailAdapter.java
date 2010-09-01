@@ -160,7 +160,8 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 				view = (LinearLayout) inflater.inflate(R.layout.details_2progress_template, parentP, false);
 			}
 			else if (detail instanceof DetailProgress) {
-				view = (LinearLayout) inflater.inflate(R.layout.details_progress_template, parentP, false);
+				int res = ((DetailProgress)detail).getRes();				
+				view = (LinearLayout) inflater.inflate(res, parentP, false);
 			}
 			else if (detail instanceof Detail2Text) {
 				view = (LinearLayout) inflater.inflate(R.layout.details_2text_template, parentP, false);

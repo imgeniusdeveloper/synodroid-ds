@@ -17,14 +17,22 @@
 package org.jared.synodroid.ds.view.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
+import org.jared.synodroid.ds.Utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +53,16 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 
 	// List of torrent
 	private List<Task> tasks = new ArrayList<Task>();
+	// List of previous tasks
+	private HashMap<Integer, Integer> uploadRatios = new HashMap<Integer, Integer>();
+	private HashMap<Integer, Long> uploadTimestamp = new HashMap<Integer, Long>();
+	private HashMap<Integer, Boolean> torrents = new HashMap<Integer, Boolean>();
 	// The XML view inflater
 	private final LayoutInflater inflater;
 	// The main activity
 	private DownloadActivity activity;
+	// Bitmap which is used for unknown progress
+	private BitmapDrawable unknownDrawable;
 
 	/**
 	 * Constructor
@@ -61,6 +75,9 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	public TaskAdapter(DownloadActivity activityP) {
 		activity = activityP;
 		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Bitmap bitmap = BitmapFactory.decodeResource(activityP.getResources(), R.drawable.progress_unknown);
+		bitmap = Utils.getRoundedCornerBitmap(bitmap, 4);
+		unknownDrawable = new BitmapDrawable(bitmap);
 	}
 
 	/**
@@ -69,8 +86,43 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * @param torrentsP
 	 */
 	public void updateTasks(List<Task> tasksP) {
+		// First update upload informations
+		for (Task task : tasksP) {
+			int taskId = task.taskId;
+			Integer progress = uploadRatios.get(taskId);
+			if (progress != null) {
+				task.uploadProgress = progress;
+			}
+			Long timestamp = uploadTimestamp.get(taskId);
+			if (timestamp != null) {
+				task.uploadTimestamp = timestamp;
+			}
+			Boolean isTorrent = torrents.get(taskId);
+			if (isTorrent != null) {
+				task.isTorrent = isTorrent;
+			}
+		}
 		tasks = tasksP;
 		notifyDataSetChanged();
+	}
+
+	/**
+	 * Update a task with its details
+	 * 
+	 * @param taskId
+	 * @param prorgessP
+	 */
+	public void updateFromDetail(TaskDetail detailP) {
+		Integer upPerc = Utils.computeUploadPercent(detailP);
+		int up = (upPerc != null ? upPerc.intValue() : 0);
+		// Affect the new upload's progress
+		uploadRatios.put(detailP.taskId, up);
+		// The upload ration has been updated: timestamp
+		uploadTimestamp.put(detailP.taskId, System.currentTimeMillis());
+		// Update the torrent flag
+		torrents.put(detailP.taskId, detailP.isTorrent);
+		// Self update
+		updateTasks(tasks);
 	}
 
 	/**
@@ -132,51 +184,87 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * Bind torrent's data with widget
 	 * 
 	 * @param viewP
-	 * @param torrentP
+	 * @param taskP
 	 */
-	private void bindView(LinearLayout viewP, final Task torrentP) {
+	private void bindView(LinearLayout viewP, final Task taskP) {
 		// Torrent's status icon
 		ImageView image = (ImageView) viewP.findViewById(R.id.id_torrent_icon);
-		IconFacade.bindTorrentStatus(activity, image, torrentP);
+		IconFacade.bindTorrentStatus(activity, image, taskP);
 
 		// The name of the torrent
 		TextView torrentName = (TextView) viewP.findViewById(R.id.id_torrent_name);
-		torrentName.setText(torrentP.fileName);
+		torrentName.setText(taskP.fileName);
 
 		// The torrent size
 		TextView torrentSize = (TextView) viewP.findViewById(R.id.id_torrent_total_size);
-		torrentSize.setText(torrentP.totalSize);
+		torrentSize.setText(taskP.totalSize);
 
 		// The torrent's owner
 		TextView torrentCurrentSize = (TextView) viewP.findViewById(R.id.id_torrent_username);
-		torrentCurrentSize.setText(torrentP.creator);
+		torrentCurrentSize.setText(taskP.creator);
 
-		// The progress bar 
-		ProgressBar progress = (ProgressBar) viewP.findViewById(R.id.id_torrent_progress);
-		// If a known value
-		if (torrentP.progress != -1 && (torrentP.progress != 100 || torrentP.status.equals(TaskStatus.TASK_SEEDING.name()))) {
-			progress.setProgress(torrentP.progress);
-			progress.setVisibility(View.VISIBLE);
+		// Get progress bar
+		ProgressBar downProgress = (ProgressBar) viewP.findViewById(R.id.id_download_progress);
+		ProgressBar upProgress = (ProgressBar) viewP.findViewById(R.id.id_upload_progress);
+		ProgressBar unknownProgress = (ProgressBar) viewP.findViewById(R.id.id_unknow_progress);
+		unknownProgress.setBackgroundDrawable(unknownDrawable);
+		// If state is DOWNLOADING or SEEDING or PAUSED
+		if (taskP.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || taskP.status.equals(TaskStatus.TASK_SEEDING.toString()) || taskP.status.equals(TaskStatus.TASK_PAUSED.toString())) {
+			downProgress.setVisibility(View.VISIBLE);
+			// If a known value
+			if (taskP.downloadProgress != -1) {
+				downProgress.setProgress(taskP.downloadProgress);
+			}
+			// According to the user's preferences AND if it is a Torrent
+			SynoServer server = ((Synodroid) activity.getApplication()).getServer();
+			if (server.isShowUpload()) {
+				// If a known value
+				if (taskP.uploadProgress != -1) {
+					upProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);
+					unknownProgress.setVisibility(View.GONE);
+					upProgress.setProgress(taskP.uploadProgress);
+				}
+				// If no value then hide it !
+				else {
+					upProgress.setVisibility(View.GONE);
+					// Show only for a torrent
+					unknownProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);
+				}
+			}
+			else {
+				upProgress.setVisibility(View.INVISIBLE);
+				unknownProgress.setVisibility(View.GONE);
+			}
 		}
-		// Otherwise hide the progress bar
+		// Hide progress bars
 		else {
-			progress.setVisibility(View.INVISIBLE);
+			downProgress.setVisibility(View.INVISIBLE);
+			upProgress.setVisibility(View.INVISIBLE);
+			unknownProgress.setVisibility(View.GONE);
 		}
-
 		// The current rates
 		TextView torrentRates = (TextView) viewP.findViewById(R.id.id_torrent_speed);
 		String rates = "";
-		if (torrentP.downloadRate.length() > 0) {
-			rates += "D:" + torrentP.downloadRate + "    ";
+		if (taskP.downloadRate.length() > 0) {
+			rates += "D:" + taskP.downloadRate + "    ";
 		}
-		if (torrentP.uploadRate.length() > 0) {
-			rates += "U:" + torrentP.uploadRate;
+		if (taskP.uploadRate.length() > 0) {
+			rates += "U:" + taskP.uploadRate;
 		}
 		torrentRates.setText(rates);
 
 		// The estimated time left
 		TextView torrentETA = (TextView) viewP.findViewById(R.id.id_torrent_eta);
-		torrentETA.setText(torrentP.eta);
+		torrentETA.setText(taskP.eta);
+	}
+
+	/**
+	 * Return the tasks list
+	 * 
+	 * @return
+	 */
+	public List<Task> getTaskList() {
+		return tasks;
 	}
 
 	/**
@@ -197,5 +285,4 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		}
 		return false;
 	}
-
 }

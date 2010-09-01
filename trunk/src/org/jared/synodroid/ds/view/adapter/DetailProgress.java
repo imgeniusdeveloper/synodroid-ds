@@ -27,21 +27,32 @@ public class DetailProgress extends Detail {
 	private String label;
 	// The progress value
 	private int value;
+	// The template resource id to use
+	private int res;
 	
 	/**
 	 * The default constructor
 	 */
-	public DetailProgress() {		
+	public DetailProgress(int resP) {
+		res = resP;
 	}
 	
 	/**
 	 * The constructor which define the name of this detail
 	 * @param nameP
 	 */
-	public DetailProgress(String nameP) {
+	public DetailProgress(String nameP, int resP) {
 		setName(nameP);
+		res = resP;
 	}
 	
+	/**
+   * @return the res
+   */
+  public int getRes() {
+  	return res;
+  }
+
 	/**
 	 * Set the first progress bar (label and value)
 	 * @param labelP

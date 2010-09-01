@@ -121,15 +121,15 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		serversCategory.removeAll();
 		maxServerId = 0;
 		PreferenceFacade.processLoadingServers(prefScreen.getSharedPreferences(), this);
-		
+
 		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
-	    if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)){
-	    	Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
-	    	if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId+".nickname")){
-	    		createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
-	    	}
-	    	preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
-	    }
+		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
+			Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
+			if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId + ".nickname")) {
+				createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
+			}
+			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
+		}
 	}
 
 	/**
@@ -255,6 +255,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 * @return The instance of the PreferenceScreen
 	 */
 	private PreferenceScreen createServerPreference(int idP, PreferenceGroup parentP, String keyP, String titleP, String summaryP) {
+		final Synodroid app = (Synodroid) getApplication();
+		
 		// Create the server preference
 		final PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(this);
 		parentP.addPreference(screen);
@@ -273,15 +275,36 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		nickPref.setText(titleP);
 		nickPref.setDefaultValue(titleP);
 		generalCategory.addPreference(nickPref);
+		
+		CheckBoxPreference showUpload = new CheckBoxPreference(this);
+		showUpload.setKey(keyP + PreferenceFacade.SHOWUPLOAD_SUFFIX);
+		showUpload.setTitle(R.string.label_showupload);
+		// It looks like by using the set check function, the preference is not save
+		// properly. Removing it seems to make default preference better
+		// autoRefresh.setChecked(true);
+		showUpload.setDefaultValue(true);
+		showUpload.setSummaryOn(R.string.hint_showupload_on);
+		showUpload.setSummaryOff(R.string.hint_showupload_off);
+		showUpload.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				app.setServerShowUpload((Boolean) newValue);
+				return true;
+			}
+		});
+		
+		generalCategory.addPreference(showUpload);
+		
 		CheckBoxPreference autoRefresh = new CheckBoxPreference(this);
 		autoRefresh.setKey(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX);
 		autoRefresh.setTitle(R.string.label_autorefresh);
-		//It looks like by using the set check function, the preference is not save properly. Removing it seems to make default preference better
-		//autoRefresh.setChecked(true);
+		// It looks like by using the set check function, the preference is not save
+		// properly. Removing it seems to make default preference better
+		// autoRefresh.setChecked(true);
 		autoRefresh.setDefaultValue(true);
 		autoRefresh.setSummaryOn(R.string.hint_autorefresh_on);
-		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
+		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);		
 		generalCategory.addPreference(autoRefresh);
+		
 		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval).setInputType(
 		    InputType.TYPE_CLASS_NUMBER);
 		autoRefreshValue.setDefaultValue("15");

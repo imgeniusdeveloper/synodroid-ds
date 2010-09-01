@@ -20,7 +20,16 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.data.TaskDetail;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Bitmap.Config;
+import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 
 /**
@@ -119,7 +128,7 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0l;
-			//Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
@@ -139,7 +148,7 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0.0d;
-			//Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
+			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
@@ -235,4 +244,53 @@ public class Utils {
 		}
 		return result;
 	}
+
+	/**
+	 * Compute the upload percentage according to the filesize and the ratio
+	 * 
+	 * @param detailP
+	 * @return Return an integer could have been compute otherwise it returns null
+	 */
+	public static Integer computeUploadPercent(TaskDetail detailP) {
+		Integer result = null;
+		long uploaded = detailP.bytesUploaded;
+		double ratio = ((double) (detailP.seedingRatio)) / 100.0d;
+		// If seeding ratio is 0, we suppose it is 100 => When a task is paused then
+		// the server returns 0 which is not the correct anwser even if the task is
+		// paused
+		if (detailP.seedingRatio == 0) {
+			ratio = 1.0d;
+		}
+		if (ratio != 0 && detailP.fileSize != -1) {
+			result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
+		}
+		return result;
+	}
+	
+	/**
+	 * Create a rounded bitmap
+	 * @param bitmap The original bitmap
+	 * @return
+	 */
+  public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
+    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+        bitmap.getHeight(), Config.ARGB_8888);
+    Canvas canvas = new Canvas(output);
+ 
+    final int color = 0xff424242;
+    final Paint paint = new Paint();
+    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+    final RectF rectF = new RectF(rect);
+ 
+    paint.setAntiAlias(true);
+    canvas.drawARGB(0, 0, 0, 0);
+    paint.setColor(color);
+    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+ 
+    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+    canvas.drawBitmap(bitmap, rect, rect, paint);
+    return output;
+  }
+
+	
 }
