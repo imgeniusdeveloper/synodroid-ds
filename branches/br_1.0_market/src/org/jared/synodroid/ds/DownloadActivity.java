@@ -377,6 +377,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       boolean out_url = false;
       if (action.equals(Intent.ACTION_VIEW)) {
         uri = intentP.getData();
+        if (uri.toString().startsWith("http")||uri.toString().startsWith("ftp")){
+        	out_url = true;
+        }
       }
       else if (action.equals(Intent.ACTION_SEND)) {
         String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
