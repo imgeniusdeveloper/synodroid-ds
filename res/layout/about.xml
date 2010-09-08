@@ -34,8 +34,7 @@
                     android:id="@+id/TextView03"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                    android:textAppearance="?android:attr/textAppearanceLarge" android:text="@string/app_name_with_version"></TextView>
                 <TextView
                     android:id="@+id/TextView04"
                     android:layout_width="wrap_content"

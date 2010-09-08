@@ -356,9 +356,10 @@ class DSHandlerDSM22 implements DSHandler {
         // The torrent's part
         Part filePart = new Part("torrent").addExtra("filename", uriP.getPath());
         filePart.setContentType("application/octet-stream");
+        
         // Get the stream according to the Uri
-        byte[] buffer = StreamFactory.getStream(uriP);
-
+        byte[] buffer = StreamFactory.getStream(uriP);	
+        
         // Set the content
         filePart.setContent(buffer);
         builder.addPart(filePart);
