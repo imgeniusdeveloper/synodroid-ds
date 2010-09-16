@@ -17,6 +17,12 @@
         <action android:name="android.intent.action.MAIN"></action>
         <category android:name="android.intent.category.LAUNCHER"></category>
       </intent-filter>
+    </activity>
+    <activity
+      android:label="@string/app_name"
+      android:name="DownloadActivity"
+      android:launchMode="singleTask"
+      android:noHistory="True">
       <intent-filter>
         <action android:name="android.intent.action.SEND" />
         <category android:name="android.intent.category.DEFAULT" />

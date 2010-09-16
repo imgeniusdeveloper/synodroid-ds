@@ -114,6 +114,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   // The tab manager
   private TabWidgetManager tabManager;
   
+  private boolean intentHandled = false;
+  
   /**
    * Handle the message
    */
@@ -292,17 +294,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     //taskView.setOnClickListener(DownloadActivity.this); 
     taskView.setOnTouchListener(gestureListener);
     about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
-    
-	Intent intent = getIntent();
-	String action = intent.getAction();
-	// Show the dialog only if the intent's action is not to view a
-	// content -> add a new file
-	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
-		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){	
-			handleIntent(intent);
-		}
-	}
-    
 
     // The user is able to click on the title bar to connect to a server
     setTitleClickListener(this);
@@ -352,19 +343,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     super.onStart();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see android.app.Activity#onNewIntent(android.content.Intent)
-   */
-  @Override
-  protected void onNewIntent(Intent intentP) {
-	super.onNewIntent(intentP);
-	if ((intentP.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
-		Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
-	    handleIntent(intentP);	
-	}
-  }
-
   /**
    * Handle all new intent
    * 
@@ -372,6 +350,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
    */
   private void handleIntent(Intent intentP) {
     String action = intentP.getAction();
+    Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
     if (action != null) {
       Uri uri = null;
       boolean out_url = false;
@@ -397,6 +376,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         AddTaskAction addTask = new AddTaskAction(uri, out_url);
         Synodroid app = (Synodroid) getApplication();
         app.executeAction(this, addTask, true);
+        intentHandled = true;
       }
     }
   }
@@ -554,6 +534,20 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   @Override
   protected void onResume() {
     super.onResume();
+    
+    Intent intent = getIntent();
+	String action = intent.getAction();
+	// Show the dialog only if the intent's action is not to view a
+	// content -> add a new file
+	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND)) && !intentHandled) {
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){	
+			handleIntent(intent);
+		}
+		else{
+			intentHandled = true;
+		}
+	}
+    
     SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 	if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
 		//Set fullscreen or not
@@ -647,6 +641,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // This bundle will be passed to onCreate if the process is
     // killed and restarted.
     savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
+    savedInstanceState.putBoolean("intentHandled", intentHandled);
+    
     // etc.
     super.onSaveInstanceState(savedInstanceState);
   }
@@ -657,6 +653,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
     int curTabId = savedInstanceState.getInt("tabID");
+    intentHandled = savedInstanceState.getBoolean("intentHandled");
     tabManager.slideTo(tabManager.getNameAtId(curTabId));
   }
 }
