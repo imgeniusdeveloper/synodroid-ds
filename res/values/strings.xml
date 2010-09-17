@@ -2,7 +2,6 @@
 <resources>
     
     <string name="app_name">Synodroid</string>
-    <string name="app_name_with_version">Synodroid 1.0.148</string>
     <string name="app_opensource">Opensource project</string>
     <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
