@@ -46,6 +46,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -262,6 +263,20 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         Eula.show(DownloadActivity.this, true);
       }
     });
+    
+    String vn = ""+getString(R.string.app_name);
+    try {
+      PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+      if (pi != null) {
+        vn +=  " "+ pi.versionName;
+      }
+    }
+    catch(Exception e) {
+      Log.e(Synodroid.DS_TAG, "Error while retrieving package information", e);
+    }
+    TextView vname = (TextView) about.findViewById(R.id.app_vers_name_text);
+    vname.setText(vn);
+    
     TextView message = (TextView) about.findViewById(R.id.about_code);
     message.setText(Html
             .fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
