@@ -8,9 +8,17 @@
  */
 package org.jared.synodroid.ds;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
@@ -49,6 +57,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -195,6 +204,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     }
     // Show task's details
     else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
+      //INTENT HANDLING
+      //Before switching intent. We will mark the current one as completed.
+      Intent cur = getIntent();
+      cur.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+      setIntent(cur);
+      
+      //Starting new intent
       Intent next = new Intent();
       next.setClass(DownloadActivity.this, DetailActivity.class);
       next.putExtra("org.jared.synodroid.ds.Details", (Task) msg.obj);
@@ -357,7 +373,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   protected void onStart() {
     super.onStart();
   }
-
+  
   /**
    * Handle all new intent
    * 
@@ -372,7 +388,52 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
       if (action.equals(Intent.ACTION_VIEW)) {
         uri = intentP.getData();
         if (uri.toString().startsWith("http")||uri.toString().startsWith("ftp")){
-        	out_url = true;
+        	/**Download and fix URL*/
+        	try {
+                URL url = new URL(uri.toString()); //you can write here any link
+                File path = Environment.getExternalStorageDirectory();
+                path = new File(path, "data/org.jared.synodroid/");
+                path.mkdirs();
+                String temp[] = uri.toString().split("/");
+                String fname =  temp[(temp.length)-1];
+                File file = new File(path, fname);
+                
+                
+                long startTime = System.currentTimeMillis();
+                Log.d("Synodroid", "Downloading "+uri.toString()+" to temp folder..." );
+                Log.d("Synodroid", "Temp file destination: " + file.getAbsolutePath());
+                /* Open a connection to that URL. */
+                URLConnection ucon = url.openConnection();
+
+                /*
+                 * Define InputStreams to read from the URLConnection.
+                 */
+                InputStream is = ucon.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
+
+                /*
+                 * Read bytes to the Buffer until there is nothing more to read(-1).
+                 */
+                ByteArrayBuffer baf = new ByteArrayBuffer(50);
+                int current = 0;
+                while ((current = bis.read()) != -1) {
+                        baf.append((byte) current);
+                }
+
+                /* Convert the Bytes read to a String. */
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(baf.toByteArray());
+                fos.close();
+                Log.d("Synodroid", "Download completed. Elapsed time: "
+                                + ((System.currentTimeMillis() - startTime) / 1000)
+                                + " sec(s)");
+                uri = Uri.fromFile(file);
+	        } catch (IOException e) {
+	        	Log.d("Synodroid", "Download Error: " + e);
+	        	Log.d("Synodroid", "Letting the NAS do the heavy lifting...");
+                out_url = true;
+	        }
+        	
         }
       }
       else if (action.equals(Intent.ACTION_SEND)) {
@@ -540,8 +601,29 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   protected void onPause() {
     super.onPause();
     ((Synodroid) getApplication()).pauseServer();
+    intentHandled = false;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see android.app.Activity#onNewIntent(android.content.Intent)
+   */
+  @Override
+  protected void onNewIntent(Intent intentP) {
+	super.onNewIntent(intentP);
+	//CASE 1: We are receiving a new intent. Check if its already been processed.
+	if ((intentP.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+		//This is NOT from history, this is a new intent. -> mark intent as to be processed.
+		intentHandled = false;
+	}
+	else{
+		//This is from history which means its been processed. -> mark intent as skipped.
+		intentHandled = true;
+	}
+	setIntent(intentP);
+  }
+
+  
   /*
    * (non-Javadoc)
    * @see android.app.Activity#onResume()
@@ -550,15 +632,25 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   protected void onResume() {
     super.onResume();
     
-    Intent intent = getIntent();
-	String action = intent.getAction();
-	// Show the dialog only if the intent's action is not to view a
-	// content -> add a new file
+    /**
+     * Intents need a lot of explanation...
+     * 3 cases: 
+     * 1- New intent (need to set as current intent)
+     * 2- Rotate screen (need to save variables so the intent is not reprocessed)
+     * 3- Restore from history (using back button need to identify the intent has already processed)
+     * */
+    //Get the current main intent
+    Intent intent = getIntent();	
+    String action = intent.getAction();
+    //Check if it is a actionable Intent and if the intent has been previously handled
 	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND)) && !intentHandled) {
-		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){	
+		///CASE 3: check if the intent is comming out of the history.
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+			//Not from history -> process intent
 			handleIntent(intent);
 		}
 		else{
+			//Your are comming from a back button -> Intent skipped
 			intentHandled = true;
 		}
 	}
@@ -668,6 +760,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
     int curTabId = savedInstanceState.getInt("tabID");
+    //CASE 2: We are restoring the state. This is most likely because the screen has been rotated. -> restoring intent state
     intentHandled = savedInstanceState.getBoolean("intentHandled");
     tabManager.slideTo(tabManager.getNameAtId(curTabId));
   }
