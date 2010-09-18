@@ -124,7 +124,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   // The tab manager
   private TabWidgetManager tabManager;
   
-  private boolean intentHandled = false;
   
   /**
    * Handle the message
@@ -204,12 +203,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     }
     // Show task's details
     else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
-      //INTENT HANDLING
-      //Before switching intent. We will mark the current one as completed.
-      Intent cur = getIntent();
-      cur.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-      setIntent(cur);
-      
       //Starting new intent
       Intent next = new Intent();
       next.setClass(DownloadActivity.this, DetailActivity.class);
@@ -452,7 +445,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         AddTaskAction addTask = new AddTaskAction(uri, out_url);
         Synodroid app = (Synodroid) getApplication();
         app.executeAction(this, addTask, true);
-        intentHandled = true;
+        //PREVENT INTENT REUSE: We mark the intent so from now on, the program thinks its from history
+        intentP.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        setIntent(intentP);
       }
     }
   }
@@ -601,7 +596,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   protected void onPause() {
     super.onPause();
     ((Synodroid) getApplication()).pauseServer();
-    intentHandled = false;
   }
 
   /*
@@ -611,15 +605,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
   @Override
   protected void onNewIntent(Intent intentP) {
 	super.onNewIntent(intentP);
-	//CASE 1: We are receiving a new intent. Check if its already been processed.
-	if ((intentP.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
-		//This is NOT from history, this is a new intent. -> mark intent as to be processed.
-		intentHandled = false;
-	}
-	else{
-		//This is from history which means its been processed. -> mark intent as skipped.
-		intentHandled = true;
-	}
 	setIntent(intentP);
   }
 
@@ -633,25 +618,22 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     super.onResume();
     
     /**
-     * Intents need a lot of explanation...
-     * 3 cases: 
-     * 1- New intent (need to set as current intent)
-     * 2- Rotate screen (need to save variables so the intent is not reprocessed)
-     * 3- Restore from history (using back button need to identify the intent has already processed)
+     * Intents are driving me insane.
+     * 
+     * When an intent has been handle by the app I mark the flag activity launched from history on 
+     * so we do not reprocess that intent again. This simplify was more how I was handling intents 
+     * before and is effective in every cases in all android 1.5 up versions...
+     * 
      * */
     //Get the current main intent
     Intent intent = getIntent();	
     String action = intent.getAction();
-    //Check if it is a actionable Intent and if the intent has been previously handled
-	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND)) && !intentHandled) {
-		///CASE 3: check if the intent is comming out of the history.
+    //Check if it is a actionable Intent
+	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
+		//REUSE INTENT CHECK: check if the intent is comming out of the history.
 		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
 			//Not from history -> process intent
 			handleIntent(intent);
-		}
-		else{
-			//Your are comming from a back button -> Intent skipped
-			intentHandled = true;
 		}
 	}
     
@@ -748,7 +730,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // This bundle will be passed to onCreate if the process is
     // killed and restarted.
     savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
-    savedInstanceState.putBoolean("intentHandled", intentHandled);
     
     // etc.
     super.onSaveInstanceState(savedInstanceState);
@@ -760,8 +741,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     // Restore UI state from the savedInstanceState.
     // This bundle has also been passed to onCreate.
     int curTabId = savedInstanceState.getInt("tabID");
-    //CASE 2: We are restoring the state. This is most likely because the screen has been rotated. -> restoring intent state
-    intentHandled = savedInstanceState.getBoolean("intentHandled");
     tabManager.slideTo(tabManager.getNameAtId(curTabId));
   }
 }
