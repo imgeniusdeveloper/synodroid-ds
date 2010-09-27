@@ -49,9 +49,6 @@
 <string name="button_cancel">Cancel</string>
 <string name="label_dsm_version">Disk Station Manager</string>
 <string name="hint_dsm_version">&quot;Set you DSM's version&quot;</string>
-<string-array name="dsm_version_array"><item>DSM 2.2</item>
-<item>DSM 2.3</item>
-</string-array>
 <string name="title_preference">Preferences</string>
 <string name="label_autorefresh">Auto refresh</string>
 <string name="hint_autorefresh_on">Auto resfresh is enabled</string>
