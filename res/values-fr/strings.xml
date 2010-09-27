@@ -49,9 +49,6 @@
 <string name="button_cancel">Annuler</string>
 <string name="label_dsm_version">Disk Station Manager</string>
 <string name="hint_dsm_version">"Règlez la version de votre DSM"</string>
-<string-array name="dsm_version_array"><item>DSM 2.2</item>
-<item>DSM 2.3</item>
-</string-array>
 <string name="title_preference">Préférences</string>
 <string name="label_autorefresh">Rafraichissement automatique</string>
 <string name="hint_autorefresh_on">Rafraichissement automatique activé</string>

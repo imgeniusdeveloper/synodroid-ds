@@ -44,9 +44,6 @@
 <string name="hint_refreshinterval">Tiempo de refresco en segundos</string>
 <string name="button_cancel">Cancelar</string>
 <string name="hint_dsm_version">"Establece tu versión DSM"</string>
-<string-array name="dsm_version_array"><item>DSM 2.2</item>
-<item>DSM 2.3</item>
-</string-array>
 <string name="title_preference">Preferencias</string>
 <string name="label_autorefresh">Refresco automático</string>
 <string name="hint_autorefresh_on">Refresco automático habilitado</string>
