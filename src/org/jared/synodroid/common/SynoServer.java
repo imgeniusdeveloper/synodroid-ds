@@ -92,6 +92,9 @@ public class SynoServer {
 	// Cookies
 	private List<String> cookies;
 
+	// Flag to know is the server has been interrupted while sleeping
+	private boolean interrupted = false;
+	
 	// Binded DownloadActivity
 	private ResponseHandler handler;
 
@@ -191,6 +194,7 @@ public class SynoServer {
 								// received
 								if (connected) {
 									// If auto refresh
+								    setInterrupted(false);
 									synchronized (this) {
 										if (autoRefresh) {
 											// Sleep
@@ -212,6 +216,7 @@ public class SynoServer {
 							// Nothing to do. It may be a force refresh after an action!
 							catch (InterruptedException iex) {
 								Log.d(Synodroid.DS_TAG, "Been interrupted while sleeping...");
+								setInterrupted(true);
 							}
 							// All others exceptions
 							catch (Exception ex) {
@@ -892,5 +897,19 @@ public class SynoServer {
 	public void setShowUpload(boolean showUpload) {
 		this.showUpload = showUpload;
 	}
+
+  /**
+   * @return the interrupted
+   */
+  public boolean isInterrupted() {
+    return interrupted;
+  }
+
+  /**
+   * @param interruptedP the interrupted to set
+   */
+  public void setInterrupted(boolean interruptedP) {
+    interrupted = interruptedP;
+  }
 
 }
