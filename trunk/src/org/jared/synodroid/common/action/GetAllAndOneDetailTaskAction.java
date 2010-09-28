@@ -64,7 +64,7 @@ public class GetAllAndOneDetailTaskAction implements SynoAction {
 	 */
 	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
 		// If we have to retrieve all tasks OR if there's no task currently OR if user unchecked 'Show upload' checkbox
-		if (allTask || taskAdapter.getCount() == 0 || !serverP.isShowUpload()) {
+		if (allTask || taskAdapter.getCount() == 0 || !serverP.isShowUpload() || serverP.isInterrupted()) {
 			getAllAction.execute(handlerP, serverP);
 		}
 		// Get a task's detail
