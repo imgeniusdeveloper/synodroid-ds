@@ -49,9 +49,6 @@
 <string name="button_cancel">Cancel</string>
 <string name="label_dsm_version">Disk Station Manager</string>
 <string name="hint_dsm_version">&quot;Set you DSM's version&quot;</string>
-<string-array name="dsm_version_array"><item>DSM 2.2</item>
-<item>DSM 2.3</item>
-</string-array>
 <string name="title_preference">Preferences</string>
 <string name="label_autorefresh">Auto refresh</string>
 <string name="hint_autorefresh_on">Auto resfresh is enabled</string>
@@ -225,7 +222,8 @@
 <string name="action_download_original_failed">Unable to save file, likeky because external storage is not mounted</string>
 <string name="lang_es">Spanish</string>
 <string name="translator">&quot;Translator(s):&quot;</string>
-
+<string name="fullscreen_preference">Full screen</string>
+<string name="summary_fullscreen_preference">Hides the notification bar</string>
 <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
 <string name="crash_notif_title">Synodroid has crashed...</string>
 <string name="crash_notif_text">Please click here to help fix the issue.</string>

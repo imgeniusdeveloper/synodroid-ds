@@ -41,11 +41,13 @@ import org.jared.synodroid.ds.view.adapter.DetailProgress;
 import org.jared.synodroid.ds.view.adapter.DetailText;
 import org.jared.synodroid.ds.view.adapter.FileDetailAdapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -53,6 +55,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -70,6 +74,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private static final String TAB_FILES = "FILES";
 	private static final String TAB_TRANSFERT = "TRANSFERT";
 	private static final String TAB_GENERAL = "GENERAL";
+	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+	private static final String PREFERENCE_GENERAL = "general_cat";
 
 	private static final int TASK_PARAMETERS_DIALOG = 1;
 
@@ -90,8 +96,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private FileDetailAdapter fileAdapter;
 	// The file ListView
 	private ListView filesListView;
-	// The current active tab
-	private String currentTab = TAB_GENERAL;
 	// Flag to know if files tab must be shown
 	private boolean showFileTab = false;
 	// The seeding ratio
@@ -110,6 +114,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
 		// Create the seeding time int array
 		String[] timesArray = getResources().getStringArray(R.array.seeding_time_array_values);
 		seedingTimes = new int[timesArray.length];
@@ -151,8 +156,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			tabManager.addTab(filesTab, filesListView);
 		}
 		// Call super onCreate after the tab intialization
+		super.setTabmanager(tabManager);
 		super.onCreate(savedInstanceState);
 
+		genListView.setOnTouchListener(gestureListener);
+		transListView.setOnTouchListener(gestureListener);
+		filesListView.setOnTouchListener(gestureListener);
+		
 		// Create a "Not yet implemented" dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
@@ -325,6 +335,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		//Check for fullscreen
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+			//Set fullscreen or not
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+		}
+		else{
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+		
 		// Launch the gets task's details recurrent action
 		Synodroid app = (Synodroid) getApplication();
 		SynoAction detailAction = new DetailTaskAction(task);
@@ -389,7 +410,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		DetailText urlDetail = new DetailText(getString(R.string.detail_url), originalLink);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-				if (task.isTorrent || task.isNZB) {
+				if ((task.isTorrent || task.isNZB) && tabManager.getSlideToTabName().equals(TAB_GENERAL)){
 					Synodroid app = (Synodroid) getApplication();
 					task.originalLink = originalLink;
 					app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
@@ -447,7 +468,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			progDetail.setProgress2(getString(R.string.detail_progress_upload) + " " + upPercStr, upPerc);
 			progDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
+					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
 					showDialog(TASK_PARAMETERS_DIALOG);
+				}
 				}
 			});
 		}
@@ -549,7 +572,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			etaDetail.setValue2(getString(R.string.detail_progress_upload) + " " + etaUpload);
 			etaDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
+					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
 					showDialog(TASK_PARAMETERS_DIALOG);
+				}
 				}
 			});
 		}
@@ -599,7 +624,6 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (oldTabId.equals(TAB_FILES)) {
 			updateTask(false);
 		}
-		currentTab = newTabIdP;
 	}
 
 	/**
@@ -620,7 +644,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// Save UI state changes to the savedInstanceState.
 		// This bundle will be passed to onCreate if the process is
 		// killed and restarted.
-		savedInstanceState.putString("tabID", currentTab);
+		savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
 		savedInstanceState.putBoolean("showFileTab", showFileTab);
 		// etc.
 		super.onSaveInstanceState(savedInstanceState);
@@ -631,8 +655,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		super.onRestoreInstanceState(savedInstanceState);
 		// Restore UI state from the savedInstanceState.
 		// This bundle has also been passed to onCreate.
-		currentTab = savedInstanceState.getString("tabID");
-		tabManager.slideTo(currentTab);
+		int curTabId = savedInstanceState.getInt("tabID");
+		tabManager.slideTo(tabManager.getNameAtId(curTabId));
 	}
 
 }
