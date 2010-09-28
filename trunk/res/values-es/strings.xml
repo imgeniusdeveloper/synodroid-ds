@@ -44,9 +44,6 @@
 <string name="hint_refreshinterval">Tiempo de refresco en segundos</string>
 <string name="button_cancel">Cancelar</string>
 <string name="hint_dsm_version">"Establece tu versión DSM"</string>
-<string-array name="dsm_version_array"><item>DSM 2.2</item>
-<item>DSM 2.3</item>
-</string-array>
 <string name="title_preference">Preferencias</string>
 <string name="label_autorefresh">Refresco automático</string>
 <string name="hint_autorefresh_on">Refresco automático habilitado</string>
@@ -221,4 +218,6 @@
 <string name="action_download_original_failed">Imposile guardar el archivo. Posiblemente el el almacenamiento externo esté desmontado</string>
 <string name="lang_es">Castellano</string>
 <string name="translator">&quot;Traductor(es):&quot;</string>
+<string name="fullscreen_preference">Pantalla completa</string>
+<string name="summary_fullscreen_preference">Oculta la barra de notificación</string>
 </resources>

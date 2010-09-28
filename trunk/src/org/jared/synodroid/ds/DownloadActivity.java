@@ -8,9 +8,17 @@
  */
 package org.jared.synodroid.ds;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.util.ByteArrayBuffer;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SynoServer;
@@ -47,8 +55,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -60,6 +70,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -79,6 +91,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String TAB_TASKS = "TASKS";
 	private static final String PREFERENCE_AUTO = "auto";
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
+  private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+  private static final String PREFERENCE_GENERAL = "general_cat";
 
 	// The connection dialog ID
 	private static final int CONNECTION_DIALOG_ID = 1;
@@ -110,8 +124,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private ImageView titleIcon;
 	// The tab manager
 	private TabWidgetManager tabManager;
-	// Current tab
-	private String cur_tab = TAB_TASKS;
 
 	/**
 	 * Handle the message
@@ -201,6 +213,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 		// Show task's details
 		else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
+      //Starting new intent
 			Intent next = new Intent();
 			next.setClass(DownloadActivity.this, DetailActivity.class);
 			next.putExtra("org.jared.synodroid.ds.Details", (Task) msg.obj);
@@ -254,6 +267,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
+	getWindow().requestFeature(Window.FEATURE_NO_TITLE); 
 		licenceAccepted = Eula.show(this, false);
 
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -269,10 +283,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		Tab torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
 		torrentTab.setLogo(R.drawable.download_logo, R.string.logo_download);
 		tabManager.addTab(torrentTab, downloadContent);
-		// Tab emuleTab = new Tab(TAB_EMULE, R.drawable.ic_tab_emule,
-		// R.drawable.ic_tab_emule_selected);
-		// emuleTab.setLogo(R.drawable.emule_logo, R.string.logo_emule);
-		// tabManager.addTab(emuleTab, null);
+        //Tab emuleTab = new Tab(TAB_EMULE, R.drawable.ic_tab_emule, R.drawable.ic_tab_emule_selected);
+        //emuleTab.setLogo(R.drawable.emule_logo, R.string.logo_emule);
+        //tabManager.addTab(emuleTab, null);
 		Tab aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
 		aboutTab.setLogo(R.drawable.about_logo, R.string.logo_about);
 		View about = inflater.inflate(R.layout.about, null, false);
@@ -283,12 +296,36 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				Eula.show(DownloadActivity.this, true);
 			}
 		});
+    
+    String vn = ""+getString(R.string.app_name);
+    try {
+      PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+      if (pi != null) {
+        vn +=  " "+ pi.versionName;
+      }
+    }
+    catch(Exception e) {
+      Log.e(Synodroid.DS_TAG, "Error while retrieving package information", e);
+    }
+    TextView vname = (TextView) about.findViewById(R.id.app_vers_name_text);
+    vname.setText(vn);
+    
 		TextView message = (TextView) about.findViewById(R.id.about_code);
 		message.setText(Html.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
 		message.setMovementMethod(LinkMovementMethod.getInstance());
+    
+    ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
+    donate.setOnClickListener(new View.OnClickListener() {
+		public void onClick(View v) {
+			Intent i = new Intent("android.intent.action.VIEW", Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
+			startActivity(i);
+		}
+	});
+    
 		tabManager.addTab(aboutTab, about);
 
 		tabManager.setTabListener(this);
+    super.setTabmanager(tabManager);
 
 		super.onCreate(savedInstanceState);
 
@@ -301,16 +338,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		taskView.setAdapter(taskAdapter);
 		taskView.setOnItemClickListener(taskAdapter);
 		taskView.setOnItemLongClickListener(taskAdapter);
-
-		Intent intent = getIntent();
-		String action = intent.getAction();
-		// Show the dialog only if the intent's action is not to view a
-		// content -> add a new file
-		if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
-			if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-				handleIntent(intent);
-			}
-		}
+    //taskView.setOnClickListener(DownloadActivity.this); 
+    taskView.setOnTouchListener(gestureListener);
+    about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
 
 		// The user is able to click on the title bar to connect to a server
 		setTitleClickListener(this);
@@ -377,32 +407,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Debug.startMethodTracing("synodroid");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStop()
-	 */
-	@Override
-	protected void onStop() {
-		// Time consuming: DO NOT COMMIT !!!
-		// Debug.stopMethodTracing();
-		super.onStop();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onNewIntent(android.content.Intent)
-	 */
-	@Override
-	protected void onNewIntent(Intent intentP) {
-		super.onNewIntent(intentP);
-		if ((intentP.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-			Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
-			handleIntent(intentP);
-		}
-	}
-
 	/**
 	 * Handle all new intent
 	 * 
@@ -410,12 +414,61 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 */
 	private void handleIntent(Intent intentP) {
 		String action = intentP.getAction();
+    Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
 		if (action != null) {
 			Uri uri = null;
 			boolean out_url = false;
 			if (action.equals(Intent.ACTION_VIEW)) {
 				uri = intentP.getData();
+        if (uri.toString().startsWith("http")||uri.toString().startsWith("ftp")){
+        	/**Download and fix URL*/
+        	try {
+                URL url = new URL(uri.toString()); //you can write here any link
+                File path = Environment.getExternalStorageDirectory();
+                path = new File(path, "data/org.jared.synodroid/");
+                path.mkdirs();
+                String temp[] = uri.toString().split("/");
+                String fname =  temp[(temp.length)-1];
+                File file = new File(path, fname);
+                
+                
+                long startTime = System.currentTimeMillis();
+                Log.d("Synodroid", "Downloading "+uri.toString()+" to temp folder..." );
+                Log.d("Synodroid", "Temp file destination: " + file.getAbsolutePath());
+                /* Open a connection to that URL. */
+                URLConnection ucon = url.openConnection();
+
+                /*
+                 * Define InputStreams to read from the URLConnection.
+                 */
+                InputStream is = ucon.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
+
+                /*
+                 * Read bytes to the Buffer until there is nothing more to read(-1).
+                 */
+                ByteArrayBuffer baf = new ByteArrayBuffer(50);
+                int current = 0;
+                while ((current = bis.read()) != -1) {
+                        baf.append((byte) current);
+                }
+
+                /* Convert the Bytes read to a String. */
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(baf.toByteArray());
+                fos.close();
+                Log.d("Synodroid", "Download completed. Elapsed time: "
+                                + ((System.currentTimeMillis() - startTime) / 1000)
+                                + " sec(s)");
+                uri = Uri.fromFile(file);
+	        } catch (IOException e) {
+	        	Log.d("Synodroid", "Download Error: " + e);
+	        	Log.d("Synodroid", "Letting the NAS do the heavy lifting...");
+                out_url = true;
 			}
+        	
+        }
+      }
 			else if (action.equals(Intent.ACTION_SEND)) {
 				String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
 				if (uriString == null) {
@@ -432,6 +485,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				AddTaskAction addTask = new AddTaskAction(uri, out_url);
 				Synodroid app = (Synodroid) getApplication();
 				app.executeAction(this, addTask, true);
+        //PREVENT INTENT REUSE: We mark the intent so from now on, the program thinks its from history
+        intentP.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+        setIntent(intentP);
 			}
 		}
 	}
@@ -583,12 +639,51 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+     */
+  @Override
+  protected void onNewIntent(Intent intentP) {
+	super.onNewIntent(intentP);
+	setIntent(intentP);
+  }
+
+  
+    /*
+     * (non-Javadoc)
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
+    
+    /**
+     * Intents are driving me insane.
+     * 
+     * When an intent has been handle by the app I mark the flag activity launched from history on 
+     * so we do not reprocess that intent again. This simplify was more how I was handling intents 
+     * before and is effective in every cases in all android 1.5 up versions...
+     * 
+     * */
+    //Get the current main intent
+    Intent intent = getIntent();	
+    String action = intent.getAction();
+    //Check if it is a actionable Intent
+	if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
+		//REUSE INTENT CHECK: check if the intent is comming out of the history.
+		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+			//Not from history -> process intent
+			handleIntent(intent);
+		}
+	}
+    
+    SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+	if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+		//Set fullscreen or not
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+	}
+	else{
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
 		// There are some case where the connected server does not show up in
 		// the title bar on top. This fixes thoses cases.
 		server = ((Synodroid) getApplication()).getServer();
@@ -614,9 +709,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * @param taskP
 	 */
 	public void onTaskClicked(final Task taskP) {
+	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
 		Synodroid app = (Synodroid) getApplication();
 		app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
 	}
+  }
 
 	/**
 	 * A task as been long clicked by the user
@@ -624,6 +721,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * @param taskP
 	 */
 	public void onTaskLongClicked(final Task taskP) {
+	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.dialog_title_action));
 		final ActionAdapter adapter = new ActionAdapter(this, taskP);
@@ -642,6 +740,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		AlertDialog connectDialog = builder.create();
 		connectDialog.show();
 	}
+  }
 
 	/**
 	 * The Eula has just been accepted
@@ -662,7 +761,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
 			((Synodroid) getApplication()).forceRefresh();
 		}
-		cur_tab = newTabIdP;
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -674,7 +772,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Save UI state changes to the savedInstanceState.
 		// This bundle will be passed to onCreate if the process is
 		// killed and restarted.
-		savedInstanceState.putString("tabID", cur_tab);
+    savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
+    
 		// etc.
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -684,7 +783,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		super.onRestoreInstanceState(savedInstanceState);
 		// Restore UI state from the savedInstanceState.
 		// This bundle has also been passed to onCreate.
-		cur_tab = savedInstanceState.getString("tabID");
-		tabManager.slideTo(cur_tab);
+    int curTabId = savedInstanceState.getInt("tabID");
+    tabManager.slideTo(tabManager.getNameAtId(curTabId));
 	}
 }

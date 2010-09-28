@@ -49,6 +49,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 
 /**
@@ -64,7 +65,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	public static final int MENU_DELETE = 2;
 	private static final String PREFERENCE_AUTO = "auto";
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
-
+	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+	private static final String PREFERENCE_GENERAL = "general_cat";
 	// Store the current max server id
 	private int maxServerId = 0;
 	// The dynamic servers category
@@ -82,7 +84,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// Retreive the preference screen
 		PreferenceScreen prefScreen = getPreferenceScreen();
 		// The general category
-		PreferenceCategory generalCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference("general_cat");
+		PreferenceCategory generalCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference(PREFERENCE_GENERAL);
 		final ListPreferenceWithValue orderPref = ListPreferenceWithValue.create(this, "sort", R.string.label_process_sort, R.string.hint_process_sort, null);
 		orderPref.setOrder(0);
 		generalCategory.addPreference(orderPref);
@@ -115,7 +117,28 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				return true;
 			}
 		});
-		// The dynamic servers category
+		
+		//Fullscreen preference
+		final CheckBoxPreference fullPref = new CheckBoxPreference(this);
+		fullPref.setKey(PREFERENCE_FULLSCREEN);
+		fullPref.setTitle(R.string.fullscreen_preference);
+		fullPref.setSummary(R.string.summary_fullscreen_preference);
+        generalCategory.addPreference(fullPref);
+        fullPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				if (newValue.toString().equals("true")){
+					preferences.edit().putBoolean(PREFERENCE_FULLSCREEN, true).commit();	
+					getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				}
+				else{
+					preferences.edit().putBoolean(PREFERENCE_FULLSCREEN, false).commit();
+					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				}
+				return true;
+			}
+		});
+        // The dynamic servers category
 		serversCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference("servers_cat");
 		// Load current servers
 		serversCategory.removeAll();
@@ -131,7 +154,27 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
 		}
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		//Check for fullscreen
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+			//Set fullscreen or not
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+		}
+		else{
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+	}
+	
 	/**
 	 * Create the option menu of this activity
 	 */

@@ -2,15 +2,15 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:installLocation="auto"
-  package="org.jared.synodroid.ds" android:versionCode="125" android:versionName="1.1.0.beta">
+  package="org.jared.synodroid.ds" android:versionName="1.1.0.beta" android:versionCode="999">
   <application
     android:label="@string/app_name"
     android:allowTaskReparenting="false"
     android:icon="@drawable/icon_phone"
-    android:name="org.jared.synodroid.Synodroid"
-    android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:debuggable="true">
+    android:name="org.jared.synodroid.Synodroid"    
+    android:debuggable="false">
     <activity
-      android:label="@string/app_name"
+     android:label="@string/app_name"
       android:name="DownloadActivity"
       android:launchMode="singleTask">
       <intent-filter>
@@ -21,31 +21,55 @@
         <action android:name="android.intent.action.SEND" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:mimeType="*/*"/>
+        <data android:mimeType="text/plain"/>
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />  
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:pathPattern=".*\\.torrent" />
+        <data android:scheme="http" android:host="*" android:pathPattern=".*\\.torrent" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />  
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:pathPattern=".*\\.nzb" />
+        <data android:scheme="file" android:host="*" android:pathPattern=".*\\.torrent" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="http" android:host="*" android:pathPattern=".*\\.nzb" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="file" android:host="*" android:pathPattern=".*\\.nzb" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:mimeType="application/x-bittorrent"/>
+        <data android:scheme="http" android:host="*" android:mimeType="application/x-bittorrent"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="file" android:host="*" android:mimeType="application/x-bittorrent"/>
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />  
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:mimeType="application/x-nzb"/>
+        <data android:scheme="http" android:host="*" android:mimeType="application/x-nzb"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />  
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="file" android:host="*" android:mimeType="application/x-nzb"/>
       </intent-filter>
     </activity>
     <activity android:name="DownloadPreferenceActivity"

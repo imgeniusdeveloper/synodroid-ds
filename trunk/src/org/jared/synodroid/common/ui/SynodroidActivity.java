@@ -20,9 +20,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +39,13 @@ import android.widget.Toast;
  */
 public abstract class SynodroidActivity extends Activity implements ResponseHandler, OnClickListener {
 
+	private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector gestureDetector;
+    public View.OnTouchListener gestureListener;
+    public TabWidgetManager tabManager;
+    
   // The inflater
   private LayoutInflater inflater;
   // The request view
@@ -113,6 +123,17 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
     // Retrieve the title's button
     titleButton = (ImageView) findViewById(R.id.id_title_click_button);
     titleButton.setVisibility(View.INVISIBLE);
+    
+    gestureDetector = new GestureDetector(new MyGestureDetector());
+    gestureListener = new View.OnTouchListener() {
+        public boolean onTouch(View v, MotionEvent event) {
+            if (gestureDetector.onTouchEvent(event)) {
+                return true;
+            }
+            return false;
+        }
+    };
+
   }
 
   /*
@@ -200,5 +221,40 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
     errorDialog.setMessage(msgP);
     errorDialogListener = listenerP;
     errorDialog.show();
+  }
+  
+  public void setTabmanager(TabWidgetManager tm){
+	  tabManager = tm;
+  }
+  
+  public void swipeLeft(){
+	if (tabManager!= null){
+		tabManager.nextTab();
+	}  
+  }
+  
+  public void swipeRight(){
+	if (tabManager!= null){
+		tabManager.previousTab();
+	} 
+  }
+  
+  class MyGestureDetector extends SimpleOnGestureListener {
+	    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	        try {
+	            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+	                return false;
+	            // right to left swipe
+	            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	                swipeLeft();
+	            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	            	swipeRight();
+	            }
+	        } catch (Exception e) {
+	            // nothing
+	        }
+	        
+	        return true;
+	    }
   }
 }

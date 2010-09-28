@@ -18,6 +18,7 @@ package org.jared.synodroid.common.action;
 
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
+import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
@@ -33,6 +34,7 @@ public class ResumeTaskAction implements SynoAction {
 	
 	public ResumeTaskAction(Task taskP) {
 		task = taskP;
+		task.status = TaskStatus.TASK_WAITING.toString();
 	}
 
 	/* (non-Javadoc)

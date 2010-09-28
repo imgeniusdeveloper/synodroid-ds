@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 /**
@@ -36,6 +38,8 @@ public class TabWidgetManager implements View.OnClickListener {
 
   // The current visible frame
   private int currentIndex = -1;
+	// The current visible frame
+	private int nextIndex = -1;
   // The tabs list
   private ArrayList<Tab> tabs = new ArrayList<Tab>();
   // The view list
@@ -47,7 +51,7 @@ public class TabWidgetManager implements View.OnClickListener {
   // The inflater
   private LayoutInflater inflater;
   // The content's frame
-  private WorkspaceView contentFrame;
+	private FrameLayout contentFrame;
   // The sliders frame
   private LinearLayout selectedTabFrame;
   // The normal tabs frame
@@ -60,24 +64,33 @@ public class TabWidgetManager implements View.OnClickListener {
   private boolean animPlaying = false;
   // The tablistener
   private TabListener tabListener;
-
+	// The title view
+	private View logoView;
+	// The logo image
+	private ImageView logoimage;
+	// The logo text
+	private TextView logoText;
   /**
    * The default constructor
    */
   public TabWidgetManager(Activity activityP, int sliderDrawableP) {
-    activity = activityP;
-    sliderDrawable = sliderDrawableP;
-    // Get the main inflater
-    inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    mainContentView = (LinearLayout) inflater.inflate(R.layout.tabs_content, null, false);
-    contentFrame = (WorkspaceView) mainContentView.findViewById(R.id.id_tab_content);
-    contentFrame.setTouchSlop(32);
-    // Load background image (for test purpose only)
-//    Bitmap backGd = BitmapFactory.decodeResource(activityP.getResources(), R.drawable.background2);
-//    contentFrame.loadWallpaper(backGd);
-    mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
-    selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
-    normalTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_normal_tabs);
+		activity = activityP;
+		sliderDrawable = sliderDrawableP;
+		// Get the main inflater
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mainContentView = (LinearLayout) inflater.inflate(R.layout.tabs_content, null, false);
+		contentFrame = (FrameLayout) mainContentView.findViewById(R.id.id_tab_content);
+		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
+		selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
+		normalTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_normal_tabs);
+		// Add the title view which will be displayed a short time when the user
+		// click on a tab
+		logoView = inflater.inflate(R.layout.tab_title, null, false);
+		logoView.setTag("TAB_TITLE");
+		logoView.setVisibility(View.INVISIBLE);
+		logoimage = (ImageView) logoView.findViewById(R.id.logoImage);
+		logoText = (TextView) logoView.findViewById(R.id.logoText);
+		contentFrame.addView(logoView);
   }
 
   /**
@@ -94,6 +107,7 @@ public class TabWidgetManager implements View.OnClickListener {
       views.add(viewP);
       contentFrame.addView(viewP);
       viewP.setTag("" + tabP.getId() + TAG_FRAME);
+      viewP.setVisibility(View.INVISIBLE);
     }
     // Add images to the appropriated frame
     ImageView normal = new ImageView(activity);
@@ -112,6 +126,9 @@ public class TabWidgetManager implements View.OnClickListener {
     if (tabs.size() == 1) {
       setTab(tabP.getId());
     }
+    		
+		// Set or reset the logoView in front of all other views
+        logoView.bringToFront();
   }
 
   /**
@@ -183,6 +200,9 @@ public class TabWidgetManager implements View.OnClickListener {
         // Show the logo
         if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
           setSelected(currentIndex, View.INVISIBLE);
+          					logoimage.setImageResource(toTab.getLogoId());
+					logoText.setText(activity.getString(toTab.getLogoTextId()));
+					logoView.setVisibility(View.VISIBLE);
         }
 
         // Create animation
@@ -234,6 +254,7 @@ public class TabWidgetManager implements View.OnClickListener {
       }
       // Change the current index
       currentIndex = newIndex;
+			nextIndex = newIndex;
     }
   }
 
@@ -255,14 +276,53 @@ public class TabWidgetManager implements View.OnClickListener {
         icon.setImageResource((visibilityP == View.VISIBLE ? tab.getIconSelected() : tab.getIconNormal()));
       }
     }
+    		View view = (View) contentFrame.findViewWithTag(tab.getId() + TAG_FRAME);
+		if (view != null) {
+			view.setVisibility(visibilityP);
+			// If the view is visible, then hide the logo view
+			if (visibilityP == View.VISIBLE) {
+				logoView.setVisibility(View.INVISIBLE);
+			}
+		}
   }
 
+	public int getSlideToIndex(){
+		return nextIndex;
+	}
+	
+	public String getSlideToTabName(){
+		try{
+			Tab tab = tabs.get(nextIndex);
+			return tab.getId();
+		}catch(Exception e) {}
+		return "";
+	}
+	
+	public int getCurrentTabIndex(){
+		return currentIndex;
+	}
+	
+	public Tab getCurrentTab(){
+		return tabs.get(currentIndex);
+	}
+	
+	public String getNameAtId(int x){
+		Tab tab = tabs.get(x);
+		return tab.getId();
+	}
+	
+	public String getCurrentTabName(){
+		Tab tab = tabs.get(currentIndex);
+		return tab.getId();
+	}
+	
   /**
    * Change the selected tab to the next one (on the right)
    */
   public void nextTab() {
     if (currentIndex < tabs.size() - 1) {
-      Tab tab = tabs.get(currentIndex + 1);
+			nextIndex = currentIndex + 1;
+			Tab tab = tabs.get(nextIndex);
       slideTo(tab.getId());
     }
   }
@@ -272,7 +332,8 @@ public class TabWidgetManager implements View.OnClickListener {
    */
   public void previousTab() {
     if (currentIndex > 0) {
-      Tab tab = tabs.get(currentIndex - 1);
+			nextIndex = currentIndex - 1;
+			Tab tab = tabs.get(nextIndex);
       slideTo(tab.getId());
     }
   }
