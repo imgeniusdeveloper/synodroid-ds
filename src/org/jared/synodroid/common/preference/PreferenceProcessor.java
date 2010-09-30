@@ -32,6 +32,7 @@ public interface PreferenceProcessor {
 	 * @param keyP The unique key used in the shared preferences
 	 * @param propretiesP The properties of the current server
 	 * @param summaryP
+	 * @return TRUE if the loop must be break: it is the case when a server connection is found in a WLAN
 	 */
 	public void process(int idP, String keyP, Properties propertiesP);
 }
