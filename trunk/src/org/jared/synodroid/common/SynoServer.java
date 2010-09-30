@@ -75,7 +75,11 @@ public class SynoServer {
 	private String sortAttribute = "task_id";
 	// Is the sort ascending
 	private boolean ascending = true;
-
+	// Is this server used only in WLAN ?
+	private boolean wlan = false;
+	// Wifi SSID allowed for this server
+	private String wifiSSID = "";
+	
 	// The recurrent action to execute
 	private SynoAction recurrentAction = null;
 
@@ -910,6 +914,34 @@ public class SynoServer {
    */
   public void setInterrupted(boolean interruptedP) {
     interrupted = interruptedP;
+  }
+
+  /**
+   * @return the wlan
+   */
+  public boolean isWlan() {
+    return wlan;
+  }
+
+  /**
+   * @param wlanP the wlan to set
+   */
+  public void setWlan(boolean wlanP) {
+    wlan = wlanP;
+  }
+
+  /**
+   * @return the wifiSSID
+   */
+  public String getWifiSSID() {
+    return wifiSSID;
+  }
+
+  /**
+   * @param wifiSSIDP the wifiSSID to set
+   */
+  public void setWifiSSID(String wifiSSIDP) {
+    wifiSSID = wifiSSIDP;
   }
 
 }

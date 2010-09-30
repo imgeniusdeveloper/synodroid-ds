@@ -237,4 +237,9 @@
 <string name="label_showupload">Show upload progress</string>
 <string name="hint_showupload_on">Upload progress is shown</string>
 <string name="hint_showupload_off">Upload progress is not shown</string>
+<string name="label_wlan">WLAN connection</string>
+<string name="hint_wlan_on">This connection is used only in WLAN</string>
+<string name="hint_wlan_off">This connection is not used in WLAN</string>
+<string name="label_wifissid">WLAN SSID</string>
+<string name="hint_wifissid">Select WLAN SSID to use with this connection</string>
 </resources>
