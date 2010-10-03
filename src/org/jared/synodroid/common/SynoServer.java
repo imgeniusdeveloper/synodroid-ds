@@ -41,6 +41,7 @@ import org.jared.synodroid.ds.R;
 import org.json.JSONObject;
 
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 
 /**
@@ -79,7 +80,7 @@ public class SynoServer {
 	private boolean wlan = false;
 	// Wifi SSID allowed for this server
 	private String wifiSSID = "";
-	
+
 	// The recurrent action to execute
 	private SynoAction recurrentAction = null;
 
@@ -98,7 +99,7 @@ public class SynoServer {
 
 	// Flag to know is the server has been interrupted while sleeping
 	private boolean interrupted = false;
-	
+
 	// Binded DownloadActivity
 	private ResponseHandler handler;
 
@@ -198,7 +199,7 @@ public class SynoServer {
 								// received
 								if (connected) {
 									// If auto refresh
-								    setInterrupted(false);
+									setInterrupted(false);
 									synchronized (this) {
 										if (autoRefresh) {
 											// Sleep
@@ -715,14 +716,35 @@ public class SynoServer {
 			}
 			br.close();
 
+			// Verify is response if not -1, otherwise take reason from the header
+			if (con.getResponseCode() == -1) {
+				List<String> reasons = headers.get("reason");
+				String r = Html.fromHtml(reasons.toString()).toString();
+				// Very bad code !!!
+				r = r.replace("[", "").replace("]", "");
+				throw new Exception(r);
+			}
+
 			Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 			JSONObject respJSO = new JSONObject(sb.toString());
 			return respJSO;
 		}
+		// Special for SSL Handshake failure
+		catch(IOException ioex) {
+			Log.e(Synodroid.DS_TAG, "Unexpected error", ioex);
+			String msg = ioex.getMessage();
+			if (msg != null && msg.indexOf("SSL handshake failure")!=-1) {
+				// Don't need to translate: the opposite message (HTTP on a SSL port) is in english and come from the server
+				throw new Exception("SSL handshake failure.\n\nVerify if you don't speak HTTPS to a standard server port.\n");
+			}
+			else {
+	  		throw ioex;
+			}
+		}
 		// Unexpected exception
 		catch (Exception ex) {
 			Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
-			throw ex;
+  		throw ex;
 		}
 		// Finally close everything
 		finally {
@@ -902,46 +924,49 @@ public class SynoServer {
 		this.showUpload = showUpload;
 	}
 
-  /**
-   * @return the interrupted
-   */
-  public boolean isInterrupted() {
-    return interrupted;
-  }
+	/**
+	 * @return the interrupted
+	 */
+	public boolean isInterrupted() {
+		return interrupted;
+	}
 
-  /**
-   * @param interruptedP the interrupted to set
-   */
-  public void setInterrupted(boolean interruptedP) {
-    interrupted = interruptedP;
-  }
+	/**
+	 * @param interruptedP
+	 *          the interrupted to set
+	 */
+	public void setInterrupted(boolean interruptedP) {
+		interrupted = interruptedP;
+	}
 
-  /**
-   * @return the wlan
-   */
-  public boolean isWlan() {
-    return wlan;
-  }
+	/**
+	 * @return the wlan
+	 */
+	public boolean isWlan() {
+		return wlan;
+	}
 
-  /**
-   * @param wlanP the wlan to set
-   */
-  public void setWlan(boolean wlanP) {
-    wlan = wlanP;
-  }
+	/**
+	 * @param wlanP
+	 *          the wlan to set
+	 */
+	public void setWlan(boolean wlanP) {
+		wlan = wlanP;
+	}
 
-  /**
-   * @return the wifiSSID
-   */
-  public String getWifiSSID() {
-    return wifiSSID;
-  }
+	/**
+	 * @return the wifiSSID
+	 */
+	public String getWifiSSID() {
+		return wifiSSID;
+	}
 
-  /**
-   * @param wifiSSIDP the wifiSSID to set
-   */
-  public void setWifiSSID(String wifiSSIDP) {
-    wifiSSID = wifiSSIDP;
-  }
+	/**
+	 * @param wifiSSIDP
+	 *          the wifiSSID to set
+	 */
+	public void setWifiSSID(String wifiSSIDP) {
+		wifiSSID = wifiSSIDP;
+	}
 
 }

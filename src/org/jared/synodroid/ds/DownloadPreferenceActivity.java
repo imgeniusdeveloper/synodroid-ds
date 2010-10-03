@@ -144,7 +144,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
     PreferenceFacade.processLoadingServers(prefScreen.getSharedPreferences(), this);
 
     SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
-    if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
+		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
       Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
       if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId + ".nickname")) {
         createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId,
@@ -203,7 +203,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
           public void process(int idP, String keyP, Properties propsP) {
             ServerInfo deletion = new ServerInfo();
             deletion.id = idP;
-            deletion.title = propsP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
+            String title = propsP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
+            Boolean useWifi = Boolean.parseBoolean(propsP.getProperty(PreferenceFacade.WLAN_SUFFIX));
+            if (useWifi) {
+            	title += " "+getResources().getText(R.string.server_suffix_wifi);
+            }
+            deletion.title = title;
             deletion.delete = false;
             deletion.key = keyP;
             servers.add(deletion);
@@ -289,8 +294,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
     if (idP > maxServerId) {
       maxServerId = idP;
     }
-    createServerPreference(idP, serversCategory, keyP, propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX),
-            summary);
+    String title = propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
+    Boolean useWifi = Boolean.parseBoolean(propertiesP.getProperty(PreferenceFacade.WLAN_SUFFIX));
+    if (useWifi) {
+    	title += " "+getResources().getText(R.string.server_suffix_wifi);
+    }
+    createServerPreference(idP, serversCategory, keyP, title, summary);
   }
 
   /**
@@ -366,7 +375,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
     connectionCategory.setTitle(getString(R.string.title_cat_connection));
     screen.addPreference(connectionCategory);
 
-    CheckBoxPreference wlanPref = new CheckBoxPreference(this);
+    final CheckBoxPreference wlanPref = new CheckBoxPreference(this);
     wlanPref.setKey(keyP + PreferenceFacade.WLAN_SUFFIX);
     wlanPref.setTitle(R.string.label_wlan);
     wlanPref.setDefaultValue(false);
@@ -379,7 +388,11 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
     String[] wifiSSIDs = new String[wifis.size() + 1];
     wifiSSIDs[0] = "None";
     for (int iLoop = 0; iLoop < wifis.size(); iLoop++) {
-      wifiSSIDs[iLoop + 1] = wifis.get(iLoop).SSID;
+    	String ssid = wifis.get(iLoop).SSID;
+    	if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+    		ssid = ssid.substring(1, ssid.length()-1);
+    	}
+      wifiSSIDs[iLoop + 1] = ssid;
     }
     ListPreferenceWithValue wifiSSIDPref = ListPreferenceWithValue.create(this,
             keyP + PreferenceFacade.WLANSSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
@@ -415,7 +428,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
         String title = (String) newValue;
         String summary = buildURL(protocolPref.getValue(), hostPref.getText(), portPref.getText());
         summary = summary.toLowerCase();
-        updatePrefScreen(screen, title, summary);
+        updatePrefScreen(screen, title, summary, wlanPref.isChecked());
         return true;
       }
     });
@@ -424,7 +437,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
       public boolean onPreferenceChange(Preference preference, Object newValue) {
         String title = nickPref.getText();
         String summary = buildURL((String) newValue, hostPref.getText(), portPref.getText());
-        updatePrefScreen(screen, title, summary);
+        updatePrefScreen(screen, title, summary, wlanPref.isChecked());
         return true;
       }
     });
@@ -433,7 +446,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
       public boolean onPreferenceChange(Preference preference, Object newValue) {
         String title = nickPref.getText();
         String summary = buildURL(protocolPref.getValue(), (String) newValue, portPref.getText());
-        updatePrefScreen(screen, title, summary);
+        updatePrefScreen(screen, title, summary, wlanPref.isChecked());
         return true;
       }
     });
@@ -442,7 +455,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
       public boolean onPreferenceChange(Preference preference, Object newValue) {
         String title = nickPref.getText();
         String summary = buildURL(protocolPref.getValue(), hostPref.getText(), (String) newValue);
-        updatePrefScreen(screen, title, summary);
+        updatePrefScreen(screen, title, summary, wlanPref.isChecked());
         return true;
       }
     });
@@ -451,14 +464,18 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
       public boolean onPreferenceChange(Preference preferenceP, Object newValueP) {
         if (!wifiMgr.isWifiEnabled()) {
           AlertDialog.Builder builder = new AlertDialog.Builder(DownloadPreferenceActivity.this);
-          builder.setTitle("Wifi is disabled").
-          setMessage("Please enable Wifi before trying to configure a WLAN connection").
-          setPositiveButton("OK", null);
+          builder.setTitle(getResources().getText(R.string.title_wifi_disabled)).
+          setMessage(getResources().getText(R.string.message_wifi_disabled)).
+          setPositiveButton(getResources().getText(R.string.button_ok), null);
           AlertDialog alert = builder.create();
           alert.show();
           return false;
         }
         else {
+          String summary = buildURL(protocolPref.getValue(), hostPref.getText(), portPref.getText());
+          summary = summary.toLowerCase();
+          String title = nickPref.getText();
+          updatePrefScreen(screen, title, summary, (Boolean)newValueP);
           return true;
         }
       }
@@ -473,7 +490,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
    * @param titleP
    * @param summaryP
    */
-  private void updatePrefScreen(PreferenceScreen prefScreenP, String titleP, String summaryP) {
+  private void updatePrefScreen(PreferenceScreen prefScreenP, String titleP, String summaryP, boolean useWifiP) {
+  	if (useWifiP) {
+  		titleP += " "+getResources().getText(R.string.server_suffix_wifi);
+  	}
     prefScreenP.setTitle(titleP);
     prefScreenP.setSummary(summaryP);
     // Notify the root PreferenceScreen that a child has been updated
