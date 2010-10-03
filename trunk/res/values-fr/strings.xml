@@ -146,7 +146,7 @@
 <string name="button_yesplease">Oui SVP</string>
 <string name="button_nothanks">Non merci</string>
 <string name="dialog_title_information">Information</string>
-<string name="no_server_configured">"Aucun serveur n'est configuré.\n\nVoulez-vous configurer un serveur maintenant?"</string>
+<string name="no_server_configured">"Aucun serveur n'est configuré ou aucun serveur n\'est approprié pour la connexion en cours.\n\nVoulez-vous configurer un serveur maintenant?"</string>
 <string name="detail_progress_upload">Emission:</string>
 <string name="detail_progress_download">Réception:</string>
 <string name="detail_finished">Terminé</string>
@@ -237,5 +237,12 @@
 <string name="label_showupload">Afficher la progression d\'émission</string>
 <string name="hint_showupload_on">La progression est affichée</string>
 <string name="hint_showupload_off">La progression est cachée</string>
-
+<string name="label_wlan">Connexion WIFI</string>
+<string name="hint_wlan_on">Cette connexion est utilisée uniquement en WIFI</string>
+<string name="hint_wlan_off">Cette connexion n\'est pas utilisée en WIFI</string>
+<string name="label_wifissid">Réseau WIFI</string>
+<string name="hint_wifissid">Sélectionner le réseau WIFI à utiliser</string>
+<string name="title_wifi_disabled">Le Wifi est désactivé</string>
+<string name="message_wifi_disabled">Activez le WiFi avant d\'essayer de configurer la connexion</string>
+<string name="server_suffix_wifi">(wifi)</string>
 </resources>

@@ -146,7 +146,7 @@
 <string name="button_yesplease">Yes please</string>
 <string name="button_nothanks">No thanks</string>
 <string name="dialog_title_information">Information</string>
-<string name="no_server_configured">No server has been yet configured or it is not well configured.\n\nWould you like to configure the system now ?</string>
+<string name="no_server_configured">No server has been configured or no server is appropriate for the current connection.\n\nWould you like to configure the system now ?</string>
 <string name="detail_progress_upload">Upload:</string>
 <string name="detail_progress_download">Download:</string>
 <string name="detail_finished">Finished</string>
@@ -232,14 +232,17 @@
 <string name="crash_dialog_text">An unexpected error occurred forcing the
         application to stop. Please help us fix this by sending us error data,
         all you have to do is click \'OK\'.</string>
-<string name="crash_dialog_comment_prompt">You might add you email address and your comments about the problem below:</string>
+<string name="crash_dialog_comment_prompt">You might add your email address and your comments about the problem below:</string>
 <string name="crash_dialog_ok_toast">Thank you !</string>
 <string name="label_showupload">Show upload progress</string>
 <string name="hint_showupload_on">Upload progress is shown</string>
 <string name="hint_showupload_off">Upload progress is not shown</string>
-<string name="label_wlan">WLAN connection</string>
-<string name="hint_wlan_on">This connection is used only in WLAN</string>
-<string name="hint_wlan_off">This connection is not used in WLAN</string>
-<string name="label_wifissid">WLAN SSID</string>
-<string name="hint_wifissid">Select WLAN SSID to use with this connection</string>
+<string name="label_wlan">WIFI connection</string>
+<string name="hint_wlan_on">This connection is used only in WIFI</string>
+<string name="hint_wlan_off">This connection is not used in WIFI</string>
+<string name="label_wifissid">WIFI network</string>
+<string name="hint_wifissid">Select the WIFI network to use</string>
+<string name="title_wifi_disabled">Wifi is disabled</string>
+<string name="message_wifi_disabled">Please enable Wifi before trying to configure the connection</string>
+<string name="server_suffix_wifi"> - (wifi)</string>
 </resources>

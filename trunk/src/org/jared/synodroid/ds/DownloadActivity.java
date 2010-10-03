@@ -200,7 +200,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Connection is done
 		else if (msg.what == ResponseHandler.MSG_CONNECTED) {
 			// Change the title
-			titleText.setText(server.getNickname());
+			String name = server.getNickname();
+			if (server.isWlan()) {
+				name += " "+getResources().getText(R.string.server_suffix_wifi);
+			}
+			titleText.setText(name);
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 		}
 		// Connecting to the server
@@ -518,9 +522,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			builderNoServer.setPositiveButton(getString(R.string.button_yesplease), new OnClickListener() {
 				// Launch the Preference activity
 				public void onClick(DialogInterface dialogP, int whichP) {
-					final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
-					preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
-					showPreferenceActivity();
+					okToCreateAServer();
 				}
 			});
 			builderNoServer.setNegativeButton(getString(R.string.button_nothanks), null);
@@ -583,8 +585,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
 					connectDialogOpened = true;
 					String[] serversTitle = new String[servers.size()];
+					final String wifiSuffix = (String) getResources().getText(R.string.server_suffix_wifi);
 					for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
-						serversTitle[iLoop] = servers.get(iLoop).getNickname();
+						SynoServer s = servers.get(iLoop);
+						String name = s.getNickname();
+						if (s.isWlan()) {
+							name += " "+wifiSuffix;
+						}
+						serversTitle[iLoop] = name;
 					}
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
 					builder.setTitle(getString(R.string.menu_connect));
@@ -688,7 +696,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// the title bar on top. This fixes thoses cases.
 		server = ((Synodroid) getApplication()).getServer();
 		if (server != null && server.isConnected()) {
-			titleText.setText(server.getNickname());
+			String name = server.getNickname();
+			if (server.isWlan()) {
+				name += " "+getResources().getText(R.string.server_suffix_wifi);
+			}
+			titleText.setText(name);
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 
 			// Launch the gets task's details recurrent action
@@ -785,5 +797,16 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// This bundle has also been passed to onCreate.
     int curTabId = savedInstanceState.getInt("tabID");
     tabManager.slideTo(tabManager.getNameAtId(curTabId));
+	}
+	
+	/**
+	 * The user agree to create a new as no server has been configured or no server is suitable
+	 * for the current connection
+	 */
+	private void okToCreateAServer() {
+		final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+		preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
+		showPreferenceActivity();
+
 	}
 }
