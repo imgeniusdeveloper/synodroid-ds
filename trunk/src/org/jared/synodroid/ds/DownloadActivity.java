@@ -44,6 +44,7 @@ import org.jared.synodroid.ds.action.ShowDetailsAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
+import org.jared.synodroid.ds.view.search.ServerDiscoveryFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -807,6 +808,5 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
 		preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
 		showPreferenceActivity();
-
 	}
 }
