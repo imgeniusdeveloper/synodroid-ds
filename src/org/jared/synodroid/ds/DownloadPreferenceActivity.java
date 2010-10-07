@@ -23,9 +23,11 @@ import org.jared.synodroid.common.preference.EditTextPreferenceWithValue;
 import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
+import org.jared.synodroid.ds.view.search.ServerDiscoveryFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -59,6 +61,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
   public static final int MENU_CREATE = 1;
   // Menu Delete
   public static final int MENU_DELETE = 2;
+  // Menu Wizard
+  public static final int MENU_WIZARD = 3;
+  
   private static final String PREFERENCE_AUTO = "auto";
   private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
   private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
@@ -177,16 +182,21 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
    * Create the option menu of this activity
    */
   public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add(0, MENU_WIZARD, 0, getString(R.string.menu_add_server)).setIcon(R.drawable.ic_menu_wizard);
     menu.add(0, MENU_CREATE, 0, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
     menu.add(0, MENU_DELETE, 0, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
     return true;
-  }
+  } 
 
   /**
    * Interact with the user
    */
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
+      case MENU_WIZARD:
+        Dialog dialog = ServerDiscoveryFactory.createDialog(this);
+        dialog.show();
+        break;
       // Create a new server
       case MENU_CREATE:
         maxServerId = maxServerId + 1;

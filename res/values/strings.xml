@@ -245,4 +245,10 @@
 <string name="title_wifi_disabled">Wifi is disabled</string>
 <string name="message_wifi_disabled">Please enable Wifi before trying to configure the connection</string>
 <string name="server_suffix_wifi"> - (wifi)</string>
+<string name="button_previous">&lt; Previous</string>
+<string name="button_next">Next ></string>
+<string name="button_finish">Finish</string>
+<string name="wizard_server_title">Server Wizard</string>
+<string name="wizard_searching_text">Searching servers...</string>
+<string name="wizard_step">Step {0} of {1}</string>
 </resources>
