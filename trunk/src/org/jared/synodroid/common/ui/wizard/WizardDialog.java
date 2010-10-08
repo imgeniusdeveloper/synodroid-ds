@@ -22,7 +22,7 @@ import android.widget.ViewFlipper;
  * 
  * @author Eric Taix
  */
-public class WizardDialog extends Dialog {
+public class WizardDialog extends Dialog implements WizardInterface {
 
   private ArrayList<WizardStep> steps = new ArrayList<WizardStep>();
   private Button nextBtn;
@@ -55,12 +55,22 @@ public class WizardDialog extends Dialog {
     super.onCreate(savedInstanceStateP);
     requestWindowFeature(Window.FEATURE_LEFT_ICON);
     setContentView(R.layout.wizard);
-    setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.ic_menu_wizard);
+    setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_dialog_alert);
     setTitle(title);
     content = (ViewFlipper) findViewById(R.id.view_flipper_id);
     prevBtn = (Button) findViewById(R.id.prev_btn_id);
+    prevBtn.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View vP) {
+        previous();
+      }
+    });
     prevBtn.setEnabled(false);
     nextBtn = (Button) findViewById(R.id.next_btn_id);
+    nextBtn.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View vP) {
+        next();
+      }
+    });
     stepText = (TextView)findViewById(R.id.step_text_id);
     updateSteps();
     updateUI();
@@ -75,8 +85,8 @@ public class WizardDialog extends Dialog {
     steps.add(stepP);
   }
 
-  /**
-   * Go to the next view
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.wizard.WizardInterface#next()
    */
   public void next() {
     currentStep++;
@@ -84,8 +94,8 @@ public class WizardDialog extends Dialog {
     updateUI();
   }
 
-  /**
-   * Go to the previous view
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.wizard.WizardInterface#previous()
    */
   public void previous() {
     currentStep--;
@@ -101,6 +111,11 @@ public class WizardDialog extends Dialog {
     boolean bool = false;
     if (currentStep < steps.size() - 1) {
       bool = true;
+      nextBtn.setText(getContext().getText(R.string.wizard_button_next));
+    }
+    else if (currentStep == steps.size() - 1) {
+      nextBtn.setText(getContext().getText(R.string.wizard_button_finish));
+      bool = true;
     }
     nextBtn.setEnabled(bool);
     // Enable / Disable the previous step
@@ -108,6 +123,7 @@ public class WizardDialog extends Dialog {
     if (currentStep > 0) {
       bool = true;
     }
+    // Update next button text to "finish"
     prevBtn.setEnabled(bool);
     // Update step text
     String msg = MessageFormat.format(stepTemplate, new Object[] { currentStep+1, steps.size() });
@@ -121,15 +137,15 @@ public class WizardDialog extends Dialog {
     content.removeAllViews();
     // Add all steps
     for (WizardStep step : steps) {
-      step.setContext(getContext());
+      step.init(this);
       View view = step.getView();
       content.addView(view);
     }
     currentStep = 0;
   }
 
-  /**
-   * Reset all previous state
+  /* (non-Javadoc)
+   * @see org.jared.synodroid.common.ui.wizard.WizardInterface#reset()
    */
   public void reset() {
     currentStep = 0;
