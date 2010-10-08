@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.jared.synodroid.ds.view.search;
+package org.jared.synodroid.ds.view.wizard;
 
+import org.jared.synodroid.common.ui.wizard.WizardInterface;
 import org.jared.synodroid.common.ui.wizard.WizardStep;
 import org.jared.synodroid.ds.R;
 
@@ -18,13 +19,13 @@ import android.widget.TextView;
 public class DiscoveringStep implements WizardStep {
 
   // The current context
-  private Context context;
+  private WizardInterface wizard;
   
   /* (non-Javadoc)
    * @see org.jared.synodroid.common.ui.wizard.WizardStep#setContext(android.content.Context)
    */
-  public void setContext(Context ctxP) {
-    context = ctxP;
+  public void init(WizardInterface wizP) {
+    wizard = wizP;
   }
 
   /* (non-Javadoc)
@@ -32,10 +33,10 @@ public class DiscoveringStep implements WizardStep {
    */
   public View getView() {
     // Create the main inflater
-    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View view = inflater.inflate(R.layout.discovering, null, false);
+    LayoutInflater inflater = (LayoutInflater) wizard.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view = inflater.inflate(R.layout.wizard_discover_server, null, false);
     TextView text = (TextView)view.findViewById(R.id.searching_text_id);
-    text.setText(context.getText(R.string.wizard_searching_text).toString());
+    text.setText(wizard.getContext().getText(R.string.wizard_searching_text).toString());
     return view;
   }
 

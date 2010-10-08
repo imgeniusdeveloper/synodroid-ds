@@ -3,7 +3,6 @@
  */
 package org.jared.synodroid.common.ui.wizard;
 
-import android.content.Context;
 import android.view.View;
 
 /**
@@ -14,10 +13,11 @@ import android.view.View;
 public interface WizardStep {
 
   /**
-   * Define the current context. An implementation can store this reference for future use if needed.
+   * Define the current Wizard which own this ste.<br/>
+   * An implementation can store this reference for future use if needed.
    * @param ctxP
    */
-  public void setContext(Context ctxP);
+  public void init(WizardInterface wizP);
   
   /**
    * Return the view associated with this step

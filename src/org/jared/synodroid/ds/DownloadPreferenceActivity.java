@@ -23,7 +23,7 @@ import org.jared.synodroid.common.preference.EditTextPreferenceWithValue;
 import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
-import org.jared.synodroid.ds.view.search.ServerDiscoveryFactory;
+import org.jared.synodroid.ds.view.wizard.WizardServerFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -182,7 +182,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
    * Create the option menu of this activity
    */
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(0, MENU_WIZARD, 0, getString(R.string.menu_add_server)).setIcon(R.drawable.ic_menu_wizard);
+    menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
     menu.add(0, MENU_CREATE, 0, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
     menu.add(0, MENU_DELETE, 0, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
     return true;
@@ -194,7 +194,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case MENU_WIZARD:
-        Dialog dialog = ServerDiscoveryFactory.createDialog(this);
+        Dialog dialog = WizardServerFactory.createDialog(this);
         dialog.show();
         break;
       // Create a new server
