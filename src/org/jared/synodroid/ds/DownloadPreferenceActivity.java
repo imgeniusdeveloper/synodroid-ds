@@ -23,7 +23,7 @@ import org.jared.synodroid.common.preference.EditTextPreferenceWithValue;
 import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
-import org.jared.synodroid.ds.view.wizard.WizardServerFactory;
+import org.jared.synodroid.ds.view.wizard.ServerWizard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -194,8 +194,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case MENU_WIZARD:
-        Dialog dialog = WizardServerFactory.createDialog(this);
-        dialog.show();
+      	ServerWizard wiz = new ServerWizard(this);
+      	wiz.start();
         break;
       // Create a new server
       case MENU_CREATE:
