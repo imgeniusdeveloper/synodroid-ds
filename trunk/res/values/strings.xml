@@ -246,10 +246,10 @@
 <string name="message_wifi_disabled">Please enable Wifi before trying to configure the connection</string>
 <string name="server_suffix_wifi"> - (wifi)</string>
 <string name="wizard_menu">Find server</string>
-<string name="wizard_button_previous">&lt; Previous</string>
-<string name="wizard_button_next">Next ></string>
-<string name="wizard_button_finish">Finish</string>
-<string name="wizard_server_title">Server Wizard</string>
-<string name="wizard_searching_text">Searching servers...</string>
-<string name="wizard_step">Step {0} of {1}</string>
+<string name="wizard_searching_title">Searching</string>
+<string name="wizard_searching_msg">Searching NAS on your local network. Please wait...</string>
+<string name="wizard_selectserver_title">Select server</string>
+<string name="wizard_user_title">User informations</string>
+<string name="wizard_user_user_label">User</string>
+<string name="wizard_user_password_label">Password</string>
 </resources>

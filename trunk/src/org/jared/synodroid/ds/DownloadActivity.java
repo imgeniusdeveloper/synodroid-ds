@@ -44,7 +44,7 @@ import org.jared.synodroid.ds.action.ShowDetailsAction;
 import org.jared.synodroid.ds.action.TaskActionMenu;
 import org.jared.synodroid.ds.view.adapter.ActionAdapter;
 import org.jared.synodroid.ds.view.adapter.TaskAdapter;
-import org.jared.synodroid.ds.view.wizard.WizardServerFactory;
+import org.jared.synodroid.ds.view.wizard.ServerWizard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
