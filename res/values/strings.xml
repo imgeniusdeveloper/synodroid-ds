@@ -252,4 +252,12 @@
 <string name="wizard_user_title">User informations</string>
 <string name="wizard_user_user_label">User</string>
 <string name="wizard_user_password_label">Password</string>
+<string name="installTorrentSearch">Install Transdroid Torrent Search</string>
+<string name="logo_search">Torrent Search</string>
+<string name="dialog_message_confirm_add">Are you sure you would like to start downloading that file?</string>
+<string name="provider_missing">Search provider not installed, click the button bellow to install it.\n\n Note: You will have to restart synodroid app to enable search after installing search provider...</string>
+<string name="searching">Searching for </string>
+<string name="no_results">No results found for </string>
+<string name="sites">Available sites:</string>
+<string name="no_keyword">Please enter a keyword to search for...</string>
 </resources>

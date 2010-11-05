@@ -250,6 +250,9 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 	            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 	            	swipeRight();
 	            }
+	            else{
+	            	return false;
+	            }
 	        } catch (Exception e) {
 	            // nothing
 	        }
