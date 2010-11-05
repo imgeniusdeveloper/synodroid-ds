@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_height="fill_parent">
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    	<LinearLayout 
+	    	android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	>
+	    	<Spinner
+	    		android:id="@+id/srcSpinner"
+		    	android:layout_width="0dip"
+		    	android:layout_weight="1"
+		    	android:layout_height="wrap_content" />
+	    	<Spinner
+	    		android:id="@+id/sortSpinner"
+		    	android:layout_width="0dip"
+		    	android:layout_weight="1"
+		    	android:layout_height="wrap_content"/>
+		</LinearLayout>	
+    	<LinearLayout 
+	    	android:orientation="horizontal"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	>
+	    	<EditText
+	    		android:id="@+id/query"
+			    android:layout_width="0dip"
+			    android:layout_weight="1"
+			    android:layout_height="wrap_content"
+			    android:singleLine="true"
+			    android:selectAllOnFocus="true"
+			    android:text="" />
+		    <Button
+		    	android:id="@+id/querygo"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="Search" />
+		</LinearLayout>	
+		<ListView
+			android:id="@+id/resList"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent" >
+		</ListView>
+		<ScrollView
+		    xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/empty_scroll"
+		    android:layout_width="fill_parent"
+		    android:isScrollContainer="true"
+		    android:layout_gravity="center" 
+			android:layout_weight="1"
+			android:layout_height="fill_parent">
+		
+			<TextView 
+				android:id="@+id/empty" 
+				android:layout_width="fill_parent" 	
+				android:layout_height="fill_parent" 
+				android:text="@string/app_name" 
+				android:textStyle="bold" 
+				android:gravity="center" />
+		</ScrollView>
+		<Button android:text="@string/installTorrentSearch" 
+				android:id="@+id/btnTorSearchInst" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"></Button>
+	</LinearLayout>
+</RelativeLayout>
