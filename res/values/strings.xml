@@ -260,4 +260,5 @@
 <string name="no_results">No results found for </string>
 <string name="sites">Available sites:</string>
 <string name="no_keyword">Please enter a keyword to search for...</string>
+<string name="search_hint">Torrent search</string>
 </resources>

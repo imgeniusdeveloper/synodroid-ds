@@ -233,6 +233,33 @@ public class TabWidgetManager implements View.OnClickListener {
   }
 
   /**
+   * Slide to a new tab.
+   * 
+   * @param The tagId to select
+   * @return
+   */
+  public void selectTab(String tabIdP) {
+    // If there is no current animation
+    if (!animPlaying) {
+      Tab fake = new Tab(tabIdP);
+      int index = tabs.indexOf(fake);
+      if (index != -1 /* && index != currentIndex */) {
+        // Retrieve tabs
+        Tab toTab = tabs.get(index);
+        // Show the logo
+        if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
+          setSelected(currentIndex, View.INVISIBLE);
+          					logoimage.setImageResource(toTab.getLogoId());
+					logoText.setText(activity.getString(toTab.getLogoTextId()));
+					logoView.setVisibility(View.VISIBLE);
+        }
+
+        setTab(toTab.getId());
+      }
+    }
+  }
+  
+  /**
    * Change the current selected tab
    */
   private void setTab(String tabId) {
