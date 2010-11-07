@@ -49,6 +49,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -78,7 +79,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -87,6 +87,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 /**
  * This activity list all current tasks
@@ -102,6 +103,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
     private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
     private static final String PREFERENCE_GENERAL = "general_cat";
+    private static final String PREFERENCE_SEARCH_SOURCE = "general_cat.search_source";
+    private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
 
 	// The connection dialog ID
 	private static final int CONNECTION_DIALOG_ID = 1;
@@ -138,16 +141,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
     private final int[] to = new int[] { R.id.result_title, R.id.result_size, R.id.result_date, R.id.result_leechers, R.id.result_seeds, R.id.result_url};
 	
 	private TextView emptyText;
-	private EditText queryText;
 	
-	private Button btnInstall, btnSearch;
+	private Button btnInstall;
     
 	private Spinner SpinnerSource, SpinnerSort; 
 	private ArrayAdapter<CharSequence> AdapterSource, AdapterSort; 
 	
 	private String[] SortOrder = { "Combined", "BySeeders" };
 	private String lastSearch = "";
-	private int lastOrder, lastSource = 0;
 	private Tab searchTab, torrentTab, aboutTab; 
 	private int curTabId = 0;
 	private boolean tabsNeedInit = false;
@@ -353,10 +354,8 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         resList = (ListView)searchContent.findViewById(R.id.resList);
         
         emptyText = (TextView)searchContent.findViewById(R.id.empty);
-        queryText = (EditText)searchContent.findViewById(R.id.query);
         
         btnInstall = (Button)searchContent.findViewById(R.id.btnTorSearchInst);
-        btnSearch = (Button)searchContent.findViewById(R.id.querygo);
         ScrollView sv = (ScrollView)searchContent.findViewById(R.id.empty_scroll);
         
         SpinnerSource = (Spinner) searchContent.findViewById(R.id.srcSpinner); 
@@ -370,8 +369,17 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         AdapterSort.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
         SpinnerSort.setAdapter(AdapterSort); 
 
+        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
+        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
         
-        for (int i = 0; i < SortOrder.length; i++) { 
+        int lastOrder  = 0;
+        int lastSource = 0;
+        
+        for (int i = 0; i < SortOrder.length; i++) {
+        	if (pref_order.equals(SortOrder[i])){
+        		lastOrder = i;
+        	}
         	AdapterSort.add(SortOrder[i]); 
         } 
         
@@ -380,34 +388,22 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         Cursor sites = getSupportedSites();
         if (sites != null) {
 	        if (sites.moveToFirst()) {
+	        	int i = 0;
 		        do {
 		        	s.append(sites.getString(1));
 		        	s.append("\n");
+		        	if (pref_src.equals(sites.getString(1))){
+		        		lastSource = i;
+		        	}
 		        	AdapterSource.add(sites.getString(1));
+		        	i++;
 		        } while (sites.moveToNext());
 	        }
 	        emptyText.setText(getString(R.string.sites) + "\n" + s.toString());
 	        btnInstall.setVisibility(Button.GONE);
 	        resList.setVisibility(ListView.GONE);
-        	
-	        // Attach button click handler
-	        btnSearch.setOnClickListener(new View.OnClickListener() {			
-				public void onClick(View v) {
-					String query = queryText.getText().toString();
-					if (!query.equals("")) {
-						new TorrentSearchTask().execute(queryText.getText().toString());
-					}
-					else {
-						emptyText.setText(R.string.no_keyword);
-						emptyText.setVisibility(TextView.VISIBLE);
-						resList.setVisibility(TextView.GONE);
-					}
-				}
-			});
 	        
         } else {
-        	queryText.setVisibility(TextView.GONE);
-        	btnSearch.setVisibility(Button.GONE);
         	SpinnerSort.setVisibility(Spinner.GONE);
         	SpinnerSource.setVisibility(Spinner.GONE);
         	resList.setVisibility(ListView.GONE);
@@ -424,7 +420,23 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
         sv.setOnTouchListener(gestureListener);
         resList.setOnTouchListener(gestureListener);
         
-        queryText.setText(lastSearch);
+        SpinnerSource.setOnItemSelectedListener(new OnItemSelectedListener(){
+        	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        		String source = ((TextView) arg1).getText().toString();
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+        		preferences.edit().putString(PREFERENCE_SEARCH_SOURCE, source).commit();
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {}
+        });
+        SpinnerSort.setOnItemSelectedListener(new OnItemSelectedListener(){
+        	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        		String order = ((TextView) arg1).getText().toString();
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+        		preferences.edit().putString(PREFERENCE_SEARCH_ORDER, order).commit();
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {}
+        });
+        
         SpinnerSource.setSelection(lastSource);
         SpinnerSort.setSelection(lastOrder);
         resList.setOnItemClickListener(new OnItemClickListener() {			
@@ -508,14 +520,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		@Override
 		protected void onPreExecute() {
 			emptyText.setVisibility(TextView.VISIBLE);
-        	emptyText.setText(getString(R.string.searching) + " " + queryText.getText().toString());
+        	emptyText.setText(getString(R.string.searching) + " " + lastSearch);
         	resList.setVisibility(ListView.GONE);
         	resList.setAdapter(null);
-
-	        lastSearch = queryText.getText().toString();
-	        lastOrder = SpinnerSort.getSelectedItemPosition();
-	        lastSource = SpinnerSource.getSelectedItemPosition();
-	        btnSearch.setEnabled(false);
 		}
 		
 		@Override
@@ -533,8 +540,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		protected void onPostExecute(Cursor cur) {
 
 	        if (cur == null) {
-	        	queryText.setVisibility(TextView.GONE);
-	        	btnSearch.setVisibility(Button.GONE);
 	        	SpinnerSort.setVisibility(Spinner.GONE);
 	        	SpinnerSource.setVisibility(Spinner.GONE);
 	        	resList.setVisibility(ListView.GONE);
@@ -552,14 +557,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	        if (cur.getCount() == 0){
 	        	emptyText.setVisibility(TextView.VISIBLE);
 	        	resList.setVisibility(ListView.GONE);
-	        	emptyText.setText(getString(R.string.no_results) + " " + queryText.getText().toString());
+	        	emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
 	        }
 	        else{
 	        	emptyText.setVisibility(TextView.GONE);
 	        	resList.setVisibility(ListView.VISIBLE);
 	        	resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));	
 	        }
-	        btnSearch.setEnabled(true);
 		}
 		
     }
@@ -928,7 +932,23 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				handleIntent(intent);
 			}
 		}
-	    
+		else if (Intent.ACTION_SEARCH.equals(action)){
+			if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+				tabManager.selectTab(TAB_SEARCH);
+			}
+			String searchKeywords = intent.getStringExtra(SearchManager.QUERY);
+			lastSearch = searchKeywords;
+			if (!searchKeywords.equals("")) {
+				new TorrentSearchTask().execute(searchKeywords);
+			}
+			else {
+				emptyText.setText(R.string.no_keyword);
+				emptyText.setVisibility(TextView.VISIBLE);
+				resList.setVisibility(TextView.GONE);
+			}
+			intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+		}
+		
 	    SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
 			//Set fullscreen or not
@@ -1018,6 +1038,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
 			((Synodroid) getApplication()).forceRefresh();
 		}
+		if (newTabIdP != null && oldTabIdP != null && newTabIdP.equals(TAB_SEARCH) && oldTabIdP.equals(TAB_SEARCH)) {
+			//TODO: Force search
+			
+		}
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -1031,8 +1055,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// killed and restarted.
 		savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
 		savedInstanceState.putString("lastSearch", lastSearch);
-		savedInstanceState.putInt("lastOrder", lastOrder);
-		savedInstanceState.putInt("lastSource", lastSource);
 		savedInstanceState.putBoolean("alreadyCanceled", alreadyCanceled);
 	    
 		// etc.
@@ -1046,8 +1068,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// This bundle has also been passed to onCreate.
 		curTabId = savedInstanceState.getInt("tabID");
 		lastSearch = savedInstanceState.getString("lastSearch");
-		lastOrder = savedInstanceState.getInt("lastOrder");
-		lastSource = savedInstanceState.getInt("lastSource");
 		alreadyCanceled = savedInstanceState.getBoolean("alreadyCanceled");
 		slide = true;
 	}

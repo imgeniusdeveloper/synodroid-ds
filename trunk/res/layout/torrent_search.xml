@@ -26,25 +26,6 @@
 		    	android:layout_weight="1"
 		    	android:layout_height="wrap_content"/>
 		</LinearLayout>	
-    	<LinearLayout 
-	    	android:orientation="horizontal"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	>
-	    	<EditText
-	    		android:id="@+id/query"
-			    android:layout_width="0dip"
-			    android:layout_weight="1"
-			    android:layout_height="wrap_content"
-			    android:singleLine="true"
-			    android:selectAllOnFocus="true"
-			    android:text="" />
-		    <Button
-		    	android:id="@+id/querygo"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="Search" />
-		</LinearLayout>	
 		<ListView
 			android:id="@+id/resList"
 			android:layout_width="fill_parent" 
