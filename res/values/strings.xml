@@ -244,7 +244,6 @@
 <string name="hint_wifissid">Select the WIFI network to use</string>
 <string name="title_wifi_disabled">Wifi is disabled</string>
 <string name="message_wifi_disabled">Please enable Wifi before trying to configure the connection</string>
-<string name="server_suffix_wifi"> - (wifi)</string>
 <string name="wizard_menu">Find server</string>
 <string name="wizard_searching_title">Searching</string>
 <string name="wizard_searching_msg">Searching NAS on your local network. Please wait...</string>
@@ -261,4 +260,10 @@
 <string name="sites">Available sites:</string>
 <string name="no_keyword">Please enter a keyword to search for...</string>
 <string name="search_hint">Torrent search</string>
+<string name="wizard_options_title">Options</string>
+<string name="wizard_https">I want to use a secured connection</string>
+<string name="wizard_ddns">I also want to be able to connect from internet</string>
+<string name="wizard_ddns_host">DDNS hostname</string>
+<string name="wizard_selectdsm_title">Select DSM version</string>
+<string name="wizard_no_server_found">No server could be found on the network. Check your connection and try again.</string>
 </resources>
