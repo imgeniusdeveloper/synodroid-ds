@@ -266,4 +266,6 @@
 <string name="wizard_ddns_host">DDNS hostname</string>
 <string name="wizard_selectdsm_title">Select DSM version</string>
 <string name="wizard_no_server_found">No server could be found on the network. Check your connection and try again.</string>
+<string name="err_nomarket">Android market is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string>
+<string name="err_provider_missing">Transdroid torrent search is not installed on your device.\n\nFollow the instructions on the search tab to install it.</string>
 </resources>
