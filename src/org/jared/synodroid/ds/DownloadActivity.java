@@ -104,7 +104,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
 	private static final String PREFERENCE_GENERAL = "general_cat";
 	private static final String PREFERENCE_SEARCH_SOURCE = "general_cat.search_source";
-  private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
+    private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
 	
 
 	// The connection dialog ID
@@ -153,7 +153,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private Tab searchTab, torrentTab, aboutTab;
 	private int curTabId = 0;
 	private boolean tabsNeedInit = false;
-	private boolean alreadyCanceled = false;
+	public boolean alreadyCanceled = false;
 	private boolean slide = false;
 
 	/**
@@ -410,7 +410,23 @@ private void initSearchTab(LayoutInflater inflater){
 				public void onClick(View v) {
 					Intent goToMarket = null;
 					goToMarket = new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=org.transdroid.search"));
-					startActivity(goToMarket);
+					try{
+						startActivity(goToMarket);	
+					}
+					catch (Exception e){
+						AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+					    // By default the message is "Error Unknown"
+					    builder.setMessage(R.string.err_nomarket);
+					    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
+					            new DialogInterface.OnClickListener() {
+					              public void onClick(DialogInterface dialog, int id) {
+					                dialog.cancel();
+					              }
+					            });
+					    AlertDialog errorDialog = builder.create();
+						errorDialog.show();
+					}
+					
 				}
 			});
         }
@@ -446,21 +462,8 @@ private void initSearchTab(LayoutInflater inflater){
 		                	public void onClick(DialogInterface dialog, int which) {
 		                		TextView tv = (TextView)rl.findViewById(R.id.result_url);
 								String url = tv.getText().toString();
-								Uri uri = Uri.parse(url);
-								boolean out_url = false;
-								
-								Uri tempUri = fixUri(uri);
-								if (tempUri.equals(uri)){
-									out_url = true;
-								}
-								else{
-									uri = tempUri;
-								}
-								
-								AddTaskAction addTask = new AddTaskAction(uri, out_url);
-								Synodroid app = (Synodroid) getApplication();
-								app.executeAction(DownloadActivity.this, addTask, true);
-		                 }
+								new TorrentDownloadAndAdd().execute(url);
+		                	}
 		                }).create();
 		        // d.setOwnerActivity(this); // why can't the builder do this?
 		        d.show();
@@ -512,6 +515,26 @@ private void initSearchTab(LayoutInflater inflater){
 		Uri uri = Uri.parse(uriString);
 		// Then query all torrent sites (no selection nor projection nor sort):
 		return managedQuery(uri, null, null, null, null);
+	}
+
+	private class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri>{
+
+		@Override
+		protected Uri doInBackground(String... params) {
+			Uri uri = Uri.parse(params[0]);
+			return fixUri(uri);
+		}
+	
+		@Override
+		protected void onPostExecute(Uri uri) {
+			boolean out_url = false;
+	        if (!uri.toString().startsWith("file:")){
+	        	out_url = true;
+	        }
+	        AddTaskAction addTask = new AddTaskAction(uri, out_url);
+			Synodroid app = (Synodroid) getApplication();
+			app.executeAction(DownloadActivity.this, addTask, true);
+		}
 	}
 
 	private class TorrentSearchTask extends AsyncTask<String, Void, Cursor> {
@@ -690,13 +713,7 @@ private void initSearchTab(LayoutInflater inflater){
 				uri = intentP.getData();
 				if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
 					/** Download and fix URL */
-					Uri tempUri = fixUri(uri);
-					if (tempUri.equals(uri)) {
-						out_url = true;
-					}
-					else {
-						uri = tempUri;
-					}
+					new TorrentDownloadAndAdd().execute(uri.toString());
 				}
 			}
 			else if (action.equals(Intent.ACTION_SEND)) {
@@ -706,20 +723,13 @@ private void initSearchTab(LayoutInflater inflater){
 				}
 				uri = Uri.parse(uriString);
 				out_url = true;
-			}
-			else {
-				return;
-			}
-
-			if (uri != null) {
+				
 				AddTaskAction addTask = new AddTaskAction(uri, out_url);
 				Synodroid app = (Synodroid) getApplication();
 				app.executeAction(this, addTask, true);
-
-				// PREVENT INTENT REUSE: We mark the intent so from now on, the program
-				// thinks its from history
-				intentP.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-				setIntent(intentP);
+			}
+			else {
+				return;
 			}
 		}
 	}
@@ -925,21 +935,43 @@ private void initSearchTab(LayoutInflater inflater){
 			}
 		}
 		else if (Intent.ACTION_SEARCH.equals(action)){
-			if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+			if (getSupportedSites() != null){
+				if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
+					tabManager.selectTab(TAB_SEARCH);
+				}
+				String searchKeywords = intent.getStringExtra(SearchManager.QUERY);
+				lastSearch = searchKeywords;
+				if (!searchKeywords.equals("")) {
+					new TorrentSearchTask().execute(searchKeywords);
+				}
+				else {
+					emptyText.setText(R.string.no_keyword);
+					emptyText.setVisibility(TextView.VISIBLE);
+					resList.setVisibility(TextView.GONE);
+				}
+			}
+			else{
 				tabManager.selectTab(TAB_SEARCH);
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+			    builder.setMessage(R.string.err_provider_missing);
+			    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
+			            new DialogInterface.OnClickListener() {
+			              public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			              }
+			            });
+			    AlertDialog errorDialog = builder.create();
+				errorDialog.show();
 			}
-			String searchKeywords = intent.getStringExtra(SearchManager.QUERY);
-			lastSearch = searchKeywords;
-			if (!searchKeywords.equals("")) {
-				new TorrentSearchTask().execute(searchKeywords);
-			}
-			else {
-				emptyText.setText(R.string.no_keyword);
-				emptyText.setVisibility(TextView.VISIBLE);
-				resList.setVisibility(TextView.GONE);
-			}
-			intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+			
+			
 		}
+
+		// PREVENT INTENT REUSE: We mark the intent so from now on, the program
+		// thinks its from history
+		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+		setIntent(intent);
 		
 	    SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){

@@ -203,6 +203,7 @@ public class Synodroid extends CrashReportingApplication {
     else {
       ArrayList<SynoAction> actionQueue = new ArrayList<SynoAction>();
       actionQueue.add(actionP);
+      activityP.alreadyCanceled = false;
       activityP.showDialogToConnect(true, actionQueue);
     }
   }
