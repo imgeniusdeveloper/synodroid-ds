@@ -89,7 +89,7 @@ public class ServerAdapter extends BaseAdapter {
 			view = (LinearLayout) convertViewP;
 		}
 		else {
-			view = (LinearLayout) inflater.inflate(R.layout.wizard_row, parentP, false);
+			view = (LinearLayout) inflater.inflate(R.layout.wizard_serverrow, parentP, false);
 		}
 		bindView(view, infos[positionP]);
 		return view;

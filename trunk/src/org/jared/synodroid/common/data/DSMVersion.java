@@ -36,8 +36,16 @@ public enum DSMVersion {
   public String getTitle() {
     return title;
   }
+  
+  /* (non-Javadoc)
+   * @see java.lang.Enum#toString()
+   */
+  @Override
+  public String toString() {
+    return title;
+  }
 
-  /**
+	/**
    * Return the instance according to the title value
    * 
    * @param valueP

@@ -101,10 +101,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String TAB_TASKS = "TASKS";
 	private static final String PREFERENCE_AUTO = "auto";
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
-    private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
-    private static final String PREFERENCE_GENERAL = "general_cat";
-    private static final String PREFERENCE_SEARCH_SOURCE = "general_cat.search_source";
-    private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
+	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
+	private static final String PREFERENCE_GENERAL = "general_cat";
+	private static final String PREFERENCE_SEARCH_SOURCE = "general_cat.search_source";
+  private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
+	
 
 	// The connection dialog ID
 	private static final int CONNECTION_DIALOG_ID = 1;
@@ -136,20 +137,20 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private ImageView titleIcon;
 	// The tab manager
 	private TabWidgetManager tabManager;
-	
+
 	private final String[] from = new String[] { "NAME", "SIZE", "ADDED", "LEECHERS", "SEEDERS", "TORRENTURL" };
-    private final int[] to = new int[] { R.id.result_title, R.id.result_size, R.id.result_date, R.id.result_leechers, R.id.result_seeds, R.id.result_url};
-	
+	private final int[] to = new int[] { R.id.result_title, R.id.result_size, R.id.result_date, R.id.result_leechers, R.id.result_seeds, R.id.result_url };
+
 	private TextView emptyText;
-	
+
 	private Button btnInstall;
-    
-	private Spinner SpinnerSource, SpinnerSort; 
-	private ArrayAdapter<CharSequence> AdapterSource, AdapterSort; 
-	
+
+	private Spinner SpinnerSource, SpinnerSort;
+	private ArrayAdapter<CharSequence> AdapterSource, AdapterSort;
+
 	private String[] SortOrder = { "Combined", "BySeeders" };
 	private String lastSearch = "";
-	private Tab searchTab, torrentTab, aboutTab; 
+	private Tab searchTab, torrentTab, aboutTab;
 	private int curTabId = 0;
 	private boolean tabsNeedInit = false;
 	private boolean alreadyCanceled = false;
@@ -230,11 +231,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Connection is done
 		else if (msg.what == ResponseHandler.MSG_CONNECTED) {
 			// Change the title
-			String name = server.getNickname();
-			if (server.isWlan()) {
-				name += " "+getResources().getText(R.string.server_suffix_wifi);
-			}
-			titleText.setText(name);
+			titleText.setText(server.getTitleName());
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 		}
 		// Connecting to the server
@@ -247,7 +244,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 		// Show task's details
 		else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
-      //Starting new intent
+			// Starting new intent
 			Intent next = new Intent();
 			next.setClass(DownloadActivity.this, DetailActivity.class);
 			next.putExtra("org.jared.synodroid.ds.Details", (Task) msg.obj);
@@ -295,7 +292,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 	}
 
-	private void initTorrentTab(LayoutInflater inflater){
+	private void initTorrentTab(LayoutInflater inflater) {
 		RelativeLayout downloadContent = (RelativeLayout) inflater.inflate(R.layout.download_list, null, false);
 		taskView = (ListView) downloadContent.findViewById(R.id.id_task_list);
 		totalUpView = (TextView) downloadContent.findViewById(R.id.id_total_upload);
@@ -306,11 +303,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		taskView.setAdapter(taskAdapter);
 		taskView.setOnItemClickListener(taskAdapter);
 		taskView.setOnItemLongClickListener(taskAdapter);
-	    //taskView.setOnClickListener(DownloadActivity.this); 
-	    taskView.setOnTouchListener(gestureListener);
+		// taskView.setOnClickListener(DownloadActivity.this);
+		taskView.setOnTouchListener(gestureListener);
 	}
-	
-	private void initAboutTab(LayoutInflater inflater){
+
+	private void initAboutTab(LayoutInflater inflater) {
 		View about = inflater.inflate(R.layout.about, null, false);
 		Button eulaBtn = (Button) about.findViewById(R.id.id_eula_view);
 		eulaBtn.setOnClickListener(new View.OnClickListener() {
@@ -319,37 +316,38 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				Eula.show(DownloadActivity.this, true);
 			}
 		});
-    
-	    String vn = ""+getString(R.string.app_name);
-	    try {
-	      PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-	      if (pi != null) {
-	        vn +=  " "+ pi.versionName;
-	      }
-	    }
-	    catch(Exception e) {
-	      Log.e(Synodroid.DS_TAG, "Error while retrieving package information", e);
-	    }
-	    TextView vname = (TextView) about.findViewById(R.id.app_vers_name_text);
-	    vname.setText(vn);
-	    
+
+		String vn = "" + getString(R.string.app_name);
+		try {
+			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+			if (pi != null) {
+				vn += " " + pi.versionName;
+			}
+		}
+		catch (Exception e) {
+			Log.e(Synodroid.DS_TAG, "Error while retrieving package information", e);
+		}
+		TextView vname = (TextView) about.findViewById(R.id.app_vers_name_text);
+		vname.setText(vn);
+
 		TextView message = (TextView) about.findViewById(R.id.about_code);
 		message.setText(Html.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
 		message.setMovementMethod(LinkMovementMethod.getInstance());
-    
-	    ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
-	    donate.setOnClickListener(new View.OnClickListener() {
+
+		ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
+		donate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent("android.intent.action.VIEW", Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
+				Intent i = new Intent("android.intent.action.VIEW", Uri
+				    .parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
 				startActivity(i);
 			}
 		});
-    
+
 		tabManager.addTab(aboutTab, about);
 		about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
 	}
-	
-	private void initSearchTab(LayoutInflater inflater){
+
+private void initSearchTab(LayoutInflater inflater){
 		RelativeLayout searchContent = (RelativeLayout) inflater.inflate(R.layout.torrent_search, null, false);
         resList = (ListView)searchContent.findViewById(R.id.resList);
         
@@ -469,29 +467,30 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			}
 		});
 	}
+
 	/**
 	 * Activity creation
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
-	    getWindow().requestFeature(Window.FEATURE_NO_TITLE); 
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		licenceAccepted = Eula.show(this, false);
 		tabsNeedInit = true;
-		
+
 		// Create the tab manager
 		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-		
-		//Download Tab
+
+		// Download Tab
 		torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
 		torrentTab.setLogo(R.drawable.download_logo, R.string.logo_download);
-		
-		//Torrent Search Tab
+
+		// Torrent Search Tab
 		searchTab = new Tab(TAB_SEARCH, R.drawable.ic_tab_search, R.drawable.ic_tab_search_selected);
-        searchTab.setLogo(R.drawable.search_logo, R.string.logo_search);
-        
-        //About Tab
-        aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
+		searchTab.setLogo(R.drawable.search_logo, R.string.logo_search);
+
+		// About Tab
+		aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
 		aboutTab.setLogo(R.drawable.about_logo, R.string.logo_about);
 
 		tabManager.setTabListener(this);
@@ -508,14 +507,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	}
 
 	private Cursor getSupportedSites() {
-    	// Create the URI of the TorrentSitesProvider
-    	String uriString = "content://org.transdroid.search.torrentsitesprovider/sites";
-        Uri uri = Uri.parse(uriString);
-        // Then query all torrent sites (no selection nor projection nor sort):
-        return managedQuery(uri, null, null, null, null);
-    }
-    
-    private class TorrentSearchTask extends AsyncTask<String, Void, Cursor> {
+		// Create the URI of the TorrentSitesProvider
+		String uriString = "content://org.transdroid.search.torrentsitesprovider/sites";
+		Uri uri = Uri.parse(uriString);
+		// Then query all torrent sites (no selection nor projection nor sort):
+		return managedQuery(uri, null, null, null, null);
+	}
+
+	private class TorrentSearchTask extends AsyncTask<String, Void, Cursor> {
 
 		@Override
 		protected void onPreExecute() {
@@ -567,8 +566,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 		
     }
-	
-	public TaskAdapter getTaskAdapter() {
+		public TaskAdapter getTaskAdapter() {
 		TaskAdapter result = null;
 		if (taskView != null) {
 			result = (TaskAdapter) taskView.getAdapter();
@@ -629,56 +627,54 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Debug.startMethodTracing("synodroid");
 	}
 
-	private Uri fixUri(Uri uri){
+	private Uri fixUri(Uri uri) {
 		try {
-            URL url = new URL(uri.toString()); //you can write here any link
-            File path = Environment.getExternalStorageDirectory();
-            path = new File(path, "data/org.jared.synodroid/");
-            path.mkdirs();
-            String temp[] = uri.toString().split("/");
-            String fname =  temp[(temp.length)-1];
-            if (!fname.endsWith(".torrent")){
-            	fname += ".torrent";
-            }
-            File file = new File(path, fname);
-            
-            
-            long startTime = System.currentTimeMillis();
-            Log.d(Synodroid.DS_TAG, "Downloading "+uri.toString()+" to temp folder..." );
-            Log.d(Synodroid.DS_TAG, "Temp file destination: " + file.getAbsolutePath());
-            /* Open a connection to that URL. */
-            URLConnection ucon = url.openConnection();
+			URL url = new URL(uri.toString()); // you can write here any link
+			File path = Environment.getExternalStorageDirectory();
+			path = new File(path, "data/org.jared.synodroid/");
+			path.mkdirs();
+			String temp[] = uri.toString().split("/");
+			String fname = temp[(temp.length) - 1];
+			if (!fname.endsWith(".torrent")) {
+				fname += ".torrent";
+			}
+			File file = new File(path, fname);
 
-            /*
-             * Define InputStreams to read from the URLConnection.
-             */
-            InputStream is = ucon.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
+			long startTime = System.currentTimeMillis();
+			Log.d(Synodroid.DS_TAG, "Downloading " + uri.toString() + " to temp folder...");
+			Log.d(Synodroid.DS_TAG, "Temp file destination: " + file.getAbsolutePath());
+			/* Open a connection to that URL. */
+			URLConnection ucon = url.openConnection();
 
-            /*
-             * Read bytes to the Buffer until there is nothing more to read(-1).
-             */
-            ByteArrayBuffer baf = new ByteArrayBuffer(50);
-            int current = 0;
-            while ((current = bis.read()) != -1) {
-                    baf.append((byte) current);
-            }
+			/*
+			 * Define InputStreams to read from the URLConnection.
+			 */
+			InputStream is = ucon.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(is);
 
-            /* Convert the Bytes read to a String. */
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(baf.toByteArray());
-            fos.close();
-            Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: "
-                            + ((System.currentTimeMillis() - startTime) / 1000)
-                            + " sec(s)");
-            uri = Uri.fromFile(file);
-        } catch (IOException e) {
-        	Log.d(Synodroid.DS_TAG, "Download Error: " + e);
-        	Log.d(Synodroid.DS_TAG, "Letting the NAS do the heavy lifting...");
+			/*
+			 * Read bytes to the Buffer until there is nothing more to read(-1).
+			 */
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int current = 0;
+			while ((current = bis.read()) != -1) {
+				baf.append((byte) current);
+			}
+
+			/* Convert the Bytes read to a String. */
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(baf.toByteArray());
+			fos.close();
+			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000) + " sec(s)");
+			uri = Uri.fromFile(file);
 		}
-        return uri;
+		catch (IOException e) {
+			Log.d(Synodroid.DS_TAG, "Download Error: " + e);
+			Log.d(Synodroid.DS_TAG, "Letting the NAS do the heavy lifting...");
+		}
+		return uri;
 	}
-	
+
 	/**
 	 * Handle all new intent
 	 * 
@@ -692,17 +688,17 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			boolean out_url = false;
 			if (action.equals(Intent.ACTION_VIEW)) {
 				uri = intentP.getData();
-		        if (uri.toString().startsWith("http")||uri.toString().startsWith("ftp")){
-		        	/**Download and fix URL*/
-		        	Uri tempUri = fixUri(uri);
-		        	if (tempUri.equals(uri)){
-		        		out_url = true;
-		        	}
-		        	else{
-		        		uri = tempUri;
-		        	}
-		        }
-		    }
+				if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
+					/** Download and fix URL */
+					Uri tempUri = fixUri(uri);
+					if (tempUri.equals(uri)) {
+						out_url = true;
+					}
+					else {
+						uri = tempUri;
+					}
+				}
+			}
 			else if (action.equals(Intent.ACTION_SEND)) {
 				String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
 				if (uriString == null) {
@@ -719,10 +715,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				AddTaskAction addTask = new AddTaskAction(uri, out_url);
 				Synodroid app = (Synodroid) getApplication();
 				app.executeAction(this, addTask, true);
-				
-		        //PREVENT INTENT REUSE: We mark the intent so from now on, the program thinks its from history
-		        intentP.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-		        setIntent(intentP);
+
+				// PREVENT INTENT REUSE: We mark the intent so from now on, the program
+				// thinks its from history
+				intentP.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+				setIntent(intentP);
 			}
 		}
 	}
@@ -816,19 +813,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			// If at least one server
 			if (servers.size() != 0) {
 				// If more than 1 server OR if we don't want to autoconnect then
-				// show
-				// the dialog
+				// show the dialog
 				if (servers.size() > 1 || !autoConnectIfOnlyOneServerP) {
 					connectDialogOpened = true;
 					String[] serversTitle = new String[servers.size()];
-					final String wifiSuffix = (String) getResources().getText(R.string.server_suffix_wifi);
 					for (int iLoop = 0; iLoop < servers.size(); iLoop++) {
 						SynoServer s = servers.get(iLoop);
-						String name = s.getNickname();
-						if (s.isWlan()) {
-							name += " "+wifiSuffix;
-						}
-						serversTitle[iLoop] = name;
+						serversTitle[iLoop] = s.getTitleName();
 					}
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
 					builder.setTitle(getString(R.string.menu_connect));
@@ -883,17 +874,18 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onNewIntent(android.content.Intent)
-     */
-  @Override
-  protected void onNewIntent(Intent intentP) {
-	super.onNewIntent(intentP);
-	setIntent(intentP);
-  }
+	 */
+	@Override
+	protected void onNewIntent(Intent intentP) {
+		super.onNewIntent(intentP);
+		setIntent(intentP);
+	}
 
-  
-    /*
-     * (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
@@ -961,11 +953,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// the title bar on top. This fixes thoses cases.
 		server = ((Synodroid) getApplication()).getServer();
 		if (server != null && server.isConnected()) {
-			String name = server.getNickname();
-			if (server.isWlan()) {
-				name += " "+getResources().getText(R.string.server_suffix_wifi);
-			}
-			titleText.setText(name);
+			titleText.setText(server.getTitleName());
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 
 			// Launch the gets task's details recurrent action
@@ -986,11 +974,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * @param taskP
 	 */
 	public void onTaskClicked(final Task taskP) {
-	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
-		Synodroid app = (Synodroid) getApplication();
-		app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
+		if (tabManager.getSlideToTabName().equals(TAB_TASKS)) {
+			Synodroid app = (Synodroid) getApplication();
+			app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
+		}
 	}
-  }
 
 	/**
 	 * A task as been long clicked by the user
@@ -998,26 +986,26 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * @param taskP
 	 */
 	public void onTaskLongClicked(final Task taskP) {
-	if (tabManager.getSlideToTabName().equals(TAB_TASKS)){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.dialog_title_action));
-		final ActionAdapter adapter = new ActionAdapter(this, taskP);
-		builder.setAdapter(adapter, new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
-				// Only if TaskActionMenu is enabled: it seems that even if the
-				// item is
-				// disable the user can tap it
-				if (taskAction.isEnabled()) {
-					Synodroid app = (Synodroid) getApplication();
-					app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
+		if (tabManager.getSlideToTabName().equals(TAB_TASKS)) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.dialog_title_action));
+			final ActionAdapter adapter = new ActionAdapter(this, taskP);
+			builder.setAdapter(adapter, new OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
+					// Only if TaskActionMenu is enabled: it seems that even if the
+					// item is
+					// disable the user can tap it
+					if (taskAction.isEnabled()) {
+						Synodroid app = (Synodroid) getApplication();
+						app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
+					}
 				}
-			}
-		});
-		AlertDialog connectDialog = builder.create();
-		connectDialog.show();
+			});
+			AlertDialog connectDialog = builder.create();
+			connectDialog.show();
+		}
 	}
-  }
 
 	/**
 	 * The Eula has just been accepted
@@ -1056,7 +1044,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		savedInstanceState.putInt("tabID", tabManager.getCurrentTabIndex());
 		savedInstanceState.putString("lastSearch", lastSearch);
 		savedInstanceState.putBoolean("alreadyCanceled", alreadyCanceled);
-	    
+
 		// etc.
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -1071,10 +1059,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		alreadyCanceled = savedInstanceState.getBoolean("alreadyCanceled");
 		slide = true;
 	}
-	
+
 	/**
-	 * The user agree to create a new as no server has been configured or no server is suitable
-	 * for the current connection
+	 * The user agree to create a new as no server has been configured or no
+	 * server is suitable for the current connection
 	 */
 	private void okToCreateAServer() {
 		final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);

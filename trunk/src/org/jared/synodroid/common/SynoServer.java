@@ -431,6 +431,19 @@ public class SynoServer {
 	}
 
 	/**
+	 * Return the title name. It's like the nickname but a suffix is added if
+	 * the server the WLAN.
+	 * @return
+	 */
+	public String getTitleName() {
+		String result = nickname;
+		if (isWlan()) {
+			result += " (" + wifiSSID+")";
+		}
+		return result;
+	}
+	
+	/**
 	 * @return the protocol
 	 */
 	public SynoProtocol getProtocol() {

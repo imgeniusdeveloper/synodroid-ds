@@ -244,5 +244,4 @@
 <string name="hint_wifissid">Sélectionner le réseau WIFI à utiliser</string>
 <string name="title_wifi_disabled">Le Wifi est désactivé</string>
 <string name="message_wifi_disabled">Activez le WiFi avant d\'essayer de configurer la connexion</string>
-<string name="server_suffix_wifi">(wifi)</string>
 </resources>
