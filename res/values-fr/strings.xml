@@ -142,7 +142,7 @@
 <string name="app_contributors">"Contributeurs du projet:"</string>
 <string name="app_status_project">Regardez le status de notre projet:</string>
 <string name="button_ok">OK</string>
-<string name="eula_view">Licence...</string>
+<string name="eula_view">Licence</string>
 <string name="button_yesplease">Oui SVP</string>
 <string name="button_nothanks">Non merci</string>
 <string name="dialog_title_information">Information</string>

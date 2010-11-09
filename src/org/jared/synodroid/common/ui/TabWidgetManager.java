@@ -160,6 +160,9 @@ public class TabWidgetManager implements View.OnClickListener {
     }
     tagID = tagID.substring(0, tagID.length() - suffixLength);
     slideTo(tagID);
+    if (tagID.equals(this.getNameAtId(this.currentIndex)) && tagID.equals("SEARCH")){
+    	this.activity.onSearchRequested();
+    }
   }
 
   /**

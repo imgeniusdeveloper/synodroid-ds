@@ -22,7 +22,7 @@
                 android:id="@+id/ImageView01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_phone"></ImageView>
+                android:src="@drawable/icon_phone"/>
 
             <LinearLayout
                 android:id="@+id/LinearLayout04"
@@ -34,12 +34,13 @@
                     android:id="@+id/app_vers_name_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge" android:text="@string/app_name"></TextView>
+                    android:textAppearance="?android:attr/textAppearanceLarge" 
+                    android:text="@string/app_name"/>
                 <TextView
                     android:id="@+id/TextView04"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_opensource"></TextView>
+                    android:text="@string/app_opensource"/>
             </LinearLayout>
             
 
@@ -55,7 +56,7 @@
                 android:id="@+id/ImgViewDonate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/btn_donate"></ImageView>
+                android:src="@drawable/btn_donate"/>
         </LinearLayout>    
         <LinearLayout
             android:id="@+id/LinearLayout03"
@@ -69,48 +70,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/app_contributors"></TextView>
+                android:text="@string/app_contributors"/>
             <TextView
                 android:id="@+id/tvEric"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="- Eric Taix"
-                android:layout_marginTop="8dip"></TextView>
+                android:layout_marginTop="8dip"/>
             <TextView
                 android:id="@+id/tvSteve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginTop="8dip"
-                android:text="- Steve Garon"></TextView>
+                android:text="- Steve Garon"/>
             <TextView 
                 android:id="@+id/tvTranslators" 
                 android:layout_width="wrap_content" 
                 android:layout_height="wrap_content" 
                 android:layout_marginTop="16dip"
                 android:textAppearance="?android:attr/textAppearanceLarge" 
-                android:text="@string/translator"></TextView>
+                android:text="@string/translator"/>
             <TextView
                 android:id="@+id/tvIgnacio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_marginTop="8dip"
-                android:text="- Ignacio Diez"></TextView>
+                android:text="- Ignacio Diez"/>
             <TextView
                 android:id="@+id/about_code_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_marginTop="16dip"
-                android:text="@string/app_status_project"></TextView>   
+                android:text="@string/app_status_project"/>   
             <TextView
                 android:id="@+id/about_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_marginTop="8dip"></TextView>
+                android:layout_marginTop="8dip"
+                android:layout_marginBottom="16dip"/>
         </LinearLayout>
 
 
@@ -119,17 +121,25 @@
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
             android:gravity="center_horizontal"
-            android:layout_marginTop="10dip"
-            android:layout_marginBottom="10dip">
+            android:layout_marginBottom="25dip">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/eula_view"
                 android:id="@+id/id_eula_view"
                 android:paddingBottom="5dip"
-                android:paddingTop="5dip"
+                android:paddingTop="3dip"
                 android:paddingRight="30dip"
-                android:paddingLeft="30dip"></Button>
+                android:paddingLeft="30dip"/>
+           <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help"
+                android:id="@+id/id_help"
+                android:paddingBottom="5dip"
+                android:paddingTop="3dip"
+                android:paddingRight="30dip"
+                android:paddingLeft="30dip"/>
         </LinearLayout>
   </LinearLayout>
 </ScrollView>

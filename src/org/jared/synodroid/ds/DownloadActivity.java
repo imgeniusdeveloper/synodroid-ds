@@ -142,7 +142,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private final int[] to = new int[] { R.id.result_title, R.id.result_size, R.id.result_date, R.id.result_leechers, R.id.result_seeds, R.id.result_url };
 
 	private TextView emptyText;
-
+	private ScrollView sv;
 	private Button btnInstall;
 
 	private Spinner SpinnerSource, SpinnerSort;
@@ -248,7 +248,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			Intent next = new Intent();
 			next.setClass(DownloadActivity.this, DetailActivity.class);
 			next.putExtra("org.jared.synodroid.ds.Details", (Task) msg.obj);
-			DownloadActivity.this.startActivityForResult(next, 0);
+			startActivityForResult(next, 0);
 		}
 		// Shared directories have been retrieved
 		else if (msg.what == ResponseHandler.MSG_SHARED_DIRECTORIES_RETRIEVED) {
@@ -317,6 +317,31 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			}
 		});
 
+		Button helpBtn = (Button) about.findViewById(R.id.id_help);
+		helpBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				try{
+					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+					emailIntent.setType("plain/text");
+					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"synodroid@gmail.com"});
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Synodroid help");
+					startActivity(emailIntent);
+				}
+				catch (Exception e){
+					AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+				    builder.setMessage(R.string.err_noemail);
+				    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
+				            new DialogInterface.OnClickListener() {
+				              public void onClick(DialogInterface dialog, int id) {
+				                dialog.cancel();
+				              }
+				            });
+				    AlertDialog errorDialog = builder.create();
+					errorDialog.show();
+				}
+			}
+		});
+		
 		String vn = "" + getString(R.string.app_name);
 		try {
 			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -354,7 +379,7 @@ private void initSearchTab(LayoutInflater inflater){
         emptyText = (TextView)searchContent.findViewById(R.id.empty);
         
         btnInstall = (Button)searchContent.findViewById(R.id.btnTorSearchInst);
-        ScrollView sv = (ScrollView)searchContent.findViewById(R.id.empty_scroll);
+        sv = (ScrollView)searchContent.findViewById(R.id.empty_scroll);
         
         SpinnerSource = (Spinner) searchContent.findViewById(R.id.srcSpinner); 
         SpinnerSort = (Spinner) searchContent.findViewById(R.id.sortSpinner); 
@@ -919,7 +944,7 @@ private void initSearchTab(LayoutInflater inflater){
 	        tabsNeedInit = false;
 		}
 		if (slide) {
-			tabManager.slideTo(tabManager.getNameAtId(curTabId));
+			tabManager.selectTab(tabManager.getNameAtId(curTabId));
 			slide = false;
 		}
         
@@ -1057,10 +1082,6 @@ private void initSearchTab(LayoutInflater inflater){
 	public void selectedTabChanged(String oldTabIdP, String newTabIdP) {
 		if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
 			((Synodroid) getApplication()).forceRefresh();
-		}
-		if (newTabIdP != null && oldTabIdP != null && newTabIdP.equals(TAB_SEARCH) && oldTabIdP.equals(TAB_SEARCH)) {
-			//TODO: Force search
-			
 		}
 	}
 

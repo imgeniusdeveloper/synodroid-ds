@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout01"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:id="@+id/mainRL"
+    android:layout_width="wrap_content"
     android:orientation="vertical"
-    android:padding="15dip"
-    android:gravity="center_vertical|center_horizontal" android:background="#BB000000">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/emule_logo"
-        android:id="@+id/logoImage"></ImageView>
-    <LinearLayout
-        android:id="@+id/LinearLayout02"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:gravity="center_vertical">
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="eMule"
-            android:id="@+id/logoText"></TextView>
-    </LinearLayout>
-</LinearLayout>
+    android:layout_height="fill_parent">
+	<LinearLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/lnLayout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:padding="15dip"
+	    android:gravity="center_vertical|center_horizontal" 
+	    android:background="#BB000000">
+	    
+	    <ImageView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical|center_horizontal" 
+	    	android:src="@drawable/emule_logo"
+	        android:id="@+id/logoImage"/>
+	    <TextView
+	        android:layout_height="wrap_content"
+	        android:layout_width="fill_parent"
+	        android:gravity="center_horizontal|center_vertical"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:layout_below="@id/logoImage" 
+			android:text="eMule"
+	        android:id="@+id/logoText"/>
+	</LinearLayout>
+</RelativeLayout>

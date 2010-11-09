@@ -142,7 +142,7 @@
 <string name="app_contributors">&quot;Project's contributors:&quot;</string>
 <string name="app_status_project">Check the status of our project:</string>
 <string name="button_ok">OK</string>
-<string name="eula_view">Licence...</string>
+<string name="eula_view">Licence</string>
 <string name="button_yesplease">Yes please</string>
 <string name="button_nothanks">No thanks</string>
 <string name="dialog_title_information">Information</string>
@@ -255,9 +255,9 @@
 <string name="logo_search">Torrent Search</string>
 <string name="dialog_message_confirm_add">Are you sure you would like to start downloading that file?</string>
 <string name="provider_missing">Search provider not installed, click the button bellow to install it.\n\n Note: You will have to restart synodroid app to enable search after installing search provider...</string>
-<string name="searching">Searching for </string>
-<string name="no_results">No results found for </string>
-<string name="sites">Available sites:</string>
+<string name="searching">Searching...\n\n</string>
+<string name="no_results">No results found.\n\n</string>
+<string name="sites">Available sites:\n</string>
 <string name="no_keyword">Please enter a keyword to search for...</string>
 <string name="search_hint">Torrent search</string>
 <string name="wizard_options_title">Options</string>
@@ -268,4 +268,6 @@
 <string name="wizard_no_server_found">No server could be found on the network. Check your connection and try again.</string>
 <string name="err_nomarket">Android market is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string>
 <string name="err_provider_missing">Transdroid torrent search is not installed on your device.\n\nFollow the instructions on the search tab to install it.</string>
+<string name="help">Help</string>
+<string name="err_noemail">No email applications configured on your device.\n\nClick on the link on the about page to get help.</string>
 </resources>
