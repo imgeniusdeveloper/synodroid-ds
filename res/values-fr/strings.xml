@@ -18,9 +18,13 @@
 <string name="action_clearall">&quot;Suppression des tâches terminées...&quot;</string>
 <string name="action_pausing">"Pause du fichier %s"</string>
 <string name="action_resuming">&quot;Reprise du fichier %s&quot;</string>
+<string name="action_pauseall">&quot;Pause de toutes les tâches actives...&quot;</string>
+<string name="action_resumeall">&quot;Reprise de toutes les tâches en pause...&quot;</string>
 <string name="menu_connect">Se connecter à</string>
 <string name="menu_search">Recherche</string>
-<string name="menu_clearall">Tout effacer</string>
+<string name="menu_clearall">Effacer les tâches finies</string>
+<string name="menu_pauseall">Interrompre les tâches actives</string>
+<string name="menu_resumeall">Reprendre les tâches en pause</string>
 <string name="dialog_title_action">Action</string>
 <string name="menu_parameter">Paramêtres</string>
 <string name="err_unknown">Erreur inconnue!</string>

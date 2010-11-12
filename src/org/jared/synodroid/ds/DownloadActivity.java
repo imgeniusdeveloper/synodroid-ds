@@ -26,7 +26,9 @@ import org.jared.synodroid.common.action.AddTaskAction;
 import org.jared.synodroid.common.action.ClearAllTaskAction;
 import org.jared.synodroid.common.action.EnumShareAction;
 import org.jared.synodroid.common.action.GetAllAndOneDetailTaskAction;
+import org.jared.synodroid.common.action.ResumeAllAction;
 import org.jared.synodroid.common.action.SetShared;
+import org.jared.synodroid.common.action.StopAllAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.SynoProtocol;
@@ -115,10 +117,14 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
 	// Menu parameters
 	public static final int MENU_PARAMETERS = 1;
-	// Menu Clear
-	public static final int MENU_CLEAR = 2;
+	// Menu Clear All
+	public static final int MENU_CLEAR_ALL = 2;
 	// Menu Shared directory
 	public static final int MENU_DESTINATION = 3;
+	// Menu Pause All
+	public static final int MENU_PAUSE_ALL = 4;
+	// Menu Resume All
+	public static final int MENU_RESUME_ALL = 5;
 
 	// The torrent listview
 	private ListView taskView, resList;
@@ -815,9 +821,11 @@ private void initSearchTab(LayoutInflater inflater){
 	 * Create the option menu of this activity
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(0, MENU_CLEAR, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		menu.add(0, MENU_PAUSE_ALL, 0, getString(R.string.menu_pauseall)).setIcon(R.drawable.ic_menu_pauseall);
+		menu.add(0, MENU_RESUME_ALL, 0, getString(R.string.menu_resumeall)).setIcon(R.drawable.ic_menu_resumeall);
+		menu.add(0, MENU_CLEAR_ALL, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 		menu.add(0, MENU_DESTINATION, 0, getString(R.string.menu_destination)).setIcon(android.R.drawable.ic_menu_share);
+		menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
 		return true;
 	}
 
@@ -825,10 +833,18 @@ private void initSearchTab(LayoutInflater inflater){
 	 * Interact with the user when a menu is selected
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
+		TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
+		List<Task> tasks = taskAdapter.getTaskList();
 		Synodroid app = (Synodroid) getApplication();
 		switch (item.getItemId()) {
-		case MENU_CLEAR:
+		case MENU_CLEAR_ALL:
 			app.executeAction(DownloadActivity.this, new ClearAllTaskAction(), false);
+			return true;
+		case MENU_PAUSE_ALL:
+			app.executeAction(DownloadActivity.this, new StopAllAction(tasks), false);
+			return true;
+		case MENU_RESUME_ALL:
+			app.executeAction(DownloadActivity.this, new ResumeAllAction(tasks), false);
 			return true;
 		case MENU_PARAMETERS:
 			showPreferenceActivity();

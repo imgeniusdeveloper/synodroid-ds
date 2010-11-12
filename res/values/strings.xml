@@ -18,9 +18,13 @@
 <string name="action_clearall">&quot;Clearing all completed tasks...&quot;</string>
 <string name="action_pausing">&quot;Pausing file %s&quot;</string>
 <string name="action_resuming">&quot;Resuming file %s&quot;</string>
+<string name="action_pauseall">&quot;Pausing all running tasks...&quot;</string>
+<string name="action_resumeall">&quot;Resuming all paused tasks...&quot;</string>
 <string name="menu_connect">Connect to</string>
 <string name="menu_search">Search</string>
 <string name="menu_clearall">Clear completed tasks</string>
+<string name="menu_pauseall">Pause all</string>
+<string name="menu_resumeall">Resume all</string>
 <string name="dialog_title_action">Action</string>
 <string name="menu_parameter">Parameters</string>
 <string name="err_unknown">Unknown error!</string>
