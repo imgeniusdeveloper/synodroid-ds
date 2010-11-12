@@ -356,7 +356,7 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					result.bytesRatio = 0;
 					if (result.bytesDownloaded != 0) {
-						result.bytesRatio = (int) ((result.bytesUploaded / result.bytesDownloaded) * 100);
+						result.bytesRatio = (int)(((float)result.bytesUploaded / (float)result.bytesDownloaded) * 100);
 					}
 				}
 				if (data.has("seedelapsed"))

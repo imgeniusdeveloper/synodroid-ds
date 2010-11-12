@@ -196,6 +196,10 @@ public class Synodroid extends CrashReportingApplication {
         // d.setOwnerActivity(this); // why can't the builder do this?
         d.show();
       }
+      else if (actionP instanceof DeleteTaskAction){
+    	  currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
+    	  activityP.onBackPressed();
+      }
       // Ok no problem do it
       else {
         currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
