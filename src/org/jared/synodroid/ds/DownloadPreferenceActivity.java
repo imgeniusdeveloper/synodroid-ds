@@ -142,21 +142,26 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		});
 		// The dynamic servers category
 		serversCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference("servers_cat");
+		// Load currents servers
+		reloadCurrentServers();
+	}
+
+	private void reloadCurrentServers() {
 		// Load current servers
 		serversCategory.removeAll();
 		maxServerId = 0;
-		PreferenceFacade.processLoadingServers(prefScreen.getSharedPreferences(), this);
+		PreferenceFacade.processLoadingServers(getPreferenceScreen().getSharedPreferences(), this);
 
 		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
 		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
-			Map<String, ?> prefs = prefScreen.getSharedPreferences().getAll();
+			Map<String, ?> prefs = getPreferenceScreen().getSharedPreferences().getAll();
 			if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId + ".nickname")) {
 				createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
 			}
 			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
-		}
+		}		
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -493,7 +498,11 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 					String summary = buildURL(protocolPref.getValue(), hostPref.getText(), portPref.getText());
 					summary = summary.toLowerCase();
 					String title = nickPref.getText();
-					updatePrefScreen(screen, title, summary, (Boolean) newValueP, wifiSSIDPref.getEntry().toString());
+					String wifiSSID = "";
+					if (wifiSSIDPref.getEntry() != null) {
+						wifiSSID = wifiSSIDPref.getEntry().toString();
+					}
+					updatePrefScreen(screen, title, summary, (Boolean) newValueP, wifiSSID);
 					return true;
 				}
 			}
@@ -576,8 +585,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLANSSID_SUFFIX, "");		
 				editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.SHOWUPLOAD_SUFFIX, false);				
 			}
-			boolean commited = editor.commit();
-			System.out.println(commited);
+			editor.commit();
+			// Reload the servers list
+			reloadCurrentServers();
 		}
 		// Display a message for the end user
 		else {
