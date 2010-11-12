@@ -464,6 +464,9 @@ private void initSearchTab(LayoutInflater inflater){
         		String source = ((TextView) arg1).getText().toString();
 				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
         		preferences.edit().putString(PREFERENCE_SEARCH_SOURCE, source).commit();
+        		if (!lastSearch.equals("")){
+        			new TorrentSearchTask().execute(lastSearch);
+        		}
 			}
 			public void onNothingSelected(AdapterView<?> arg0) {}
         });
@@ -472,6 +475,9 @@ private void initSearchTab(LayoutInflater inflater){
         		String order = ((TextView) arg1).getText().toString();
 				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
         		preferences.edit().putString(PREFERENCE_SEARCH_ORDER, order).commit();
+        		if (!lastSearch.equals("")){
+        			new TorrentSearchTask().execute(lastSearch);
+        		}
 			}
 			public void onNothingSelected(AdapterView<?> arg0) {}
         });
