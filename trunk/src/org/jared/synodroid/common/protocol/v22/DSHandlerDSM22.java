@@ -294,6 +294,7 @@ class DSHandlerDSM22 implements DSHandler {
             result.bytesDownloaded = result.bytesUploaded;
             result.bytesUploaded =0;
           }
+          result.bytesRatio = (int)((result.bytesUploaded / result.bytesDownloaded) * 100);
         }
         if (data.has("seedelapsed")) result.seedingElapsed = data.getInt("seedelapsed");
         if (data.has("isnzb")) result.isNZB = data.getBoolean("isnzb");

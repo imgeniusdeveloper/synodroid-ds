@@ -83,5 +83,6 @@ public class TaskDetail implements Serializable {
 	public Long seeders;
 	// The number of leechers
 	public Long leechers;
+	public int bytesRatio;
 }
 
