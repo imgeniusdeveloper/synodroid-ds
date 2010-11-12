@@ -244,4 +244,31 @@
 <string name="hint_wifissid">Sélectionner le réseau WIFI à utiliser</string>
 <string name="title_wifi_disabled">Le Wifi est désactivé</string>
 <string name="message_wifi_disabled">Activez le WiFi avant d\'essayer de configurer la connexion</string>
+
+<string name="wizard_menu">Recherche serveur</string>
+<string name="wizard_searching_title">Recherche</string>
+<string name="wizard_searching_msg">Recherche de NAS sur votre réseau local.\nVeuillez patienter...</string>
+<string name="wizard_selectserver_title">Sélectionner le serveur</string>
+<string name="wizard_user_title">Information utilisateur</string>
+<string name="wizard_user_user_label">Utilisateur</string>
+<string name="wizard_user_password_label">Mot de passe</string>
+<string name="installTorrentSearch">Installer Transdroid Search</string>
+<string name="logo_search">Recherche de torrent</string>
+<string name="dialog_message_confirm_add">Etes-vous sûr de vouloir commencer le téléchargement de ce fichier?</string>
+<string name="provider_missing">Aucun moteur de recherche n\'est installé, cliquez sur le bouton suivant pour l\'installer.\n\n Note: Vous devez redémarrer Synodroid après l\'installation pour activer la recherche.</string>
+<string name="searching">Recherche en cours...\n\n</string>
+<string name="no_results">Aucun résultat.\n\n</string>
+<string name="sites">Sites disponibles:\n</string>
+<string name="no_keyword">Entrez un mot clé à rechercher...</string>
+<string name="search_hint">Recherche de torrent</string>
+<string name="wizard_options_title">Options</string>
+<string name="wizard_https">Je veux utiliser une connexion sécurisée</string>
+<string name="wizard_ddns">Je veux pouvoir me connecter depuis internet</string>
+<string name="wizard_ddns_host">Nom DDNS</string>
+<string name="wizard_selectdsm_title">Sélectionner la version DSM</string>
+<string name="wizard_no_server_found">Aucun serveur n\'a pu être trouvé sur le réseau. Vérifiez votre connexion et essayez à nouveau.</string>
+<string name="err_nomarket">Android market n\'est pas installé sur votre appareil.\n\nContactez le développeur pour avoir une version de Transdroid Search.</string>
+<string name="err_provider_missing">Transdroid search n\'est pas installé sur votre appareil.\n\nSuivez les instructions dans l\'onglet \'Recherche\' pour l\'installer.</string>
+<string name="help">Aide</string>
+<string name="err_noemail">Aucune application d\'email n\'est installée sur votre appareil.\n\nCliquez sur le lien de la page \'A propos\' pour avoir de l\'aide.</string>
 </resources>
