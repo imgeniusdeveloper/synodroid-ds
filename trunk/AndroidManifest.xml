@@ -100,6 +100,8 @@
     <activity android:name="org.acra.CrashReportDialog"
         android:theme="@android:style/Theme.Dialog"
         android:launchMode="singleInstance" />
+    <provider android:name=".SynodroidSearchSuggestion"
+              android:authorities="org.jared.synodroid.SynodroidSearchSuggestion" />
   </application>
   
   <uses-sdk android:minSdkVersion="3" />

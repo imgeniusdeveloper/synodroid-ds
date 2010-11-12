@@ -64,6 +64,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.provider.SearchRecentSuggestions;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -974,6 +975,9 @@ private void initSearchTab(LayoutInflater inflater){
 				lastSearch = searchKeywords;
 				if (!searchKeywords.equals("")) {
 					new TorrentSearchTask().execute(searchKeywords);
+					SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+							SynodroidSearchSuggestion.AUTHORITY, SynodroidSearchSuggestion.MODE);
+			        suggestions.saveRecentQuery(searchKeywords, null);
 				}
 				else {
 					emptyText.setText(R.string.no_keyword);
