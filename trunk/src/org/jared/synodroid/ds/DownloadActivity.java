@@ -585,9 +585,12 @@ private void initSearchTab(LayoutInflater inflater){
 	        String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"+params[0];
 	        Uri uri = Uri.parse(uriString);
 	        // Then query for this specific record (no selection nor projection nor sort):
+	        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+	        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
+	        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
+	        
 	        return managedQuery(uri, null, "SITE = ?", 
-	        		new String[] { SpinnerSource.getSelectedItem().toString() }, 
-	        		SpinnerSort.getSelectedItem().toString());
+	        		new String[] { pref_src }, pref_order);
 		}
 		
 		@Override
