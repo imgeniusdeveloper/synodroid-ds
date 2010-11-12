@@ -244,6 +244,7 @@
 <string name="hint_wifissid">Select the WIFI network to use</string>
 <string name="title_wifi_disabled">Wifi is disabled</string>
 <string name="message_wifi_disabled">Please enable Wifi before trying to configure the connection</string>
+
 <string name="wizard_menu">Find server</string>
 <string name="wizard_searching_title">Searching</string>
 <string name="wizard_searching_msg">Searching NAS on your local network. Please wait...</string>
