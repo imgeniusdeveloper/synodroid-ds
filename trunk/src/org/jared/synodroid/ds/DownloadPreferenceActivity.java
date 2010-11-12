@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.jared.synodroid.Synodroid;
@@ -150,16 +149,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// Load current servers
 		serversCategory.removeAll();
 		maxServerId = 0;
-		PreferenceFacade.processLoadingServers(getPreferenceScreen().getSharedPreferences(), this);
-
-		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
-		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
-			Map<String, ?> prefs = getPreferenceScreen().getSharedPreferences().getAll();
-			if (!prefs.containsKey(PreferenceFacade.SERVER_PREFIX + maxServerId + ".nickname")) {
-				createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
-			}
-			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
-		}		
+		PreferenceFacade.processLoadingServers(getPreferenceScreen().getSharedPreferences(), this);	
 	}
 	
 	/*
@@ -179,6 +169,17 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		}
 		else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		}
+	}
+
+	@Override
+	public void onAttachedToWindow() {
+	    super.onAttachedToWindow();
+
+	    SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
+			openOptionsMenu();
+			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
 		}
 	}
 
