@@ -151,4 +151,19 @@ public interface DSHandler {
 	 */
 	public StringBuffer getOriginalFile(Task taskP) throws Exception;
 
+	/**
+	 * Resume all paused tasks
+	 * @param taskP
+	 * @throws Exception
+	 */
+	public void resumeAll(List<Task> taskP) throws Exception;
+	
+	/**
+	 * Pause all running tasks
+	 * @param taskP
+	 * @throws Exception
+	 */
+	public void stopAll(List<Task> taskP) throws Exception;
+
+	
 }

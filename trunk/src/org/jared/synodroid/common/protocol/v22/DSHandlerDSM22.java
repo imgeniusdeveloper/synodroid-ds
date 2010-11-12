@@ -19,6 +19,7 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskFile;
+import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.DSHandler;
 import org.jared.synodroid.common.protocol.DSMException;
 import org.jared.synodroid.common.protocol.MultipartBuilder;
@@ -207,6 +208,21 @@ class DSHandlerDSM22 implements DSHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#resumeAll(List<org.jared.
+	 * synodroid. common.data.Task>)
+	 */
+	public void resumeAll(List<Task> taskP) throws Exception {
+		for (Task task : taskP) {
+			if (task.status.equals(TaskStatus.TASK_PAUSED.toString())) {
+				resume(task);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.jared.synodroid.common.protocol.DSHandler#stop(org.jared.synodroid.
 	 * common.data.Task)
 	 */
@@ -217,6 +233,22 @@ class DSHandlerDSM22 implements DSHandler {
 			// Execute
 			synchronized (server) {
 				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#stopAll(List<org.jared.synodroid
+	 * . common.data.Task>)
+	 */
+	public void stopAll(List<Task> taskP) throws Exception {
+		for (Task task : taskP) {
+			if (task.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || task.status.equals(TaskStatus.TASK_PRE_SEEDING.toString()) || task.status.equals(TaskStatus.TASK_SEEDING.toString())
+			    || task.status.equals(TaskStatus.TASK_HASH_CHECKING.toString()) || task.status.equals(TaskStatus.TASK_WAITING.toString())) {
+				stop(task);
 			}
 		}
 	}
