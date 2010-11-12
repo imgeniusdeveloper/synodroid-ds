@@ -18,6 +18,7 @@ import org.jared.synodroid.common.action.GetAllAndOneDetailTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.ResponseHandler;
+import org.jared.synodroid.ds.DetailActivity;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
@@ -169,6 +170,44 @@ public class Synodroid extends CrashReportingApplication {
     }
   }
 
+  /**
+   * Execute an action and connect to the server or display the connection dialog if needed
+   * 
+   * @param activityP
+   * @param actionP
+   * @param forceRefreshP
+   */
+  public void executeAction(final DetailActivity activityP, final SynoAction actionP, final boolean forceRefreshP) {
+    if (currentServer != null) {
+      // First verify if it is a DeleteTaskAction and if the task is not finished
+      TaskStatus status = null;
+      if (actionP.getTask() != null && actionP.getTask().status != null) {
+        status = TaskStatus.valueOf(actionP.getTask().status);
+      }
+      if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
+        Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(
+                R.string.dialog_message_confirm).setNegativeButton(android.R.string.no, null).setPositiveButton(
+                android.R.string.yes, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
+                    activityP.onBackPressed();
+                  }
+                }).create();
+        // d.setOwnerActivity(this); // why can't the builder do this?
+        d.show();
+      }
+      // Ok no problem do it
+      else {
+        currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
+      }
+    }
+    // If an action have to be executed but with no current connection
+    else {
+      ArrayList<SynoAction> actionQueue = new ArrayList<SynoAction>();
+      actionQueue.add(actionP);
+    }
+  }
+  
   /**
    * Execute an action and connect to the server or display the connection dialog if needed
    * 

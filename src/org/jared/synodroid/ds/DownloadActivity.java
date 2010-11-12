@@ -821,8 +821,8 @@ private void initSearchTab(LayoutInflater inflater){
 	 * Create the option menu of this activity
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_PAUSE_ALL, 0, getString(R.string.menu_pauseall)).setIcon(R.drawable.ic_menu_pauseall);
-		menu.add(0, MENU_RESUME_ALL, 0, getString(R.string.menu_resumeall)).setIcon(R.drawable.ic_menu_resumeall);
+		menu.add(0, MENU_PAUSE_ALL, 0, getString(R.string.menu_pauseall)).setIcon(R.drawable.ic_menu_pause);
+		menu.add(0, MENU_RESUME_ALL, 0, getString(R.string.menu_resumeall)).setIcon(android.R.drawable.ic_menu_revert);
 		menu.add(0, MENU_CLEAR_ALL, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 		menu.add(0, MENU_DESTINATION, 0, getString(R.string.menu_destination)).setIcon(android.R.drawable.ic_menu_share);
 		menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);

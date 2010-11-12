@@ -17,9 +17,12 @@ import java.util.List;
 
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.action.DeleteTaskAction;
 import org.jared.synodroid.common.action.DetailTaskAction;
 import org.jared.synodroid.common.action.DownloadOriginalLinkAction;
 import org.jared.synodroid.common.action.GetFilesAction;
+import org.jared.synodroid.common.action.PauseTaskAction;
+import org.jared.synodroid.common.action.ResumeTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.action.UpdateTaskAction;
 import org.jared.synodroid.common.data.OriginalFile;
@@ -53,6 +56,8 @@ import android.os.Environment;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -78,6 +83,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private static final String PREFERENCE_GENERAL = "general_cat";
 
 	private static final int TASK_PARAMETERS_DIALOG = 1;
+	private static final int MENU_PAUSE = 1;
+	private static final int MENU_DELETE = 2;
+	private static final int MENU_CANCEL = 3;
+	private static final int MENU_RESUME = 4;
+	private static final int MENU_RETRY = 5;
+	private static final int MENU_CLEAR = 6;
 
 	// The "Not yet implemented" dialog
 	@SuppressWarnings("unused")
@@ -106,7 +117,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private boolean seedingChanged = false;
 	// The values of seeding time
 	private int[] seedingTimes;
-
+	private TaskStatus status;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -244,6 +256,74 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		}
 	}
 
+	/**
+	 * Interact with the user when a menu is selected
+	 */
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Synodroid app = (Synodroid) getApplication();
+		switch (item.getItemId()) {
+		case MENU_PAUSE:
+			app.executeAction(DetailActivity.this, new PauseTaskAction(task), true);
+			return true;
+		case MENU_DELETE:
+		case MENU_CANCEL:
+		case MENU_CLEAR:
+			app.executeAction(DetailActivity.this, new DeleteTaskAction(task), true);
+			return true;
+		case MENU_RESUME:
+		case MENU_RETRY:
+			app.executeAction(DetailActivity.this, new ResumeTaskAction(task), true);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Create the option menu of this activity
+	 */
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		if (status != null){
+			switch (status) {
+			case TASK_DOWNLOADING:
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
+				break;
+			case TASK_PRE_SEEDING:
+			case TASK_SEEDING:
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_CANCEL, 0, getString(R.string.action_cancel)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+				break;
+			case TASK_PAUSED:
+				menu.add(0, MENU_RESUME, 0, getString(R.string.action_resume)).setIcon(android.R.drawable.ic_menu_revert);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
+				break;
+			case TASK_ERROR:
+			case TASK_ERROR_DEST_NO_EXIST:
+		  	case TASK_ERROR_DEST_DENY:
+		  	case TASK_ERROR_QUOTA_REACHED:
+		  	case TASK_ERROR_TIMEOUT:
+		  	case TASK_ERROR_EXCEED_MAX_FS_SIZE:
+		  	case TASK_ERROR_BROKEN_LINK:
+			case TASK_ERROR_DISK_FULL:
+				menu.add(0, MENU_RETRY, 0, getString(R.string.action_retry)).setIcon(android.R.drawable.ic_menu_revert);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
+				break;
+			case TASK_FINISHING:
+			case TASK_FINISHED:
+				menu.add(0, MENU_CLEAR, 0, getString(R.string.action_clear)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+				break;
+			case TASK_HASH_CHECKING:
+			case TASK_WAITING:
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
+				break;
+			}
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -276,6 +356,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
+			status = TaskStatus.valueOf(details.status);
 			break;
 		case ResponseHandler.MSG_ERROR:
 			SynoServer server = ((Synodroid) getApplication()).getServer();
