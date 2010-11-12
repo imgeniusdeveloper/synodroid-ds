@@ -3,6 +3,8 @@
  */
 package org.jared.synodroid.common.action;
 
+import java.util.List;
+
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
@@ -16,6 +18,9 @@ import org.jared.synodroid.ds.DownloadActivity;
  */
 public class GetAllTaskAction implements SynoAction {
 
+	// The number of tasks to return by request (this is a hard coded limit due to the synology server)
+	private final int LIMIT_PAR_REQUEST = 25;
+	
   // The name of the sorted attribut
   private String sortAttr;
   // Is the sort ascending ?
@@ -36,7 +41,20 @@ public class GetAllTaskAction implements SynoAction {
    * @see org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
    */
   public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-    TaskContainer container = serverP.getDSMHandlerFactory().getDSHandler().getAllTask(sortAttr, ascending);
+  	int start = 0;
+    TaskContainer container = serverP.getDSMHandlerFactory().getDSHandler().getAllTask(start, LIMIT_PAR_REQUEST, sortAttr, ascending);
+    int total = container.getTotalTasks();
+    if (total > LIMIT_PAR_REQUEST) {
+    	int nbLoop = (total-1) / 25 ;
+    	for (int iLoop = 0; iLoop < nbLoop; iLoop++) {
+    		start += LIMIT_PAR_REQUEST;
+    		// Retrieve other taks part
+        TaskContainer secondaryContainer = serverP.getDSMHandlerFactory().getDSHandler().getAllTask(start, LIMIT_PAR_REQUEST, sortAttr, ascending);
+    		List<Task> tasks = secondaryContainer.getTasks();
+    		// Add them to the main container
+    		container.getTasks().addAll(tasks);
+    	}
+    }
     serverP.fireMessage(handlerP, DownloadActivity.MSG_TASKS_UPDATED, container);
   }
 

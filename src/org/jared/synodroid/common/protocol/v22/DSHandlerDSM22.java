@@ -63,12 +63,14 @@ class DSHandlerDSM22 implements DSHandler {
    * (non-Javadoc)
    * @see org.jared.synodroid.common.Protocol#getAllTask()
    */
-  public TaskContainer getAllTask(String sortAttrP, boolean ascendingP) throws Exception {
+  public TaskContainer getAllTask(int startP, int limitP, String sortAttrP, boolean ascendingP) throws Exception {
     ArrayList<Task> result = new ArrayList<Task>();
     TaskContainer container = new TaskContainer(result);
     // If we are logged on
     if (server.isConnected()) {
       QueryBuilder getAllRequest = new QueryBuilder().add("action", "getall");
+      getAllRequest.add("start", ""+startP);
+      getAllRequest.add("limit", ""+limitP);
       getAllRequest.add("sort", sortAttrP.toLowerCase());
       String asc = (ascendingP ? "ASC" : "DESC");
       getAllRequest.add("dir", asc);
@@ -83,9 +85,10 @@ class DSHandlerDSM22 implements DSHandler {
         // Get the totals rates
         String totalUp = jso.getString("total_up");
         String totalDown = jso.getString("total_down");
+        int totalTasks = jso.getInt("total");
         container.setTotalUp(totalUp);
         container.setTotalDown(totalDown);
-
+        container.setTotalTasks(totalTasks);
         JSONArray items = jso.getJSONArray("items");
         for (int iLoop = 0; iLoop < items.length(); iLoop++) {
           JSONObject item = items.getJSONObject(iLoop);
