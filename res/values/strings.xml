@@ -253,7 +253,7 @@
 <string name="wizard_searching_title">Searching</string>
 <string name="wizard_searching_msg">Searching NAS on your local network. Please wait...</string>
 <string name="wizard_selectserver_title">Select server</string>
-<string name="wizard_user_title">User informations</string>
+<string name="wizard_user_title">User information</string>
 <string name="wizard_user_user_label">User</string>
 <string name="wizard_user_password_label">Password</string>
 <string name="installTorrentSearch">Install Transdroid Torrent Search</string>
@@ -266,7 +266,7 @@
 <string name="no_keyword">Please enter a keyword to search for...</string>
 <string name="search_hint">Torrent search</string>
 <string name="wizard_options_title">Options</string>
-<string name="wizard_https">I want to use a secured connection</string>
+<string name="wizard_https">I want to use a secure connection</string>
 <string name="wizard_ddns">I also want to be able to connect from internet</string>
 <string name="wizard_ddns_host">DDNS hostname</string>
 <string name="wizard_selectdsm_title">Select DSM version</string>
