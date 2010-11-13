@@ -176,16 +176,18 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	}
 
 	@Override
-	public void onAttachedToWindow() {
-		super.onAttachedToWindow();
+	public void onWindowFocusChanged(boolean hasFocus) {
+	    super.onWindowFocusChanged(hasFocus);
 
-		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
-		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
-			openOptionsMenu();
-			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
-		}
+	    if (hasFocus){
+	    	SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+			if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
+				openOptionsMenu();
+				preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
+			}
+	    }   
 	}
-
+	
 	/**
 	 * Create the option menu of this activity
 	 */
