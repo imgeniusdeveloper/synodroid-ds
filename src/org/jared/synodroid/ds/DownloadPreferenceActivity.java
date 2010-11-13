@@ -27,6 +27,7 @@ import org.jared.synodroid.ds.view.wizard.ServerWizard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -45,10 +46,12 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 /**
  * The preference activity
@@ -149,9 +152,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// Load current servers
 		serversCategory.removeAll();
 		maxServerId = 0;
-		PreferenceFacade.processLoadingServers(getPreferenceScreen().getSharedPreferences(), this);	
+		PreferenceFacade.processLoadingServers(getPreferenceScreen().getSharedPreferences(), this);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -174,9 +177,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 
 	@Override
 	public void onAttachedToWindow() {
-	    super.onAttachedToWindow();
+		super.onAttachedToWindow();
 
-	    SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
 		if (preferences.getBoolean(PREFERENCE_AUTO_CREATENOW, false)) {
 			openOptionsMenu();
 			preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, false).commit();
@@ -231,7 +234,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		case MENU_CREATE:
 			maxServerId = maxServerId + 1;
 			// Create the create new server screen
-			createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
+			PreferenceScreen screen = createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
+			showServerDialog(screen);
 			break;
 
 		// Delete one or more servers
@@ -245,7 +249,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 					String title = propsP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
 					Boolean useWifi = Boolean.parseBoolean(propsP.getProperty(PreferenceFacade.WLAN_SUFFIX));
 					if (useWifi) {
-						title += " (" + propsP.getProperty(PreferenceFacade.WLANSSID_SUFFIX)+")";
+						title += " (" + propsP.getProperty(PreferenceFacade.WLANSSID_SUFFIX) + ")";
 					}
 					deletion.title = title;
 					deletion.delete = false;
@@ -575,16 +579,16 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.REFRESHVALUE_SUFFIX, "5");
 			editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLAN_SUFFIX, true);
 			editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLANSSID_SUFFIX, metaDataP.get(ServerWizard.META_WIFI).toString());
-			editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.SHOWUPLOAD_SUFFIX, true);				
+			editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.SHOWUPLOAD_SUFFIX, true);
 			// If the user also want to access to his server from internet
-			if (((Boolean)metaDataP.get(ServerWizard.META_DDNS))) {
+			if (((Boolean) metaDataP.get(ServerWizard.META_DDNS))) {
 				maxServerId++;
 				editCommonsValues(editor, metaDataP);
 				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.HOST_SUFFIX, metaDataP.get(ServerWizard.META_DDNS_NAME).toString());
 				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.REFRESHVALUE_SUFFIX, "20");
 				editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLAN_SUFFIX, false);
-				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLANSSID_SUFFIX, "");		
-				editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.SHOWUPLOAD_SUFFIX, false);				
+				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLANSSID_SUFFIX, "");
+				editor.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.SHOWUPLOAD_SUFFIX, false);
 			}
 			editor.commit();
 			// Reload the servers list
@@ -593,12 +597,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// Display a message for the end user
 		else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(R.string.dialog_title_information)
-					   .setMessage(R.string.wizard_no_server_found)
-			       .setCancelable(false)
-			       .setPositiveButton(R.string.button_ok, null)
-			       .create()
-			       .show();
+			builder.setTitle(R.string.dialog_title_information).setMessage(R.string.wizard_no_server_found).setCancelable(false).setPositiveButton(R.string.button_ok, null).create().show();
 		}
 	}
 
@@ -611,7 +610,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.PASSWORD_SUFFIX, metaDataP.get(ServerWizard.META_PASSWORD).toString());
 		editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.REFRESHSTATE_SUFFIX, true);
 	}
-	
+
 	/**
 	 * An inner class which provide minimal information about a server
 	 */
@@ -658,4 +657,22 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		}
 	}
 
+	/**
+	 * Show the preference screen. It's a very bad implementation 
+	 * @param screenP
+	 */
+	private void showServerDialog(PreferenceScreen screenP) {
+		ListView listView = new ListView(this);
+		screenP.bind(listView);
+
+		// Set the title bar if title is available, else no title bar
+		final CharSequence title = getTitle();
+		Dialog dialog = new Dialog(this, TextUtils.isEmpty(title) ? android.R.style.Theme_NoTitleBar : android.R.style.Theme);
+		dialog.setContentView(listView);
+		if (!TextUtils.isEmpty(title)) {
+			dialog.setTitle(title);
+		}
+		dialog.setOnDismissListener(screenP);
+		dialog.show();
+	}
 }
