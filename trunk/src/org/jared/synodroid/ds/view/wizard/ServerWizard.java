@@ -43,8 +43,10 @@ public class ServerWizard {
 	private static final int MSG_SERVER_SELECTED = 1;
 	private static final int MSG_USER_EDITED = 2;
 	private static final int MSG_DSM_SELECTED = 3;
-	private static final int MSG_OPTIONS_EDITED = 4;
+	private static final int MSG_OPTIONS_HTTPS_EDITED = 4;
+	private static final int MSG_OPTIONS_INTERNET_EDITED = 5;
 
+	
 	private HashMap<String, Object> metaData = new HashMap<String, Object>();
 	private boolean canceled = false;
 
@@ -85,12 +87,18 @@ public class ServerWizard {
 				case MSG_DSM_SELECTED:
 					dsmDialog.dismiss();
 					dsmDialog = null;
-					editOptions();
+					editOptionsSecure();
 					break;
 				// Options have been edited
-				case MSG_OPTIONS_EDITED:
-					optionsDialog.dismiss();
-					optionsDialog = null;
+				case MSG_OPTIONS_HTTPS_EDITED:
+					optionsHTTPSDialog.dismiss();
+					optionsHTTPSDialog = null;
+					editOptionsInternet();
+					break;
+					// Options have been edited
+				case MSG_OPTIONS_INTERNET_EDITED:
+					optionsInternetDialog.dismiss();
+					optionsInternetDialog = null;
 					createServers();
 					break;
 				default:
@@ -123,8 +131,10 @@ public class ServerWizard {
 	private AlertDialog userDialog;
 	// The DSM dialog
 	private AlertDialog dsmDialog;
-	// The options dialog
-	private AlertDialog optionsDialog;
+	// The HTTPS option dialog
+	private AlertDialog optionsHTTPSDialog;
+	// The Internet option dialog
+	private AlertDialog optionsInternetDialog;
 
 	/**
 	 * Constructor
@@ -158,9 +168,25 @@ public class ServerWizard {
 	/**
 	 * Edit HTTPS options
 	 */
-	private void editOptions() {
-		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_options, null);
+	private void editOptionsSecure() {
+		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_options_secured, null);
 		final CheckBox httpsCB = (CheckBox) ll.findViewById(R.id.https_option);
+		optionsHTTPSDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_options_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				metaData.put(META_HTTPS, httpsCB.isChecked());
+				Message msg = new Message();
+				msg.what = MSG_OPTIONS_HTTPS_EDITED;
+				handler.sendMessage(msg);
+			}
+		}).create();
+		optionsHTTPSDialog.show();
+	}
+
+	/**
+	 * Edit Internet options
+	 */
+	private void editOptionsInternet() {
+		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_options_internet, null);
 		final CheckBox ddnsCB = (CheckBox) ll.findViewById(R.id.ddns_option);
 		final EditText ddnsET = (EditText) ll.findViewById(R.id.ddns_hostname);
 		ddnsET.setEnabled(false);
@@ -169,17 +195,16 @@ public class ServerWizard {
 				ddnsET.setEnabled(isChecked);
 			}
 		});
-		optionsDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_options_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
+		optionsInternetDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_options_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				metaData.put(META_HTTPS, httpsCB.isChecked());
 				metaData.put(META_DDNS, ddnsCB.isChecked());
 				metaData.put(META_DDNS_NAME, ddnsET.getText().toString());
 				Message msg = new Message();
-				msg.what = MSG_OPTIONS_EDITED;
+				msg.what = MSG_OPTIONS_INTERNET_EDITED;
 				handler.sendMessage(msg);
 			}
 		}).create();
-		optionsDialog.show();
+		optionsInternetDialog.show();
 	}
 
 	/**
