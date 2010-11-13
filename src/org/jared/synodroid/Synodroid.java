@@ -190,7 +190,7 @@ public class Synodroid extends CrashReportingApplication {
                 android.R.string.yes, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                     currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
-                    activityP.onBackPressed();
+                    activityP.finish();
                   }
                 }).create();
         // d.setOwnerActivity(this); // why can't the builder do this?
@@ -198,7 +198,7 @@ public class Synodroid extends CrashReportingApplication {
       }
       else if (actionP instanceof DeleteTaskAction){
     	  currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
-    	  activityP.onBackPressed();
+    	  activityP.finish();
       }
       // Ok no problem do it
       else {
