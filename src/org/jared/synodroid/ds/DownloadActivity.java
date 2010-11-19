@@ -59,6 +59,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.PackageInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -163,6 +164,18 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	public boolean alreadyCanceled = false;
 	private boolean slide = false;
 
+	@Override
+	public boolean onSearchRequested(){
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		return super.onSearchRequested();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		//ignore orientation change
+		super.onConfigurationChanged(newConfig);
+	}
+	
 	/**
 	 * Handle the message
 	 */
@@ -379,7 +392,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
 	}
 
-private void initSearchTab(LayoutInflater inflater){
+    private void initSearchTab(LayoutInflater inflater){
 		RelativeLayout searchContent = (RelativeLayout) inflater.inflate(R.layout.torrent_search, null, false);
         resList = (ListView)searchContent.findViewById(R.id.resList);
         
@@ -944,6 +957,23 @@ private void initSearchTab(LayoutInflater inflater){
 		setIntent(intentP);
 	}
 
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+	    super.onWindowFocusChanged(hasFocus);
+
+	    if (hasFocus){
+	    	SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+			if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
+				//Set fullscreen or not
+				getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
+			}
+			else{
+				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			}
+			
+	    }   
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1027,15 +1057,7 @@ private void initSearchTab(LayoutInflater inflater){
 		intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
 		setIntent(intent);
 		
-	    SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
-			//Set fullscreen or not
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
-		}
-		else{
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		// There are some case where the connected server does not show up in
+	    // There are some case where the connected server does not show up in
 		// the title bar on top. This fixes thoses cases.
 		server = ((Synodroid) getApplication()).getServer();
 		if (server != null && server.isConnected()) {

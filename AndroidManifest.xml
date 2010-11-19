@@ -11,9 +11,11 @@
     android:debuggable="false">
     
     <activity
-     android:label="@string/app_name"
+      android:label="@string/app_name"
       android:name="DownloadActivity"
-      android:launchMode="singleTask">
+      android:configChanges="orientation|keyboardHidden"
+      android:launchMode="singleTask"
+      android:theme="@android:style/Theme.NoTitleBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"></action>
         <category android:name="android.intent.category.LAUNCHER"></category>
@@ -83,21 +85,28 @@
       <meta-data android:name="android.app.searchable"
                        android:resource="@xml/searchable" />
     </activity>
-    <activity android:name="DownloadPreferenceActivity"
-      android:launchMode="singleTop">
+    <activity 
+      android:name="DownloadPreferenceActivity"
+      android:configChanges="orientation|keyboardHidden"
+      android:launchMode="singleTop"
+      android:theme="@android:style/Theme.NoTitleBar">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"></action>
         <category android:name="android.intent.category.PREFERENCE"></category>
       </intent-filter>
     </activity>
-    <activity android:name="DetailActivity"
-      android:launchMode="singleTop">
+    <activity 
+      android:name="DetailActivity"
+      android:configChanges="orientation|keyboardHidden"
+      android:launchMode="singleTop"
+      android:theme="@android:style/Theme.NoTitleBar">
       <intent-filter>
         <action android:name="android.intent.action.VIEW"></action>
         <category android:name="android.intent.category.DEFAULT"></category>
       </intent-filter>
     </activity>
-    <activity android:name="org.acra.CrashReportDialog"
+    <activity 
+        android:name="org.acra.CrashReportDialog"
         android:theme="@android:style/Theme.Dialog"
         android:launchMode="singleInstance" />
     <provider android:name=".SynodroidSearchSuggestion"
