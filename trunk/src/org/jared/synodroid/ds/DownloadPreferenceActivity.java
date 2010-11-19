@@ -34,6 +34,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -76,6 +77,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	// The dynamic servers category
 	private PreferenceCategory serversCategory;
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		//ignore orientation change
+		super.onConfigurationChanged(newConfig);
+	}	
+	
 	/**
 	 * Create the UI
 	 */
