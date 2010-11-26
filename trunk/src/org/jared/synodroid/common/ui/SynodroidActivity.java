@@ -226,9 +226,14 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
    * @param listenerP A listener which will be called when the user will click on the OK button
    */
   public void showError(String msgP, DialogInterface.OnClickListener listenerP) {
-    errorDialog.setMessage(msgP);
-    errorDialogListener = listenerP;
-    errorDialog.show();
+	  try{
+		  errorDialog.setMessage(msgP);
+		  errorDialogListener = listenerP;
+		  errorDialog.show();
+	  }
+      catch (Exception e){
+    	  //Being unable to show the dialog, maybe the application does not have focus anymore...
+      }
   }
   
   public void setTabmanager(TabWidgetManager tm){
