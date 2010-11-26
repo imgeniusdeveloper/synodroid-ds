@@ -36,7 +36,7 @@
 <string name="label_port">Port</string>
 <string name="label_username">Username</string>
 <string name="label_password">Password</string>
-<string name="label_refreshinterval">Refresh interval</string>
+<string name="label_refreshinterval">Interval</string>
 <string name="hint_nickname">Set the nickname</string>
 <string name="hint_protocol">Set the protocol to use</string>
 <string name="hint_host">Set the hostname or IP</string>
@@ -77,7 +77,8 @@
 <string name="label_default_server_prefix">Server </string>
 <string name="hint_default_server">Click to edit</string>
 <string name="menu_refresh">Refresh</string>
-<string name="title_cat_connection">Connection parameters</string>
+<string name="title_cat_connection">Public connection parameters</string>
+<string name="title_cat_connection_local">Local connection parameters</string>
 <string name="title_cat_server">General parameters</string>
 
 <string name="action_resume">Resume</string>
@@ -238,10 +239,9 @@
         all you have to do is click \'OK\'.</string>
 <string name="crash_dialog_comment_prompt">You might add your email address and your comments about the problem below:</string>
 <string name="crash_dialog_ok_toast">Thank you !</string>
-<string name="label_showupload">Show upload progress</string>
+<string name="label_showupload">Upload progress</string>
 <string name="hint_showupload_on">Upload progress is shown</string>
 <string name="hint_showupload_off">Upload progress is not shown</string>
-<string name="label_wlan">WIFI connection</string>
 <string name="hint_wlan_on">This connection is used only in WIFI</string>
 <string name="hint_wlan_off">This connection is not used in WIFI</string>
 <string name="label_wifissid">WIFI network</string>

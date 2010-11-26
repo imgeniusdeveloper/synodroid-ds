@@ -217,7 +217,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 			}
 			// According to the user's preferences AND if it is a Torrent
 			SynoServer server = ((Synodroid) activity.getApplication()).getServer();
-			if (server.isShowUpload()) {
+			if (server.getConnection().showUpload) {
 				// If a known value
 				if (taskP.uploadProgress != -1) {
 					upProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);

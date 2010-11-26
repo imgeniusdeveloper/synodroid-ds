@@ -7,8 +7,7 @@
     android:label="@string/app_name"
     android:allowTaskReparenting="false"
     android:icon="@drawable/icon_phone"
-    android:name="org.jared.synodroid.Synodroid" 
-    android:debuggable="false">
+    android:name="org.jared.synodroid.Synodroid" android:debuggable="true">
     
     <activity
       android:label="@string/app_name"

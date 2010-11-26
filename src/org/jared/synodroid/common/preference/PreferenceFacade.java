@@ -14,8 +14,8 @@ import java.util.Properties;
 
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.SynoServerConnection;
 import org.jared.synodroid.common.data.DSMVersion;
-import org.jared.synodroid.common.data.SynoProtocol;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,8 +41,8 @@ public class PreferenceFacade {
   public static final String PROTOCOL_SUFFIX = ".protocol";
   public static final String NICKNAME_SUFFIX = ".nickname";
 
-  public static final String WLAN_SUFFIX = ".wlan";
-  public static final String WLANSSID_SUFFIX = ".wlanssid";
+  public static final String SSID_SUFFIX = ".ssid";
+  public static final String WLAN_RADICAL = ".wlan";
 
   public static final String SERVER_PREFIX = "server.";
 
@@ -68,19 +68,11 @@ public class PreferenceFacade {
               // Retreive server's informations
               Properties props = new Properties();
               props.setProperty(NICKNAME_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + NICKNAME_SUFFIX)));
-              props.setProperty(PROTOCOL_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + PROTOCOL_SUFFIX)));
-              props.setProperty(HOST_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + HOST_SUFFIX)));
-              props.setProperty(PORT_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + PORT_SUFFIX)));
               props.setProperty(DSM_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + DSM_SUFFIX)));
               props.setProperty(USER_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + USER_SUFFIX)));
               props.setProperty(PASSWORD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + PASSWORD_SUFFIX)));
-              props.setProperty(REFRESHSTATE_SUFFIX,
-                      convert2String(prefs.get(SERVER_PREFIX + id + REFRESHSTATE_SUFFIX)));
-              props.setProperty(REFRESHVALUE_SUFFIX,
-                      convert2String(prefs.get(SERVER_PREFIX + id + REFRESHVALUE_SUFFIX)));
-              props.setProperty(SHOWUPLOAD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + SHOWUPLOAD_SUFFIX)));
-              props.setProperty(WLAN_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + WLAN_SUFFIX)));
-              props.setProperty(WLANSSID_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + WLANSSID_SUFFIX)));
+              loadConnectionProperties(false, props, prefs, id);
+              loadConnectionProperties(true, props, prefs, id);
               // Process the current server's item
               processorP.process(id, SERVER_PREFIX + id, props);
             }
@@ -90,6 +82,38 @@ public class PreferenceFacade {
         catch(NumberFormatException ex) {
         }
       }
+    }
+  }
+
+  /**
+   * Load connection properties
+   * 
+   * @param localP
+   * @param props
+   * @param prefs
+   * @param id
+   */
+  private static void loadConnectionProperties(boolean localP, Properties props, Map<String, ?> prefs, int id) {
+    String localRadical = "";
+    if (localP) {
+      localRadical += PreferenceFacade.WLAN_RADICAL;
+    }
+    props.setProperty(localRadical + PROTOCOL_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + PROTOCOL_SUFFIX)));
+    props.setProperty(localRadical + HOST_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + HOST_SUFFIX)));
+    props.setProperty(localRadical + PORT_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + PORT_SUFFIX)));
+    props.setProperty(localRadical + REFRESHSTATE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + REFRESHSTATE_SUFFIX)));
+    props.setProperty(localRadical + REFRESHVALUE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + REFRESHVALUE_SUFFIX)));
+    props.setProperty(localRadical + SHOWUPLOAD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+            + SHOWUPLOAD_SUFFIX)));
+    // Don't try to load SSID if public mode
+    if (localP) {
+      props.setProperty(localRadical + SSID_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+              + SSID_SUFFIX)));
     }
   }
 
@@ -121,43 +145,23 @@ public class PreferenceFacade {
     processLoadingServers(sharedPreferencesP, new PreferenceProcessor() {
       public void process(int idP, String keyP, Properties propertiesP) {
         try {
-          // Minimal informations
-          SynoProtocol protocol = SynoProtocol.valueOf(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX));
-          int port = Integer.parseInt(propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
-          SynoServer server = new SynoServer(propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX), protocol,
-                  propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), port, propertiesP
-                          .getProperty(PreferenceFacade.USER_SUFFIX), propertiesP
+
+          SynoServerConnection loc = SynoServerConnection.createFromProperties(true, propertiesP);
+          SynoServerConnection pub = SynoServerConnection.createFromProperties(false, propertiesP);
+
+          SynoServer server = new SynoServer(propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX), loc, pub,
+                  propertiesP.getProperty(PreferenceFacade.USER_SUFFIX), propertiesP
                           .getProperty(PreferenceFacade.PASSWORD_SUFFIX));
           // DSM version
           DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
           server.setDsmVersion(vers);
-          // Show upload
-          boolean showUpload = Boolean.parseBoolean(propertiesP.getProperty(PreferenceFacade.SHOWUPLOAD_SUFFIX));
-          server.setShowUpload(showUpload);
-          // Refresh
-          Integer refreshInterval = Integer.parseInt(propertiesP.getProperty(PreferenceFacade.REFRESHVALUE_SUFFIX));
-          server.setRefreshInterval(refreshInterval);
-          boolean autoRefresh = Boolean.parseBoolean(propertiesP.getProperty(PreferenceFacade.REFRESHSTATE_SUFFIX));
-          server.setAutoRefresh(autoRefresh);
           // Sort informations
           String sortAttr = sharedPreferencesP.getString("sort", "task_id");
           boolean asc = sharedPreferencesP.getBoolean("asc", true);
           server.setSortAttribute(sortAttr);
           server.setAscending(asc);
-          // Wlan
-          boolean useInWlan = Boolean.parseBoolean(propertiesP.getProperty(PreferenceFacade.WLAN_SUFFIX));
-          server.setWlan(useInWlan);
-          String ssid = propertiesP.getProperty(PreferenceFacade.WLANSSID_SUFFIX);
-          server.setWifiSSID(ssid);
-          // 
-          // Add this server according to the following rules :
-          // 
-          // the server is configured to be used in a wlan AND wifi is activated AND ssids are equals
-          // OR
-          // the server is not configured to be used in a wlan AND wifi is disabled
-          // 
-          if ((useInWlan && wifiConnected && currentWifi.getSSID().equals(ssid))
-                  || (!useInWlan && !wifiConnected)) {
+          // If this server has a public connection OR if it has a local one and SSIDs match
+          if (pub != null && (wifiConnected && loc != null && loc.wifiSSID != null && loc.wifiSSID.equals(currentWifi.getSSID()))) {
             result.add(server);
           }
         }

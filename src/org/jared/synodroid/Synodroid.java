@@ -24,7 +24,10 @@ import org.jared.synodroid.ds.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 /**
@@ -104,7 +107,22 @@ public class Synodroid extends CrashReportingApplication {
       serverP.setRecurrentAction(activityP, recurrentAction);
       // Then connect the new one
       currentServer = serverP;
-      currentServer.connect(activityP, actionQueueP);
+      
+      // Determine the current network access
+      WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+      boolean wifiOn = wifiMgr.isWifiEnabled();
+      final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
+      final boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
+      // If we are connected to a WIFI network, verify if SSID match
+      boolean pub  = true; 
+      if (wifiConnected) {
+        String ssid = currentServer.getLocalConnection().wifiSSID;
+        if (ssid!=null && currentWifi.getSSID().equals(ssid)) {
+          pub = false;
+        }
+      }
+      
+      currentServer.connect(activityP, actionQueueP, pub);
     }
   }
 
@@ -265,18 +283,6 @@ public class Synodroid extends CrashReportingApplication {
     }
   }
 
-  /**
-   * Change the sort
-   * 
-   * @param sorAttrP
-   * @param ascendingP
-   */
-  public void setServerShowUpload(boolean showUploadP) {
-    if (currentServer != null) {
-      currentServer.setShowUpload(showUploadP);
-      currentServer.forceRefresh();
-    }
-  }
   /**
    * Execute an asynchronous action if the server is currently connected
    * @param handlerP
