@@ -31,7 +31,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class EditTextPreferenceWithValue extends EditTextPreference {
+public class EditTextPreferenceWithValue extends EditTextPreference implements PreferenceWithValue {
 
 	// The textview used in the preference
 	private TextView valueView;
@@ -125,6 +125,13 @@ public class EditTextPreferenceWithValue extends EditTextPreference {
 			valueView.setText(valueP);
 		}		
 	}
+
+	/* (non-Javadoc)
+   * @see org.jared.synodroid.common.preference.PreferenceWithValue#getValue()
+   */
+  public String getPrintableValue() {
+	  return getText();
+  }
 
 	/**
 	 * Convenient method to create an instance of EditTextPreference
