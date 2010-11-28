@@ -97,7 +97,12 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
    * @see org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue()
    */
   public String getPrintableValue() {
-	  return getCurrentValue();
+  	String v = getValue();
+    int index = findIndexOfValue(v);
+    if (index != -1) {
+      return getEntries()[index].toString();
+    }
+	  return "";
   }
 
 	/*
