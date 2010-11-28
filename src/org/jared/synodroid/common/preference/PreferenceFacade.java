@@ -154,15 +154,28 @@ public class PreferenceFacade {
                           .getProperty(PreferenceFacade.PASSWORD_SUFFIX));
           // DSM version
           DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
+          if (vers == null) {
+          	vers = DSMVersion.VERSION2_1;
+          }
           server.setDsmVersion(vers);
           // Sort informations
           String sortAttr = sharedPreferencesP.getString("sort", "task_id");
           boolean asc = sharedPreferencesP.getBoolean("asc", true);
           server.setSortAttribute(sortAttr);
           server.setAscending(asc);
-          // If this server has a public connection OR if it has a local one and SSIDs match
-          if (pub != null && (wifiConnected && loc != null && loc.wifiSSID != null && loc.wifiSSID.equals(currentWifi.getSSID()))) {
+          // If this server has a public connection
+          if (pub != null) { 
             result.add(server);
+          }
+          // Or if this server has a local connection AND the wifi is connected AND one SSID matchs 
+          else {
+          	if (loc != null && wifiConnected && loc != null && loc.wifiSSID != null && loc.wifiSSID.size() > 0) {
+          		for (String ssid : loc.wifiSSID) {
+            		if (ssid.equals(currentWifi.getSSID())) {
+                  result.add(server);            			
+            		}	              
+              }
+          	}
           }
         }
         catch(Exception ex) {

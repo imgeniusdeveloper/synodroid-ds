@@ -11,7 +11,6 @@ package org.jared.synodroid.common.preference;
 import org.jared.synodroid.ds.R;
 
 import android.content.Context;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,7 +21,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class ListPreferenceWithValue extends ListPreference implements PreferenceWithValue {
+public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelect implements PreferenceWithValue{
 
   private TextView value;
   // The current value
@@ -36,7 +35,7 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
    * @param context
    * @param attrs
    */
-  public ListPreferenceWithValue(Context context, AttributeSet attrs) {
+  public ListPreferenceMultiSelectWithValue(Context context, AttributeSet attrs) {
     super(context, attrs);
     setLayoutResource(R.layout.preference_with_value);
     initInternalChangeListener();
@@ -47,7 +46,7 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
    * 
    * @param context
    */
-  public ListPreferenceWithValue(Context context) {
+  public ListPreferenceMultiSelectWithValue(Context context) {
     super(context);
     setLayoutResource(R.layout.preference_with_value);
     initInternalChangeListener();
@@ -61,12 +60,11 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
     super.onBindView(view);
     value = (TextView) view.findViewById(R.id.preference_value);
     if (value != null) {
-      String v = getValue();
-      int index = findIndexOfValue(v);
-      if (index != -1) {
-        value.setText(getEntries()[index]);
+      String val = getPrintableText(getPrintableValue());
+      if (val != null) {
+        value.setText(val);
       }
-      currentValue = getValue();
+      currentValue = getPrintableValue();
     }
   }
 
@@ -77,10 +75,10 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
     // Call the super method as we overrided it
     super.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
       public boolean onPreferenceChange(Preference preference, Object newValue) {
-        int index = findIndexOfValue(newValue.toString());
-        if (index != -1) {
-          value.setText(getEntries()[index]);
-          currentValue = value.getText().toString();
+      	String val = getPrintableText(newValue.toString());
+        if (val != null) {
+          value.setText(val);
+          currentValue = val;
         }
         // By default update the preference's state
         boolean result = true;
@@ -93,11 +91,34 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
     });
   }
 
+  /**
+   * Return a printable text (with comma separator) from a value with separator
+   * @param valueWithSeparatorP
+   * @return
+   */
+  private String getPrintableText(String valueWithSeparatorP) {
+  	String[] ssids = parseStoredValue(valueWithSeparatorP);
+  	String result = null;
+  	// For each SSID
+  	for (String ssid : ssids) {
+      int index = findIndexOfValue(ssid);
+      if (index != -1) {
+      	if (result == null) {
+      		result = getEntries()[index].toString();
+      	}
+      	else {
+      		result = result + ", " + getEntries()[index].toString();
+      	}
+      }
+    }
+  	return result;
+  }
+  
   /* (non-Javadoc)
    * @see org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue()
    */
   public String getPrintableValue() {
-	  return getCurrentValue();
+	  return getPrintableText(getValue());
   }
 
 	/*
@@ -120,7 +141,7 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
     String result = currentValue;
     // If not set then return the current state
     if (result == null) {
-      result = getValue();
+      result = getPrintableValue();
     }
     return currentValue;
   }
@@ -155,9 +176,9 @@ public class ListPreferenceWithValue extends ListPreference implements Preferenc
    * @param summaryP
    * @return
    */
-  public static ListPreferenceWithValue create(Context contextP, String keyP, int titleP, int summaryP,
+  public static ListPreferenceMultiSelectWithValue create(Context contextP, String keyP, int titleP, int summaryP,
           String[] versions) {
-    ListPreferenceWithValue pref = new ListPreferenceWithValue(contextP);
+    ListPreferenceMultiSelectWithValue pref = new ListPreferenceMultiSelectWithValue(contextP);
     pref.setKey(keyP);
     pref.setTitle(titleP);
     pref.setSummary(summaryP);

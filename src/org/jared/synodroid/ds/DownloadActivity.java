@@ -251,7 +251,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Connection is done
 		else if (msg.what == ResponseHandler.MSG_CONNECTED) {
 			// Change the title
-			titleText.setText(server.getNickname());
+			String title = server.getNickname();
+			if (server.getConnection()==server.getPublicConnection()) {
+				title += " (@)";
+			}
+			titleText.setText(title);
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 		}
 		// Connecting to the server

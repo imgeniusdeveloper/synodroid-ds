@@ -1,5 +1,4 @@
 /**
- * Copyright 2010 Eric Taix Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
@@ -20,9 +19,11 @@ import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.TaskSort;
 import org.jared.synodroid.common.preference.EditTextPreferenceWithValue;
+import org.jared.synodroid.common.preference.ListPreferenceMultiSelectWithValue;
 import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
+import org.jared.synodroid.common.preference.PreferenceWithValue;
 import org.jared.synodroid.ds.view.wizard.ServerWizard;
 
 import android.app.Activity;
@@ -32,6 +33,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
@@ -46,11 +48,13 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 /**
@@ -255,7 +259,6 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 					ServerInfo deletion = new ServerInfo();
 					deletion.id = idP;
 					String title = propsP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
-					title += " (" + propsP.getProperty(PreferenceFacade.SSID_SUFFIX) + ")";
 					deletion.title = title;
 					deletion.delete = false;
 					deletion.key = keyP;
@@ -338,13 +341,40 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 * java.lang.String, java.lang.String)
 	 */
 	public void process(int idP, String keyP, Properties propertiesP) {
-		String summary = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
+		String summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP
+		    .getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));
+		String summary2 = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
+		summary = getServerSummary(summary, summary2);
 		if (idP > maxServerId) {
 			maxServerId = idP;
 		}
 		String title = propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX);
-		title += " (" + propertiesP.getProperty(PreferenceFacade.SSID_SUFFIX) + ")";
 		createServerPreference(idP, serversCategory, keyP, title, summary);
+	}
+
+	/**
+	 * Set the summary of a server
+	 * 
+	 * @param summary1P
+	 * @param summary2P
+	 */
+	private String getServerSummary(String summary1P, String summary2P) {
+		// If local connection exists
+		if (summary1P != null && summary1P.length() > 0) {
+			// And public connection too, then show both
+			if (summary2P != null && summary2P.length() > 0) {
+				summary1P += "\n" + summary2P + " (@)";
+			}
+		}
+		// Else if only public connection exists
+		else if (summary2P != null && summary2P.length() > 0) {
+			summary1P = summary2P + " (@)";
+		}
+		// Otherwise show default text
+		else {
+			summary1P = getString(R.string.hint_default_server);
+		}
+		return summary1P;
 	}
 
 	/**
@@ -362,6 +392,68 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		screen.setPersistent(true);
 		screen.setTitle(titleP);
 		screen.setSummary(summaryP);
+		screen.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			public boolean onPreferenceClick(Preference preference) {
+				// At this point the dialog was created ! We can add our dismiss
+				// callback
+				screen.getDialog().setOnDismissListener(new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						// Don't forget to call the screen onDismiss method
+						screen.onDismiss(dialog);
+						// Then do our job: refresh summaries
+						int catCount = screen.getPreferenceCount();
+						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null;
+						for (int cLoop = 0; cLoop < catCount; cLoop++) {
+							Preference cat = screen.getPreference(cLoop);
+							if (cat instanceof PreferenceCategory) {
+								int prefCount = ((PreferenceCategory) cat).getPreferenceCount();
+								for (int iLoop = 0; iLoop < prefCount; iLoop++) {
+									Preference pref = ((PreferenceCategory) cat).getPreference(iLoop);
+									String key = pref.getKey();
+									if (key != null) {
+										if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX)) {
+											protWLAN = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.PROTOCOL_SUFFIX)) {
+											prot = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX)) {
+											hostWLAN = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.HOST_SUFFIX)) {
+											host = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX)) {
+											portWLAN = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.PORT_SUFFIX)) {
+											port = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+										else if (key.endsWith(PreferenceFacade.NICKNAME_SUFFIX)) {
+											nickname = ((PreferenceWithValue) pref).getPrintableValue();
+										}
+									}
+								}
+							}
+						}
+						// Build title
+						if (nickname != null) {
+							screen.setTitle(nickname);
+						}
+						// Build summaries
+						String summary1 = buildURL(protWLAN, hostWLAN, portWLAN);
+						String summary2 = buildURL(prot, host, port);
+						summary1 = getServerSummary(summary1, summary2);
+						screen.setSummary(summary1);
+						// Notify the root PreferenceScreen that a child has been updated
+						PreferenceScreen rootScreen = getPreferenceScreen();
+						BaseAdapter adapt = (BaseAdapter) rootScreen.getRootAdapter();
+						adapt.notifyDataSetChanged();
+					}
+				});
+				return false;
+			}
+		});
 		// ----------------------------------------------
 		// Create a category to show general parameters
 		PreferenceCategory generalCategory = new PreferenceCategory(this);
@@ -381,11 +473,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// --- DSM Version
 		generalCategory.addPreference(ListPreferenceWithValue.create(this, keyP + PreferenceFacade.DSM_SUFFIX, R.string.label_dsm_version, R.string.hint_dsm_version, DSMVersion.getValues()));
 
-		// Create public connection category
-		addConnectionCategory(keyP, screen, false, R.string.title_cat_connection);
-
 		// Create local connection category
 		addConnectionCategory(keyP, screen, true, R.string.title_cat_connection_local);
+		// Create public connection category
+		addConnectionCategory(keyP, screen, false, R.string.title_cat_connection);
 
 		return screen;
 	}
@@ -408,16 +499,15 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// ---- Create Wifi list (ONLY for wifi connection)
 		if (showWifiP) {
 			List<WifiConfiguration> wifis = wifiMgr.getConfiguredNetworks();
-			String[] wifiSSIDs = new String[wifis.size() + 1];
-			wifiSSIDs[0] = "None";
+			String[] wifiSSIDs = new String[wifis.size()];
 			for (int iLoop = 0; iLoop < wifis.size(); iLoop++) {
 				String ssid = wifis.get(iLoop).SSID;
 				if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
 					ssid = ssid.substring(1, ssid.length() - 1);
 				}
-				wifiSSIDs[iLoop + 1] = ssid;
+				wifiSSIDs[iLoop] = ssid;
 			}
-			final ListPreferenceWithValue wifiSSIDPref = ListPreferenceWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
+			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
 			connectionCategory.addPreference(wifiSSIDPref);
 			if (!wifiMgr.isWifiEnabled()) {
 				wifiSSIDPref.setEnabled(false);
@@ -444,14 +534,6 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		showUpload.setDefaultValue(false);
 		showUpload.setSummaryOn(R.string.hint_showupload_on);
 		showUpload.setSummaryOff(R.string.hint_showupload_off);
-		// showUpload.setOnPreferenceChangeListener(new OnPreferenceChangeListener()
-		// {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// app.setServerShowUpload((Boolean) newValue);
-		// return true;
-		// }
-		// });
 		connectionCategory.addPreference(showUpload);
 		// ---- Auto refresh
 		CheckBoxPreference autoRefresh = new CheckBoxPreference(this);
@@ -472,119 +554,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// Add dependencies. DON'T use 'setDependency()' when building Preferences
 		// at runtime
 		connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX);
-
-		// // Create listener to update title and summary
-		// nickPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// String title = (String) newValue;
-		// String summary = buildURL(protocolPref.getValue(), hostPref.getText(),
-		// portPref.getText());
-		// summary = summary.toLowerCase();
-		// updatePrefScreen(screen, title, summary, wlanPref.isChecked(),
-		// wifiSSIDPref.getEntry().toString());
-		// return true;
-		// }
-		// });
-		// // Create listener to update title and summary
-		// protocolPref.setOnPreferenceChangeListener(new
-		// OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// String title = nickPref.getText();
-		// String summary = buildURL((String) newValue, hostPref.getText(),
-		// portPref.getText());
-		// updatePrefScreen(screen, title, summary, wlanPref.isChecked(),
-		// wifiSSIDPref.getEntry().toString());
-		// return true;
-		// }
-		// });
-		// // Create listener to update title and summary
-		// hostPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// String title = nickPref.getText();
-		// String summary = buildURL(protocolPref.getValue(), (String) newValue,
-		// portPref.getText());
-		// updatePrefScreen(screen, title, summary, wlanPref.isChecked(),
-		// wifiSSIDPref.getEntry().toString());
-		// return true;
-		// }
-		// });
-		// // Create listener to update title and summary
-		// portPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// String title = nickPref.getText();
-		// String summary = buildURL(protocolPref.getValue(), hostPref.getText(),
-		// (String) newValue);
-		// updatePrefScreen(screen, title, summary, wlanPref.isChecked(),
-		// wifiSSIDPref.getEntry().toString());
-		// return true;
-		// }
-		// });
-		// // Create listener to avoid allowing WLAN connection when wifi if OFF
-		// wlanPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preferenceP, Object
-		// newValueP) {
-		// if (!wifiMgr.isWifiEnabled()) {
-		// AlertDialog.Builder builder = new
-		// AlertDialog.Builder(DownloadPreferenceActivity.this);
-		// builder.setTitle(getResources().getText(R.string.title_wifi_disabled)).setMessage(
-		// getResources().getText(R.string.message_wifi_disabled)).setPositiveButton(
-		// getResources().getText(R.string.button_ok), null);
-		// AlertDialog alert = builder.create();
-		// alert.show();
-		// return false;
-		// }
-		// else {
-		// String summary = buildURL(protocolPref.getValue(), hostPref.getText(),
-		// portPref.getText());
-		// summary = summary.toLowerCase();
-		// String title = nickPref.getText();
-		// String wifiSSID = "";
-		// if (wifiSSIDPref.getEntry() != null) {
-		// wifiSSID = wifiSSIDPref.getEntry().toString();
-		// }
-		// updatePrefScreen(screen, title, summary, (Boolean) newValueP, wifiSSID);
-		// return true;
-		// }
-		// }
-		// });
-		// // Create listener to update title and summary
-		// wifiSSIDPref.setOnPreferenceChangeListener(new
-		// OnPreferenceChangeListener() {
-		// public boolean onPreferenceChange(Preference preference, Object newValue)
-		// {
-		// String title = nickPref.getText();
-		// String summary = buildURL(protocolPref.getValue(), hostPref.getText(),
-		// portPref.getText());
-		// updatePrefScreen(screen, title, summary, wlanPref.isChecked(), (String)
-		// newValue);
-		// return true;
-		// }
-		// });
 	}
-
-	/**
-	 * Update the PreferenceScreen to reflect the current values
-	 * 
-	 * @param prefScreenP
-	 * @param titleP
-	 * @param summaryP
-	 */
-	// private void updatePrefScreen(PreferenceScreen prefScreenP, String titleP,
-	// String summaryP, boolean useWifiP, String ssidP) {
-	// if (useWifiP) {
-	// titleP += " - (" + ssidP + ")";
-	// }
-	// prefScreenP.setTitle(titleP);
-	// prefScreenP.setSummary(summaryP);
-	// // Notify the root PreferenceScreen that a child has been updated
-	// PreferenceScreen rootScreen = getPreferenceScreen();
-	// BaseAdapter adapt = (BaseAdapter) rootScreen.getRootAdapter();
-	// adapt.notifyDataSetChanged();
-	// }
 
 	/**
 	 * Build a end-user String which represents the URL used
@@ -662,7 +632,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		if (host != null && host.length() > 0) {
 			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.PROTOCOL_SUFFIX, ((Boolean) metaDataP.get(ServerWizard.META_HTTPS)) ? "HTTPS" : "HTTP");
 			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.HOST_SUFFIX, host);
-	    editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.PORT_SUFFIX, ((Boolean) metaDataP.get(ServerWizard.META_HTTPS)) ? "5001" : "5000");
+			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.PORT_SUFFIX, ((Boolean) metaDataP.get(ServerWizard.META_HTTPS)) ? "5001" : "5000");
 			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.SHOWUPLOAD_SUFFIX, showUpload);
 			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.REFRESHSTATE_SUFFIX, true);
 			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.REFRESHVALUE_SUFFIX, refreshRate);
