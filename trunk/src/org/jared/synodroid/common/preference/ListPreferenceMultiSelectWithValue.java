@@ -60,7 +60,7 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
     super.onBindView(view);
     value = (TextView) view.findViewById(R.id.preference_value);
     if (value != null) {
-      String val = getPrintableText(getPrintableValue());
+      String val = getPrintableText(getValue());
       if (val != null) {
         value.setText(val);
       }
