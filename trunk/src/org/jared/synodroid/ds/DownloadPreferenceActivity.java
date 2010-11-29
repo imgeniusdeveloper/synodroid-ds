@@ -341,9 +341,17 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 * java.lang.String, java.lang.String)
 	 */
 	public void process(int idP, String keyP, Properties propertiesP) {
-		String summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP
+		String summary = null, summary2 = null;
+		String usewifi = propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.USEWIFI_SUFFIX);
+		String useext = propertiesP.getProperty(PreferenceFacade.USEEXT_SUFFIX);
+		
+		if (usewifi != null && usewifi.equals("true")){
+			summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP
 		    .getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));
-		String summary2 = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
+		}
+		if (useext != null && useext.equals("true")){
+			summary2 = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
+		}
 		summary = getServerSummary(summary, summary2);
 		if (idP > maxServerId) {
 			maxServerId = idP;
@@ -362,7 +370,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// If local connection exists
 		if (summary1P != null && summary1P.length() > 0) {
 			// And public connection too, then show both
-			if (summary2P != null && summary2P.length() > 0) {
+			if (summary2P != null && summary2P.length() > 8) {
 				summary1P += "\n" + summary2P + " (@)";
 			}
 		}
@@ -403,6 +411,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 						// Then do our job: refresh summaries
 						int catCount = screen.getPreferenceCount();
 						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null;
+						boolean usewifi = false, useext = false;
 						for (int cLoop = 0; cLoop < catCount; cLoop++) {
 							Preference cat = screen.getPreference(cLoop);
 							if (cat instanceof PreferenceCategory) {
@@ -432,6 +441,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 										else if (key.endsWith(PreferenceFacade.NICKNAME_SUFFIX)) {
 											nickname = ((PreferenceWithValue) pref).getPrintableValue();
 										}
+										else if (key.endsWith(PreferenceFacade.USEWIFI_SUFFIX)) {
+											usewifi = ((CheckBoxPreference) pref).isChecked();
+										}
+										else if (key.endsWith(PreferenceFacade.USEEXT_SUFFIX)) {
+											useext = ((CheckBoxPreference) pref).isChecked();
+										}
 									}
 								}
 							}
@@ -441,8 +456,13 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 							screen.setTitle(nickname);
 						}
 						// Build summaries
-						String summary1 = buildURL(protWLAN, hostWLAN, portWLAN);
-						String summary2 = buildURL(prot, host, port);
+						String summary1 = null, summary2 = null;
+						if (usewifi){
+							summary1 = buildURL(protWLAN, hostWLAN, portWLAN);	
+						}
+						if (useext){
+							summary2 = buildURL(prot, host, port);	
+						}
 						summary1 = getServerSummary(summary1, summary2);
 						screen.setSummary(summary1);
 						// Notify the root PreferenceScreen that a child has been updated
@@ -498,6 +518,18 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		final WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		// ---- Create Wifi list (ONLY for wifi connection)
 		if (showWifiP) {
+			// ---- Use Wifi
+			CheckBoxPreference useWifi = new CheckBoxPreference(this);
+			useWifi.setKey(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			useWifi.setTitle(R.string.label_usewifi);
+			// It looks like by using the set check function, the preference is not save
+			// properly. Removing it seems to make default preference better
+			// autoRefresh.setChecked(true);
+			useWifi.setDefaultValue(false);
+			useWifi.setSummaryOn(R.string.hint_usewifi_on);
+			useWifi.setSummaryOff(R.string.hint_usewifi_off);
+			connectionCategory.addPreference(useWifi);
+			
 			List<WifiConfiguration> wifis = wifiMgr.getConfiguredNetworks();
 			String[] wifiSSIDs = new String[wifis.size()];
 			for (int iLoop = 0; iLoop < wifis.size(); iLoop++) {
@@ -512,6 +544,20 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			if (!wifiMgr.isWifiEnabled()) {
 				wifiSSIDPref.setEnabled(false);
 			}
+		}
+		else{
+			// ---- Use External Connection
+			CheckBoxPreference useExt = new CheckBoxPreference(this);
+			useExt.setKey(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			useExt.setTitle(R.string.label_useext);
+			// It looks like by using the set check function, the preference is not save
+			// properly. Removing it seems to make default preference better
+			// autoRefresh.setChecked(true);
+			useExt.setDefaultValue(false);
+			useExt.setSummaryOn(R.string.hint_useext_on);
+			useExt.setSummaryOff(R.string.hint_useext_off);
+			connectionCategory.addPreference(useExt);
+			
 		}
 
 		// ---- Protocol
@@ -553,6 +599,25 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		connectionCategory.addPreference(autoRefreshValue);
 		// Add dependencies. DON'T use 'setDependency()' when building Preferences
 		// at runtime
+		
+		if (showWifiP) {
+			connectionCategory.findPreference(keyP + PreferenceFacade.SSID_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.PROTOCOL_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.HOST_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.PORT_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.SHOWUPLOAD_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
+		}	
+		else{
+			connectionCategory.findPreference(keyP + PreferenceFacade.PROTOCOL_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.HOST_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.PORT_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.SHOWUPLOAD_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
+		}
+		
 		connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX);
 	}
 
@@ -597,8 +662,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			// If the user also want to access to his server from internet
 			if (((Boolean) metaDataP.get(ServerWizard.META_DDNS))) {
 				writeConnectionValues(editor, false, metaDataP);
-				editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX, metaDataP.get(ServerWizard.META_WIFI).toString());
 			}
+			editor.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX, metaDataP.get(ServerWizard.META_WIFI).toString());
 			editor.commit();
 			// Reload the servers list
 			reloadCurrentServers();
@@ -627,7 +692,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			host = metaDataP.get(ServerWizard.META_HOST).toString();
 			showUpload = true;
 			refreshRate = "5";
+			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.USEWIFI_SUFFIX, true);
 		}
+		else{
+			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.USEEXT_SUFFIX, true);
+		}
+		
 		// Verify if at least host has been set
 		if (host != null && host.length() > 0) {
 			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.PROTOCOL_SUFFIX, ((Boolean) metaDataP.get(ServerWizard.META_HTTPS)) ? "HTTPS" : "HTTP");

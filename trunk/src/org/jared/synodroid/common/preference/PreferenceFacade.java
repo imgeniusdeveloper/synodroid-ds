@@ -30,6 +30,8 @@ import android.util.Log;
  */
 public class PreferenceFacade {
 
+  public static final String USEWIFI_SUFFIX = ".iswifi";
+  public static final String USEEXT_SUFFIX = ".isexternal";
   public static final String REFRESHVALUE_SUFFIX = ".refreshvalue";
   public static final String SHOWUPLOAD_SUFFIX = ".showupload";
   public static final String REFRESHSTATE_SUFFIX = ".refreshstate";
@@ -114,6 +116,12 @@ public class PreferenceFacade {
     if (localP) {
       props.setProperty(localRadical + SSID_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
               + SSID_SUFFIX)));
+      props.setProperty(localRadical + USEWIFI_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+              + USEWIFI_SUFFIX)));
+    }
+    else{
+      props.setProperty(localRadical + USEEXT_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical
+                + USEEXT_SUFFIX)));
     }
   }
 
@@ -172,7 +180,7 @@ public class PreferenceFacade {
           	if (loc != null && wifiConnected && loc != null && loc.wifiSSID != null && loc.wifiSSID.size() > 0) {
           		for (String ssid : loc.wifiSSID) {
             		if (ssid.equals(currentWifi.getSSID())) {
-                  result.add(server);            			
+            			result.add(server);            			
             		}	              
               }
           	}
