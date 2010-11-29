@@ -371,12 +371,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		if (summary1P != null && summary1P.length() > 0) {
 			// And public connection too, then show both
 			if (summary2P != null && summary2P.length() > 8) {
-				summary1P += "\n" + summary2P + " (@)";
+				summary1P += "\n" + summary2P + " (P)";
 			}
 		}
 		// Else if only public connection exists
 		else if (summary2P != null && summary2P.length() > 0) {
-			summary1P = summary2P + " (@)";
+			summary1P = summary2P + " (P)";
 		}
 		// Otherwise show default text
 		else {

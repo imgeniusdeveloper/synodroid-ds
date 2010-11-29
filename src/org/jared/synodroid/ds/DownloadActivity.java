@@ -253,7 +253,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			// Change the title
 			String title = server.getNickname();
 			if (server.getConnection()==server.getPublicConnection()) {
-				title += " (@)";
+				title += " (P)";
 			}
 			titleText.setText(title);
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
@@ -1065,7 +1065,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// the title bar on top. This fixes thoses cases.
 		server = ((Synodroid) getApplication()).getServer();
 		if (server != null && server.isConnected()) {
-			titleText.setText(server.getNickname());
+			String title = server.getNickname();
+			if (server.getConnection()==server.getPublicConnection()) {
+				title += " (P)";
+			}
+			titleText.setText(title);
 			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 
 			// Launch the gets task's details recurrent action
