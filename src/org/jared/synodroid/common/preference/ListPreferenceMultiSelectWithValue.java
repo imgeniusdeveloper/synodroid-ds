@@ -100,17 +100,19 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
   	String[] ssids = parseStoredValue(valueWithSeparatorP);
   	String result = null;
   	// For each SSID
-  	for (String ssid : ssids) {
-      int index = findIndexOfValue(ssid);
-      if (index != -1) {
-      	if (result == null) {
-      		result = getEntries()[index].toString();
-      	}
-      	else {
-      		result = result + ", " + getEntries()[index].toString();
-      	}
-      }
-    }
+  	if (ssids != null){
+  		for (String ssid : ssids) {
+  	      int index = findIndexOfValue(ssid);
+  	      if (index != -1) {
+  	      	if (result == null) {
+  	      		result = getEntries()[index].toString();
+  	      	}
+  	      	else {
+  	      		result = result + ", " + getEntries()[index].toString();
+  	      	}
+  	      }
+  	    }
+  	}
   	return result;
   }
   

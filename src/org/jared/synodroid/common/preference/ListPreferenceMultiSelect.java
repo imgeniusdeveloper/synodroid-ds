@@ -80,7 +80,13 @@ public class ListPreferenceMultiSelect extends ListPreference {
 		if ("".equals(val))
 			return null;
 		else
-			return ((String) val).split(SEPARATOR);
+			try{
+				return ((String) val).split(SEPARATOR);
+			}
+			catch (Exception e){
+				return null;
+			}
+			
 	}
 
 	/**

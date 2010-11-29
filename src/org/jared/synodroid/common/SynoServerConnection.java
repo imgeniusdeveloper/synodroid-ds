@@ -47,26 +47,42 @@ public class SynoServerConnection {
 		SynoServerConnection result = null;
 		try {
 			String radical = "";
+			boolean valid = false;
 			if (local) {
 				radical += PreferenceFacade.WLAN_RADICAL;
+				String usewifi = props.getProperty(radical + PreferenceFacade.USEWIFI_SUFFIX);
+				if (usewifi != null && usewifi.equals("true")){
+					valid = true;
+				}
 			}
-
-			SynoProtocol protocol = SynoProtocol.valueOf(props.getProperty(radical + PreferenceFacade.PROTOCOL_SUFFIX));
-			int port = Integer.parseInt(props.getProperty(radical + PreferenceFacade.PORT_SUFFIX));
-			String host = props.getProperty(radical + PreferenceFacade.HOST_SUFFIX);
-			if (protocol != null && port != 0 && host != null && host.length() > 0) {
-				result = new SynoServerConnection();
-				result.protocol = protocol;
-				result.host = host;
-				result.port = port;
-				result.showUpload = Boolean.parseBoolean(props.getProperty(radical + PreferenceFacade.SHOWUPLOAD_SUFFIX));
-				result.refreshInterval = Integer.parseInt(props.getProperty(radical + PreferenceFacade.REFRESHVALUE_SUFFIX));
-				result.autoRefresh = Boolean.parseBoolean(props.getProperty(radical + PreferenceFacade.REFRESHSTATE_SUFFIX));
-				if (local) {
-					String separatedValues = props.getProperty(radical + PreferenceFacade.SSID_SUFFIX);
-					String[] ssids = ListPreferenceMultiSelectWithValue.parseStoredValue(separatedValues);
-					if (ssids != null) {
-						result.wifiSSID = Arrays.asList(ssids);
+			else{
+				String useext = props.getProperty(radical + PreferenceFacade.USEEXT_SUFFIX);
+				if (useext != null && useext.equals("true")){
+					valid = true;
+				}
+			}
+			
+			if (valid){
+				SynoProtocol protocol = SynoProtocol.valueOf(props.getProperty(radical + PreferenceFacade.PROTOCOL_SUFFIX));
+				int port = Integer.parseInt(props.getProperty(radical + PreferenceFacade.PORT_SUFFIX));
+				String host = props.getProperty(radical + PreferenceFacade.HOST_SUFFIX);
+				if (protocol != null && port != 0 && host != null && host.length() > 0) {
+					result = new SynoServerConnection();
+					result.protocol = protocol;
+					result.host = host;
+					result.port = port;
+					result.showUpload = Boolean.parseBoolean(props.getProperty(radical + PreferenceFacade.SHOWUPLOAD_SUFFIX));
+					result.refreshInterval = Integer.parseInt(props.getProperty(radical + PreferenceFacade.REFRESHVALUE_SUFFIX));
+					result.autoRefresh = Boolean.parseBoolean(props.getProperty(radical + PreferenceFacade.REFRESHSTATE_SUFFIX));
+					if (local) {
+						String separatedValues = props.getProperty(radical + PreferenceFacade.SSID_SUFFIX);
+						String[] ssids = ListPreferenceMultiSelectWithValue.parseStoredValue(separatedValues);
+						if (ssids != null) {
+							result.wifiSSID = Arrays.asList(ssids);
+						}
+					}
+					else{
+						result.wifiSSID = null;
 					}
 				}
 			}

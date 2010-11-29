@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.acra.CrashReportingApplication;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.SynoServerConnection;
 import org.jared.synodroid.common.action.DeleteTaskAction;
 import org.jared.synodroid.common.action.GetAllAndOneDetailTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
@@ -116,15 +117,18 @@ public class Synodroid extends CrashReportingApplication {
       // If we are connected to a WIFI network, verify if SSID match
       boolean pub  = true; 
       if (wifiConnected) {
-        List<String> ssids = currentServer.getLocalConnection().wifiSSID;
-        if (ssids != null) {
-        	for (String ssid : ssids) {
-        		if (currentWifi.getSSID().equals(ssid)) {
-              pub = false;
-              break;
-        		}
-          }
-        }
+    	SynoServerConnection sc = currentServer.getLocalConnection();
+    	if (sc != null){
+	        List<String> ssids = sc.wifiSSID;
+	        if (ssids != null) {
+	        	for (String ssid : ssids) {
+	        		if (currentWifi.getSSID().equals(ssid)) {
+	              pub = false;
+	              break;
+	        		}
+	          }
+	        }
+    	}
       }      
       currentServer.connect(activityP, actionQueueP, pub);
     }

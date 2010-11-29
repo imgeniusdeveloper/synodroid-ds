@@ -275,4 +275,10 @@
 <string name="err_provider_missing">Transdroid torrent search is not installed on your device.\n\nFollow the instructions on the search tab to install it.</string>
 <string name="help">Help</string>
 <string name="err_noemail">No email applications configured on your device.\n\nClick on the link on the about page to get help.</string>
+<string name="label_usewifi">Connect from wifi</string>
+<string name="hint_usewifi_on">Linked to one or more wifi network</string>
+<string name="hint_usewifi_off">Not linked to wifi network</string>
+<string name="label_useext">Connect from anywhere</string>
+<string name="hint_useext_on">Accessible from anywhere</string>
+<string name="hint_useext_off">Not accessible outside wifi</string>
 </resources>
