@@ -275,4 +275,11 @@
 <string name="err_provider_missing">Transdroid search n\'est pas installé sur votre appareil.\n\nSuivez les instructions dans l\'onglet \'Recherche\' pour l\'installer.</string>
 <string name="help">Aide</string>
 <string name="err_noemail">Aucune application d\'email n\'est installée sur votre appareil.\n\nCliquez sur le lien de la page \'A propos\' pour avoir de l\'aide.</string>
+
+<string name="label_usewifi">Connexion depuis un réseau local</string>
+<string name="hint_usewifi_on">Lié à un ou plusieurs réseaux locaux</string>
+<string name="hint_usewifi_off">Non lié à un réseau local</string>
+<string name="label_useext">Connexion depuis l\'extérieur</string>
+<string name="hint_useext_on">Accessible depuis l\'extérieur</string>
+<string name="hint_useext_off">Non accessible depuis l\'extérieur</string>
 </resources>
