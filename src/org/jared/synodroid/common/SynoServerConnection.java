@@ -80,6 +80,9 @@ public class SynoServerConnection {
 						if (ssids != null) {
 							result.wifiSSID = Arrays.asList(ssids);
 						}
+						else{
+							result = null;
+						}
 					}
 					else{
 						result.wifiSSID = null;
