@@ -3,10 +3,10 @@
     <shape>
       <corners android:radius="2dip" />
       <gradient
-        android:startColor="#ff9c9e9c"
-        android:centerColor="#ff6b756b"
+        android:startColor="#ff9c9c9c"
+        android:centerColor="#ff6b6b6b"
         android:centerY="0.50"
-        android:endColor="#ff737173"
+        android:endColor="#ff737373"
         android:angle="270" /> 
     </shape>
   </item>
@@ -16,7 +16,7 @@
         <corners android:radius="2dip" />
         <stroke
           android:width="20dip"
-          android:color="#ff0000"
+          android:color="#ff000000"
           android:dashWidth="10dip"
           android:dashGap="10dip" />
       </shape>
@@ -27,10 +27,10 @@
       <shape>
         <corners android:radius="2dip"/>
         <gradient
-          android:startColor="#ff71a838"
-          android:centerColor="#ff689a33"
+          android:startColor="#ff0fc80f"
+          android:centerColor="#ff1eaF1e"
           android:centerY="0.50"          
-          android:endColor="#ff6ca035"
+          android:endColor="#ff2d8c2d"
           android:angle="270" />
       </shape>
     </clip>
