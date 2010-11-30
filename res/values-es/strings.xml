@@ -1,31 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <string name="app_name">Synodroid</string>
-    <string name="app_opensource">Opensource project</string>
-    <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
-<string name="connect_cant_connect">"No se puede conectar a {0}. El error es '{1}'."</string>
-<string name="unknow_reason">"Se ha producido un error por una razón desconocida"</string>
-<string name="connect_wrong_userpassword">"Usuario o contraseña incorrecta. Pruebe de nuevo."</string>
-<string name="connect_already_connected">"Está conectado desde otro ordenador. Por favor reconecte."</string>
-<string name="connect_nohost">"No se puede conectar al servidor. Verifique sus parámetros."</string>
-<string name="connect_error_title">"Error"</string>
-<string name="connect_connecting2">"Conectando. Espere por favor"</string>
-<string name="connect_connecting">"Conectando a \n{0}\nEspere por favor..."</string>
-<string name="connect_ssl_error">"Error SSL: {0}"</string>
-<string name="action_deleting">"Eliminando archivo %s"</string>
-<string name="action_clearall">"Limpiando todas las tareas completas..."</string>
-<string name="action_pausing">"Pausando archivo %s"</string>
-<string name="action_resuming">"Reanudando el archivo %s"</string>
+<string name="app_name">Synodroid</string>
+<string name="app_opensource">Opensource project</string>
+<string name="app_url">http://code.google.com/p/synodroid-ds/</string>
+
+<string name="connect_cant_connect">&quot;No se puede conectar a {0}. El error es '{1}'.&quot;</string>
+<string name="unknow_reason">&quot;Se ha producido un error por una razón desconocida&quot;</string>
+<string name="connect_wrong_userpassword">&quot;Usuario o contraseña incorrecta. Pruebe de nuevo.&quot;</string>
+<string name="connect_already_connected">&quot;Está conectado desde otro ordenador. Por favor reconecte.&quot;</string>
+<string name="connect_nohost">&quot;No se puede conectar al servidor. Verifique sus parámetros.&quot;</string>
+<string name="connect_error_title">&quot;Error&quot;</string>
+<string name="connect_connecting2">&quot;Conectando. Espere por favor&quot;</string>
+<string name="connect_connecting">&quot;Conectando a \n{0}\nEspere por favor...&quot;</string>
+<string name="connect_ssl_error">&quot;Error SSL: {0}&quot;</string>
+<string name="action_deleting">&quot;Eliminando archivo %s&quot;</string>
+<string name="action_clearall">&quot;Limpiando todas las tareas completas...&quot;</string>
+<string name="action_pausing">&quot;Pausando archivo %s&quot;</string>
+<string name="action_resuming">&quot;Reanudando el archivo %s&quot;</string>
+<string name="action_pauseall">&quot;Pausando todas las tareas activas...&quot;</string>
+<string name="action_resumeall">&quot;Reanudando todas las tareas pausadas...&quot;</string>
 <string name="menu_connect">Conectar a</string>
 <string name="menu_search">Buscar</string>
 <string name="menu_clearall">Limpiar tareas completadas</string>
+<string name="menu_pauseall">Pausar todo</string>
+<string name="menu_resumeall">Reanudar todo</string>
 <string name="dialog_title_action">Acción</string>
 <string name="menu_parameter">Parámetros</string>
 <string name="err_unknown">Error desconocido</string>
 
-<string name="connect_cant">"No estás autorizado a utilizar este servicio"</string>
+<string name="connect_cant">&quot;No estás autorizado a utilizar este servicio&quot;</string>
 <string name="label_nickname">Nickname</string>
 <string name="label_protocol">Protocolo</string>
 <string name="label_host">Servidor</string>
@@ -41,13 +45,18 @@
 <string name="hint_password">Contraseña</string>
 
 
-<string name="hint_refreshinterval">Tiempo de refresco en segundos</string>
+<string name="hint_refreshinterval">Tiempo de actualización en segundos</string>
+<string-array name="protocols_array"><item>HTTP</item>
+<item>HTTPS</item>
+</string-array>
+
 <string name="button_cancel">Cancelar</string>
-<string name="hint_dsm_version">"Establece tu versión DSM"</string>
+<string name="label_dsm_version">Disk Station Manager</string>
+<string name="hint_dsm_version">&quot;Establece tu versión DSM&quot;</string>
 <string name="title_preference">Preferencias</string>
-<string name="label_autorefresh">Refresco automático</string>
-<string name="hint_autorefresh_on">Refresco automático habilitado</string>
-<string name="hint_autorefresh_off">Refresco automático deshabilitado</string>
+<string name="label_autorefresh">Actualización automática</string>
+<string name="hint_autorefresh_on">Actualización automática habilitada</string>
+<string name="hint_autorefresh_off">Actualización automática deshabilitada</string>
 <string name="title_cat_servers">Servidores</string>
 <string name="title_cat_general">Opciones Generales</string>
 
@@ -82,7 +91,7 @@
 <string name="dialog_title_confirm">Confirmación</string>
 <string name="button_yes">Si</string>
 <string name="button_no">No</string>
-<string name="dialog_message_confirm">"Las operaciones sobre al archivo no se han completado. ¿Desea continuar?"</string>
+<string name="dialog_message_confirm">&quot;Las operaciones sobre al archivo no se han completado. ¿Desea continuar?&quot;</string>
 <string name="label_sort_taskid">Por fecha de creación</string>
 <string name="label_sort_filename">Por nombre de archivo</string>
 <string name="label_sort_totalsize">Por tamaño total</string>
@@ -133,15 +142,15 @@
 <string name="detail_status_finished">Finalizado</string>
 <string name="detail_status_hash_checking">Chequeando Hash</string>
 <string name="detail_status_error">Error</string>
-<string name="menu_about">Sobre</string>
-<string name="app_contributors">"Participantes en el proyecto:"</string>
+<string name="menu_about">Acerca de </string>
+<string name="app_contributors">&quot;Participantes en el proyecto:&quot;</string>
 <string name="app_status_project">Chequea el estado de nuestro proyecto:</string>
 <string name="button_ok">OK</string>
 <string name="eula_view">Licencia</string>
-<string name="button_yesplease">Si por favor</string>
+<string name="button_yesplease">Sí por favor</string>
 <string name="button_nothanks">No gracias</string>
 <string name="dialog_title_information">Información</string>
-<string name="no_server_configured">No se ha configurado ningun servidor todavía o no se ha configurado correctamante.\n\n¿Desea configurar el sistema ahora?</string>
+<string name="no_server_configured">No se ha configurado ningún servidor todavía o no se ha configurado correctamante.\n\n¿Desea configurar el sistema ahora?</string>
 <string name="detail_progress_upload">Subido:</string>
 <string name="detail_progress_download">Descargado:</string>
 <string name="detail_finished">Finalizado</string>
@@ -150,8 +159,7 @@
 <string name="title_information">Información</string>
 <string name="detail_unknown">Desconocido</string>
 <string name="action_files">Recuperando archivos \'%s\'</string>
-<string name="action_updating">"Actualizando archivo %s"</string>
-
+<string name="action_updating">&quot;Actualizando archivo %s&quot;</string>
 <string name="seeding_time">Tiempo compartiendo</string>
 <string name="seeding_ratio">Ratio de compartición (%)</string>
 <string name="seeding_parameters_time">Parámetros de compartición</string>
@@ -182,7 +190,7 @@
 
 <string name="logo_download">Torrent, NZB, Url</string>
 <string name="logo_emule">eMule (no implementado)</string>
-<string name="logo_about">Sobre</string>
+<string name="logo_about">Acerca de</string>
 <string-array name="seeding_time_array_values">
 <item>0</item>
 <item>90</item>
@@ -212,12 +220,58 @@
 <string name="shared_dir_title">Seleccione un directorio</string>
 <string name="shared_note">Nota: este parámetro afectará a todas las descargas pendientes</string>
 <string name="action_set_shared">Estableciendo directorio compartido</string>
-<string name="menu_destination">Destinato</string>
+<string name="menu_destination">Destino</string>
 <string name="action_download_original_file">Descargando archivo original</string>
 <string name="action_download_original_saved">El fichero se ha guardado en el almacenamiento externo(/sdcard/download)</string>
-<string name="action_download_original_failed">Imposile guardar el archivo. Posiblemente el el almacenamiento externo esté desmontado</string>
+<string name="action_download_original_failed">Imposile guardar el archivo. Posiblemente el almacenamiento externo esté desmontado</string>
 <string name="lang_es">Castellano</string>
 <string name="translator">&quot;Traductor(es):&quot;</string>
 <string name="fullscreen_preference">Pantalla completa</string>
 <string name="summary_fullscreen_preference">Oculta la barra de notificación</string>
+<string name="crash_notif_ticker_text">Error inesperado, por favor, envíe un informe...</string>
+<string name="crash_notif_title">Synodroid ha fallado...</string>
+<string name="crash_notif_text">Por favor, presione aquí para ayudar a arreglar el problema.</string>
+
+<string name="crash_dialog_title">Synodroid ha fallado</string>
+<string name="crash_dialog_text">Ha ocurrido un error inesperado obligando a para la aplicación. Por favor, ayúdenos a resolver este problema envíandonos los datos del error,
+        todo lo que tienes que hacer es presionar \'OK\'.</string>
+<string name="crash_dialog_comment_prompt">Puedes añadir tu email y tus comentarios sobre el problema debajo:</string>
+<string name="crash_dialog_ok_toast">¡ Gracias !</string>
+<string name="label_showupload">Mostrar progreso de subida</string>
+<string name="hint_showupload_on">Se muestra el progreso de subida</string>
+<string name="hint_showupload_off">No se muestra el progreso de subida</string>
+<string name="label_wlan">Conexión WIFI</string>
+<string name="hint_wlan_on">Esta conexión se utiliza sólo sobre WIFI</string>
+<string name="hint_wlan_off">Esta conexión no se utiliza sobre WIFI</string>
+<string name="label_wifissid">Red WIFI</string>
+<string name="hint_wifissid">Seleccione la red WIFI a utilizar</string>
+<string name="title_wifi_disabled">Wifi está deshabilitada</string>
+<string name="message_wifi_disabled">Por favor, habilite el Wifi antes de configurar la conexión</string>
+
+<string name="wizard_menu">Buscar servidor</string>
+<string name="wizard_searching_title">Buscando</string>
+<string name="wizard_searching_msg">Buscando NAS en tu red local. Por favor espere...</string>
+<string name="wizard_selectserver_title">Seleccione servidor</string>
+<string name="wizard_user_title">Información de usuario</string>
+<string name="wizard_user_user_label">Usuario</string>
+<string name="wizard_user_password_label">Contraseña</string>
+<string name="installTorrentSearch">Instalar Buscador de Torrents Transdroid</string>
+<string name="logo_search">Buscar Torrent</string>
+<string name="dialog_message_confirm_add">¿Está seguro de que quiere comenzar a descargar el archivo?</string>
+<string name="provider_missing">Proveedor de búsqueda no instalado,presione el botón inferior para instalarlo.\n\n Nota: Tendrá que reiniciar synodroid para habilitar después de instalar el proveedor de búsqueda...</string>
+<string name="searching">Buscando...\n\n</string>
+<string name="no_results">No se han encontrado coincidencias.\n\n</string>
+<string name="sites">Sitios disponibles:\n</string>
+<string name="no_keyword">Por favor, introduzca una clava por la que buscar...</string>
+<string name="search_hint">Buscar Torrent</string>
+<string name="wizard_options_title">Opciones</string>
+<string name="wizard_https">Quiero usar una conexión segura</string>
+<string name="wizard_ddns">También quiero conectarme a través de internet</string>
+<string name="wizard_ddns_host">Nombre de host DDNS</string>
+<string name="wizard_selectdsm_title">Seleccione versión de DSM</string>
+<string name="wizard_no_server_found">No se ha podido encontrar ningún servidor en la red. Comprueba tu conexión y pruebe de nuevo.</string>
+<string name="err_nomarket">Android market no está instalado en tu dispositivo.\n\nContacta con los desarrolladores para conseguir una copia de Transdroid search.</string>
+<string name="err_provider_missing">El buscador de torrents Transdroid no está instalado en tu dispositivo.\n\nSigue las instrucciones en la pestaña de búsqueda para instalarlo.</string>
+<string name="help">Ayuda</string>
+<string name="err_noemail">No hay ninguna aplicación de email configurada en tu dispositivo\nClica en el link de la página de "Acerca de Synodroid" para conseguir ayuda.</string>
 </resources>
