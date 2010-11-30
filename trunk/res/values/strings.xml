@@ -282,4 +282,6 @@
 <string name="label_useext">Connect from anywhere</string>
 <string name="hint_useext_on">Accessible from anywhere</string>
 <string name="hint_useext_off">Not accessible outside wifi</string>
+<string name="clear_search_history">Clear search history</string>
+<string name="cleared_search_history">Search history cleared.</string>
 </resources>

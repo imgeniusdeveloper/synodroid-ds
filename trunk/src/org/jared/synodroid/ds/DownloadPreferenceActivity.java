@@ -49,6 +49,7 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.provider.SearchRecentSuggestions;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -56,6 +57,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * The preference activity
@@ -152,12 +154,32 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				return true;
 			}
 		});
+		
+		final Preference clearHistory = new Preference(this);
+		clearHistory.setTitle(R.string.clear_search_history);
+		generalCategory.addPreference(clearHistory);
+		clearHistory.setOnPreferenceClickListener(new OnPreferenceClickListener(){
+
+			public boolean onPreferenceClick(Preference arg0) {
+				clearSearchHistory();
+				Toast toast = Toast.makeText(DownloadPreferenceActivity.this, getString(R.string.cleared_search_history), Toast.LENGTH_SHORT);
+				toast.show();
+				return false;
+			}
+			
+		});
 		// The dynamic servers category
 		serversCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference("servers_cat");
 		// Load currents servers
 		reloadCurrentServers();
 	}
 
+	private void clearSearchHistory(){
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+				SynodroidSearchSuggestion.AUTHORITY, SynodroidSearchSuggestion.MODE);
+		suggestions.clearHistory();
+	}
+	
 	private void reloadCurrentServers() {
 		// Load current servers
 		serversCategory.removeAll();
