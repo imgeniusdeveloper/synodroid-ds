@@ -274,4 +274,13 @@
 <string name="err_provider_missing">El buscador de torrents Transdroid no está instalado en tu dispositivo.\n\nSigue las instrucciones en la pestaña de búsqueda para instalarlo.</string>
 <string name="help">Ayuda</string>
 <string name="err_noemail">No hay ninguna aplicación de email configurada en tu dispositivo\nClica en el link de la página de "Acerca de Synodroid" para conseguir ayuda.</string>
+
+<string name="label_usewifi">Usar wifi</string>
+<string name="hint_usewifi_on">Unido a una o más redes wifi</string>
+<string name="hint_usewifi_off">No unido a una red wifi</string>
+<string name="label_useext">Conectar desde cualquier sitio</string>
+<string name="hint_useext_on">Accesible desde cualquier sitio</string>
+<string name="hint_useext_off">No accesible fuera de wifi</string>
+<string name="clear_search_history">Limpiar historial de búsqueda</string>
+<string name="cleared_search_history">Historial de búsqueda limpiado.</string>
 </resources>
