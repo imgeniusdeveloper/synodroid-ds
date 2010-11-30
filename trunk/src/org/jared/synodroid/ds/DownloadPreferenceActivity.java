@@ -541,7 +541,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			}
 			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
 			connectionCategory.addPreference(wifiSSIDPref);
-			if (!wifiMgr.isWifiEnabled()) {
+			if (!wifiMgr.isWifiEnabled() && wifiSSIDs.length == 0) {
 				wifiSSIDPref.setEnabled(false);
 			}
 		}
@@ -562,6 +562,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 
 		// ---- Protocol
 		final ListPreferenceWithValue protocolPref = ListPreferenceWithValue.create(this, keyP + PreferenceFacade.PROTOCOL_SUFFIX, R.string.label_protocol, R.string.hint_protocol, SynoProtocol.getValues());
+		protocolPref.setDefaultValue(SynoProtocol.getValues()[0]);
 		connectionCategory.addPreference(protocolPref);
 		// ---- Host
 		final EditTextPreferenceWithValue hostPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.HOST_SUFFIX, R.string.label_host, R.string.hint_host);
