@@ -74,6 +74,7 @@ public class IconFacade {
 	  	case TASK_ERROR_EXCEED_MAX_FS_SIZE:
 	  	case TASK_ERROR_BROKEN_LINK:
 		case TASK_ERROR_DISK_FULL:
+		case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
 			id = R.drawable.dl_error;
 			break;
 		}
