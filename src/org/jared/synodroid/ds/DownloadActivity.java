@@ -133,8 +133,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private TextView totalUpView;
 	// The total download rate view
 	private TextView totalDownView;
-	// The synology server
-	private SynoServer server;
 	// Flag to know is the EULA has been accepted
 	private boolean licenceAccepted = false;
 	// Flag to tell app that the connect dialog is opened
@@ -232,8 +230,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			// Show the error
 			// Save the last error inside the server to surive UI rotation and
 			// pause/resume.
-			if (server == null)
-				server = ((Synodroid) getApplication()).getServer();
+			final SynoServer server = ((Synodroid) getApplication()).getServer();
 			if (server != null) {
 				server.setLastError((String) msg.obj);
 				showError(server.getLastError(), new Dialog.OnClickListener() {
@@ -250,6 +247,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 		// Connection is done
 		else if (msg.what == ResponseHandler.MSG_CONNECTED) {
+			final SynoServer server = ((Synodroid) getApplication()).getServer();
 			// Change the title
 			String title = server.getNickname();
 			if (server.getConnection()==server.getPublicConnection()) {
@@ -761,7 +759,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * 
 	 * @param intentP
 	 */
-	private void handleIntent(Intent intentP) {
+	private boolean handleIntent(Intent intentP) {
 		String action = intentP.getAction();
 		Log.d(Synodroid.DS_TAG, "New intent: " + intentP);
 		if (action != null) {
@@ -772,12 +770,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
 					/** Download and fix URL */
 					new TorrentDownloadAndAdd().execute(uri.toString());
+					return false;
 				}
 			}
 			else if (action.equals(Intent.ACTION_SEND)) {
 				String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
 				if (uriString == null) {
-					return;
+					return true;
 				}
 				uri = Uri.parse(uriString);
 				out_url = true;
@@ -787,9 +786,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				app.executeAction(this, addTask, true);
 			}
 			else {
-				return;
+				return true;
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -904,7 +904,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					// When the user select a server
 					builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int item) {
-							server = servers.get(item);
+							SynoServer server = servers.get(item);
 							// Change the server
 							((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
 							dialog.dismiss();
@@ -921,7 +921,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				else {
 					// Auto connect to the first server
 					if (servers.size() > 0) {
-						server = servers.get(0);
+						SynoServer server = servers.get(0);
 						// Change the server
 						((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
 					}
@@ -1008,6 +1008,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			slide = false;
 		}
         
+		boolean connectToServer = true;
 	    //Get the current main intent
 	    Intent intent = getIntent();	
 	    String action = intent.getAction();
@@ -1016,7 +1017,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			//REUSE INTENT CHECK: check if the intent is comming out of the history.
 			if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0){
 				//Not from history -> process intent
-				handleIntent(intent);
+				connectToServer = handleIntent(intent);
 			}
 		}
 		else if (Intent.ACTION_SEARCH.equals(action)){
@@ -1063,7 +1064,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		
 	    // There are some case where the connected server does not show up in
 		// the title bar on top. This fixes thoses cases.
-		server = ((Synodroid) getApplication()).getServer();
+		SynoServer server = ((Synodroid) getApplication()).getServer();
 		if (server != null && server.isConnected()) {
 			String title = server.getNickname();
 			if (server.getConnection()==server.getPublicConnection()) {
@@ -1080,7 +1081,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		}
 		// No server then display the connection dialog
 		else {
-			showDialogToConnect(true, null);
+			if (connectToServer) showDialogToConnect(true, null);
 		}
 	}
 
