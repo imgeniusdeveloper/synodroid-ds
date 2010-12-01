@@ -246,7 +246,7 @@ public class Synodroid extends CrashReportingApplication {
    * @param forceRefreshP
    */
   public void executeAction(final DownloadActivity activityP, final SynoAction actionP, final boolean forceRefreshP) {
-    if (currentServer != null) {
+	if (currentServer != null && currentServer.isConnected()) {
       // First verify if it is a DeleteTaskAction and if the task is not finished
       TaskStatus status = null;
       if (actionP.getTask() != null && actionP.getTask().status != null) {
@@ -265,7 +265,7 @@ public class Synodroid extends CrashReportingApplication {
       }
       // Ok no problem do it
       else {
-        currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
+    	currentServer.executeAsynchronousAction(activityP, actionP, forceRefreshP);
       }
     }
     // If an action have to be executed but with no current connection

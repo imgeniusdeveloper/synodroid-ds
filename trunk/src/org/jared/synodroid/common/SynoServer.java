@@ -330,8 +330,7 @@ public class SynoServer {
    * @throws DSMException
    */
   public void connect(final ResponseHandler handlerP, final List<SynoAction> actionQueueP, boolean publicP) {
-
-    // Set the connection according to the public or local parameter
+	// Set the connection according to the public or local parameter
     if (publicP) {
       currentConn = publicConnection;
     }
@@ -614,7 +613,7 @@ public class SynoServer {
    * @return the protocol
    */
   public SynoProtocol getProtocol() {
-    return currentConn.protocol;
+	return currentConn.protocol;
   }
 
   /**
