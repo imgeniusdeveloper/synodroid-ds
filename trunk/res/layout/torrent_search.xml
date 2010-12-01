@@ -37,7 +37,7 @@
 	    	android:layout_width="fill_parent" 
 	    	android:layout_height="fill_parent" 
 	    	android:isScrollContainer="true" 
-	    	android:layout_below="@+id/layout_btns">
+	    	android:layout_below="@+id/resList">
 			<Button 
 				android:text="@string/installTorrentSearch" 
 				android:id="@+id/btnTorSearchInst" 
