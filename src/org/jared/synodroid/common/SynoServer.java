@@ -41,6 +41,7 @@ import org.jared.synodroid.common.protocol.https.AcceptAllTrustManager;
 import org.jared.synodroid.ds.R;
 import org.json.JSONObject;
 
+import android.net.Uri;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
@@ -764,7 +765,7 @@ public class SynoServer {
   private HttpURLConnection createConnection(String uriP, String requestP, String methodP)
           throws MalformedURLException, IOException {
     // Prepare the connection
-    HttpURLConnection con = (HttpURLConnection) new URL(getUrl() + uriP).openConnection();
+    HttpURLConnection con = (HttpURLConnection) new URL(getUrl() + Uri.encode(uriP, "/")).openConnection();
     // con.setConnectTimeout(20000);
     // Add cookies if exist
     if (cookies != null) {
