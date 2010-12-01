@@ -90,6 +90,7 @@ import android.widget.ScrollView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -571,7 +572,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	}
 
 	private class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri>{
-
+		@Override
+		protected void onPreExecute() {
+			Toast toast = Toast.makeText(DownloadActivity.this, getString(R.string.wait_for_download), Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		
 		@Override
 		protected Uri doInBackground(String... params) {
 			Uri uri = Uri.parse(params[0]);
