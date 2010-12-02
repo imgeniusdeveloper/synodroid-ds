@@ -284,5 +284,5 @@
 <string name="hint_useext_off">Not accessible outside wifi</string>
 <string name="clear_search_history">Clear search history</string>
 <string name="cleared_search_history">Search history cleared.</string>
-<string name="wait_for_download">Do not close Synodroid until task added, waiting task file...</string>
+<string name="wait_for_download">Do not close Synodroid until task is added.\nWaiting for task file...</string>
 </resources>

@@ -284,4 +284,5 @@
 <string name="hint_useext_off">Non accessible depuis l\'extérieur</string>
 <string name="clear_search_history">Supprimer l\'historique de recherche</string>
 <string name="cleared_search_history">Historique de recherche supprimée.</string>
+<string name="wait_for_download">Ne fermé pas Synodroid tant que la tâche n\'est pas ajouter.\nEn attente du fichier de tâche...</string>
 </resources>
