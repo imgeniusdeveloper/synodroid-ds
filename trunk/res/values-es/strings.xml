@@ -283,4 +283,5 @@
 <string name="hint_useext_off">No accesible fuera de wifi</string>
 <string name="clear_search_history">Limpiar historial de búsqueda</string>
 <string name="cleared_search_history">Historial de búsqueda limpiado.</string>
+<string name="wait_for_download">No cierre Synodroid hasta que la tarea se añade.\nLugar para archivo de tarea ...</string>
 </resources>
