@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/id_main">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:id="@+id/id_top_bar">
+        <RelativeLayout
+            android:id="@+id/LinearLayout01"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:background="@drawable/title_bar"
+            android:visibility="visible"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/id_title_click_button"
+                android:src="@drawable/ic_list_action"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="false" android:layout_height="wrap_content" android:layout_marginTop="5dip" android:layout_marginLeft="6dip"></ImageView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/id_operation_pending_container"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dip"
+                android:visibility="invisible"
+                android:layout_centerVertical="false"
+                android:orientation="horizontal" android:layout_marginTop="10dip">
+                
+            <ProgressBar android:id="@+id/ProgressBar01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminate="true" style="?android:progressBarStyleSmall"></ProgressBar>
+</LinearLayout>
+            <RelativeLayout
+                android:layout_height="40dip"
+                android:id="@+id/id_title_bar"
+                android:layout_width="fill_parent"
+                android:layout_toRightOf="@+id/id_title_click_button"
+                android:layout_toLeftOf="@+id/id_operation_pending_container" android:gravity="center_horizontal">
+            </RelativeLayout>
+        </RelativeLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:background="@drawable/border_top"
+            android:id="@+id/id_title_top_border"
+            android:layout_height="1dip"></View>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/id_bottom_bar">
+        <View
+            android:layout_width="wrap_content"
+            android:background="@drawable/border_top"
+            android:id="@+id/id_status_top_bar"
+            android:layout_height="5dip"></View>
+        <RelativeLayout
+            style="?android:attr/windowTitleBackgroundStyle"
+            android:layout_width="fill_parent"
+            android:background="@drawable/status_bar"
+            android:id="@+id/id_status_bar"
+            android:layout_height="48dip">
+        </RelativeLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:background="@drawable/border_top"
+            android:id="@+id/id_status_bottom_bar"
+            android:layout_height="5dip"></View>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:clickable="true"
+        android:layout_above="@+id/id_bottom_bar"
+        android:layout_below="@+id/id_top_bar"
+        android:id="@+id/id_main_content"></RelativeLayout>
+</RelativeLayout>
