@@ -239,7 +239,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		MenuItem wizardItem = menu.getItem(0);
-		if (wizardItem != null) {
+		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
+		if (wizardItem != null && wizardPossible) {
 			WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			boolean wifiOn = wifiMgr.isWifiEnabled();
 			final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
