@@ -80,6 +80,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.WindowManager.BadTokenException;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -263,7 +264,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
 			taskAdapter.updateTasks(new ArrayList<Task>());
 			// Show the connection dialog
-			showDialog(CONNECTION_DIALOG_ID);
+			try{
+				showDialog(CONNECTION_DIALOG_ID);
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 		// Show task's details
 		else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
@@ -296,7 +302,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			});
 
 			AlertDialog alert = builder.create();
-			alert.show();
+			try{
+				alert.show();
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 	}
 
@@ -336,7 +347,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		eulaBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Diplay the EULA
-				Eula.show(DownloadActivity.this, true);
+				try{
+					Eula.show(DownloadActivity.this, true);
+				}
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 		});
 
@@ -360,7 +376,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				              }
 				            });
 				    AlertDialog errorDialog = builder.create();
-					errorDialog.show();
+				    try{
+				    	errorDialog.show();
+				    }
+					catch (BadTokenException ex){
+						//Unable to show dialog probably because intent has been closed. Ignoring...
+					}
 				}
 			}
 		});
@@ -472,7 +493,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					              }
 					            });
 					    AlertDialog errorDialog = builder.create();
-						errorDialog.show();
+					    try{
+					    	errorDialog.show();
+					    }
+						catch (BadTokenException ex){
+							//Unable to show dialog probably because intent has been closed. Ignoring...
+						}
 					}
 					
 				}
@@ -520,7 +546,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		                	}
 		                }).create();
 		        // d.setOwnerActivity(this); // why can't the builder do this?
-		        d.show();
+		        try{
+		        	d.show();
+		        }
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 		});
 	}
@@ -532,7 +563,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	public void onCreate(Bundle savedInstanceState) {
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		licenceAccepted = Eula.show(this, false);
+		licenceAccepted = false;
+		try{
+			licenceAccepted = Eula.show(this, false);
+		}
+		catch (BadTokenException e){
+			//Unable to show dialog probably because intent has been closed. Ignoring...
+		}
 		tabsNeedInit = true;
 
 		// Create the tab manager
@@ -917,7 +954,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 						}
 					});
 					AlertDialog connectDialog = builder.create();
-					connectDialog.show();
+					try{
+						connectDialog.show();
+					}
+					catch (BadTokenException e){
+						//Unable to show dialog probably because intent has been closed. Ignoring...
+					}
 					connectDialog.setOnDismissListener(new OnDismissListener() {
 						public void onDismiss(DialogInterface dialog) {
 							connectDialogOpened = false;
@@ -939,7 +981,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				// accepted, it means that the EULA is currenlty being displayed so
 				// don't show the "Wizard" dialog
 				if (licenceAccepted && !alreadyCanceled) {
-					showDialog(NO_SERVER_DIALOG_ID);
+					try{
+						showDialog(NO_SERVER_DIALOG_ID);
+					}
+					catch (BadTokenException e){
+						//Unable to show dialog probably because intent has been closed. Ignoring...
+					}
 				}
 			}
 		}
@@ -1057,7 +1104,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			              }
 			            });
 			    AlertDialog errorDialog = builder.create();
-				errorDialog.show();
+			    try{
+			    	errorDialog.show();
+			    }
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 			
 			
@@ -1126,7 +1178,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				}
 			});
 			AlertDialog connectDialog = builder.create();
-			connectDialog.show();
+			try{
+				connectDialog.show();
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 	}
 
