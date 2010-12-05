@@ -563,8 +563,11 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			}
 			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
 			connectionCategory.addPreference(wifiSSIDPref);
-			if (!wifiMgr.isWifiEnabled() && wifiSSIDs.length == 0) {
+			if (!wifiMgr.isWifiEnabled() || wifiSSIDs.length == 0) {
 				connectionCategory.setEnabled(false);
+			}
+			else{
+				wifiSSIDPref.setValue(wifiSSIDs[0]);
 			}
 		}
 		else{
