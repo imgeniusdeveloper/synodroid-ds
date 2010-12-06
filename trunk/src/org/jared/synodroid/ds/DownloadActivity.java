@@ -685,17 +685,17 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					}
 				});
 	        }
-	        
-	        // Show results in the list
-	        if (cur.getCount() == 0){
-	        	emptyText.setVisibility(TextView.VISIBLE);
-	        	resList.setVisibility(ListView.GONE);
-	        	emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
-	        }
-	        else{
-	        	emptyText.setVisibility(TextView.GONE);
-	        	resList.setVisibility(ListView.VISIBLE);
-	        	resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));	
+	        else{// Show results in the list
+		        if (cur.getCount() == 0){
+		        	emptyText.setVisibility(TextView.VISIBLE);
+		        	resList.setVisibility(ListView.GONE);
+		        	emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
+		        }
+		        else{
+		        	emptyText.setVisibility(TextView.GONE);
+		        	resList.setVisibility(ListView.VISIBLE);
+		        	resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));	
+		        }
 	        }
 		}
 		
