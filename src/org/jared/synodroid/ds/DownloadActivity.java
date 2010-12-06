@@ -802,7 +802,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000) + " sec(s)");
 			uri = Uri.fromFile(file);
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			Log.d(Synodroid.DS_TAG, "Download Error: " + e);
 			Log.d(Synodroid.DS_TAG, "Letting the NAS do the heavy lifting...");
 		}
