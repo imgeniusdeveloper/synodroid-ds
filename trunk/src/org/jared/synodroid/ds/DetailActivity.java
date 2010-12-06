@@ -398,6 +398,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				Toast toast = Toast.makeText(this, getString(R.string.action_download_original_failed), Toast.LENGTH_LONG);
 				toast.show();
 			}
+			catch (OutOfMemoryError e) {
+				// Unable to create file, likely because external storage is
+				// not currently mounted.
+				Log.w("ExternalStorage", "Error writing " + file, e);
+				Toast toast = Toast.makeText(this, getString(R.string.action_download_original_failed), Toast.LENGTH_LONG);
+				toast.show();
+			}
 			break;
 		}
 	}
