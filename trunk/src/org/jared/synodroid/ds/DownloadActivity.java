@@ -617,19 +617,26 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		
 		@Override
 		protected Uri doInBackground(String... params) {
-			Uri uri = Uri.parse(params[0]);
-			return fixUri(uri);
+			try{
+				Uri uri = Uri.parse(params[0]);
+				return fixUri(uri);
+			}
+			catch (Exception e){
+				return null;
+			}
 		}
 	
 		@Override
 		protected void onPostExecute(Uri uri) {
 			boolean out_url = false;
-	        if (!uri.toString().startsWith("file:")){
-	        	out_url = true;
-	        }
-	        AddTaskAction addTask = new AddTaskAction(uri, out_url);
-			Synodroid app = (Synodroid) getApplication();
-			app.executeAction(DownloadActivity.this, addTask, true);
+			if (uri != null){
+				if (!uri.toString().startsWith("file:")){
+		        	out_url = true;
+		        }
+		        AddTaskAction addTask = new AddTaskAction(uri, out_url);
+				Synodroid app = (Synodroid) getApplication();
+				app.executeAction(DownloadActivity.this, addTask, true);
+			}
 		}
 	}
 
@@ -645,16 +652,21 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		
 		@Override
 		protected Cursor doInBackground(String... params) {
-			// Create the URI of the TorrentProvider
-	        String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"+params[0];
-	        Uri uri = Uri.parse(uriString);
-	        // Then query for this specific record (no selection nor projection nor sort):
-	        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-	        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
-	        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
-	        
-	        return managedQuery(uri, null, "SITE = ?", 
-	        		new String[] { pref_src }, pref_order);
+			try{
+				// Create the URI of the TorrentProvider
+		        String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"+params[0];
+		        Uri uri = Uri.parse(uriString);
+		        // Then query for this specific record (no selection nor projection nor sort):
+		        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
+		        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
+		        
+		        return managedQuery(uri, null, "SITE = ?", 
+		        		new String[] { pref_src }, pref_order);
+			}
+		    catch (Exception e){
+		    	return null;
+		    }
 		}
 		
 		@Override

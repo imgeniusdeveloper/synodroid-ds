@@ -224,9 +224,17 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 * Create the option menu of this activity
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
-		menu.add(0, MENU_CREATE, 1, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
-		menu.add(0, MENU_DELETE, 2, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
+		if (wizardPossible){
+			menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
+			menu.add(0, MENU_CREATE, 1, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
+			menu.add(0, MENU_DELETE, 2, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+				
+		}
+		else{
+			menu.add(0, MENU_CREATE, 0, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
+			menu.add(0, MENU_DELETE, 1, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+		}
 		return true;
 	}
 
@@ -238,15 +246,18 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		MenuItem wizardItem = menu.getItem(0);
 		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
-		if (wizardItem != null && wizardPossible) {
-			WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-			boolean wifiOn = wifiMgr.isWifiEnabled();
-			final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
-			boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
-			wizardItem.setEnabled(wifiConnected);
+		if (wizardPossible){
+			MenuItem wizardItem = menu.getItem(0);
+			if (wizardItem != null) {
+				WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+				boolean wifiOn = wifiMgr.isWifiEnabled();
+				final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
+				boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
+				wizardItem.setEnabled(wifiConnected);
+			}
 		}
+		
 		return true;
 	}
 
