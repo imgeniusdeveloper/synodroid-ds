@@ -823,14 +823,16 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				}
 				uri = Uri.parse(uriString);
 				out_url = true;
-				
-				AddTaskAction addTask = new AddTaskAction(uri, out_url);
-				Synodroid app = (Synodroid) getApplication();
-				app.executeAction(this, addTask, true);
 			}
 			else {
 				return true;
 			}
+			// If uri is not null
+			if (uri != null) {
+				AddTaskAction addTask = new AddTaskAction(uri, out_url);
+				Synodroid app = (Synodroid) getApplication();
+				app.executeAction(this, addTask, true);
+			}	
 		}
 		return true;
 	}
