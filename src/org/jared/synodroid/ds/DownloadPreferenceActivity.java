@@ -224,9 +224,17 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 * Create the option menu of this activity
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
-		menu.add(0, MENU_CREATE, 1, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
-		menu.add(0, MENU_DELETE, 2, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
+		if (wizardPossible){
+			menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
+			menu.add(0, MENU_CREATE, 1, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
+			menu.add(0, MENU_DELETE, 2, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+				
+		}
+		else{
+			menu.add(0, MENU_CREATE, 0, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
+			menu.add(0, MENU_DELETE, 1, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
+		}
 		return true;
 	}
 
@@ -238,14 +246,18 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-		MenuItem wizardItem = menu.getItem(0);
-		if (wizardItem != null) {
-			WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-			boolean wifiOn = wifiMgr.isWifiEnabled();
-			final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
-			boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
-			wizardItem.setEnabled(wifiConnected);
+		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
+		if (wizardPossible){
+			MenuItem wizardItem = menu.getItem(0);
+			if (wizardItem != null) {
+				WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+				boolean wifiOn = wifiMgr.isWifiEnabled();
+				final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
+				boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
+				wizardItem.setEnabled(wifiConnected);
+			}
 		}
+		
 		return true;
 	}
 
@@ -327,17 +339,27 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 							ServerInfo serv = servers.get(index);
 							// If we want to delete it then remove from the ServerCategory
 							if (serv.delete) {
-								// Deletion is done by hand
+								editor.remove(serv.key + PreferenceFacade.USEEXT_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.USEWIFI_SUFFIX); 
 								editor.remove(serv.key + PreferenceFacade.NICKNAME_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.DSM_SUFFIX);
+								
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SHOWUPLOAD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHSTATE_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHVALUE_SUFFIX);
+								
 								editor.remove(serv.key + PreferenceFacade.PROTOCOL_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.HOST_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.PORT_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.DSM_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.SHOWUPLOAD_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.REFRESHSTATE_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.REFRESHVALUE_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.SSID_SUFFIX);
 							}
 						}
 					}
@@ -502,15 +524,15 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		generalCategory.setTitle(getString(R.string.title_cat_server));
 		screen.addPreference(generalCategory);
 		// ---- Nickname
-		final EditTextPreferenceWithValue nickPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.NICKNAME_SUFFIX, R.string.label_nickname, R.string.hint_nickname);
+		final EditTextPreferenceWithValue nickPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.NICKNAME_SUFFIX, R.string.label_nickname, R.string.hint_nickname, true);
 		nickPref.setText(titleP);
 		nickPref.setDefaultValue(titleP);
 		generalCategory.addPreference(nickPref);
 
 		// ---- Username
-		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.USER_SUFFIX, R.string.label_username, R.string.hint_username));
+		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.USER_SUFFIX, R.string.label_username, R.string.hint_username, true));
 		// ---- Password
-		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password).setInputType(
+		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password, false).setInputType(
 		    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
 		// --- DSM Version
 		generalCategory.addPreference(ListPreferenceWithValue.create(this, keyP + PreferenceFacade.DSM_SUFFIX, R.string.label_dsm_version, R.string.hint_dsm_version, DSMVersion.getValues()));
@@ -563,8 +585,11 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			}
 			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
 			connectionCategory.addPreference(wifiSSIDPref);
-			if (!wifiMgr.isWifiEnabled() && wifiSSIDs.length == 0) {
+			if (!wifiMgr.isWifiEnabled() || wifiSSIDs.length == 0) {
 				connectionCategory.setEnabled(false);
+			}
+			else{
+				wifiSSIDPref.setValue(wifiSSIDs[0]);
 			}
 		}
 		else{
@@ -587,10 +612,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		protocolPref.setDefaultValue(SynoProtocol.getValues()[0]);
 		connectionCategory.addPreference(protocolPref);
 		// ---- Host
-		final EditTextPreferenceWithValue hostPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.HOST_SUFFIX, R.string.label_host, R.string.hint_host);
+		final EditTextPreferenceWithValue hostPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.HOST_SUFFIX, R.string.label_host, R.string.hint_host, true);
 		connectionCategory.addPreference(hostPref);
 		// ---- Port
-		final EditTextPreferenceWithValue portPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PORT_SUFFIX, R.string.label_port, R.string.hint_port).setInputType(InputType.TYPE_CLASS_NUMBER);
+		final EditTextPreferenceWithValue portPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PORT_SUFFIX, R.string.label_port, R.string.hint_port, true).setInputType(InputType.TYPE_CLASS_NUMBER);
 		connectionCategory.addPreference(portPref);
 
 		// ---- Show upload
@@ -616,7 +641,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
 		connectionCategory.addPreference(autoRefresh);
 		// -- Refresh value
-		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval).setInputType(
+		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval, true).setInputType(
 		    InputType.TYPE_CLASS_NUMBER);
 		autoRefreshValue.setDefaultValue("15");
 		connectionCategory.addPreference(autoRefreshValue);
@@ -655,7 +680,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	private String buildURL(String protoP, String hostP, String portP) {
 		String result = "";
 		// If at least a non null value
-		if ((protoP != null && protoP.length() > 0) || (hostP != null && hostP.length() > 0) || (portP != null && portP.length() > 0)) {
+		if ((protoP != null && protoP.length() > 0) && (hostP != null && hostP.length() > 0) && (portP != null && portP.length() > 0)) {
 			result = result + (protoP != null ? protoP : "") + "://";
 			result = result + (hostP != null ? hostP : "") + ":";
 			result = result + (portP != null ? portP : "");

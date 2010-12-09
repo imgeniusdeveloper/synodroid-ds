@@ -37,6 +37,7 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	private TextView valueView;
 	// The input type ot use in the dialog's EditText
 	private Integer inputType = null;
+	private boolean doTrim = false;
 
 
 	/**
@@ -45,10 +46,11 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	 * @param context
 	 * @param attrs
 	 */
-	public EditTextPreferenceWithValue(Context context, AttributeSet attrs) {
+	public EditTextPreferenceWithValue(Context context, AttributeSet attrs, boolean trim) {
 		super(context, attrs);
 		setLayoutResource(R.layout.preference_with_value);
 		setSingleLine(true);
+		doTrim = trim;
 	}
 
 	/**
@@ -56,10 +58,12 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	 * 
 	 * @param context
 	 */
-	public EditTextPreferenceWithValue(Context context) {
+	public EditTextPreferenceWithValue(Context context, boolean trim) {
 		super(context);
 		setLayoutResource(R.layout.preference_with_value);
 		setSingleLine(true);
+		doTrim = trim;
+		
 	}
 
 	/**
@@ -106,7 +110,12 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	 */
 	@Override
 	public void setText(String text) {
-		super.setText(text);
+		if (doTrim && text != null){
+			super.setText(text.trim());
+		}
+		else{
+			super.setText(text);
+		}
 		updateValueInPreference(getText());
 	}
 
@@ -141,8 +150,8 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	 * @param summaryP
 	 * @return
 	 */
-	public static EditTextPreferenceWithValue create(Context contextP, String keyP, int titleP, int summaryP) {
-		EditTextPreferenceWithValue pref = new EditTextPreferenceWithValue(contextP);
+	public static EditTextPreferenceWithValue create(Context contextP, String keyP, int titleP, int summaryP, boolean trim) {
+		EditTextPreferenceWithValue pref = new EditTextPreferenceWithValue(contextP, trim);
 		pref.setKey(keyP);
 		pref.setTitle(titleP);
 		pref.setSummary(summaryP);

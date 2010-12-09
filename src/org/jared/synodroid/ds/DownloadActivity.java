@@ -11,7 +11,6 @@ package org.jared.synodroid.ds;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -80,6 +79,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.WindowManager.BadTokenException;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -263,7 +263,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
 			taskAdapter.updateTasks(new ArrayList<Task>());
 			// Show the connection dialog
-			showDialog(CONNECTION_DIALOG_ID);
+			try{
+				showDialog(CONNECTION_DIALOG_ID);
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 		// Show task's details
 		else if (msg.what == ResponseHandler.MSG_SHOW_DETAILS) {
@@ -296,7 +301,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			});
 
 			AlertDialog alert = builder.create();
-			alert.show();
+			try{
+				alert.show();
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 	}
 
@@ -336,7 +346,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		eulaBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				// Diplay the EULA
-				Eula.show(DownloadActivity.this, true);
+				try{
+					Eula.show(DownloadActivity.this, true);
+				}
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 		});
 
@@ -360,7 +375,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				              }
 				            });
 				    AlertDialog errorDialog = builder.create();
-					errorDialog.show();
+				    try{
+				    	errorDialog.show();
+				    }
+					catch (BadTokenException ex){
+						//Unable to show dialog probably because intent has been closed. Ignoring...
+					}
 				}
 			}
 		});
@@ -472,7 +492,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					              }
 					            });
 					    AlertDialog errorDialog = builder.create();
-						errorDialog.show();
+					    try{
+					    	errorDialog.show();
+					    }
+						catch (BadTokenException ex){
+							//Unable to show dialog probably because intent has been closed. Ignoring...
+						}
 					}
 					
 				}
@@ -520,7 +545,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		                	}
 		                }).create();
 		        // d.setOwnerActivity(this); // why can't the builder do this?
-		        d.show();
+		        try{
+		        	d.show();
+		        }
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 		});
 	}
@@ -532,7 +562,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	public void onCreate(Bundle savedInstanceState) {
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		licenceAccepted = Eula.show(this, false);
+		licenceAccepted = false;
+		try{
+			licenceAccepted = Eula.show(this, false);
+		}
+		catch (BadTokenException e){
+			//Unable to show dialog probably because intent has been closed. Ignoring...
+		}
 		tabsNeedInit = true;
 
 		// Create the tab manager
@@ -580,19 +616,26 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		
 		@Override
 		protected Uri doInBackground(String... params) {
-			Uri uri = Uri.parse(params[0]);
-			return fixUri(uri);
+			try{
+				Uri uri = Uri.parse(params[0]);
+				return fixUri(uri);
+			}
+			catch (Exception e){
+				return null;
+			}
 		}
 	
 		@Override
 		protected void onPostExecute(Uri uri) {
 			boolean out_url = false;
-	        if (!uri.toString().startsWith("file:")){
-	        	out_url = true;
-	        }
-	        AddTaskAction addTask = new AddTaskAction(uri, out_url);
-			Synodroid app = (Synodroid) getApplication();
-			app.executeAction(DownloadActivity.this, addTask, true);
+			if (uri != null){
+				if (!uri.toString().startsWith("file:")){
+		        	out_url = true;
+		        }
+		        AddTaskAction addTask = new AddTaskAction(uri, out_url);
+				Synodroid app = (Synodroid) getApplication();
+				app.executeAction(DownloadActivity.this, addTask, true);
+			}
 		}
 	}
 
@@ -608,16 +651,21 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		
 		@Override
 		protected Cursor doInBackground(String... params) {
-			// Create the URI of the TorrentProvider
-	        String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"+params[0];
-	        Uri uri = Uri.parse(uriString);
-	        // Then query for this specific record (no selection nor projection nor sort):
-	        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-	        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
-	        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
-	        
-	        return managedQuery(uri, null, "SITE = ?", 
-	        		new String[] { pref_src }, pref_order);
+			try{
+				// Create the URI of the TorrentProvider
+		        String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"+params[0];
+		        Uri uri = Uri.parse(uriString);
+		        // Then query for this specific record (no selection nor projection nor sort):
+		        SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		        String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
+		        String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
+		        
+		        return managedQuery(uri, null, "SITE = ?", 
+		        		new String[] { pref_src }, pref_order);
+			}
+		    catch (Exception e){
+		    	return null;
+		    }
 		}
 		
 		@Override
@@ -636,17 +684,17 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					}
 				});
 	        }
-	        
-	        // Show results in the list
-	        if (cur.getCount() == 0){
-	        	emptyText.setVisibility(TextView.VISIBLE);
-	        	resList.setVisibility(ListView.GONE);
-	        	emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
-	        }
-	        else{
-	        	emptyText.setVisibility(TextView.GONE);
-	        	resList.setVisibility(ListView.VISIBLE);
-	        	resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));	
+	        else{// Show results in the list
+		        if (cur.getCount() == 0){
+		        	emptyText.setVisibility(TextView.VISIBLE);
+		        	resList.setVisibility(ListView.GONE);
+		        	emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
+		        }
+		        else{
+		        	emptyText.setVisibility(TextView.GONE);
+		        	resList.setVisibility(ListView.VISIBLE);
+		        	resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));	
+		        }
 	        }
 		}
 		
@@ -753,7 +801,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000) + " sec(s)");
 			uri = Uri.fromFile(file);
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			Log.d(Synodroid.DS_TAG, "Download Error: " + e);
 			Log.d(Synodroid.DS_TAG, "Letting the NAS do the heavy lifting...");
 		}
@@ -919,7 +967,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 						}
 					});
 					AlertDialog connectDialog = builder.create();
-					connectDialog.show();
+					try{
+						connectDialog.show();
+					}
+					catch (BadTokenException e){
+						//Unable to show dialog probably because intent has been closed. Ignoring...
+					}
 					connectDialog.setOnDismissListener(new OnDismissListener() {
 						public void onDismiss(DialogInterface dialog) {
 							connectDialogOpened = false;
@@ -941,7 +994,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				// accepted, it means that the EULA is currenlty being displayed so
 				// don't show the "Wizard" dialog
 				if (licenceAccepted && !alreadyCanceled) {
-					showDialog(NO_SERVER_DIALOG_ID);
+					try{
+						showDialog(NO_SERVER_DIALOG_ID);
+					}
+					catch (Exception e){
+						//Unable to show dialog probably because intent has been closed or the dialog is already displayed. Ignoring...
+					}
 				}
 			}
 		}
@@ -1059,7 +1117,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			              }
 			            });
 			    AlertDialog errorDialog = builder.create();
-				errorDialog.show();
+			    try{
+			    	errorDialog.show();
+			    }
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 			
 			
@@ -1128,7 +1191,12 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				}
 			});
 			AlertDialog connectDialog = builder.create();
-			connectDialog.show();
+			try{
+				connectDialog.show();
+			}
+			catch (BadTokenException e){
+				//Unable to show dialog probably because intent has been closed. Ignoring...
+			}
 		}
 	}
 
