@@ -10,7 +10,6 @@ package org.jared.synodroid.ds;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -391,7 +390,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				Toast toast = Toast.makeText(DetailActivity.this, getString(R.string.action_download_original_saved), Toast.LENGTH_SHORT);
 				toast.show();
 			}
-			catch (IOException e) {
+			catch (Exception e) {
 				// Unable to create file, likely because external storage is
 				// not currently mounted.
 				Log.w("ExternalStorage", "Error writing " + file, e);
@@ -524,7 +523,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		setResult(RESULT_OK, previous);
 		
 		// ------------ Status
-		result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
+		try{
+			result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
+		}
+		catch (NullPointerException e){
+			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
+		}
 		// ------------ Transfered
 		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
 		if (details.isTorrent) {

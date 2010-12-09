@@ -914,9 +914,15 @@ public class SynoServer {
       BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
       StringBuffer sb = new StringBuffer();
       String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line);
+      try{
+    	  while ((line = br.readLine()) != null) {
+	        sb.append(line);
+	      }
       }
+      catch (OutOfMemoryError e){
+    	  sb = null;
+      }
+      
       br.close();
       return sb;
     }
