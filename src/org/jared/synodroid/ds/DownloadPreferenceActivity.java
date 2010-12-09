@@ -524,15 +524,15 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		generalCategory.setTitle(getString(R.string.title_cat_server));
 		screen.addPreference(generalCategory);
 		// ---- Nickname
-		final EditTextPreferenceWithValue nickPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.NICKNAME_SUFFIX, R.string.label_nickname, R.string.hint_nickname);
+		final EditTextPreferenceWithValue nickPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.NICKNAME_SUFFIX, R.string.label_nickname, R.string.hint_nickname, true);
 		nickPref.setText(titleP);
 		nickPref.setDefaultValue(titleP);
 		generalCategory.addPreference(nickPref);
 
 		// ---- Username
-		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.USER_SUFFIX, R.string.label_username, R.string.hint_username));
+		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.USER_SUFFIX, R.string.label_username, R.string.hint_username, true));
 		// ---- Password
-		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password).setInputType(
+		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password, false).setInputType(
 		    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
 		// --- DSM Version
 		generalCategory.addPreference(ListPreferenceWithValue.create(this, keyP + PreferenceFacade.DSM_SUFFIX, R.string.label_dsm_version, R.string.hint_dsm_version, DSMVersion.getValues()));
@@ -612,10 +612,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		protocolPref.setDefaultValue(SynoProtocol.getValues()[0]);
 		connectionCategory.addPreference(protocolPref);
 		// ---- Host
-		final EditTextPreferenceWithValue hostPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.HOST_SUFFIX, R.string.label_host, R.string.hint_host);
+		final EditTextPreferenceWithValue hostPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.HOST_SUFFIX, R.string.label_host, R.string.hint_host, true);
 		connectionCategory.addPreference(hostPref);
 		// ---- Port
-		final EditTextPreferenceWithValue portPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PORT_SUFFIX, R.string.label_port, R.string.hint_port).setInputType(InputType.TYPE_CLASS_NUMBER);
+		final EditTextPreferenceWithValue portPref = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PORT_SUFFIX, R.string.label_port, R.string.hint_port, true).setInputType(InputType.TYPE_CLASS_NUMBER);
 		connectionCategory.addPreference(portPref);
 
 		// ---- Show upload
@@ -641,7 +641,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
 		connectionCategory.addPreference(autoRefresh);
 		// -- Refresh value
-		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval).setInputType(
+		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval, true).setInputType(
 		    InputType.TYPE_CLASS_NUMBER);
 		autoRefreshValue.setDefaultValue("15");
 		connectionCategory.addPreference(autoRefreshValue);
