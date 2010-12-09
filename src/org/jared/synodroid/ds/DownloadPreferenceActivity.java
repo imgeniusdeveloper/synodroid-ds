@@ -339,17 +339,27 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 							ServerInfo serv = servers.get(index);
 							// If we want to delete it then remove from the ServerCategory
 							if (serv.delete) {
-								// Deletion is done by hand
+								editor.remove(serv.key + PreferenceFacade.USEEXT_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.USEWIFI_SUFFIX); 
 								editor.remove(serv.key + PreferenceFacade.NICKNAME_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.DSM_SUFFIX);
+								
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SHOWUPLOAD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHSTATE_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHVALUE_SUFFIX);
+								
 								editor.remove(serv.key + PreferenceFacade.PROTOCOL_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.HOST_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.PORT_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.DSM_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
+								editor.remove(serv.key + PreferenceFacade.SHOWUPLOAD_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.REFRESHSTATE_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.REFRESHVALUE_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.SSID_SUFFIX);
 							}
 						}
 					}
@@ -670,7 +680,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	private String buildURL(String protoP, String hostP, String portP) {
 		String result = "";
 		// If at least a non null value
-		if ((protoP != null && protoP.length() > 0) || (hostP != null && hostP.length() > 0) || (portP != null && portP.length() > 0)) {
+		if ((protoP != null && protoP.length() > 0) && (hostP != null && hostP.length() > 0) && (portP != null && portP.length() > 0)) {
 			result = result + (protoP != null ? protoP : "") + "://";
 			result = result + (hostP != null ? hostP : "") + ":";
 			result = result + (portP != null ? portP : "");
