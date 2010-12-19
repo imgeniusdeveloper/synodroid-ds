@@ -318,9 +318,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		if (requestCode == 0) {
 			if (resultCode == RESULT_OK) {
 				TaskDetail details = (TaskDetail) data.getSerializableExtra("org.jared.synodroid.ds.Details");
-				// Get the adapter
-				TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
-				taskAdapter.updateFromDetail(details);
+				if (details != null){
+					// Get the adapter
+					TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
+					taskAdapter.updateFromDetail(details);
+				}
 			}
 		}
 	}
