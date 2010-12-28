@@ -313,6 +313,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		  	case TASK_ERROR_BROKEN_LINK:
 			case TASK_ERROR_DISK_FULL:
 			case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
+			case TASK_ERROR_EXCEED_MAX_DEST_FS_SIZE:
 				menu.add(0, MENU_RETRY, 0, getString(R.string.action_retry)).setIcon(android.R.drawable.ic_menu_revert);
 				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
 				break;
@@ -547,7 +548,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		String downPerStr = getString(R.string.detail_unknown);
 		int downPer = 0;
 		if (filesize != -1) {
-			downPer = (int) ((downloaded * 100) / filesize);
+			try{
+				downPer = (int) ((downloaded * 100) / filesize);
+			}
+			catch (ArithmeticException e){
+				downPer = 100;
+			}
 			downPerStr = "" + downPer + "%";
 		}
 
