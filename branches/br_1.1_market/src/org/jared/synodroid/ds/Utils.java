@@ -262,7 +262,14 @@ public class Utils {
 			ratio = 1.0d;
 		}
 		if (ratio != 0 && detailP.fileSize != -1) {
-			result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
+			try{
+				result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
+			}
+			catch (ArithmeticException e){
+				result = new Integer(100);
+			}
+			
+			
 		}
 		return result;
 	}
