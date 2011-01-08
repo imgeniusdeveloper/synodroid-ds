@@ -19,7 +19,10 @@ package org.jared.synodroid.common.data;
 import org.jared.synodroid.ds.R;
 
 /**
- * This enumeration enumerates the different kind of sort
+ * This enumeration enumerates the different kind of sort<br/>
+ * 
+ * !!!!!!!!!!!!!!
+ * DO NOT MODIFIY enum constant values, because they are used as it in the request parameters
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
@@ -31,7 +34,7 @@ public enum TaskSort {
 	PROGRESS(R.string.label_sort_progress),
 	UPLOAD_RATE(R.string.label_sort_uploadrate),
 	CURRENT_RATE(R.string.label_sort_currentrate),
-	TIME_LEFT(R.string.label_sort_timeleft),
+	TIMELEFT(R.string.label_sort_timeleft),
 	STATUS(R.string.label_sort_status),
 	USERNAME(R.string.label_sort_username)
 	;
