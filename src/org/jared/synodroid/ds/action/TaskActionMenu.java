@@ -83,6 +83,7 @@ public class TaskActionMenu {
 	  	case TASK_ERROR_BROKEN_LINK:
 		case TASK_ERROR_DISK_FULL:
 		case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
+		case TASK_ERROR_EXCEED_MAX_DEST_FS_SIZE:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_retry), new ResumeTaskAction(taskP), true));
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));

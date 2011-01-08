@@ -578,10 +578,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			String[] wifiSSIDs = new String[wifis.size()];
 			for (int iLoop = 0; iLoop < wifis.size(); iLoop++) {
 				String ssid = wifis.get(iLoop).SSID;
-				if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-					ssid = ssid.substring(1, ssid.length() - 1);
+				if (ssid != null){
+					if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+						ssid = ssid.substring(1, ssid.length() - 1);
+					}
+					wifiSSIDs[iLoop] = ssid;
 				}
-				wifiSSIDs[iLoop] = ssid;
 			}
 			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
 			connectionCategory.addPreference(wifiSSIDPref);

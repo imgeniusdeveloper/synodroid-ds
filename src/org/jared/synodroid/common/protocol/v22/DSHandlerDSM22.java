@@ -640,6 +640,10 @@ class DSHandlerDSM22 implements DSHandler {
 				else if (json.has("errno")) {
 					JSONObject err = json.getJSONObject("errno");
 					reason = err.getString("key");
+					// Means that no shared directory has been set currently: don't throw an exception
+					if (reason!=null && reason.equals("download_error_user_removed")) {
+						return "";
+					}
 				}
 				throw new DSMException(reason);
 			}

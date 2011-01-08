@@ -116,15 +116,16 @@ public class Synodroid extends CrashReportingApplication {
       final boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
       // If we are connected to a WIFI network, verify if SSID match
       boolean pub  = true; 
-      if (wifiConnected) {
+      String cur_ssid = currentWifi.getSSID();
+      if (wifiConnected && cur_ssid != null) {
     	SynoServerConnection sc = currentServer.getLocalConnection();
     	if (sc != null){
 	        List<String> ssids = sc.wifiSSID;
 	        if (ssids != null) {
 	        	for (String ssid : ssids) {
-	        		if (currentWifi.getSSID().equals(ssid)) {
-	              pub = false;
-	              break;
+	        		if (cur_ssid.equals(ssid)) {
+	        			pub = false;
+	        			break;
 	        		}
 	          }
 	        }
