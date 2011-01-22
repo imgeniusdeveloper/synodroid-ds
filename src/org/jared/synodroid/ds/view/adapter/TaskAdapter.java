@@ -161,7 +161,12 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * @param indexP
 	 */
 	public long getItemId(int indexP) {
-		return tasks.get(indexP).taskId;
+		try{
+			return tasks.get(indexP).taskId;
+		}
+		catch (Exception e){
+			return 0;
+		}
 	}
 
 	/**
