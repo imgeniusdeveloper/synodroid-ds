@@ -369,7 +369,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
-			status = TaskStatus.valueOf(details.status);
+			if (details.status == null){
+				status = TaskStatus.valueOf("TASK_UNKNOWN");
+			}
+			else{
+				status = TaskStatus.valueOf(details.status);
+			}
 			break;
 		case ResponseHandler.MSG_ERROR:
 			SynoServer server = ((Synodroid) getApplication()).getServer();

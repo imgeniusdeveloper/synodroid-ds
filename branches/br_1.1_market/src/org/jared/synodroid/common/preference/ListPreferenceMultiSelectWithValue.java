@@ -164,10 +164,6 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
   @Override
   public void setEntryValues(CharSequence[] entryValuesP) {
     super.setEntryValues(entryValuesP);
-    // Set the default value
-    if (entryValuesP != null && entryValuesP.length > 0) {
-      setValue(entryValuesP[0].toString());
-    }
   }
 
   /**
@@ -179,7 +175,7 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
    * @return
    */
   public static ListPreferenceMultiSelectWithValue create(Context contextP, String keyP, int titleP, int summaryP,
-          String[] versions) {
+          String[] versions, String def_value) {
     ListPreferenceMultiSelectWithValue pref = new ListPreferenceMultiSelectWithValue(contextP);
     pref.setKey(keyP);
     pref.setTitle(titleP);
@@ -188,7 +184,7 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
     if (versions != null && versions.length > 0) {
       pref.setEntries(versions);
       pref.setEntryValues(versions);
-      pref.setValue(versions[0]);
+      pref.setValue(def_value);
     }
     return pref;
   }
