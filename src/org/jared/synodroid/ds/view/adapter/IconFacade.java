@@ -41,6 +41,11 @@ public class IconFacade {
 	 * @param siteP
 	 */
 	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
+		//Overide task status if has unknown in it.
+		if (torrentP.status.toLowerCase().contains("unknown")){
+			torrentP.status = "TASK_UNKNOWN";
+		}
+		
 		TaskStatus status = TaskStatus.valueOf(torrentP.status);
 		int id = 0;
 		Animation animation = null;
@@ -55,6 +60,7 @@ public class IconFacade {
 		case TASK_PAUSED:
 			id = R.drawable.dl_paused;
 			break;
+		case TASK_UNKNOWN:
 		case TASK_WAITING:
 		case TASK_HASH_CHECKING:
 			id = R.drawable.dl_waiting;

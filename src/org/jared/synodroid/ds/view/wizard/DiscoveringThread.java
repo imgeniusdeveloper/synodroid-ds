@@ -63,11 +63,19 @@ public class DiscoveringThread extends Thread {
 		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		MulticastLock lock = wifi.createMulticastLock("fliing_lock");
 		lock.setReferenceCounted(true);
-		lock.acquire();
 		try {
+			lock.acquire();
 			InetAddress addr = getLocalIpAddress();
 			jmdns = JmDNS.create(addr);
 			ServiceInfo[] infos = jmdns.list("_http._tcp.local.");
+			Message msg = new Message();
+			msg.what = DiscoveringHandler.MSG_SERVER_FOUND;
+			msg.obj = infos;
+			handler.sendMessage(msg);
+		}
+		catch (SecurityException e){
+			//Could not acquire lock. Fake no server found...
+			ServiceInfo[] infos = new ServiceInfo[0];
 			Message msg = new Message();
 			msg.what = DiscoveringHandler.MSG_SERVER_FOUND;
 			msg.obj = infos;
@@ -80,7 +88,7 @@ public class DiscoveringThread extends Thread {
 			if (jmdns != null)
 				jmdns.close();
 			if (lock != null) {
-				lock.release();
+				if (lock.isHeld()) lock.release();
 			}
 		}
   }

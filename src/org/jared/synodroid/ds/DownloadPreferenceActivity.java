@@ -585,13 +585,13 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 					wifiSSIDs[iLoop] = ssid;
 				}
 			}
-			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
+			WifiInfo currentWifi = wifiMgr.getConnectionInfo();
+		    String cur_ssid = currentWifi.getSSID();
+		    
+			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs, cur_ssid);
 			connectionCategory.addPreference(wifiSSIDPref);
 			if (!wifiMgr.isWifiEnabled() || wifiSSIDs.length == 0) {
 				connectionCategory.setEnabled(false);
-			}
-			else{
-				wifiSSIDPref.setValue(wifiSSIDs[0]);
 			}
 		}
 		else{
