@@ -313,19 +313,19 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	/**
 	 * This method is called when a sub activity exits.
 	 */
-	@Override
+	/*@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 0) {
 			if (resultCode == RESULT_OK) {
 				TaskDetail details = (TaskDetail) data.getSerializableExtra("org.jared.synodroid.ds.Details");
-				if (details != null){
+				if (details != null && taskView != null){
 					// Get the adapter
 					TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
 					taskAdapter.updateFromDetail(details);
 				}
 			}
 		}
-	}
+	}*/
 
 	private void initTorrentTab(LayoutInflater inflater) {
 		RelativeLayout downloadContent = (RelativeLayout) inflater.inflate(R.layout.download_list, null, false);

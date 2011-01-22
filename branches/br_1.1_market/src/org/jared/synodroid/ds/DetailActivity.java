@@ -139,58 +139,63 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		for (int iLoop = 0; iLoop < timesArray.length; iLoop++) {
 			seedingTimes[iLoop] = Integer.parseInt(timesArray[iLoop]);
 		}
-
+		
 		// Get the details intent
 		Intent intent = getIntent();
 		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
 
-		// Build the general tab
-		ListView genListView = new ListView(this);
-		genAdapter = new DetailAdapter(this);
-		genListView.setAdapter(genAdapter);
-		genListView.setOnItemClickListener(genAdapter);
-
-		// Build the transfer tab
-		ListView transListView = new ListView(this);
-		transAdapter = new DetailAdapter(this);
-		transListView.setAdapter(transAdapter);
-		transListView.setOnItemClickListener(transAdapter);
-
-		filesListView = new ListView(this);
-		fileAdapter = new FileDetailAdapter(this, task);
-		filesListView.setAdapter(fileAdapter);
-
-		if (savedInstanceState != null) {
-			showFileTab = savedInstanceState.getBoolean("showFileTab", false);
-		}
-		// Build the TabManager
-		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-		Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
-		tabManager.addTab(genTab, genListView);
-		Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
-		tabManager.addTab(transTab, transListView);
-		if (showFileTab) {
-			Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
-			tabManager.addTab(filesTab, filesListView);
-		}
-		// Call super onCreate after the tab intialization
-		super.setTabmanager(tabManager);
-		super.onCreate(savedInstanceState);
-
-		genListView.setOnTouchListener(gestureListener);
-		transListView.setOnTouchListener(gestureListener);
-		filesListView.setOnTouchListener(gestureListener);
+		if (task != null){
+			// Build the general tab
+			ListView genListView = new ListView(this);
+			genAdapter = new DetailAdapter(this);
+			genListView.setAdapter(genAdapter);
+			genListView.setOnItemClickListener(genAdapter);
 		
-		// Create a "Not yet implemented" dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
-		notYetImplementedDialog = builder.create();
-
-		// Add a tab listener
-		tabManager.setTabListener(this);
-
-		// Set the the title (the filename)
-		title.setText(task.fileName);
+			// Build the transfer tab
+			ListView transListView = new ListView(this);
+			transAdapter = new DetailAdapter(this);
+			transListView.setAdapter(transAdapter);
+			transListView.setOnItemClickListener(transAdapter);
+		
+			filesListView = new ListView(this);
+			fileAdapter = new FileDetailAdapter(this, task);
+			filesListView.setAdapter(fileAdapter);
+		
+			if (savedInstanceState != null) {
+				showFileTab = savedInstanceState.getBoolean("showFileTab", false);
+			}
+			// Build the TabManager
+			tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
+			Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
+			tabManager.addTab(genTab, genListView);
+			Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
+			tabManager.addTab(transTab, transListView);
+			if (showFileTab) {
+				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
+				tabManager.addTab(filesTab, filesListView);
+			}
+			// Call super onCreate after the tab intialization
+			super.setTabmanager(tabManager);
+			super.onCreate(savedInstanceState);
+		
+			genListView.setOnTouchListener(gestureListener);
+			transListView.setOnTouchListener(gestureListener);
+			filesListView.setOnTouchListener(gestureListener);
+			
+			// Create a "Not yet implemented" dialog
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.title_information)).setMessage(getString(R.string.not_yet_implemented)).setCancelable(false).setPositiveButton(R.string.button_ok, null);
+			notYetImplementedDialog = builder.create();
+		
+			// Add a tab listener
+			tabManager.setTabListener(this);
+		
+			// Set the the title (the filename)
+			title.setText(task.fileName);
+		}
+		else{
+			this.finish();
+		}
 	}
 
 	/*
