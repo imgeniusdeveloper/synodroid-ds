@@ -41,12 +41,15 @@ public class IconFacade {
 	 * @param siteP
 	 */
 	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
-		//Overide task status if has unknown in it.
-		if (torrentP.status.toLowerCase().contains("unknown")){
-			torrentP.status = "TASK_UNKNOWN";
+		//Trap invalid task status and replace by unknown
+		TaskStatus status;
+		try{
+			status = TaskStatus.valueOf(torrentP.status);	
+		}
+		catch (IllegalArgumentException e){
+			status = TaskStatus.valueOf("TASK_UNKNOWN");
 		}
 		
-		TaskStatus status = TaskStatus.valueOf(torrentP.status);
 		int id = 0;
 		Animation animation = null;
 		switch (status) {

@@ -540,6 +540,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		catch (NullPointerException e){
 			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
 		}
+		catch (IllegalArgumentException e){
+			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
+		}
 		// ------------ Transfered
 		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
 		if (details.isTorrent) {
