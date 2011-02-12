@@ -105,6 +105,16 @@
       </intent-filter>
     </activity>
     <activity 
+      android:name="HelpActivity"
+      android:configChanges="orientation|keyboardHidden"
+      android:launchMode="singleTop"
+      android:theme="@android:style/Theme.NoTitleBar">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"></action>
+        <category android:name="android.intent.category.DEFAULT"></category>
+      </intent-filter>
+    </activity>
+    <activity 
         android:name="org.acra.CrashReportDialog"
         android:theme="@android:style/Theme.Dialog"
         android:launchMode="singleInstance" />
