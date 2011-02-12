@@ -274,7 +274,6 @@
 <string name="err_nomarket">Android market is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string>
 <string name="err_provider_missing">Transdroid torrent search is not installed on your device.\n\nFollow the instructions on the search tab to install it.</string>
 <string name="help">Help</string>
-<string name="err_noemail">No email applications configured on your device.\n\nClick on the link on the about page to get help.</string>
 
 <string name="label_usewifi">Connect from wifi</string>
 <string name="hint_usewifi_on">Linked to one or more wifi network</string>
@@ -285,4 +284,30 @@
 <string name="clear_search_history">Clear search history</string>
 <string name="cleared_search_history">Search history cleared.</string>
 <string name="wait_for_download">Do not close Synodroid until task is added.\nWaiting for task file...</string>
+
+<string name="err_noemail">No email applications configured on your device.\n\nEmail synodroid@gmail.com to get help.</string>
+<string name="app_help">FAQs</string>
+<string name="email">Get support by email!</string>
+<string name="faq1">How do I find a server?</string>
+<string name="rep1">You don\'t find a server, you need to own one. Synodroid was made to control a Synology Network Attached Storage (NAS). If you don\'t have a Synology NAS, this app is not for you, uninstall it...</string>
+
+<string name="faq2">Where can I get a Synology NAS?</string>
+<string name="rep2">Check the Synology web site for where to buy information.</string>
+
+<string name="faq6">What is a Synology NAS?</string>
+<string name="rep6">Check the Synology web site for information about their products.</string>
+
+<string name="faq7">How can I download file to my phone using your app ?</string>
+<string name="rep7">This app is not meant to download file ON your phone. It is only use to control the \"Download Station\" section of your Synology NAS.</string>
+
+<string name="faq3">How can I connect to my Synology NAS ?</string>
+<string name="rep3">From the main page of Synodroid, press the menu button of your phone and select parameters. Press the menu button again from the parameters window and select one of the 2 following options:\n\n1. Find a server\n2. Add a server</string>
+
+<string name="faq4">The find server button does not find my Synology NAS, why?</string>
+<string name="rep4">Before using the find server feature, there is 3 things you need to know about:\n\n- 1 -\nYou must be connected to the same WIFI as your NAS.\n\n- 2 -\nYour NAS must be powered on and ready to use.\n\n- 3 -\nYou must be running Android 1.6 and up.\n\n** Note:\nIf the find server feature doesn\'t work for you, you can still add your server manually using the \"Add Server\" menu in the parameters.</string>
+
+<string name="faq5">This FAQ didn\'t help me, What should I do?</string>
+<string name="rep5">Email the developers using the button bellow.\n\nPlease ask a very precise question to help us understand your problem.</string>
+
+
 </resources>

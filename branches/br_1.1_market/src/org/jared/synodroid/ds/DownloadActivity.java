@@ -360,30 +360,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		Button helpBtn = (Button) about.findViewById(R.id.id_help);
 		helpBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				try{
-					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-					emailIntent.setType("plain/text");
-					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"synodroid@gmail.com"});
-					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Synodroid help");
-					startActivity(emailIntent);
-				}
-				catch (Exception e){
-					AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
-				    builder.setMessage(R.string.err_noemail);
-				    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
-				            new DialogInterface.OnClickListener() {
-				              public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				              }
-				            });
-				    AlertDialog errorDialog = builder.create();
-				    try{
-				    	errorDialog.show();
-				    }
-					catch (BadTokenException ex){
-						//Unable to show dialog probably because intent has been closed. Ignoring...
-					}
-				}
+				Intent next = new Intent();
+				next.setClass(DownloadActivity.this, HelpActivity.class);
+				startActivity(next);
 			}
 		});
 		
