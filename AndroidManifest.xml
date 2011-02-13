@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:installLocation="auto"
-  package="org.jared.synodroid.ds" android:versionName="1.1.253" android:versionCode="253">
+  package="org.jared.synodroid.ds" android:versionName="1.1.257" android:versionCode="257">
   <application
     android:label="@string/app_name"
     android:allowTaskReparenting="false"
