@@ -274,7 +274,6 @@
 <string name="err_nomarket">Android market n\'est pas installé sur votre appareil.\n\nContactez le développeur pour avoir une version de Transdroid Search.</string>
 <string name="err_provider_missing">Transdroid search n\'est pas installé sur votre appareil.\n\nSuivez les instructions dans l\'onglet \'Recherche\' pour l\'installer.</string>
 <string name="help">Aide</string>
-<string name="err_noemail">Aucune application d\'email n\'est installée sur votre appareil.\n\nCliquez sur le lien de la page \'A propos\' pour avoir de l\'aide.</string>
 
 <string name="label_usewifi">Connexion depuis un réseau local</string>
 <string name="hint_usewifi_on">Lié à un ou plusieurs réseaux locaux</string>
@@ -285,4 +284,29 @@
 <string name="clear_search_history">Supprimer l\'historique de recherche</string>
 <string name="cleared_search_history">Historique de recherche supprimée.</string>
 <string name="wait_for_download">Ne fermé pas Synodroid tant que la tâche n\'est pas ajouter.\nEn attente du fichier de tâche...</string>
+
+<string name="err_noemail">Aucune application d\'email n\'est installée sur votre appareil.\n\nEnvoyer un message à synodroid@gmail.com pour assistance.</string>
+<string name="app_help">FAQ: Foire aux questions</string>
+<string name="email">Assistance par email!</string>
+<string name="faq1">Comment trouve-t\'on un serveur?</string>
+<string name="rep1">On ne trouve pas un serveur, on doit en poséder un. Synodroid à été conçu pour contrôler une unité de stockage réseau NAS Synology. Si vous n\'avez pas de NAS Synology, cette application n\'est d\'aucune utilité pour vous. Déinstallé la.</string>
+
+<string name="faq2">Où puis-je me procurer un NAS Synology?</string>
+<string name="rep2">Allez sur le site web de Synology pour plus d\'information sur l\'achat de produits Synology.</string>
+
+<string name="faq6">Qu\'est-ce qu\'un NAS Synology?</string>
+<string name="rep6">Allez sur le site web de Synology pour plus d\'information sur les produits Synology.</string>
+
+<string name="faq7">Comment puis-je télécharger un fichier sur mon téléphone à l\'aide de votre application?</string>
+<string name="rep7">Cette application n\'est pas conçu pour télécharger des fichier sur votre téléphone. Elle est conçu pour contrôler la section \"Download Station\" de votre NAS Synology.</string>
+
+<string name="faq3">Comment puis-je me connecter sur mon NAS Synology?</string>
+<string name="rep3">De la page principale de Synodroid, selectioner le menu parametres. De la fenêtre de parametres, sélectioner un des deux menu suivants:\n\n1. Trouver un serveur\n2. Ajouter un serveur</string>
+
+<string name="faq4">Le bouton \"Trouver un serveur\" ne fonctionne pas, pourquoi?</string>
+<string name="rep4">Avant d\'utiliser la fonctionnalité de recherche de serveur, il y a 3 points que vous devez savoir:\n\n- 1 -\nVous devez être connecter sur le même réseau WIFI que votre serveur NAS.\n\n- 2 -\nVotre serveur NAS doit être ouvert et pret à utiliser.\n\n- 3 -\nVous devez avoir une version d\'Android superieure ou égale à 1.6.\n\n** Note:\nSi la fonctionnalité de recherche de serveur ne fonctionne pas pour vous, vous pouvez toujours ajouter un serveur manuellement avec le menu \"Ajouter un serveur\".</string>
+
+<string name="faq5">Cette Foire aux Questions ne m\'a pas aider dans mon problème, que faire?</string>
+<string name="rep5">Envoyer un message aux dévelopeurs de l\'application à l\'aide du bouton ci-dessous.\n\nSVP formulez une question précise pour nous aider à répondre à votre problème.</string>
+
 </resources>

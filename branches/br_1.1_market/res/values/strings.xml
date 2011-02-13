@@ -286,7 +286,7 @@
 <string name="wait_for_download">Do not close Synodroid until task is added.\nWaiting for task file...</string>
 
 <string name="err_noemail">No email applications configured on your device.\n\nEmail synodroid@gmail.com to get help.</string>
-<string name="app_help">FAQs</string>
+<string name="app_help">FAQ: Frequently asked questions</string>
 <string name="email">Get support by email!</string>
 <string name="faq1">How do I find a server?</string>
 <string name="rep1">You don\'t find a server, you need to own one. Synodroid was made to control a Synology Network Attached Storage (NAS). If you don\'t have a Synology NAS, this app is not for you, uninstall it...</string>
