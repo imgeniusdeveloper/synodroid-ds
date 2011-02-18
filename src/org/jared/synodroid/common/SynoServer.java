@@ -778,7 +778,6 @@ public class SynoServer {
     con.setUseCaches(false);
     con.setRequestMethod(methodP);
     con.setConnectTimeout(20000);
-    con.connect();
     Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
     return con;
   }
