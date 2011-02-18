@@ -307,7 +307,7 @@
 <string name="rep4">Before using the find server feature, there is 3 things you need to know about:\n\n- 1 -\nYou must be connected to the same WIFI as your NAS.\n\n- 2 -\nYour NAS must be powered on and ready to use.\n\n- 3 -\nYou must be running Android 1.6 and up.\n\n** Note:\nIf the find server feature doesn\'t work for you, you can still add your server manually using the \"Add Server\" menu in the parameters.</string>
 
 <string name="faq5">This FAQ didn\'t help me, What should I do?</string>
-<string name="rep5">Email the developers using the button bellow.\n\nPlease ask a very precise question to help us understand your problem.</string>
+<string name="rep5">Email the developers using the button below.\n\nPlease ask a very precise question to help us understand your problem.</string>
 
 
 </resources>
