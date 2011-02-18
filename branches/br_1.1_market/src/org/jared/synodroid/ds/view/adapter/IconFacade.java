@@ -65,8 +65,10 @@ public class IconFacade {
 			break;
 		case TASK_UNKNOWN:
 		case TASK_WAITING:
+			id = R.drawable.dl_wait;
+			break;
 		case TASK_HASH_CHECKING:
-			id = R.drawable.dl_waiting;
+			id = R.drawable.dl_hash;
 			animation = AnimationUtils.loadAnimation(ctxP, R.anim.rotate_indefinitely);
 			// Can not be set in the XML (LinearInterpolar is not public: arghhh)
 			animation.setInterpolator(new LinearInterpolator());
