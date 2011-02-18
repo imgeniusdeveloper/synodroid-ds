@@ -749,7 +749,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			path.mkdirs();
 			String temp[] = uri.toString().split("/");
 			String fname = temp[(temp.length) - 1];
-			if (!fname.endsWith(".torrent")) {
+			if (!fname.toLowerCase().endsWith(".torrent") && !fname.toLowerCase().endsWith(".nzb")) {
 				fname += ".torrent";
 			}
 			File file = new File(path, fname);
