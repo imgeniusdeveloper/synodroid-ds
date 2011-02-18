@@ -43,7 +43,6 @@ import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.Message;
-import android.text.Html;
 import android.util.Log;
 
 /**
@@ -766,7 +765,7 @@ public class SynoServer {
           throws MalformedURLException, IOException {
     // Prepare the connection
     HttpURLConnection con = (HttpURLConnection) new URL(getUrl() + Uri.encode(uriP, "/")).openConnection();
-    // con.setConnectTimeout(20000);
+    
     // Add cookies if exist
     if (cookies != null) {
       for (String cookie : cookies) {
@@ -779,6 +778,7 @@ public class SynoServer {
     con.setUseCaches(false);
     con.setRequestMethod(methodP);
     con.setConnectTimeout(20000);
+    con.connect();
     Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
     return con;
   }
@@ -794,43 +794,53 @@ public class SynoServer {
    */
   public JSONObject sendJSONRequest(String uriP, String requestP, String methodP) throws Exception {
     HttpURLConnection con = null;
+    OutputStreamWriter wr = null;
+    BufferedReader br = null;
+    StringBuffer sb = null;
     try {
-      // Create the connection
-      con = createConnection(uriP, requestP, methodP);
-      // Add the parameters
-      OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-      wr.write(requestP);
-      // Send the request
-      wr.flush();
-
-      // Try to retrieve the session cookie
-      Map<String, List<String>> headers = con.getHeaderFields();
-      List<String> newCookie = headers.get("set-cookie");
-      if (newCookie != null) {
-        cookies = newCookie;
-        Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+      
+      //For some reason in Gingerbread I often get a response code of -1. 
+      //Here I retry for a maximum of MAX_RETRY to send the request and it usually succeed at the second try... 
+      int retry = 0;
+      int MAX_RETRY = 2;
+      while (retry <= MAX_RETRY){
+	      // Create the connection
+	      con = createConnection(uriP, requestP, methodP);
+	      // Add the parameters
+	      wr = new OutputStreamWriter(con.getOutputStream());
+	      wr.write(requestP);
+	      // Send the request
+	      wr.flush();
+	      wr.close();
+	      
+	      // Try to retrieve the session cookie
+	      Map<String, List<String>> headers = con.getHeaderFields();
+	      List<String> newCookie = headers.get("set-cookie");
+	      if (newCookie != null) {
+	        cookies = newCookie;
+	        Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+	      }
+	      
+	      // Now read the reponse and build a string with it
+	      br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+	      sb = new StringBuffer();
+	      String line;
+	      while ((line = br.readLine()) != null) {
+	        sb.append(line);
+	      }
+	      br.close();
+	      // Verify is response if not -1, otherwise take reason from the header
+	      if (con.getResponseCode() == -1) {
+	    	retry ++;
+	    	Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
+	      }
+	      else{
+	    	Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
+		    JSONObject respJSO = new JSONObject(sb.toString());
+		    return respJSO;
+	      }
       }
-      // Now read the reponse and build a string with it
-      BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-      StringBuffer sb = new StringBuffer();
-      String line;
-      while ((line = br.readLine()) != null) {
-        sb.append(line);
-      }
-      br.close();
-
-      // Verify is response if not -1, otherwise take reason from the header
-      if (con.getResponseCode() == -1) {
-        List<String> reasons = headers.get("reason");
-        String r = Html.fromHtml(reasons.toString()).toString();
-        // Very bad code !!!
-        r = r.replace("[", "").replace("]", "");
-        throw new Exception(r);
-      }
-
-      Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
-      JSONObject respJSO = new JSONObject(sb.toString());
-      return respJSO;
+      throw new Exception("Failed to read response from server. Please reconnect!");
     }
     // Special for SSL Handshake failure
     catch(IOException ioex) {
@@ -854,6 +864,10 @@ public class SynoServer {
       if (con != null) {
         con.disconnect();
       }
+      wr = null;
+      br = null;
+      sb = null;
+      con = null;
     }
   }
 
