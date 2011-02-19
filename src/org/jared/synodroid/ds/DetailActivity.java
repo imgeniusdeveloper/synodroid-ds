@@ -587,8 +587,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			progDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
 					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
-					showDialog(TASK_PARAMETERS_DIALOG);
-				}
+						try{
+							showDialog(TASK_PARAMETERS_DIALOG);
+						}
+						catch (Exception e){
+							//Dialog failed to display. Probably already displayed. Ignore!
+						}
+					}
 				}
 			});
 		}
@@ -699,8 +704,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			etaDetail.setAction(new DetailAction() {
 				public void execute(Detail detailsP) {
 					if (tabManager.getSlideToTabName().equals(TAB_TRANSFERT)){
-					showDialog(TASK_PARAMETERS_DIALOG);
-				}
+						try{
+							showDialog(TASK_PARAMETERS_DIALOG);
+						}
+						catch (Exception e){
+							//Dialog failed to display. Probably already displayed. Ignore!
+						}
+					}
 				}
 			});
 		}

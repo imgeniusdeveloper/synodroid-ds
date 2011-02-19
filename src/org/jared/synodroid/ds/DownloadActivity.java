@@ -266,7 +266,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			try{
 				showDialog(CONNECTION_DIALOG_ID);
 			}
-			catch (BadTokenException e){
+			catch (Exception e){
 				//Unable to show dialog probably because intent has been closed. Ignoring...
 			}
 		}
