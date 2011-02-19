@@ -53,7 +53,14 @@ public class TaskActionMenu {
 	 */
 	public static List<TaskActionMenu> createActions(Context ctxP, Task taskP) {
 		ArrayList<TaskActionMenu> result = new ArrayList<TaskActionMenu>();
-		TaskStatus status = TaskStatus.valueOf(taskP.status);
+		TaskStatus status;
+		try{
+			status = TaskStatus.valueOf(taskP.status);	
+		}
+		catch (IllegalArgumentException e){
+			status = TaskStatus.valueOf("TASK_UNKNOWN");
+		}
+		
 		switch (status) {
 		case TASK_DOWNLOADING:
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
@@ -102,6 +109,8 @@ public class TaskActionMenu {
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
+			break;
+		case TASK_UNKNOWN:
 			break;
 		}
 		return result;

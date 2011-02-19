@@ -209,7 +209,12 @@ public class Synodroid extends CrashReportingApplication {
       // First verify if it is a DeleteTaskAction and if the task is not finished
       TaskStatus status = null;
       if (actionP.getTask() != null && actionP.getTask().status != null) {
-        status = TaskStatus.valueOf(actionP.getTask().status);
+        try{
+			status = TaskStatus.valueOf(actionP.getTask().status);	
+		}
+		catch (IllegalArgumentException e){
+			status = TaskStatus.valueOf("TASK_UNKNOWN");
+		}
       }
       if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
         Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(
@@ -251,7 +256,12 @@ public class Synodroid extends CrashReportingApplication {
       // First verify if it is a DeleteTaskAction and if the task is not finished
       TaskStatus status = null;
       if (actionP.getTask() != null && actionP.getTask().status != null) {
-        status = TaskStatus.valueOf(actionP.getTask().status);
+    	  try{
+  			status = TaskStatus.valueOf(actionP.getTask().status);	
+  		}
+  		catch (IllegalArgumentException e){
+  			status = TaskStatus.valueOf("TASK_UNKNOWN");
+  		}
       }
       if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
         Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(

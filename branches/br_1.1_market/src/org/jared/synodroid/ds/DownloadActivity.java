@@ -1159,24 +1159,26 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(getString(R.string.dialog_title_action));
 			final ActionAdapter adapter = new ActionAdapter(this, taskP);
-			builder.setAdapter(adapter, new OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
-					// Only if TaskActionMenu is enabled: it seems that even if the
-					// item is
-					// disable the user can tap it
-					if (taskAction.isEnabled()) {
-						Synodroid app = (Synodroid) getApplication();
-						app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
+			if (adapter.getCount() != 0){ 
+				builder.setAdapter(adapter, new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
+						// Only if TaskActionMenu is enabled: it seems that even if the
+						// item is
+						// disable the user can tap it
+						if (taskAction.isEnabled()) {
+							Synodroid app = (Synodroid) getApplication();
+							app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
+						}
 					}
+				});
+				AlertDialog connectDialog = builder.create();
+				try{
+					connectDialog.show();
 				}
-			});
-			AlertDialog connectDialog = builder.create();
-			try{
-				connectDialog.show();
-			}
-			catch (BadTokenException e){
-				//Unable to show dialog probably because intent has been closed. Ignoring...
+				catch (BadTokenException e){
+					//Unable to show dialog probably because intent has been closed. Ignoring...
+				}
 			}
 		}
 	}

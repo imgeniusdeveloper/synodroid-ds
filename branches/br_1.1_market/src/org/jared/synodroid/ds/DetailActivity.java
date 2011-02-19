@@ -369,11 +369,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			}
 			genAdapter.updateDetails(buildGeneralDetails(details));
 			transAdapter.updateDetails(buildTransferDetails(details));
-			if (details.status == null){
-				status = TaskStatus.valueOf("TASK_UNKNOWN");
+			try{
+				status = TaskStatus.valueOf(details.status);	
 			}
-			else{
-				status = TaskStatus.valueOf(details.status);
+			catch (IllegalArgumentException e){
+				status = TaskStatus.valueOf("TASK_UNKNOWN");
 			}
 			break;
 		case ResponseHandler.MSG_ERROR:
@@ -648,8 +648,16 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		}
 		// If the user defined a minimum seeding time AND we are in seeding
 		// mode
+		TaskStatus tsk_status;
+		try{
+			tsk_status = TaskStatus.valueOf(details.status);	
+		}
+		catch (IllegalArgumentException e){
+			tsk_status = TaskStatus.valueOf("TASK_UNKNOWN");
+		}
+		
 		Long timeLeftTime = null;
-		if (details.seedingInterval != 0 && TaskStatus.valueOf(details.status) == TaskStatus.TASK_SEEDING) {
+		if (details.seedingInterval != 0 && tsk_status == TaskStatus.TASK_SEEDING) {
 			timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
 			if (timeLeftTime < 0) {
 				timeLeftTime = null;
