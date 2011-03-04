@@ -660,6 +660,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		catch (IllegalArgumentException e){
 			tsk_status = TaskStatus.valueOf("TASK_UNKNOWN");
 		}
+		catch (NullPointerException e){
+			tsk_status = TaskStatus.valueOf("TASK_UNKNOWN");
+		}
 		
 		Long timeLeftTime = null;
 		if (details.seedingInterval != 0 && tsk_status == TaskStatus.TASK_SEEDING) {

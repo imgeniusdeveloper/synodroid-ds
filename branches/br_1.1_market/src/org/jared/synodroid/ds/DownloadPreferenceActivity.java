@@ -281,7 +281,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			maxServerId = maxServerId + 1;
 			// Create the create new server screen
 			PreferenceScreen screen = createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
-			showServerDialog(screen);
+			if (screen != null){
+				showServerDialog(screen);	
+			}
 			break;
 
 		// Delete one or more servers
@@ -451,7 +453,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				screen.getDialog().setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						// Don't forget to call the screen onDismiss method
-						screen.onDismiss(dialog);
+						try {
+							screen.onDismiss(dialog);
+						}catch (Exception e){}
 						// Then do our job: refresh summaries
 						int catCount = screen.getPreferenceCount();
 						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null;
