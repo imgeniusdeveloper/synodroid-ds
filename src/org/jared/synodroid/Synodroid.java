@@ -98,7 +98,7 @@ public class Synodroid extends CrashReportingApplication {
    * @param serverP
    */
   public synchronized void connectServer(DownloadActivity activityP, SynoServer serverP, List<SynoAction> actionQueueP) {
-    if (currentServer == null || !currentServer.isAlive() || !currentServer.equals(serverP)) {
+    //if (currentServer == null || !currentServer.isAlive() || !currentServer.equals(serverP)) {
       // First disconnect the old server
       if (currentServer != null) {
         currentServer.disconnect();
@@ -132,7 +132,7 @@ public class Synodroid extends CrashReportingApplication {
     	}
       }      
       currentServer.connect(activityP, actionQueueP, pub);
-    }
+    //}
   }
 
   /**
