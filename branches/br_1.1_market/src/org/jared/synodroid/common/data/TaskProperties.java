@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Eric Taix
+ * Copyright 2010 Steve Garon
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,18 @@ package org.jared.synodroid.common.data;
 
 /**
  * A simple data container for a file 
- * @author Eric Taix (eric.taix at gmail.com)
+ * @author Steve Garon (steve.garon at gmail.com)
  */
-public class TaskFile {
+public class TaskProperties {
 
-	// The filename
-	public String name;
-	// The filesize
-	public String filesize;
-	// A flag to know if the file will be downloaded or not
-	public boolean download;
-	//Task numeric ID
-	public int id = 0;
-	
+	public int seeding_ratio = 0 ;
+	public int seeding_interval = 0;
+	public int ul_rate = 0;
+	public int dl_rate = 0;
+	public int priority = 0;
+	public int max_peers = 200;
+	public String destination = "";
+	public String id = "0";
 	
 	/* (non-Javadoc)
    * @see java.lang.Object#hashCode()
@@ -39,7 +38,7 @@ public class TaskFile {
   public int hashCode() {
 	  final int prime = 31;
 	  int result = 1;
-	  result = prime * result + ((name == null) ? 0 : name.hashCode());
+	  result = prime * result + ((id == null) ? 0 : id.hashCode());
 	  return result;
   }
   
@@ -55,12 +54,12 @@ public class TaskFile {
 		  return false;
 	  if (getClass() != obj.getClass())
 		  return false;
-	  TaskFile other = (TaskFile) obj;
-	  if (name == null) {
-		  if (other.name != null)
+	  TaskProperties other = (TaskProperties) obj;
+	  if (id == null) {
+		  if (other.id != null)
 			  return false;
 	  }
-	  else if (!name.equals(other.name))
+	  else if (!id.equals(other.id))
 		  return false;
 	  return true;
   }

@@ -706,6 +706,7 @@ public class SynoServer {
     return ascending;
   }
 
+  
   /**
    * Execute an asynchronous action on this server
    * 
@@ -714,6 +715,16 @@ public class SynoServer {
    */
   public void executeAsynchronousAction(final ResponseHandler handlerP, final SynoAction actionP,
           final boolean forceRefreshP) {
+	  executeAsynchronousAction(handlerP, actionP, forceRefreshP, true);
+  }
+  /**
+   * Execute an asynchronous action on this server
+   * 
+   * @param actionP The action to execute
+   * @param forceRefreshP Flag to set if a refresh is needed after the completion of the action
+   */
+  public void executeAsynchronousAction(final ResponseHandler handlerP, final SynoAction actionP,
+          final boolean forceRefreshP, final boolean showToast) {
     Runnable runnable = new Runnable() {
       public void run() {
         // An operation is pending
@@ -721,7 +732,7 @@ public class SynoServer {
         Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
         try {
           // If a Toast must be shown
-          if (actionP.isToastable()) {
+          if (actionP.isToastable() && showToast) {
             int resId = actionP.getToastId();
             String fileName = (actionP.getTask() != null ? actionP.getTask().fileName : "");
             String text = handlerP.getString(resId, new Object[] { fileName });

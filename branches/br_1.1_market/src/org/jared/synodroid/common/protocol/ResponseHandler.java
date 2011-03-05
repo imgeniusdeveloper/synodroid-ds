@@ -48,7 +48,8 @@ public interface ResponseHandler {
 	public static final int MSG_SHARED_DIRECTORIES_RETRIEVED = 100010;
     // Original file retrieved
     public static final int MSG_ORIGINAL_FILE_RETRIEVED = 100011;
-
+   
+    public static final int MSG_PROPERTIES_RECEIVED = 100012;
 
 	/**
 	 * Handle the response. BE CAREFUL this method will NOT be called from the main thread.

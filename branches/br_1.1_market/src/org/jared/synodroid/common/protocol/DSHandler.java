@@ -15,6 +15,7 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskFile;
+import org.jared.synodroid.common.data.TaskProperties;
 
 import android.net.Uri;
 
@@ -106,6 +107,18 @@ public interface DSHandler {
 	 */
 	public List<TaskFile> getFiles(final Task taskP) throws Exception;
 
+	/**
+	 * Get Properties of a task
+	 * 
+	 * @param taskP
+	 *          The task to update
+	 */
+	public TaskProperties getTaskProperty(final Task taskP) throws Exception;
+	
+	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval ) throws Exception;
+	
+	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception;
+	
 	/**
 	 * Update a task
 	 * 

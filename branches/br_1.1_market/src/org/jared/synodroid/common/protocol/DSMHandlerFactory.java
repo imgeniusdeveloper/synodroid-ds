@@ -19,6 +19,7 @@ package org.jared.synodroid.common.protocol;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.protocol.v22.DSHandlerDSM22Factory;
+import org.jared.synodroid.common.protocol.v31.DSHandlerDSM31Factory;
 
 /**
  * This is the protocol abstract factory. The goal of this class is to provide
@@ -51,6 +52,8 @@ public abstract class DSMHandlerFactory {
 		  	return new DSHandlerDSM22Factory(serverP);
           case VERSION3_0:
             return new DSHandlerDSM22Factory(serverP);
+          case VERSION3_1:
+            return new DSHandlerDSM31Factory(serverP);
 		}
 		return result;
 	}

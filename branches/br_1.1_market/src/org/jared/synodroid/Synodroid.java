@@ -209,12 +209,7 @@ public class Synodroid extends CrashReportingApplication {
       // First verify if it is a DeleteTaskAction and if the task is not finished
       TaskStatus status = null;
       if (actionP.getTask() != null && actionP.getTask().status != null) {
-        try{
-			status = TaskStatus.valueOf(actionP.getTask().status);	
-		}
-		catch (IllegalArgumentException e){
-			status = TaskStatus.valueOf("TASK_UNKNOWN");
-		}
+        status = actionP.getTask().getStatus();
       }
       if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
         Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(
@@ -256,12 +251,7 @@ public class Synodroid extends CrashReportingApplication {
       // First verify if it is a DeleteTaskAction and if the task is not finished
       TaskStatus status = null;
       if (actionP.getTask() != null && actionP.getTask().status != null) {
-    	  try{
-  			status = TaskStatus.valueOf(actionP.getTask().status);	
-  		}
-  		catch (IllegalArgumentException e){
-  			status = TaskStatus.valueOf("TASK_UNKNOWN");
-  		}
+    	  status = actionP.getTask().getStatus();
       }
       if ((actionP instanceof DeleteTaskAction) && (status != TaskStatus.TASK_FINISHED)) {
         Dialog d = new AlertDialog.Builder(activityP).setTitle(R.string.dialog_title_confirm).setMessage(
@@ -301,7 +291,21 @@ public class Synodroid extends CrashReportingApplication {
       currentServer.forceRefresh();
     }
   }
-
+  
+  /**
+   * Execute an asynchronous action if the server is currently connected
+   * @param handlerP
+   * @param actionP
+   * @param forceRefreshP
+   * @param showToastP
+   */
+  
+  public void executeAsynchronousAction(ResponseHandler handlerP, SynoAction actionP, final boolean forceRefreshP, final boolean showToastP) {
+	  if (currentServer != null) {
+	      currentServer.executeAsynchronousAction(handlerP, actionP, forceRefreshP, showToastP);
+	  }
+  }
+	  
   /**
    * Execute an asynchronous action if the server is currently connected
    * @param handlerP

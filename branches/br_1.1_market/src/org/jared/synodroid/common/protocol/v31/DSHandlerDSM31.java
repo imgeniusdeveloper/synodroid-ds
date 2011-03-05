@@ -1,12 +1,12 @@
 /**
- * Copyright 2010 Eric Taix Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * Copyright 2010 Steve Garon Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of the License at
  * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language governing permissions and limitations under the
  * License.
  */
-package org.jared.synodroid.common.protocol.v22;
+package org.jared.synodroid.common.protocol.v31;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +29,21 @@ import org.jared.synodroid.common.protocol.QueryBuilder;
 import org.jared.synodroid.common.protocol.StreamFactory;
 import org.jared.synodroid.ds.Utils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.net.Uri;
 import android.util.Log;
 
 /**
- * @author Eric Taix (eric.taix at gmail dot com)
+ * @author Stave Garon (steve.garon at gmail dot com)
  */
-class DSHandlerDSM22 implements DSHandler {
+class DSHandlerDSM31 implements DSHandler {
 
 	// DownloadManager constant declaration
 	private static final String DM_URI = "/download/downloadman.cgi";
-
+	private static final String TORRENT_INFO = "/webman/modules/DownloadStation/dlm/torrent_info.cgi";
+	
 	/* The Synology's server */
 	private SynoServer server;
 
@@ -50,7 +52,7 @@ class DSHandlerDSM22 implements DSHandler {
 	 * 
 	 * @param serverP
 	 */
-	public DSHandlerDSM22(SynoServer serverP) {
+	public DSHandlerDSM31(SynoServer serverP) {
 		server = serverP;
 	}
 
@@ -265,11 +267,11 @@ class DSHandlerDSM22 implements DSHandler {
 		ArrayList<TaskFile> result = new ArrayList<TaskFile>();
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getfilelist").add("taskid", "" + taskP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action", "list_file").add("task_id", "" + taskP.taskId);
 			// Execute
 			JSONObject json = null;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				json = server.sendJSONRequest(TORRENT_INFO, getAllRequest.toString(), "GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If request succeded
@@ -281,7 +283,8 @@ class DSHandlerDSM22 implements DSHandler {
 					TaskFile file = new TaskFile();
 					file.name = obj.getString("name");
 					file.filesize = obj.getString("size");
-					file.download = obj.getBoolean("dl");
+					file.download = obj.getBoolean("wanted");
+					file.id = obj.getInt("index");
 					result.add(file);
 				}
 				array.length();
@@ -505,6 +508,7 @@ class DSHandlerDSM22 implements DSHandler {
 		}
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -513,44 +517,15 @@ class DSHandlerDSM22 implements DSHandler {
 	 * .common.data.Task)
 	 */
 	public TaskProperties getTaskProperty(Task taskP) throws Exception{
-		TaskProperties out = null;
-		return out;
-	}
-	
-	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval ) throws Exception{}
-	
-	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception{}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid
-	 * .common.data.Task, java.util.List, int, int)
-	 */
-	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {
-		// Create the JSON request
-		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "applytask").add("taskid", "" + taskP.taskId).add("update", "1");
-		// If files update is needed
-		if (filesP != null && filesP.size() > 0) {
-			JSONObject data = new JSONObject();
-			JSONArray datas = new JSONArray();
-			for (TaskFile taskFile : filesP) {
-				JSONObject file = new JSONObject();
-				file.put("name", taskFile.name);
-				file.put("dl", taskFile.download);
-				datas.put(file);
-			}
-			data.put("data", datas);
-			updateTaskRequest.add("fsel", data.toString());
-		}
-		updateTaskRequest.add("seeding_ratio", "" + seedingRatioP);
-		updateTaskRequest.add("seeding_interval", "" + seedingIntervalP);
-		// Execute it to the server
+		// torrent_info.cgi?_dc=1299264441500&action=get_property&task_id=2001
+		QueryBuilder getPropReq = new QueryBuilder().add("action", "get_property").add("task_id", "" + taskP.taskId);
+		
+		TaskProperties output = new TaskProperties();
+		output.id = "" + taskP.taskId;
+		
 		JSONObject json = null;
 		synchronized (server) {
-			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(), "POST");
+			json = server.sendJSONRequest(TORRENT_INFO, getPropReq.toString(), "POST");
 		}
 		boolean success = json.getBoolean("success");
 		// If not successful then throw an exception
@@ -565,7 +540,147 @@ class DSHandlerDSM22 implements DSHandler {
 			}
 			throw new DSMException(reason);
 		}
+		else{
+			try {
+				if (json.has("ul_rate")){
+					output.ul_rate = json.getInt("ul_rate");
+				}
+				if (json.has("dl_rate")){
+					output.dl_rate = json.getInt("dl_rate");
+				}
+				if (json.has("max_peers")){
+					output.max_peers = json.getInt("max_peers");
+				}
+				if (json.has("priority")){
+					output.priority = json.getInt("priority");
+				}
+				if (json.has("seeding_ratio")){
+					output.seeding_ratio = json.getInt("seeding_ratio");
+				}
+				if (json.has("seeding_interval")){
+					output.seeding_interval = json.getInt("seeding_interval");
+				}
+				if (json.has("destination")){
+					output.destination = json.getString("destination");
+				}
+				
+			} catch (JSONException e) {}
+			
+		}
+		return output;
 	}
+	
+	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval ) throws Exception{
+		//action=set_property
+		//&task_ids=[2001]
+		//&settings={"ext-comp-1434":"","ul_rate":5,"dl_rate":5,"priority":-1,"max_peers":100,"destination":"upload","seeding_ratio":25,"seeding_interval":90}'
+		
+		// Create the JSON request
+		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "set_property").add("task_ids", "[" + taskP.taskId+"]");
+		JSONObject data = new JSONObject();
+		
+		data.put("ext-comp-1434", "");
+		data.put("ul_rate", ul_rate);
+		data.put("dl_rate", dl_rate);
+		data.put("priority", priority);
+		data.put("max_peers", max_peers);
+		data.put("destination", destination);
+		data.put("seeding_ratio", seeding_ratio);
+		data.put("seeding_interval", seeding_interval);
+		
+		updateTaskRequest.add("settings", data.toString());
+		
+		// Execute it to the server
+		JSONObject json = null;
+		synchronized (server) {
+			json = server.sendJSONRequest(TORRENT_INFO, updateTaskRequest.toString(), "POST");
+		}
+		boolean success = json.getBoolean("success");
+		// If not successful then throw an exception
+		if (!success) {
+			String reason = "";
+			if (json.has("reason")) {
+				reason = json.getString("reason");
+			}
+			else if (json.has("errno")) {
+				JSONObject err = json.getJSONObject("errno");
+				reason = err.getString("key");
+			}
+			throw new DSMException(reason);
+		}
+		
+	}
+	
+	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception{
+		//action=set_files_priority&task_id=2001&priority=skip&indexes=%5B1%5D
+		List<Integer> l_skip = new ArrayList<Integer>();
+		List<Integer> l_normal = new ArrayList<Integer>();
+		
+		for (TaskFile taskFile : filesP) {
+			if (taskFile.download){
+				l_normal.add(taskFile.id);
+			}
+			else{
+				l_skip.add(taskFile.id);
+			}
+		}
+		
+		if (l_skip.size() != 0){
+			QueryBuilder updateSkipped = new QueryBuilder().add("action", "set_files_priority").add("task_id", "" + taskP.taskId).add("priority", "skip").add("indexes", l_skip.toString());
+			
+			// Execute it to the server
+			JSONObject json = null;
+			synchronized (server) {
+				json = server.sendJSONRequest(TORRENT_INFO, updateSkipped.toString(), "POST");
+			}
+			boolean success = json.getBoolean("success");
+			// If not successful then throw an exception
+			if (!success) {
+				String reason = "";
+				if (json.has("reason")) {
+					reason = json.getString("reason");
+				}
+				else if (json.has("errno")) {
+					JSONObject err = json.getJSONObject("errno");
+					reason = err.getString("key");
+				}
+				throw new DSMException(reason);
+			}
+		}
+		
+		if (l_normal.size() != 0){
+			QueryBuilder updateNormal = new QueryBuilder().add("action", "set_files_priority").add("task_id", "" + taskP.taskId).add("priority", "1").add("indexes", l_normal.toString());
+			
+			// Execute it to the server
+			JSONObject json = null;
+			synchronized (server) {
+				json = server.sendJSONRequest(TORRENT_INFO, updateNormal.toString(), "POST");
+			}
+			boolean success = json.getBoolean("success");
+			// If not successful then throw an exception
+			if (!success) {
+				String reason = "";
+				if (json.has("reason")) {
+					reason = json.getString("reason");
+				}
+				else if (json.has("errno")) {
+					JSONObject err = json.getJSONObject("errno");
+					reason = err.getString("key");
+				}
+				throw new DSMException(reason);
+			}
+		}
+		
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid
+	 * .common.data.Task, java.util.List, int, int)
+	 */
+	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {}
 
 	/*
 	 * (non-Javadoc)
