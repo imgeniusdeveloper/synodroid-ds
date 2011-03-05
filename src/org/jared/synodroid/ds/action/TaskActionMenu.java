@@ -24,7 +24,6 @@ import org.jared.synodroid.common.action.PauseTaskAction;
 import org.jared.synodroid.common.action.ResumeTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.R;
 
 import android.content.Context;
@@ -53,15 +52,7 @@ public class TaskActionMenu {
 	 */
 	public static List<TaskActionMenu> createActions(Context ctxP, Task taskP) {
 		ArrayList<TaskActionMenu> result = new ArrayList<TaskActionMenu>();
-		TaskStatus status;
-		try{
-			status = TaskStatus.valueOf(taskP.status);	
-		}
-		catch (IllegalArgumentException e){
-			status = TaskStatus.valueOf("TASK_UNKNOWN");
-		}
-		
-		switch (status) {
+		switch (taskP.getStatus()) {
 		case TASK_DOWNLOADING:
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
@@ -111,6 +102,7 @@ public class TaskActionMenu {
 			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
 			break;
 		case TASK_UNKNOWN:
+			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
 			break;
 		}
 		return result;

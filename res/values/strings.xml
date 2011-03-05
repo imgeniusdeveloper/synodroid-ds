@@ -310,4 +310,26 @@
 <string name="rep5">Email the developers using the button below.\n\nPlease ask a very precise question to help us understand your problem.</string>
 
 
+
+<string name="ul_rate">Max upload rate (KB\\s)</string>
+<string name="dl_rate">Max download rate (KB\\s)</string>
+<string name="max_peers">Max number of peers</string>
+<string name="priority">Download priority</string>
+<string name="destination">Destination folder</string>
+<string-array name="priority_array">
+<item>High</item>
+<item>Normal</item>
+<item>Low</item>
+</string-array>
+<string-array name="priority_array_value">
+<item>1</item>
+<item>0</item>
+<item>-1</item>
+</string-array>
+<string-array name="destination_array">
+</string-array>
+<string name="action_task_prop">Gathering task properties...</string>
+<string name="task_parameters">Task Properties</string>
+<string name="downloadOnly">Only works when task is downloading...</string>
+
 </resources>

@@ -84,5 +84,17 @@ public class TaskDetail implements Serializable {
 	// The number of leechers
 	public Long leechers;
 	public int bytesRatio;
+	
+	public TaskStatus getStatus(){
+		TaskStatus taskStat;
+		try{
+			taskStat = TaskStatus.valueOf(status);
+		}
+		catch (Exception e){
+			taskStat = TaskStatus.TASK_UNKNOWN;
+		}
+		
+		return taskStat;
+	}
 }
 

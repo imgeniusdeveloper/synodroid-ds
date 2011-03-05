@@ -17,7 +17,6 @@
 package org.jared.synodroid.ds.view.adapter;
 
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.R;
 
 import android.content.Context;
@@ -42,17 +41,9 @@ public class IconFacade {
 	 */
 	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
 		//Trap invalid task status and replace by unknown
-		TaskStatus status;
-		try{
-			status = TaskStatus.valueOf(torrentP.status);	
-		}
-		catch (IllegalArgumentException e){
-			status = TaskStatus.valueOf("TASK_UNKNOWN");
-		}
-		
 		int id = 0;
 		Animation animation = null;
-		switch (status) {
+		switch (torrentP.getStatus()) {
 		case TASK_DOWNLOADING:
 			id = R.drawable.dl_download;
 			break;
@@ -63,7 +54,6 @@ public class IconFacade {
 		case TASK_PAUSED:
 			id = R.drawable.dl_paused;
 			break;
-		case TASK_UNKNOWN:
 		case TASK_WAITING:
 			id = R.drawable.dl_wait;
 			break;
@@ -77,6 +67,7 @@ public class IconFacade {
 		case TASK_FINISHED:
 			id = R.drawable.dl_finished;
 			break;
+		case TASK_UNKNOWN:
 		case TASK_ERROR:
 		case TASK_ERROR_DEST_NO_EXIST:
 	  	case TASK_ERROR_DEST_DENY:
