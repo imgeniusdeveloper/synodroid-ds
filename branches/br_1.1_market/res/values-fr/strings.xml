@@ -309,4 +309,27 @@
 <string name="faq5">Cette Foire aux Questions ne m\'a pas aider dans mon problème, que faire?</string>
 <string name="rep5">Envoyer un message aux dévelopeurs de l\'application à l\'aide du bouton ci-dessous.\n\nSVP formulez une question précise pour nous aider à répondre à votre problème.</string>
 
+
+<string name="ul_rate">Vitesse de téléchargement max. (KB\\s)</string>
+<string name="dl_rate">Vitesse d\'envoi max. (KB\\s)</string>
+<string name="max_peers">Nombre de connections max.</string>
+<string name="priority">Priorité de téléchargement</string>
+<string name="destination">Dossier de destination</string>
+<string-array name="priority_array">
+<item>Haute</item>
+<item>Normale</item>
+<item>Basse</item>
+</string-array>
+<string-array name="priority_array_value">
+<item>1</item>
+<item>0</item>
+<item>-1</item>
+</string-array>
+<string-array name="destination_array">
+</string-array>
+<string name="action_task_prop">Collecte des propriétés de la tâche...</string>
+<string name="task_parameters">Propriétés de la tâche</string>
+<string name="downloadOnly">Ne fonctionne seulement lorsque la tâche est en téléchargement...</string>
+
+
 </resources>

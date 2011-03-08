@@ -308,5 +308,25 @@
 <string name="faq5">Este FAQ no me ha ayudado.¿Qué debería hacer?</string>
 <string name="rep5">Manda un email a los desarrolladores usando el botón inferior.\n\nPor favor, haz una pregunta precisa para ayudarnos a comprender tu problema.</string>
 
+<string name="ul_rate">Velocidad máxima de subida (KB\\s)</string>
+<string name="dl_rate">Velocidad máxima de bajada (KB\\s)</string>
+<string name="max_peers">Número máximo de pares</string>
+<string name="priority">Prioridad en descarga</string>
+<string name="destination">Carpeta destino</string>
+<string-array name="priority_array">
+<item>Alta</item>
+<item>Normal</item>
+<item>Baja</item>
+</string-array>
+<string-array name="priority_array_value">
+<item>1</item>
+<item>0</item>
+<item>-1</item>
+</string-array>
+<string-array name="destination_array">
+</string-array>
+<string name="action_task_prop">Recopilando propiedades de la tarea.</string>
+<string name="task_parameters">Propiedades de la tarea</string>
+<string name="downloadOnly">Sólo funciona cuando la tarea está en descarga...</string>
 
 </resources>
