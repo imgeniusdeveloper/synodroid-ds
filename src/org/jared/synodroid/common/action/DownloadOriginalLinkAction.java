@@ -39,19 +39,15 @@ public class DownloadOriginalLinkAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
-	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 * @seeorg.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds. TorrentListActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		StringBuffer data = serverP.getDSMHandlerFactory().getDSHandler()
-				.getOriginalFile(task);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		StringBuffer data = serverP.getDSMHandlerFactory().getDSHandler().getOriginalFile(task);
 		OriginalFile ori = new OriginalFile();
 		String[] temp = task.originalLink.split("/");
 		ori.fileName = temp[(temp.length) - 1];
 		ori.rawData = data;
-		serverP.fireMessage(handlerP,
-				ResponseHandler.MSG_ORIGINAL_FILE_RETRIEVED, ori);
+		serverP.fireMessage(handlerP, ResponseHandler.MSG_ORIGINAL_FILE_RETRIEVED, ori);
 	}
 
 	/*

@@ -77,18 +77,12 @@ public class TabWidgetManager implements View.OnClickListener {
 		activity = activityP;
 		sliderDrawable = sliderDrawableP;
 		// Get the main inflater
-		inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mainContentView = (LinearLayout) inflater.inflate(
-				R.layout.tabs_content, null, false);
-		contentFrame = (FrameLayout) mainContentView
-				.findViewById(R.id.id_tab_content);
-		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null,
-				false);
-		selectedTabFrame = (LinearLayout) mainTabsView
-				.findViewById(R.id.id_selected_tabs);
-		normalTabFrame = (LinearLayout) mainTabsView
-				.findViewById(R.id.id_normal_tabs);
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mainContentView = (LinearLayout) inflater.inflate(R.layout.tabs_content, null, false);
+		contentFrame = (FrameLayout) mainContentView.findViewById(R.id.id_tab_content);
+		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
+		selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
+		normalTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_normal_tabs);
 		// Add the title view which will be displayed a short time when the user
 		// click on a tab
 		logoView = inflater.inflate(R.layout.tab_title, null, false);
@@ -139,8 +133,7 @@ public class TabWidgetManager implements View.OnClickListener {
 	}
 
 	/**
-	 * Return the view corresponding to the tabP parameter or null if the tab
-	 * does not exist
+	 * Return the view corresponding to the tabP parameter or null if the tab does not exist
 	 * 
 	 * @param tabP
 	 * @return
@@ -168,8 +161,7 @@ public class TabWidgetManager implements View.OnClickListener {
 		}
 		tagID = tagID.substring(0, tagID.length() - suffixLength);
 		slideTo(tagID);
-		if (tagID.equals(this.getNameAtId(this.currentIndex))
-				&& tagID.equals("SEARCH")) {
+		if (tagID.equals(this.getNameAtId(this.currentIndex)) && tagID.equals("SEARCH")) {
 			this.activity.onSearchRequested();
 		}
 	}
@@ -211,8 +203,7 @@ public class TabWidgetManager implements View.OnClickListener {
 				Tab fromTab = tabs.get(currentIndex);
 				final Tab toTab = tabs.get(index);
 				// Show the logo
-				if (currentIndex != index
-						&& (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
+				if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
 					setSelected(currentIndex, View.INVISIBLE);
 					logoimage.setImageResource(toTab.getLogoId());
 					logoText.setText(activity.getString(toTab.getLogoTextId()));
@@ -221,16 +212,10 @@ public class TabWidgetManager implements View.OnClickListener {
 
 				// Create animation
 				float factor = 1.0f * (index - currentIndex);
-				Animation animSlider = new TranslateAnimation(
-						Animation.RELATIVE_TO_SELF, 0.0f,
-						Animation.RELATIVE_TO_SELF, factor,
-						Animation.RELATIVE_TO_SELF, 0.0f,
-						Animation.RELATIVE_TO_SELF, 0.0f);
+				Animation animSlider = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, factor, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 				animSlider.setDuration(400);
 				// Retrieve the source slider
-				final ImageView slider = (ImageView) selectedTabFrame
-						.findViewWithTag("" + fromTab.getId()
-								+ TAG_SELECTED_SUFFIX);
+				final ImageView slider = (ImageView) selectedTabFrame.findViewWithTag("" + fromTab.getId() + TAG_SELECTED_SUFFIX);
 				animSlider.setAnimationListener(new AnimationListener() {
 					public void onAnimationStart(Animation animation) {
 					}
@@ -266,8 +251,7 @@ public class TabWidgetManager implements View.OnClickListener {
 				// Retrieve tabs
 				Tab toTab = tabs.get(index);
 				// Show the logo
-				if (currentIndex != index
-						&& (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
+				if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
 					setSelected(currentIndex, View.INVISIBLE);
 					logoimage.setImageResource(toTab.getLogoId());
 					logoText.setText(activity.getString(toTab.getLogoTextId()));
@@ -313,23 +297,17 @@ public class TabWidgetManager implements View.OnClickListener {
 	 */
 	private void setSelected(int indexP, int visibilityP) {
 		Tab tab = tabs.get(indexP);
-		ImageView img = (ImageView) selectedTabFrame.findViewWithTag(tab
-				.getId()
-				+ TAG_SELECTED_SUFFIX);
+		ImageView img = (ImageView) selectedTabFrame.findViewWithTag(tab.getId() + TAG_SELECTED_SUFFIX);
 		if (img != null) {
 			img.setVisibility(visibilityP);
 			// If the tab have a different images (normal + selected)
 			int imgSelected = tab.getIconSelected();
 			if (imgSelected != 0) {
-				ImageView icon = (ImageView) normalTabFrame.findViewWithTag(tab
-						.getId()
-						+ TAG_NORMAL_SUFFIX);
-				icon.setImageResource((visibilityP == View.VISIBLE ? tab
-						.getIconSelected() : tab.getIconNormal()));
+				ImageView icon = (ImageView) normalTabFrame.findViewWithTag(tab.getId() + TAG_NORMAL_SUFFIX);
+				icon.setImageResource((visibilityP == View.VISIBLE ? tab.getIconSelected() : tab.getIconNormal()));
 			}
 		}
-		View view = (View) contentFrame
-				.findViewWithTag(tab.getId() + TAG_FRAME);
+		View view = (View) contentFrame.findViewWithTag(tab.getId() + TAG_FRAME);
 		if (view != null) {
 			view.setVisibility(visibilityP);
 			// If the view is visible, then hide the logo view

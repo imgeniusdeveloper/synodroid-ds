@@ -115,8 +115,7 @@ public class Utils {
 	}
 
 	/**
-	 * Utility method to convert a string into an int and log if an error
-	 * occured
+	 * Utility method to convert a string into an int and log if an error occured
 	 * 
 	 * @param valueP
 	 * @return
@@ -135,8 +134,7 @@ public class Utils {
 	}
 
 	/**
-	 * Utility method to convert a string into an double and log if an error
-	 * occured
+	 * Utility method to convert a string into an double and log if an error occured
 	 * 
 	 * @param valueP
 	 * @return
@@ -155,8 +153,7 @@ public class Utils {
 	}
 
 	/**
-	 * Extract from percent string (with the caracter '%') the percentage int
-	 * value
+	 * Extract from percent string (with the caracter '%') the percentage int value
 	 * 
 	 * @param percentP
 	 * @return
@@ -168,8 +165,7 @@ public class Utils {
 			try {
 				result = (int) Double.parseDouble(p);
 			}
-			// Nothing to do: it is not an integer, os just return the default
-			// value
+			// Nothing to do: it is not an integer, os just return the default value
 			catch (NumberFormatException ex) {
 			}
 		}
@@ -245,25 +241,21 @@ public class Utils {
 	 * Compute the upload percentage according to the filesize and the ratio
 	 * 
 	 * @param detailP
-	 * @return Return an integer could have been compute otherwise it returns
-	 *         null
+	 * @return Return an integer could have been compute otherwise it returns null
 	 */
 	public static Integer computeUploadPercent(TaskDetail detailP) {
 		Integer result = null;
 		long uploaded = detailP.bytesUploaded;
 		double ratio = ((double) (detailP.seedingRatio)) / 100.0d;
-		// If seeding ratio is 0, we suppose it is 100 => When a task is paused
-		// then
-		// the server returns 0 which is not the correct anwser even if the task
-		// is
+		// If seeding ratio is 0, we suppose it is 100 => When a task is paused then
+		// the server returns 0 which is not the correct anwser even if the task is
 		// paused
 		if (detailP.seedingRatio == 0) {
 			ratio = 1.0d;
 		}
 		if (ratio != 0 && detailP.fileSize != -1) {
 			try {
-				result = new Integer(
-						(int) ((uploaded * 100) / (detailP.fileSize * ratio)));
+				result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
 			} catch (ArithmeticException e) {
 				result = new Integer(100);
 			}
@@ -280,8 +272,7 @@ public class Utils {
 	 * @return
 	 */
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
-		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-				.getHeight(), Config.ARGB_8888);
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
 
 		final int color = 0xff424242;

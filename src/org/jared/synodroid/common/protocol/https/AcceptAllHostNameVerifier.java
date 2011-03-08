@@ -20,8 +20,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
 /**
- * This class always return true when it tries to verify a hostname in a ssl
- * session. Why ? Because when using self signed certificate (like Synology do),
+ * This class always return true when it tries to verify a hostname in a ssl session. Why ? Because when using self signed certificate (like Synology do),
  * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
@@ -30,8 +29,7 @@ public class AcceptAllHostNameVerifier implements HostnameVerifier {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String,
-	 * javax.net.ssl.SSLSession)
+	 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)
 	 */
 	public boolean verify(String hostNameP, SSLSession sslSessionP) {
 		return true;

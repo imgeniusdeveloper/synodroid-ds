@@ -22,8 +22,7 @@ import org.jared.synodroid.common.protocol.v22.DSHandlerDSM22Factory;
 import org.jared.synodroid.common.protocol.v31.DSHandlerDSM31Factory;
 
 /**
- * This is the protocol abstract factory. The goal of this class is to provide
- * the protocol factory implementation according to the DSM version
+ * This is the protocol abstract factory. The goal of this class is to provide the protocol factory implementation according to the DSM version
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -40,8 +39,7 @@ public abstract class DSMHandlerFactory {
 	 * 
 	 * @return
 	 */
-	public final static DSMHandlerFactory getFactory(DSMVersion versionP,
-			SynoServer serverP) {
+	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP) {
 		DSMHandlerFactory result = null;
 		// Depending on DSM version
 		switch (versionP) {
@@ -60,8 +58,7 @@ public abstract class DSMHandlerFactory {
 	}
 
 	/**
-	 * Connect to a SynoServer. This method MUST be called prior to any other
-	 * methods.
+	 * Connect to a SynoServer. This method MUST be called prior to any other methods.
 	 * 
 	 * @param serverP
 	 */

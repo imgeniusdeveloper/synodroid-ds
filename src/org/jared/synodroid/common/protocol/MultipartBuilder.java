@@ -75,8 +75,7 @@ public class MultipartBuilder {
 				// Start of the part
 				dos.writeBytes(twoHyphens + boundary + lineEnd);
 				// The part's name
-				dos.writeBytes("Content-Disposition: form-data; name=\""
-						+ part.getName() + "\"");
+				dos.writeBytes("Content-Disposition: form-data; name=\"" + part.getName() + "\"");
 				// Extras
 				Properties extras = part.getExtras();
 				Enumeration<Object> enu = extras.keys();
@@ -88,10 +87,8 @@ public class MultipartBuilder {
 				// Next line
 				dos.writeBytes(lineEnd);
 				// The content-type (by default it is plain US-ASCII text)
-				if (part.getContentType() != null
-						&& part.getContentType().length() > 0) {
-					dos.writeBytes("Content-Type: " + part.getContentType()
-							+ lineEnd);
+				if (part.getContentType() != null && part.getContentType().length() > 0) {
+					dos.writeBytes("Content-Type: " + part.getContentType() + lineEnd);
 				}
 				// A blank line
 				dos.writeBytes(lineEnd);

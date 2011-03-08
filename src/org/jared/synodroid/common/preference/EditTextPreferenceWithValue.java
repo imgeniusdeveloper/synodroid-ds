@@ -31,8 +31,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class EditTextPreferenceWithValue extends EditTextPreference implements
-		PreferenceWithValue {
+public class EditTextPreferenceWithValue extends EditTextPreference implements PreferenceWithValue {
 
 	// The textview used in the preference
 	private TextView valueView;
@@ -46,8 +45,7 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements
 	 * @param context
 	 * @param attrs
 	 */
-	public EditTextPreferenceWithValue(Context context, AttributeSet attrs,
-			boolean trim) {
+	public EditTextPreferenceWithValue(Context context, AttributeSet attrs, boolean trim) {
 		super(context, attrs);
 		setLayoutResource(R.layout.preference_with_value);
 		setSingleLine(true);
@@ -68,8 +66,7 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements
 	}
 
 	/**
-	 * Set the input type for the dialog's EditText. Useful to set password,
-	 * int, or other specific type of input
+	 * Set the input type for the dialog's EditText. Useful to set password, int, or other specific type of input
 	 * 
 	 * @param inputTypeP
 	 */
@@ -127,11 +124,8 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements
 	private void updateValueInPreference(String valueP) {
 		// Prevent from showing a password
 		EditText editText = getEditText();
-		if (valueP != null
-				&& editText != null
-				&& (editText.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0) {
-			valueP = "*********************************************************************************************************************"
-					.substring(0, valueP.length());
+		if (valueP != null && editText != null && (editText.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0) {
+			valueP = "*********************************************************************************************************************".substring(0, valueP.length());
 		}
 		// Show the value
 		if (valueView != null) {
@@ -156,10 +150,8 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements
 	 * @param summaryP
 	 * @return
 	 */
-	public static EditTextPreferenceWithValue create(Context contextP,
-			String keyP, int titleP, int summaryP, boolean trim) {
-		EditTextPreferenceWithValue pref = new EditTextPreferenceWithValue(
-				contextP, trim);
+	public static EditTextPreferenceWithValue create(Context contextP, String keyP, int titleP, int summaryP, boolean trim) {
+		EditTextPreferenceWithValue pref = new EditTextPreferenceWithValue(contextP, trim);
 		pref.setKey(keyP);
 		pref.setTitle(titleP);
 		pref.setSummary(summaryP);

@@ -34,15 +34,11 @@ public class DetailTaskAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.
-	 * ds.DownloadActivity, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid. ds.DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		TaskDetail details = serverP.getDSMHandlerFactory().getDSHandler()
-				.getDetails(task);
-		serverP.fireMessage(handlerP, DownloadActivity.MSG_DETAILS_RETRIEVED,
-				details);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		TaskDetail details = serverP.getDSMHandlerFactory().getDSHandler().getDetails(task);
+		serverP.fireMessage(handlerP, DownloadActivity.MSG_DETAILS_RETRIEVED, details);
 	}
 
 	/*

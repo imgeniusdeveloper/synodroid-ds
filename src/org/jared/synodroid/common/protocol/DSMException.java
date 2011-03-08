@@ -24,8 +24,7 @@ package org.jared.synodroid.common.protocol;
 @SuppressWarnings("serial")
 public class DSMException extends Exception {
 
-	// The JSON's reason of the exception. Can be null if there's a root cause
-	// exception
+	// The JSON's reason of the exception. Can be null if there's a root cause exception
 	private String jsonReason;
 	// The root cause exception (more technical errors)
 	private Exception rootException;

@@ -31,12 +31,7 @@ import java.io.Closeable;
 import org.jared.synodroid.ds.R;
 
 /**
- * Displays an EULA ("End User License Agreement") that the user has to accept
- * before using the application. Your application should call
- * {@link Eula#show(android.app.Activity)} in the onCreate() method of the first
- * activity. If the user accepts the EULA, it will never be shown again. If the
- * user refuses, {@link android.app.Activity#finish()} is invoked on your
- * activity.
+ * Displays an EULA ("End User License Agreement") that the user has to accept before using the application. Your application should call {@link Eula#show(android.app.Activity)} in the onCreate() method of the first activity. If the user accepts the EULA, it will never be shown again. If the user refuses, {@link android.app.Activity#finish()} is invoked on your activity.
  */
 public class Eula {
 	private static final String ASSET_EULA = "EULA";
@@ -55,61 +50,48 @@ public class Eula {
 	}
 
 	/**
-	 * Displays the EULA if necessary. This method should be called from the
-	 * onCreate() method of your main Activity.
+	 * Displays the EULA if necessary. This method should be called from the onCreate() method of your main Activity.
 	 * 
 	 * @param activity
 	 *            The Activity to finish if the user rejects the EULA.
 	 * @return Whether the user has agreed already.
 	 */
 	public static boolean show(final Activity activity, boolean forceToShow) {
-		final SharedPreferences preferences = activity.getSharedPreferences(
-				PREFERENCES_EULA, Activity.MODE_PRIVATE);
-		if (!preferences.getBoolean(PREFERENCE_EULA_ACCEPTED, false)
-				|| forceToShow) {
-			final AlertDialog.Builder builder = new AlertDialog.Builder(
-					activity);
+		final SharedPreferences preferences = activity.getSharedPreferences(PREFERENCES_EULA, Activity.MODE_PRIVATE);
+		if (!preferences.getBoolean(PREFERENCE_EULA_ACCEPTED, false) || forceToShow) {
+			final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(R.string.eula_title);
 			builder.setCancelable(!forceToShow);
 			if (!forceToShow) {
-				builder.setPositiveButton(R.string.eula_accept,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								accept(preferences);
-								if (activity instanceof OnEulaAgreedTo) {
-									((OnEulaAgreedTo) activity)
-											.onEulaAgreedTo();
-								}
-							}
-						});
-				builder.setNegativeButton(R.string.eula_refuse,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								refuse(preferences, activity);
-							}
-						});
-				builder
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								refuse(preferences, activity);
-							}
-						});
+				builder.setPositiveButton(R.string.eula_accept, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						accept(preferences);
+						if (activity instanceof OnEulaAgreedTo) {
+							((OnEulaAgreedTo) activity).onEulaAgreedTo();
+						}
+					}
+				});
+				builder.setNegativeButton(R.string.eula_refuse, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						refuse(preferences, activity);
+					}
+				});
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						refuse(preferences, activity);
+					}
+				});
 			} else {
-				builder.setPositiveButton(R.string.eula_hide,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,
-									int which) {
-								// DO NOTHING JUST HIDE IT ...
-							}
-						});
-				builder
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								// DO NOTHING JUST HIDE IT ...
-							}
-						});
+				builder.setPositiveButton(R.string.eula_hide, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// DO NOTHING JUST HIDE IT ...
+					}
+				});
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						// DO NOTHING JUST HIDE IT ...
+					}
+				});
 			}
 			builder.setMessage(readEula(activity));
 			builder.create().show();
@@ -130,8 +112,7 @@ public class Eula {
 	private static CharSequence readEula(Activity activity) {
 		BufferedReader in = null;
 		try {
-			in = new BufferedReader(new InputStreamReader(activity.getAssets()
-					.open(ASSET_EULA)));
+			in = new BufferedReader(new InputStreamReader(activity.getAssets().open(ASSET_EULA)));
 			String line;
 			StringBuilder buffer = new StringBuilder();
 			while ((line = in.readLine()) != null)

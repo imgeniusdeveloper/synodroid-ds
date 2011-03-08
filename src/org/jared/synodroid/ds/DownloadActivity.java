@@ -99,8 +99,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
  * 
  * @author eric.taix at gmail.com
  */
-public class DownloadActivity extends SynodroidActivity implements
-		Eula.OnEulaAgreedTo, TitleClicklistener, TabListener {
+public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAgreedTo, TitleClicklistener, TabListener {
 
 	private static final String TAB_ABOUT = "ABOUT";
 	private static final String TAB_SEARCH = "SEARCH";
@@ -145,11 +144,8 @@ public class DownloadActivity extends SynodroidActivity implements
 	// The tab manager
 	private TabWidgetManager tabManager;
 
-	private final String[] from = new String[] { "NAME", "SIZE", "ADDED",
-			"LEECHERS", "SEEDERS", "TORRENTURL" };
-	private final int[] to = new int[] { R.id.result_title, R.id.result_size,
-			R.id.result_date, R.id.result_leechers, R.id.result_seeds,
-			R.id.result_url };
+	private final String[] from = new String[] { "NAME", "SIZE", "ADDED", "LEECHERS", "SEEDERS", "TORRENTURL" };
+	private final int[] to = new int[] { R.id.result_title, R.id.result_size, R.id.result_date, R.id.result_leechers, R.id.result_seeds, R.id.result_url };
 
 	private TextView emptyText;
 	private ScrollView sv;
@@ -234,8 +230,7 @@ public class DownloadActivity extends SynodroidActivity implements
 			// Show the error
 			// Save the last error inside the server to surive UI rotation and
 			// pause/resume.
-			final SynoServer server = ((Synodroid) getApplication())
-					.getServer();
+			final SynoServer server = ((Synodroid) getApplication()).getServer();
 			if (server != null) {
 				server.setLastError((String) msg.obj);
 				showError(server.getLastError(), new Dialog.OnClickListener() {
@@ -252,17 +247,14 @@ public class DownloadActivity extends SynodroidActivity implements
 		}
 		// Connection is done
 		else if (msg.what == ResponseHandler.MSG_CONNECTED) {
-			final SynoServer server = ((Synodroid) getApplication())
-					.getServer();
+			final SynoServer server = ((Synodroid) getApplication()).getServer();
 			// Change the title
 			String title = server.getNickname();
 			if (server.getConnection() == server.getPublicConnection()) {
 				title += " (P)";
 			}
 			titleText.setText(title);
-			titleIcon
-					.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE
-							: View.GONE);
+			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 		}
 		// Connecting to the server
 		else if (msg.what == ResponseHandler.MSG_CONNECTING) {
@@ -273,8 +265,7 @@ public class DownloadActivity extends SynodroidActivity implements
 			try {
 				showDialog(CONNECTION_DIALOG_ID);
 			} catch (Exception e) {
-				// Unable to show dialog probably because intent has been
-				// closed. Ignoring...
+				// Unable to show dialog probably because intent has been closed. Ignoring...
 			}
 		}
 		// Show task's details
@@ -299,23 +290,19 @@ public class DownloadActivity extends SynodroidActivity implements
 			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(getString(R.string.shared_dir_title));
-			builder.setSingleChoiceItems(dirNames, selected,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int item) {
-							dialog.dismiss();
-							Synodroid app = (Synodroid) getApplication();
-							app.executeAsynchronousAction(
-									DownloadActivity.this, new SetShared(null,
-											dirNames[item]), true);
-						}
-					});
+			builder.setSingleChoiceItems(dirNames, selected, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					dialog.dismiss();
+					Synodroid app = (Synodroid) getApplication();
+					app.executeAsynchronousAction(DownloadActivity.this, new SetShared(null, dirNames[item]), true);
+				}
+			});
 
 			AlertDialog alert = builder.create();
 			try {
 				alert.show();
 			} catch (BadTokenException e) {
-				// Unable to show dialog probably because intent has been
-				// closed. Ignoring...
+				// Unable to show dialog probably because intent has been closed. Ignoring...
 			}
 		}
 	}
@@ -324,23 +311,15 @@ public class DownloadActivity extends SynodroidActivity implements
 	 * This method is called when a sub activity exits.
 	 */
 	/*
-	 * @Override protected void onActivityResult(int requestCode, int
-	 * resultCode, Intent data) { if (requestCode == 0) { if (resultCode ==
-	 * RESULT_OK) { TaskDetail details = (TaskDetail)
-	 * data.getSerializableExtra("org.jared.synodroid.ds.Details"); if (details
-	 * != null && taskView != null){ // Get the adapter TaskAdapter taskAdapter
-	 * = (TaskAdapter) taskView.getAdapter();
+	 * @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) { if (requestCode == 0) { if (resultCode == RESULT_OK) { TaskDetail details = (TaskDetail) data.getSerializableExtra("org.jared.synodroid.ds.Details"); if (details != null && taskView != null){ // Get the adapter TaskAdapter taskAdapter = (TaskAdapter) taskView.getAdapter();
 	 * taskAdapter.updateFromDetail(details); } } } }
 	 */
 
 	private void initTorrentTab(LayoutInflater inflater) {
-		RelativeLayout downloadContent = (RelativeLayout) inflater.inflate(
-				R.layout.download_list, null, false);
+		RelativeLayout downloadContent = (RelativeLayout) inflater.inflate(R.layout.download_list, null, false);
 		taskView = (ListView) downloadContent.findViewById(R.id.id_task_list);
-		totalUpView = (TextView) downloadContent
-				.findViewById(R.id.id_total_upload);
-		totalDownView = (TextView) downloadContent
-				.findViewById(R.id.id_total_download);
+		totalUpView = (TextView) downloadContent.findViewById(R.id.id_total_upload);
+		totalDownView = (TextView) downloadContent.findViewById(R.id.id_total_download);
 		tabManager.addTab(torrentTab, downloadContent);
 		// Create the task adapter
 		TaskAdapter taskAdapter = new TaskAdapter(this);
@@ -360,8 +339,7 @@ public class DownloadActivity extends SynodroidActivity implements
 				try {
 					Eula.show(DownloadActivity.this, true);
 				} catch (BadTokenException e) {
-					// Unable to show dialog probably because intent has been
-					// closed. Ignoring...
+					// Unable to show dialog probably because intent has been closed. Ignoring...
 				}
 			}
 		});
@@ -377,43 +355,34 @@ public class DownloadActivity extends SynodroidActivity implements
 
 		String vn = "" + getString(R.string.app_name);
 		try {
-			PackageInfo pi = getPackageManager().getPackageInfo(
-					getPackageName(), 0);
+			PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
 			if (pi != null) {
 				vn += " " + pi.versionName;
 			}
 		} catch (Exception e) {
-			Log.e(Synodroid.DS_TAG,
-					"Error while retrieving package information", e);
+			Log.e(Synodroid.DS_TAG, "Error while retrieving package information", e);
 		}
 		TextView vname = (TextView) about.findViewById(R.id.app_vers_name_text);
 		vname.setText(vn);
 
 		TextView message = (TextView) about.findViewById(R.id.about_code);
-		message
-				.setText(Html
-						.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
+		message.setText(Html.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
 		message.setMovementMethod(LinkMovementMethod.getInstance());
 
 		ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
 		donate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent i = new Intent(
-						"android.intent.action.VIEW",
-						Uri
-								.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
+				Intent i = new Intent("android.intent.action.VIEW", Uri.parse("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ABCSFVFDRJEFS&lc=CA&item_name=Synodroid&item_number=synodroid%2dmarket&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted"));
 				startActivity(i);
 			}
 		});
 
 		tabManager.addTab(aboutTab, about);
-		about.findViewById(R.id.about_scroll).setOnTouchListener(
-				gestureListener);
+		about.findViewById(R.id.about_scroll).setOnTouchListener(gestureListener);
 	}
 
 	private void initSearchTab(LayoutInflater inflater) {
-		RelativeLayout searchContent = (RelativeLayout) inflater.inflate(
-				R.layout.torrent_search, null, false);
+		RelativeLayout searchContent = (RelativeLayout) inflater.inflate(R.layout.torrent_search, null, false);
 		resList = (ListView) searchContent.findViewById(R.id.resList);
 
 		emptyText = (TextView) searchContent.findViewById(R.id.empty);
@@ -424,20 +393,15 @@ public class DownloadActivity extends SynodroidActivity implements
 		SpinnerSource = (Spinner) searchContent.findViewById(R.id.srcSpinner);
 		SpinnerSort = (Spinner) searchContent.findViewById(R.id.sortSpinner);
 
-		AdapterSource = new ArrayAdapter<CharSequence>(this,
-				android.R.layout.simple_spinner_item);
-		AdapterSource
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		AdapterSource = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
+		AdapterSource.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SpinnerSource.setAdapter(AdapterSource);
 
-		AdapterSort = new ArrayAdapter<CharSequence>(this,
-				android.R.layout.simple_spinner_item);
-		AdapterSort
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		AdapterSort = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item);
+		AdapterSort.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SpinnerSort.setAdapter(AdapterSort);
 
-		SharedPreferences preferences = getSharedPreferences(
-				PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 		String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
 		String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
 
@@ -479,31 +443,23 @@ public class DownloadActivity extends SynodroidActivity implements
 			btnInstall.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent goToMarket = null;
-					goToMarket = new Intent(Intent.ACTION_VIEW, Uri
-							.parse("market://details?id=org.transdroid.search"));
+					goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.transdroid.search"));
 					try {
 						startActivity(goToMarket);
 					} catch (Exception e) {
-						AlertDialog.Builder builder = new AlertDialog.Builder(
-								DownloadActivity.this);
+						AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
 						// By default the message is "Error Unknown"
 						builder.setMessage(R.string.err_nomarket);
-						builder.setTitle(
-								getString(R.string.connect_error_title))
-								.setCancelable(false).setPositiveButton("OK",
-										new DialogInterface.OnClickListener() {
-											public void onClick(
-													DialogInterface dialog,
-													int id) {
-												dialog.cancel();
-											}
-										});
+						builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 						AlertDialog errorDialog = builder.create();
 						try {
 							errorDialog.show();
 						} catch (BadTokenException ex) {
-							// Unable to show dialog probably because intent has
-							// been closed. Ignoring...
+							// Unable to show dialog probably because intent has been closed. Ignoring...
 						}
 					}
 
@@ -515,13 +471,10 @@ public class DownloadActivity extends SynodroidActivity implements
 		resList.setOnTouchListener(gestureListener);
 
 		SpinnerSource.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				String source = ((TextView) arg1).getText().toString();
-				SharedPreferences preferences = getSharedPreferences(
-						PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-				preferences.edit().putString(PREFERENCE_SEARCH_SOURCE, source)
-						.commit();
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				preferences.edit().putString(PREFERENCE_SEARCH_SOURCE, source).commit();
 				if (!lastSearch.equals("")) {
 					new TorrentSearchTask().execute(lastSearch);
 				}
@@ -531,13 +484,10 @@ public class DownloadActivity extends SynodroidActivity implements
 			}
 		});
 		SpinnerSort.setOnItemSelectedListener(new OnItemSelectedListener() {
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				String order = ((TextView) arg1).getText().toString();
-				SharedPreferences preferences = getSharedPreferences(
-						PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-				preferences.edit().putString(PREFERENCE_SEARCH_ORDER, order)
-						.commit();
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				preferences.edit().putString(PREFERENCE_SEARCH_ORDER, order).commit();
 				if (!lastSearch.equals("")) {
 					new TorrentSearchTask().execute(lastSearch);
 				}
@@ -550,30 +500,20 @@ public class DownloadActivity extends SynodroidActivity implements
 		SpinnerSource.setSelection(lastSource);
 		SpinnerSort.setSelection(lastOrder);
 		resList.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				final RelativeLayout rl = (RelativeLayout) arg1;
-				Dialog d = new AlertDialog.Builder(DownloadActivity.this)
-						.setTitle(R.string.dialog_title_confirm).setMessage(
-								R.string.dialog_message_confirm_add)
-						.setNegativeButton(android.R.string.no, null)
-						.setPositiveButton(android.R.string.yes,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										TextView tv = (TextView) rl
-												.findViewById(R.id.result_url);
-										String url = tv.getText().toString();
-										new TorrentDownloadAndAdd()
-												.execute(url);
-									}
-								}).create();
+				Dialog d = new AlertDialog.Builder(DownloadActivity.this).setTitle(R.string.dialog_title_confirm).setMessage(R.string.dialog_message_confirm_add).setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						TextView tv = (TextView) rl.findViewById(R.id.result_url);
+						String url = tv.getText().toString();
+						new TorrentDownloadAndAdd().execute(url);
+					}
+				}).create();
 				// d.setOwnerActivity(this); // why can't the builder do this?
 				try {
 					d.show();
 				} catch (BadTokenException e) {
-					// Unable to show dialog probably because intent has been
-					// closed. Ignoring...
+					// Unable to show dialog probably because intent has been closed. Ignoring...
 				}
 			}
 		});
@@ -590,8 +530,7 @@ public class DownloadActivity extends SynodroidActivity implements
 		try {
 			licenceAccepted = Eula.show(this, false);
 		} catch (BadTokenException e) {
-			// Unable to show dialog probably because intent has been closed.
-			// Ignoring...
+			// Unable to show dialog probably because intent has been closed. Ignoring...
 		}
 		tabsNeedInit = true;
 
@@ -599,18 +538,15 @@ public class DownloadActivity extends SynodroidActivity implements
 		tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
 
 		// Download Tab
-		torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download,
-				R.drawable.ic_tab_download_selected);
+		torrentTab = new Tab(TAB_TASKS, R.drawable.ic_tab_download, R.drawable.ic_tab_download_selected);
 		torrentTab.setLogo(R.drawable.download_logo, R.string.logo_download);
 
 		// Torrent Search Tab
-		searchTab = new Tab(TAB_SEARCH, R.drawable.ic_tab_search,
-				R.drawable.ic_tab_search_selected);
+		searchTab = new Tab(TAB_SEARCH, R.drawable.ic_tab_search, R.drawable.ic_tab_search_selected);
 		searchTab.setLogo(R.drawable.search_logo, R.string.logo_search);
 
 		// About Tab
-		aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about,
-				R.drawable.ic_tab_about_selected);
+		aboutTab = new Tab(TAB_ABOUT, R.drawable.ic_tab_about, R.drawable.ic_tab_about_selected);
 		aboutTab.setLogo(R.drawable.about_logo, R.string.logo_about);
 
 		tabManager.setTabListener(this);
@@ -637,8 +573,7 @@ public class DownloadActivity extends SynodroidActivity implements
 	private class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 		@Override
 		protected void onPreExecute() {
-			Toast toast = Toast.makeText(DownloadActivity.this,
-					getString(R.string.wait_for_download), Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(DownloadActivity.this, getString(R.string.wait_for_download), Toast.LENGTH_LONG);
 			toast.show();
 		}
 
@@ -680,20 +615,14 @@ public class DownloadActivity extends SynodroidActivity implements
 		protected Cursor doInBackground(String... params) {
 			try {
 				// Create the URI of the TorrentProvider
-				String uriString = "content://org.transdroid.search.torrentsearchprovider/search/"
-						+ params[0];
+				String uriString = "content://org.transdroid.search.torrentsearchprovider/search/" + params[0];
 				Uri uri = Uri.parse(uriString);
-				// Then query for this specific record (no selection nor
-				// projection nor sort):
-				SharedPreferences preferences = getSharedPreferences(
-						PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-				String pref_src = preferences.getString(
-						PREFERENCE_SEARCH_SOURCE, "");
-				String pref_order = preferences.getString(
-						PREFERENCE_SEARCH_ORDER, "");
+				// Then query for this specific record (no selection nor projection nor sort):
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				String pref_src = preferences.getString(PREFERENCE_SEARCH_SOURCE, "");
+				String pref_order = preferences.getString(PREFERENCE_SEARCH_ORDER, "");
 
-				return managedQuery(uri, null, "SITE = ?",
-						new String[] { pref_src }, pref_order);
+				return managedQuery(uri, null, "SITE = ?", new String[] { pref_src }, pref_order);
 			} catch (Exception e) {
 				return null;
 			}
@@ -710,10 +639,7 @@ public class DownloadActivity extends SynodroidActivity implements
 				btnInstall.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						Intent goToMarket = null;
-						goToMarket = new Intent(
-								Intent.ACTION_VIEW,
-								Uri
-										.parse("market://details?id=org.transdroid.search"));
+						goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.transdroid.search"));
 						startActivity(goToMarket);
 					}
 				});
@@ -721,14 +647,11 @@ public class DownloadActivity extends SynodroidActivity implements
 				if (cur.getCount() == 0) {
 					emptyText.setVisibility(TextView.VISIBLE);
 					resList.setVisibility(ListView.GONE);
-					emptyText.setText(getString(R.string.no_results) + " "
-							+ lastSearch);
+					emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
 				} else {
 					emptyText.setVisibility(TextView.GONE);
 					resList.setVisibility(ListView.VISIBLE);
-					resList.setAdapter(new SimpleCursorAdapter(
-							DownloadActivity.this, R.layout.search_row, cur,
-							from, to));
+					resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));
 				}
 			}
 		}
@@ -746,9 +669,7 @@ public class DownloadActivity extends SynodroidActivity implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.TitleClicklistener#onTitleClicked(android
-	 * .view.View)
+	 * @see org.jared.synodroid.common.ui.TitleClicklistener#onTitleClicked(android .view.View)
 	 */
 	public void onTitleClicked(View viewP) {
 		showDialogToConnect(false, null);
@@ -760,8 +681,7 @@ public class DownloadActivity extends SynodroidActivity implements
 	 * @see org.jared.synodroid.common.ui.SynodroidActivity#getMainContentView()
 	 */
 	@Override
-	public void attachMainContentView(LayoutInflater inflaterP,
-			ViewGroup parentP) {
+	public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
 		parentP.addView(tabManager.getContentView());
 	}
 
@@ -805,17 +725,14 @@ public class DownloadActivity extends SynodroidActivity implements
 			path.mkdirs();
 			String temp[] = uri.toString().split("/");
 			String fname = temp[(temp.length) - 1];
-			if (!fname.toLowerCase().endsWith(".torrent")
-					&& !fname.toLowerCase().endsWith(".nzb")) {
+			if (!fname.toLowerCase().endsWith(".torrent") && !fname.toLowerCase().endsWith(".nzb")) {
 				fname += ".torrent";
 			}
 			File file = new File(path, fname);
 
 			long startTime = System.currentTimeMillis();
-			Log.d(Synodroid.DS_TAG, "Downloading " + uri.toString()
-					+ " to temp folder...");
-			Log.d(Synodroid.DS_TAG, "Temp file destination: "
-					+ file.getAbsolutePath());
+			Log.d(Synodroid.DS_TAG, "Downloading " + uri.toString() + " to temp folder...");
+			Log.d(Synodroid.DS_TAG, "Temp file destination: " + file.getAbsolutePath());
 			/* Open a connection to that URL. */
 			URLConnection ucon = url.openConnection();
 
@@ -838,9 +755,7 @@ public class DownloadActivity extends SynodroidActivity implements
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(baf.toByteArray());
 			fos.close();
-			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: "
-					+ ((System.currentTimeMillis() - startTime) / 1000)
-					+ " sec(s)");
+			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000) + " sec(s)");
 			uri = Uri.fromFile(file);
 		} catch (Exception e) {
 			Log.d(Synodroid.DS_TAG, "Download Error: " + e);
@@ -862,15 +777,13 @@ public class DownloadActivity extends SynodroidActivity implements
 			boolean out_url = false;
 			if (action.equals(Intent.ACTION_VIEW)) {
 				uri = intentP.getData();
-				if (uri.toString().startsWith("http")
-						|| uri.toString().startsWith("ftp")) {
+				if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
 					/** Download and fix URL */
 					new TorrentDownloadAndAdd().execute(uri.toString());
 					return false;
 				}
 			} else if (action.equals(Intent.ACTION_SEND)) {
-				String uriString = (String) intentP.getExtras().get(
-						Intent.EXTRA_TEXT);
+				String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
 				if (uriString == null) {
 					return true;
 				}
@@ -903,32 +816,27 @@ public class DownloadActivity extends SynodroidActivity implements
 			dialog = new ProgressDialog(this);
 			dialog.setTitle("");
 			dialog.setCancelable(false);
-			((ProgressDialog) dialog)
-					.setMessage(getString(R.string.connect_connecting2));
+			((ProgressDialog) dialog).setMessage(getString(R.string.connect_connecting2));
 			((ProgressDialog) dialog).setIndeterminate(true);
 			break;
 		// No server have been yet configured
 		case NO_SERVER_DIALOG_ID:
 			AlertDialog.Builder builderNoServer = new AlertDialog.Builder(this);
 			builderNoServer.setTitle(R.string.dialog_title_information);
-			builderNoServer
-					.setMessage(getString(R.string.no_server_configured));
+			builderNoServer.setMessage(getString(R.string.no_server_configured));
 			builderNoServer.setCancelable(true);
-			builderNoServer.setPositiveButton(
-					getString(R.string.button_yesplease),
-					new OnClickListener() {
-						// Launch the Preference activity
-						public void onClick(DialogInterface dialogP, int whichP) {
-							okToCreateAServer();
-						}
-					});
-			builderNoServer.setNegativeButton(
-					getString(R.string.button_nothanks), new OnClickListener() {
-						// Launch the Preference activity
-						public void onClick(DialogInterface dialogP, int whichP) {
-							alreadyCanceled = true;
-						}
-					});
+			builderNoServer.setPositiveButton(getString(R.string.button_yesplease), new OnClickListener() {
+				// Launch the Preference activity
+				public void onClick(DialogInterface dialogP, int whichP) {
+					okToCreateAServer();
+				}
+			});
+			builderNoServer.setNegativeButton(getString(R.string.button_nothanks), new OnClickListener() {
+				// Launch the Preference activity
+				public void onClick(DialogInterface dialogP, int whichP) {
+					alreadyCanceled = true;
+				}
+			});
 			dialog = builderNoServer.create();
 			break;
 
@@ -940,16 +848,11 @@ public class DownloadActivity extends SynodroidActivity implements
 	 * Create the option menu of this activity
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_PAUSE_ALL, 0, getString(R.string.menu_pauseall))
-				.setIcon(R.drawable.ic_menu_pause);
-		menu.add(0, MENU_RESUME_ALL, 0, getString(R.string.menu_resumeall))
-				.setIcon(android.R.drawable.ic_menu_revert);
-		menu.add(0, MENU_CLEAR_ALL, 0, getString(R.string.menu_clearall))
-				.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-		menu.add(0, MENU_DESTINATION, 0, getString(R.string.menu_destination))
-				.setIcon(android.R.drawable.ic_menu_share);
-		menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter))
-				.setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(0, MENU_PAUSE_ALL, 0, getString(R.string.menu_pauseall)).setIcon(R.drawable.ic_menu_pause);
+		menu.add(0, MENU_RESUME_ALL, 0, getString(R.string.menu_resumeall)).setIcon(android.R.drawable.ic_menu_revert);
+		menu.add(0, MENU_CLEAR_ALL, 0, getString(R.string.menu_clearall)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+		menu.add(0, MENU_DESTINATION, 0, getString(R.string.menu_destination)).setIcon(android.R.drawable.ic_menu_share);
+		menu.add(0, MENU_PARAMETERS, 0, getString(R.string.menu_parameter)).setIcon(android.R.drawable.ic_menu_preferences);
 		return true;
 	}
 
@@ -962,16 +865,13 @@ public class DownloadActivity extends SynodroidActivity implements
 		Synodroid app = (Synodroid) getApplication();
 		switch (item.getItemId()) {
 		case MENU_CLEAR_ALL:
-			app.executeAction(DownloadActivity.this, new ClearAllTaskAction(),
-					false);
+			app.executeAction(DownloadActivity.this, new ClearAllTaskAction(), false);
 			return true;
 		case MENU_PAUSE_ALL:
-			app.executeAction(DownloadActivity.this, new StopAllAction(tasks),
-					false);
+			app.executeAction(DownloadActivity.this, new StopAllAction(tasks), false);
 			return true;
 		case MENU_RESUME_ALL:
-			app.executeAction(DownloadActivity.this,
-					new ResumeAllAction(tasks), false);
+			app.executeAction(DownloadActivity.this, new ResumeAllAction(tasks), false);
 			return true;
 		case MENU_PARAMETERS:
 			showPreferenceActivity();
@@ -995,11 +895,9 @@ public class DownloadActivity extends SynodroidActivity implements
 	/**
 	 * Show the dialog to connect to a server
 	 */
-	public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP,
-			final List<SynoAction> actionQueueP) {
+	public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<SynoAction> actionQueueP) {
 		if (!connectDialogOpened) {
-			final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(
-					this, PreferenceManager.getDefaultSharedPreferences(this));
+			final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(this, PreferenceManager.getDefaultSharedPreferences(this));
 			// If at least one server
 			if (servers.size() != 0) {
 				// If more than 1 server OR if we don't want to autoconnect then
@@ -1014,25 +912,19 @@ public class DownloadActivity extends SynodroidActivity implements
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
 					builder.setTitle(getString(R.string.menu_connect));
 					// When the user select a server
-					builder.setItems(serversTitle,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int item) {
-									SynoServer server = servers.get(item);
-									// Change the server
-									((Synodroid) getApplication())
-											.connectServer(
-													DownloadActivity.this,
-													server, actionQueueP);
-									dialog.dismiss();
-								}
-							});
+					builder.setItems(serversTitle, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int item) {
+							SynoServer server = servers.get(item);
+							// Change the server
+							((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
+							dialog.dismiss();
+						}
+					});
 					AlertDialog connectDialog = builder.create();
 					try {
 						connectDialog.show();
 					} catch (BadTokenException e) {
-						// Unable to show dialog probably because intent has
-						// been closed. Ignoring...
+						// Unable to show dialog probably because intent has been closed. Ignoring...
 					}
 					connectDialog.setOnDismissListener(new OnDismissListener() {
 						public void onDismiss(DialogInterface dialog) {
@@ -1044,24 +936,20 @@ public class DownloadActivity extends SynodroidActivity implements
 					if (servers.size() > 0) {
 						SynoServer server = servers.get(0);
 						// Change the server
-						((Synodroid) getApplication()).connectServer(
-								DownloadActivity.this, server, actionQueueP);
+						((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
 					}
 				}
 			}
 			// No server then show the dialog to configure a server
 			else {
 				// Only if the EULA has been accepted. If the EULA has not been
-				// accepted, it means that the EULA is currenlty being displayed
-				// so
+				// accepted, it means that the EULA is currenlty being displayed so
 				// don't show the "Wizard" dialog
 				if (licenceAccepted && !alreadyCanceled) {
 					try {
 						showDialog(NO_SERVER_DIALOG_ID);
 					} catch (Exception e) {
-						// Unable to show dialog probably because intent has
-						// been closed or the dialog is already displayed.
-						// Ignoring...
+						// Unable to show dialog probably because intent has been closed or the dialog is already displayed. Ignoring...
 					}
 				}
 			}
@@ -1095,16 +983,12 @@ public class DownloadActivity extends SynodroidActivity implements
 		super.onWindowFocusChanged(hasFocus);
 
 		if (hasFocus) {
-			SharedPreferences preferences = getSharedPreferences(
-					PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+			SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 			if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)) {
 				// Set fullscreen or not
-				getWindow().setFlags(
-						WindowManager.LayoutParams.FLAG_FULLSCREEN,
-						WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			} else {
-				getWindow().clearFlags(
-						WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			}
 
 		}
@@ -1122,10 +1006,7 @@ public class DownloadActivity extends SynodroidActivity implements
 		/**
 		 * Intents are driving me insane.
 		 * 
-		 * When an intent has been handle by the app I mark the flag activity
-		 * launched from history on so we do not reprocess that intent again.
-		 * This simplify was more how I was handling intents before and is
-		 * effective in every cases in all android 1.5 up versions...
+		 * When an intent has been handle by the app I mark the flag activity launched from history on so we do not reprocess that intent again. This simplify was more how I was handling intents before and is effective in every cases in all android 1.5 up versions...
 		 * 
 		 * */
 		// Init tabmanager tabs
@@ -1146,11 +1027,8 @@ public class DownloadActivity extends SynodroidActivity implements
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		// Check if it is a actionable Intent
-		if (action != null
-				&& (action.equals(Intent.ACTION_VIEW) || action
-						.equals(Intent.ACTION_SEND))) {
-			// REUSE INTENT CHECK: check if the intent is comming out of the
-			// history.
+		if (action != null && (action.equals(Intent.ACTION_VIEW) || action.equals(Intent.ACTION_SEND))) {
+			// REUSE INTENT CHECK: check if the intent is comming out of the history.
 			if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
 				// Not from history -> process intent
 				connectToServer = handleIntent(intent);
@@ -1160,14 +1038,11 @@ public class DownloadActivity extends SynodroidActivity implements
 				if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
 					tabManager.selectTab(TAB_SEARCH);
 				}
-				String searchKeywords = intent
-						.getStringExtra(SearchManager.QUERY);
+				String searchKeywords = intent.getStringExtra(SearchManager.QUERY);
 				lastSearch = searchKeywords;
 				if (!searchKeywords.equals("")) {
 					new TorrentSearchTask().execute(searchKeywords);
-					SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-							this, SynodroidSearchSuggestion.AUTHORITY,
-							SynodroidSearchSuggestion.MODE);
+					SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, SynodroidSearchSuggestion.AUTHORITY, SynodroidSearchSuggestion.MODE);
 					suggestions.saveRecentQuery(searchKeywords, null);
 				} else {
 					emptyText.setText(R.string.no_keyword);
@@ -1177,23 +1052,18 @@ public class DownloadActivity extends SynodroidActivity implements
 			} else {
 				tabManager.selectTab(TAB_SEARCH);
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						DownloadActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
 				builder.setMessage(R.string.err_provider_missing);
-				builder.setTitle(getString(R.string.connect_error_title))
-						.setCancelable(false).setPositiveButton("OK",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int id) {
-										dialog.cancel();
-									}
-								});
+				builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 				AlertDialog errorDialog = builder.create();
 				try {
 					errorDialog.show();
 				} catch (BadTokenException e) {
-					// Unable to show dialog probably because intent has been
-					// closed. Ignoring...
+					// Unable to show dialog probably because intent has been closed. Ignoring...
 				}
 			}
 
@@ -1213,15 +1083,11 @@ public class DownloadActivity extends SynodroidActivity implements
 				title += " (P)";
 			}
 			titleText.setText(title);
-			titleIcon
-					.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE
-							: View.GONE);
+			titleIcon.setVisibility(server.getProtocol() == SynoProtocol.HTTPS ? View.VISIBLE : View.GONE);
 
 			// Launch the gets task's details recurrent action
 			Synodroid app = (Synodroid) getApplication();
-			app.setRecurrentAction(this, new GetAllAndOneDetailTaskAction(
-					server.getSortAttribute(), server.isAscending(),
-					(TaskAdapter) taskView.getAdapter()));
+			app.setRecurrentAction(this, new GetAllAndOneDetailTaskAction(server.getSortAttribute(), server.isAscending(), (TaskAdapter) taskView.getAdapter()));
 
 			app.resumeServer();
 		}
@@ -1240,8 +1106,7 @@ public class DownloadActivity extends SynodroidActivity implements
 	public void onTaskClicked(final Task taskP) {
 		if (tabManager.getSlideToTabName().equals(TAB_TASKS)) {
 			Synodroid app = (Synodroid) getApplication();
-			app.executeAction(DownloadActivity.this, new ShowDetailsAction(
-					taskP), true);
+			app.executeAction(DownloadActivity.this, new ShowDetailsAction(taskP), true);
 		}
 	}
 
@@ -1258,16 +1123,13 @@ public class DownloadActivity extends SynodroidActivity implements
 			if (adapter.getCount() != 0) {
 				builder.setAdapter(adapter, new OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						TaskActionMenu taskAction = (TaskActionMenu) adapter
-								.getItem(which);
-						// Only if TaskActionMenu is enabled: it seems that even
-						// if the
+						TaskActionMenu taskAction = (TaskActionMenu) adapter.getItem(which);
+						// Only if TaskActionMenu is enabled: it seems that even if the
 						// item is
 						// disable the user can tap it
 						if (taskAction.isEnabled()) {
 							Synodroid app = (Synodroid) getApplication();
-							app.executeAction(DownloadActivity.this, taskAction
-									.getAction(), true);
+							app.executeAction(DownloadActivity.this, taskAction.getAction(), true);
 						}
 					}
 				});
@@ -1275,8 +1137,7 @@ public class DownloadActivity extends SynodroidActivity implements
 				try {
 					connectDialog.show();
 				} catch (BadTokenException e) {
-					// Unable to show dialog probably because intent has been
-					// closed. Ignoring...
+					// Unable to show dialog probably because intent has been closed. Ignoring...
 				}
 			}
 		}
@@ -1293,9 +1154,7 @@ public class DownloadActivity extends SynodroidActivity implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.
-	 * String, java.lang.String)
+	 * @see org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang. String, java.lang.String)
 	 */
 	public void selectedTabChanged(String oldTabIdP, String newTabIdP) {
 		if (newTabIdP != null && newTabIdP.equals(TAB_TASKS)) {
@@ -1303,8 +1162,7 @@ public class DownloadActivity extends SynodroidActivity implements
 		}
 	}
 
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
@@ -1333,12 +1191,10 @@ public class DownloadActivity extends SynodroidActivity implements
 	}
 
 	/**
-	 * The user agree to create a new as no server has been configured or no
-	 * server is suitable for the current connection
+	 * The user agree to create a new as no server has been configured or no server is suitable for the current connection
 	 */
 	private void okToCreateAServer() {
-		final SharedPreferences preferences = getSharedPreferences(
-				PREFERENCE_AUTO, Activity.MODE_PRIVATE);
+		final SharedPreferences preferences = getSharedPreferences(PREFERENCE_AUTO, Activity.MODE_PRIVATE);
 		preferences.edit().putBoolean(PREFERENCE_AUTO_CREATENOW, true).commit();
 		showPreferenceActivity();
 	}

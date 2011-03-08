@@ -38,8 +38,7 @@ import android.widget.Toast;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public abstract class SynodroidActivity extends Activity implements
-		ResponseHandler, OnClickListener {
+public abstract class SynodroidActivity extends Activity implements ResponseHandler, OnClickListener {
 
 	private static final int SWIPE_MIN_DISTANCE = 120;
 	private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -75,8 +74,7 @@ public abstract class SynodroidActivity extends Activity implements
 				break;
 			case MSG_TOAST:
 				String text = (String) msgP.obj;
-				toast = Toast.makeText(SynodroidActivity.this, text,
-						Toast.LENGTH_LONG);
+				toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
 				toast.show();
 				break;
 			default:
@@ -162,23 +160,20 @@ public abstract class SynodroidActivity extends Activity implements
 	 */
 	public void setTitleClickListener(TitleClicklistener titleClickListenerP) {
 		titleClickListener = titleClickListenerP;
-		titleButton.setVisibility((titleClickListener != null ? View.VISIBLE
-				: View.INVISIBLE));
+		titleButton.setVisibility((titleClickListener != null ? View.VISIBLE : View.INVISIBLE));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jared.synodroid.common.protocol.ResponseHandler#handleReponse(
-	 * android .os.Message)
+	 * @see org.jared.synodroid.common.protocol.ResponseHandler#handleReponse( android .os.Message)
 	 */
 	public final void handleReponse(Message msgP) {
 		handler.sendMessage(msgP);
 	}
 
 	/**
-	 * Handle the message from a none UI thread. It is safe to interact with the
-	 * UI in this method
+	 * Handle the message from a none UI thread. It is safe to interact with the UI in this method
 	 */
 	public abstract void handleMessage(Message msgP);
 
@@ -187,24 +182,21 @@ public abstract class SynodroidActivity extends Activity implements
 	 * 
 	 * @return
 	 */
-	public abstract void attachTitleView(LayoutInflater inflaterP,
-			ViewGroup parentP);
+	public abstract void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP);
 
 	/**
 	 * Return the view which will be added to the statusBar
 	 * 
 	 * @return
 	 */
-	public abstract void attachStatusView(LayoutInflater inflaterP,
-			ViewGroup parentP);
+	public abstract void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP);
 
 	/**
 	 * Return the view which will be added to the main content
 	 * 
 	 * @return
 	 */
-	public abstract void attachMainContentView(LayoutInflater inflaterP,
-			ViewGroup parentP);
+	public abstract void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP);
 
 	/**
 	 * Create all required dialogs
@@ -214,17 +206,15 @@ public abstract class SynodroidActivity extends Activity implements
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// By default the message is "Error Unknown"
 		builder.setMessage(R.string.err_unknown);
-		builder.setTitle(getString(R.string.connect_error_title))
-				.setCancelable(false).setPositiveButton("OK",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								// If a listener as been defined
-								if (errorDialogListener != null) {
-									errorDialogListener.onClick(dialog, id);
-								}
-							}
-						});
+		builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				// If a listener as been defined
+				if (errorDialogListener != null) {
+					errorDialogListener.onClick(dialog, id);
+				}
+			}
+		});
 		errorDialog = builder.create();
 	}
 
@@ -234,8 +224,7 @@ public abstract class SynodroidActivity extends Activity implements
 	 * @param msgP
 	 *            The message to display
 	 * @param listenerP
-	 *            A listener which will be called when the user will click on
-	 *            the OK button
+	 *            A listener which will be called when the user will click on the OK button
 	 */
 	public void showError(String msgP, DialogInterface.OnClickListener listenerP) {
 		try {
@@ -243,8 +232,7 @@ public abstract class SynodroidActivity extends Activity implements
 			errorDialogListener = listenerP;
 			errorDialog.show();
 		} catch (Exception e) {
-			// Being unable to show the dialog, maybe the application does not
-			// have focus anymore...
+			// Being unable to show the dialog, maybe the application does not have focus anymore...
 		}
 	}
 
@@ -265,17 +253,14 @@ public abstract class SynodroidActivity extends Activity implements
 	}
 
 	class MyGestureDetector extends SimpleOnGestureListener {
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 			try {
 				if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
 					return false;
 				// right to left swipe
-				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+				if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 					swipeLeft();
-				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-						&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+				} else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 					swipeRight();
 				} else {
 					return false;

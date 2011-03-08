@@ -39,8 +39,7 @@ public class IconFacade {
 	 * @param viewP
 	 * @param siteP
 	 */
-	public static void bindTorrentStatus(Context ctxP, ImageView viewP,
-			Task torrentP) {
+	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
 		// Trap invalid task status and replace by unknown
 		int id = 0;
 		Animation animation = null;
@@ -60,10 +59,8 @@ public class IconFacade {
 			break;
 		case TASK_HASH_CHECKING:
 			id = R.drawable.dl_hash;
-			animation = AnimationUtils.loadAnimation(ctxP,
-					R.anim.rotate_indefinitely);
-			// Can not be set in the XML (LinearInterpolar is not public:
-			// arghhh)
+			animation = AnimationUtils.loadAnimation(ctxP, R.anim.rotate_indefinitely);
+			// Can not be set in the XML (LinearInterpolar is not public: arghhh)
 			animation.setInterpolator(new LinearInterpolator());
 			break;
 		case TASK_FINISHING:

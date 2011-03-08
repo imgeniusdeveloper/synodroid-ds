@@ -31,8 +31,7 @@ public class Part {
 	private Properties extras = new Properties();
 	// The data
 	private byte[] data;
-	// The content-type (don't set 'content-type:' but just
-	// application/octet-stream for example
+	// The content-type (don't set 'content-type:' but just application/octet-stream for example
 	private String contentType = null;
 
 	/**

@@ -32,8 +32,7 @@ public class TaskContainer {
 	private String totalUp = "";
 	// The total upload rate
 	private String totalDown = "";
-	// The total number of task (this is not the size of tasks list as the
-	// server can't return all tasks in one request)
+	// The total number of task (this is not the size of tasks list as the server can't return all tasks in one request)
 	private int totalTasks = 0;
 
 	/**

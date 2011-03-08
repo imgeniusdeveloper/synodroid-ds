@@ -21,8 +21,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class ListPreferenceMultiSelectWithValue extends
-		ListPreferenceMultiSelect implements PreferenceWithValue {
+public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelect implements PreferenceWithValue {
 
 	private TextView value;
 	// The current value
@@ -36,8 +35,7 @@ public class ListPreferenceMultiSelectWithValue extends
 	 * @param context
 	 * @param attrs
 	 */
-	public ListPreferenceMultiSelectWithValue(Context context,
-			AttributeSet attrs) {
+	public ListPreferenceMultiSelectWithValue(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setLayoutResource(R.layout.preference_with_value);
 		initInternalChangeListener();
@@ -76,8 +74,7 @@ public class ListPreferenceMultiSelectWithValue extends
 	private void initInternalChangeListener() {
 		// Call the super method as we overrided it
 		super.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference,
-					Object newValue) {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String val = getPrintableText(newValue.toString());
 				if (val != null) {
 					value.setText(val);
@@ -95,8 +92,7 @@ public class ListPreferenceMultiSelectWithValue extends
 	}
 
 	/**
-	 * Return a printable text (with comma separator) from a value with
-	 * separator
+	 * Return a printable text (with comma separator) from a value with separator
 	 * 
 	 * @param valueWithSeparatorP
 	 * @return
@@ -123,9 +119,7 @@ public class ListPreferenceMultiSelectWithValue extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue
-	 * ()
+	 * @see org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue()
 	 */
 	public String getPrintableValue() {
 		return getPrintableText(getValue());
@@ -134,20 +128,15 @@ public class ListPreferenceMultiSelectWithValue extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeandroid.preference.Preference#setOnPreferenceChangeListener(android.
-	 * preference .Preference.OnPreferenceChangeListener)
+	 * @see android.preference.Preference#setOnPreferenceChangeListener(android.preference .Preference.OnPreferenceChangeListener)
 	 */
 	@Override
-	public void setOnPreferenceChangeListener(
-			OnPreferenceChangeListener onPreferenceChangeListener) {
+	public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
 		listener = onPreferenceChangeListener;
 	}
 
 	/**
-	 * Return the current value. This value is NOT the value stored in the
-	 * SharedPreference but the current value in the view editor of this
-	 * preference. Useful when you want to retrieve the new value before the
-	 * preference is updated
+	 * Return the current value. This value is NOT the value stored in the SharedPreference but the current value in the view editor of this preference. Useful when you want to retrieve the new value before the preference is updated
 	 * 
 	 * @return
 	 */
@@ -173,9 +162,7 @@ public class ListPreferenceMultiSelectWithValue extends
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * android.preference.ListPreference#setEntryValues(java.lang.CharSequence
-	 * [])
+	 * @see android.preference.ListPreference#setEntryValues(java.lang.CharSequence[])
 	 */
 	@Override
 	public void setEntryValues(CharSequence[] entryValuesP) {
@@ -190,11 +177,8 @@ public class ListPreferenceMultiSelectWithValue extends
 	 * @param summaryP
 	 * @return
 	 */
-	public static ListPreferenceMultiSelectWithValue create(Context contextP,
-			String keyP, int titleP, int summaryP, String[] versions,
-			String def_value) {
-		ListPreferenceMultiSelectWithValue pref = new ListPreferenceMultiSelectWithValue(
-				contextP);
+	public static ListPreferenceMultiSelectWithValue create(Context contextP, String keyP, int titleP, int summaryP, String[] versions, String def_value) {
+		ListPreferenceMultiSelectWithValue pref = new ListPreferenceMultiSelectWithValue(contextP);
 		pref.setKey(keyP);
 		pref.setTitle(titleP);
 		pref.setSummary(summaryP);

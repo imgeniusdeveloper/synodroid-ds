@@ -41,16 +41,11 @@ public class GetFilesAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
-	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		List<TaskFile> files = serverP.getDSMHandlerFactory().getDSHandler()
-				.getFiles(task);
-		serverP.fireMessage(handlerP,
-				ResponseHandler.MSG_DETAILS_FILES_RETRIEVED, files);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		List<TaskFile> files = serverP.getDSMHandlerFactory().getDSHandler().getFiles(task);
+		serverP.fireMessage(handlerP, ResponseHandler.MSG_DETAILS_FILES_RETRIEVED, files);
 	}
 
 	/*
