@@ -27,8 +27,7 @@ public interface SynoAction {
 	 * @param activityP
 	 * @param serverP
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception;
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception;
 
 	/**
 	 * Return the name of the action
@@ -52,8 +51,7 @@ public interface SynoAction {
 	public int getToastId();
 
 	/**
-	 * Return the task associated with this task. May return null if no specific
-	 * task is associated.
+	 * Return the task associated with this task. May return null if no specific task is associated.
 	 * 
 	 * @return
 	 */

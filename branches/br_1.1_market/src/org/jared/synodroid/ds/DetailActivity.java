@@ -151,15 +151,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	public void onCreate(Bundle savedInstanceState) {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// Create the seeding time int array
-		String[] timesArray = getResources().getStringArray(
-				R.array.seeding_time_array_values);
+		String[] timesArray = getResources().getStringArray(R.array.seeding_time_array_values);
 		seedingTimes = new int[timesArray.length];
 		for (int iLoop = 0; iLoop < timesArray.length; iLoop++) {
 			seedingTimes[iLoop] = Integer.parseInt(timesArray[iLoop]);
 		}
 
-		String[] priorityArray = getResources().getStringArray(
-				R.array.priority_array_value);
+		String[] priorityArray = getResources().getStringArray(R.array.priority_array_value);
 		priorities = new int[priorityArray.length];
 		for (int iLoop = 0; iLoop < priorityArray.length; iLoop++) {
 			priorities[iLoop] = Integer.parseInt(priorityArray[iLoop]);
@@ -167,8 +165,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
 		// Get the details intent
 		Intent intent = getIntent();
-		task = (Task) intent
-				.getSerializableExtra("org.jared.synodroid.ds.Details");
+		task = (Task) intent.getSerializableExtra("org.jared.synodroid.ds.Details");
 
 		if (task != null) {
 			// Build the general tab
@@ -188,20 +185,16 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			filesListView.setAdapter(fileAdapter);
 
 			if (savedInstanceState != null) {
-				showFileTab = savedInstanceState.getBoolean("showFileTab",
-						false);
+				showFileTab = savedInstanceState.getBoolean("showFileTab", false);
 			}
 			// Build the TabManager
 			tabManager = new TabWidgetManager(this, R.drawable.ic_tab_slider);
-			Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general,
-					R.drawable.ic_tab_general_selected);
+			Tab genTab = new Tab(TAB_GENERAL, R.drawable.ic_tab_general, R.drawable.ic_tab_general_selected);
 			tabManager.addTab(genTab, genListView);
-			Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer,
-					R.drawable.ic_tab_transfer_selected);
+			Tab transTab = new Tab(TAB_TRANSFERT, R.drawable.ic_tab_transfer, R.drawable.ic_tab_transfer_selected);
 			tabManager.addTab(transTab, transListView);
 			if (showFileTab) {
-				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files,
-						R.drawable.ic_tab_files_selected);
+				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
 				tabManager.addTab(filesTab, filesListView);
 			}
 			// Call super onCreate after the tab intialization
@@ -235,91 +228,69 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// Create the task's parameters dialog
 		case TASK_PARAMETERS_DIALOG:
 			// Create the view
-			View container = inflater.inflate(R.layout.seeding_parameters,
-					null, false);
-			final EditText seedRatio = (EditText) container
-					.findViewById(R.id.seedingPercentage);
-			final Spinner seedTime = (Spinner) container
-					.findViewById(R.id.seedingTime);
+			View container = inflater.inflate(R.layout.seeding_parameters, null, false);
+			final EditText seedRatio = (EditText) container.findViewById(R.id.seedingPercentage);
+			final Spinner seedTime = (Spinner) container.findViewById(R.id.seedingTime);
 			// Create the dialog
 			builder.setTitle(getString(R.string.seeding_parameters_time));
 			builder.setView(container);
-			builder.setPositiveButton(getString(R.string.button_ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialogP, int whichP) {
-							seedingChanged = true;
-							try {
-								int seedR = Integer.parseInt(seedRatio
-										.getText().toString());
-								seedingRatio = seedR;
-								int pos = seedTime.getSelectedItemPosition();
-								seedingTime = seedingTimes[pos];
-								// At the end, update the task.
-								updateTask(true);
-							}
-							// The ratio is not an integer
-							catch (NumberFormatException ex) {
-								// NTD: the input method does not allow to set a
-								// float or
-								// a string
-							}
-						}
-					});
+			builder.setPositiveButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialogP, int whichP) {
+					seedingChanged = true;
+					try {
+						int seedR = Integer.parseInt(seedRatio.getText().toString());
+						seedingRatio = seedR;
+						int pos = seedTime.getSelectedItemPosition();
+						seedingTime = seedingTimes[pos];
+						// At the end, update the task.
+						updateTask(true);
+					}
+					// The ratio is not an integer
+					catch (NumberFormatException ex) {
+						// NTD: the input method does not allow to set a float or
+						// a string
+					}
+				}
+			});
 			builder.setNegativeButton(getString(R.string.button_cancel), null);
 			return builder.create();
 		case TASK_PROPERTIES_DIALOG:
 			// Create the view
-			View containerP = inflater.inflate(R.layout.task_properties, null,
-					false);
-			final EditText seedRatioP = (EditText) containerP
-					.findViewById(R.id.seedingPercentage);
-			final EditText ul_rateP = (EditText) containerP
-					.findViewById(R.id.ul_rate);
-			final EditText dl_rateP = (EditText) containerP
-					.findViewById(R.id.dl_rate);
-			final EditText max_peersP = (EditText) containerP
-					.findViewById(R.id.max_peers);
-			final Spinner destinationP = (Spinner) containerP
-					.findViewById(R.id.destination);
-			final Spinner priorityP = (Spinner) containerP
-					.findViewById(R.id.priority);
-			final Spinner seedTimeP = (Spinner) containerP
-					.findViewById(R.id.seedingTime);
+			View containerP = inflater.inflate(R.layout.task_properties, null, false);
+			final EditText seedRatioP = (EditText) containerP.findViewById(R.id.seedingPercentage);
+			final EditText ul_rateP = (EditText) containerP.findViewById(R.id.ul_rate);
+			final EditText dl_rateP = (EditText) containerP.findViewById(R.id.dl_rate);
+			final EditText max_peersP = (EditText) containerP.findViewById(R.id.max_peers);
+			final Spinner destinationP = (Spinner) containerP.findViewById(R.id.destination);
+			final Spinner priorityP = (Spinner) containerP.findViewById(R.id.priority);
+			final Spinner seedTimeP = (Spinner) containerP.findViewById(R.id.seedingTime);
 			// Create the dialog
 			builder.setTitle(getString(R.string.task_parameters));
 			builder.setView(containerP);
-			builder.setPositiveButton(getString(R.string.button_ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialogP, int whichP) {
-							seedingChanged = true;
-							try {
-								ul_rate = Integer.parseInt(ul_rateP.getText()
-										.toString());
-								dl_rate = Integer.parseInt(dl_rateP.getText()
-										.toString());
-								max_peers = Integer.parseInt(max_peersP
-										.getText().toString());
-								destination = destinations[destinationP
-										.getSelectedItemPosition()];
-								priority = priorities[priorityP
-										.getSelectedItemPosition()];
+			builder.setPositiveButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialogP, int whichP) {
+					seedingChanged = true;
+					try {
+						ul_rate = Integer.parseInt(ul_rateP.getText().toString());
+						dl_rate = Integer.parseInt(dl_rateP.getText().toString());
+						max_peers = Integer.parseInt(max_peersP.getText().toString());
+						destination = destinations[destinationP.getSelectedItemPosition()];
+						priority = priorities[priorityP.getSelectedItemPosition()];
 
-								int seedR = Integer.parseInt(seedRatioP
-										.getText().toString());
-								seedingRatio = seedR;
-								int pos = seedTimeP.getSelectedItemPosition();
-								seedingTime = seedingTimes[pos];
-								// At the end, update the task.
-								updateTask(true);
-							}
-							// The ratio is not an integer
-							catch (NumberFormatException ex) {
-								// NTD: the input method does not allow to set a
-								// float or
-								// a string
-							}
-						}
-					});
+						int seedR = Integer.parseInt(seedRatioP.getText().toString());
+						seedingRatio = seedR;
+						int pos = seedTimeP.getSelectedItemPosition();
+						seedingTime = seedingTimes[pos];
+						// At the end, update the task.
+						updateTask(true);
+					}
+					// The ratio is not an integer
+					catch (NumberFormatException ex) {
+						// NTD: the input method does not allow to set a float or
+						// a string
+					}
+				}
+			});
 			builder.setNegativeButton(getString(R.string.button_cancel), null);
 			return builder.create();
 		default:
@@ -337,10 +308,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		switch (id) {
 		// Prepare the task's parameters dialog
 		case TASK_PARAMETERS_DIALOG:
-			final EditText seedRatio = (EditText) dialog
-					.findViewById(R.id.seedingPercentage);
-			final Spinner seedTime = (Spinner) dialog
-					.findViewById(R.id.seedingTime);
+			final EditText seedRatio = (EditText) dialog.findViewById(R.id.seedingPercentage);
+			final Spinner seedTime = (Spinner) dialog.findViewById(R.id.seedingTime);
 			seedRatio.setText("" + seedingRatio);
 			// Try to find the right value
 			int pos = 0;
@@ -353,21 +322,14 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			seedTime.setSelection(pos);
 			break;
 		case TASK_PROPERTIES_DIALOG:
-			final EditText seedRatioP = (EditText) dialog
-					.findViewById(R.id.seedingPercentage);
-			final Spinner seedTimeP = (Spinner) dialog
-					.findViewById(R.id.seedingTime);
+			final EditText seedRatioP = (EditText) dialog.findViewById(R.id.seedingPercentage);
+			final Spinner seedTimeP = (Spinner) dialog.findViewById(R.id.seedingTime);
 
-			final EditText ul_rateP = (EditText) dialog
-					.findViewById(R.id.ul_rate);
-			final EditText dl_rateP = (EditText) dialog
-					.findViewById(R.id.dl_rate);
-			final EditText max_peersP = (EditText) dialog
-					.findViewById(R.id.max_peers);
-			final Spinner destinationP = (Spinner) dialog
-					.findViewById(R.id.destination);
-			final Spinner priorityP = (Spinner) dialog
-					.findViewById(R.id.priority);
+			final EditText ul_rateP = (EditText) dialog.findViewById(R.id.ul_rate);
+			final EditText dl_rateP = (EditText) dialog.findViewById(R.id.dl_rate);
+			final EditText max_peersP = (EditText) dialog.findViewById(R.id.max_peers);
+			final Spinner destinationP = (Spinner) dialog.findViewById(R.id.destination);
+			final Spinner priorityP = (Spinner) dialog.findViewById(R.id.priority);
 			ul_rateP.setText("" + ul_rate);
 			dl_rateP.setText("" + dl_rate);
 			max_peersP.setText("" + max_peers);
@@ -395,10 +357,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
 			// Try to find the right value
 			position = 0;
-			ArrayAdapter<String> sa = new ArrayAdapter<String>(this,
-					android.R.layout.simple_spinner_item, destinations);
-			sa
-					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			ArrayAdapter<String> sa = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, destinations);
+			sa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			for (int iLoop = 0; iLoop < destinations.length; iLoop++) {
 				if (destinations[iLoop] == destination) {
 					position = iLoop;
@@ -417,30 +377,25 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		Synodroid app = (Synodroid) getApplication();
 		switch (item.getItemId()) {
 		case MENU_PAUSE:
-			app.executeAction(DetailActivity.this, new PauseTaskAction(task),
-					true);
+			app.executeAction(DetailActivity.this, new PauseTaskAction(task), true);
 			return true;
 		case MENU_DELETE:
 		case MENU_CANCEL:
 		case MENU_CLEAR:
-			app.executeAction(DetailActivity.this, new DeleteTaskAction(task),
-					true);
+			app.executeAction(DetailActivity.this, new DeleteTaskAction(task), true);
 			return true;
 		case MENU_RESUME:
 		case MENU_RETRY:
-			app.executeAction(DetailActivity.this, new ResumeTaskAction(task),
-					true);
+			app.executeAction(DetailActivity.this, new ResumeTaskAction(task), true);
 			return true;
 		case MENU_PARAMETERS:
 			if (app.getServer().getDsmVersion() == DSMVersion.VERSION3_1) {
-				app.executeAsynchronousAction(DetailActivity.this,
-						new EnumShareAction(), false, false);
+				app.executeAsynchronousAction(DetailActivity.this, new EnumShareAction(), false, false);
 			} else {
 				try {
 					showDialog(TASK_PARAMETERS_DIALOG);
 				} catch (Exception e) {
-					// Dialog failed to display. Probably already displayed.
-					// Ignore!
+					// Dialog failed to display. Probably already displayed. Ignore!
 				}
 			}
 			return true;
@@ -456,23 +411,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		if (status != null) {
 			switch (status) {
 			case TASK_DOWNLOADING:
-				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause))
-						.setIcon(R.drawable.ic_menu_pause);
-				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete))
-						.setIcon(android.R.drawable.ic_menu_delete);
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
 				break;
 			case TASK_PRE_SEEDING:
 			case TASK_SEEDING:
-				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause))
-						.setIcon(R.drawable.ic_menu_pause);
-				menu.add(0, MENU_CANCEL, 0, getString(R.string.action_cancel))
-						.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_CANCEL, 0, getString(R.string.action_cancel)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 				break;
 			case TASK_PAUSED:
-				menu.add(0, MENU_RESUME, 0, getString(R.string.action_resume))
-						.setIcon(android.R.drawable.ic_menu_revert);
-				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete))
-						.setIcon(android.R.drawable.ic_menu_delete);
+				menu.add(0, MENU_RESUME, 0, getString(R.string.action_resume)).setIcon(android.R.drawable.ic_menu_revert);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
 				break;
 			case TASK_ERROR:
 			case TASK_ERROR_DEST_NO_EXIST:
@@ -485,36 +434,25 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
 			case TASK_UNKNOWN:
 			case TASK_ERROR_EXCEED_MAX_DEST_FS_SIZE:
-				menu.add(0, MENU_RETRY, 0, getString(R.string.action_retry))
-						.setIcon(android.R.drawable.ic_menu_revert);
-				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete))
-						.setIcon(android.R.drawable.ic_menu_delete);
+				menu.add(0, MENU_RETRY, 0, getString(R.string.action_retry)).setIcon(android.R.drawable.ic_menu_revert);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
 				break;
 			case TASK_FINISHING:
 			case TASK_FINISHED:
-				menu.add(0, MENU_CLEAR, 0, getString(R.string.action_clear))
-						.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+				menu.add(0, MENU_CLEAR, 0, getString(R.string.action_clear)).setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 				break;
 			case TASK_HASH_CHECKING:
 			case TASK_WAITING:
-				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause))
-						.setIcon(R.drawable.ic_menu_pause);
-				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete))
-						.setIcon(android.R.drawable.ic_menu_delete);
+				menu.add(0, MENU_PAUSE, 0, getString(R.string.action_pause)).setIcon(R.drawable.ic_menu_pause);
+				menu.add(0, MENU_DELETE, 0, getString(R.string.action_delete)).setIcon(android.R.drawable.ic_menu_delete);
 				break;
 			}
 		}
 		if (task.isTorrent) {
 			if (task.getStatus() == TaskStatus.TASK_DOWNLOADING) {
-				menu.add(0, MENU_PARAMETERS, 0,
-						getString(R.string.task_parameters)).setIcon(
-						android.R.drawable.ic_menu_preferences)
-						.setEnabled(true);
+				menu.add(0, MENU_PARAMETERS, 0, getString(R.string.task_parameters)).setIcon(android.R.drawable.ic_menu_preferences).setEnabled(true);
 			} else {
-				menu.add(0, MENU_PARAMETERS, 0,
-						getString(R.string.task_parameters)).setIcon(
-						android.R.drawable.ic_menu_preferences).setEnabled(
-						false);
+				menu.add(0, MENU_PARAMETERS, 0, getString(R.string.task_parameters)).setIcon(android.R.drawable.ic_menu_preferences).setEnabled(false);
 			}
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -523,9 +461,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os
-	 * .Message)
+	 * @see org.jared.synodroid.common.ui.SynodroidActivity#handleMessage(android.os .Message)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -557,8 +493,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				}
 			}
 			Synodroid app = (Synodroid) getApplication();
-			app.executeAsynchronousAction(this, new GetTaskPropertiesAction(
-					task), false, false);
+			app.executeAsynchronousAction(this, new GetTaskPropertiesAction(task), false, false);
 			break;
 		// Details updated
 		case ResponseHandler.MSG_DETAILS_RETRIEVED:
@@ -570,8 +505,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			if (task.isTorrent || task.isNZB) {
 				// Build the file tab
 				fileAdapter = (FileDetailAdapter) filesListView.getAdapter();
-				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files,
-						R.drawable.ic_tab_files_selected);
+				Tab filesTab = new Tab(TAB_FILES, R.drawable.ic_tab_files, R.drawable.ic_tab_files_selected);
 				// If the tab does not already exist !
 				if (tabManager.getTab(filesTab) == null) {
 					tabManager.addTab(filesTab, filesListView);
@@ -606,17 +540,13 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				OutputStream os = new FileOutputStream(file);
 				os.write(rawData.toString().getBytes());
 				os.close();
-				Toast toast = Toast.makeText(DetailActivity.this,
-						getString(R.string.action_download_original_saved),
-						Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(DetailActivity.this, getString(R.string.action_download_original_saved), Toast.LENGTH_SHORT);
 				toast.show();
 			} catch (Exception e) {
 				// Unable to create file, likely because external storage is
 				// not currently mounted.
 				Log.w("ExternalStorage", "Error writing " + file, e);
-				Toast toast = Toast.makeText(this,
-						getString(R.string.action_download_original_failed),
-						Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(this, getString(R.string.action_download_original_failed), Toast.LENGTH_LONG);
 				toast.show();
 			}
 			break;
@@ -647,12 +577,10 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		super.onResume();
 
 		// Check for fullscreen
-		SharedPreferences preferences = getSharedPreferences(
-				PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
 		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)) {
 			// Set fullscreen or not
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
@@ -668,22 +596,17 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView
-	 * (android .view.ViewGroup)
+	 * @see org.jared.synodroid.common.ui.SynodroidActivity#attachMainContentView (android .view.ViewGroup)
 	 */
 	@Override
-	public void attachMainContentView(LayoutInflater inflaterP,
-			ViewGroup parentP) {
+	public void attachMainContentView(LayoutInflater inflaterP, ViewGroup parentP) {
 		parentP.addView(tabManager.getContentView());
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.SynodroidActivity#attachStatusView(android
-	 * .view.ViewGroup)
+	 * @see org.jared.synodroid.common.ui.SynodroidActivity#attachStatusView(android .view.ViewGroup)
 	 */
 	@Override
 	public void attachStatusView(LayoutInflater inflaterP, ViewGroup parentP) {
@@ -693,14 +616,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.SynodroidActivity#attachTitleView(android
-	 * .view.ViewGroup)
+	 * @see org.jared.synodroid.common.ui.SynodroidActivity#attachTitleView(android .view.ViewGroup)
 	 */
 	@Override
 	public void attachTitleView(LayoutInflater inflaterP, ViewGroup parentP) {
-		RelativeLayout titleContainer = (RelativeLayout) inflaterP.inflate(
-				R.layout.detail_title, parentP, true);
+		RelativeLayout titleContainer = (RelativeLayout) inflaterP.inflate(R.layout.detail_title, parentP, true);
 		title = (TextView) titleContainer.findViewById(R.id.id_title);
 	}
 
@@ -710,39 +630,30 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private List<Detail> buildGeneralDetails(TaskDetail details) {
 		ArrayList<Detail> result = new ArrayList<Detail>();
 		// FileName
-		result.add(new DetailText(getString(R.string.detail_filename),
-				details.fileName));
+		result.add(new DetailText(getString(R.string.detail_filename), details.fileName));
 		setTitle(details.fileName);
 		// Destination
-		DetailText destDetail = new DetailText(
-				getString(R.string.detail_destination), details.destination);
+		DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
 		result.add(destDetail);
 		// File size
-		result.add(new DetailText(getString(R.string.detail_filesize), Utils
-				.bytesToFileSize(details.fileSize,
-						getString(R.string.detail_unknown))));
+		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize, getString(R.string.detail_unknown))));
 		// Creation time
-		result.add(new DetailText(getString(R.string.detail_creationtime),
-				Utils.computeDate(details.creationDate)));
+		result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
 		// URL
 		final String originalLink = details.url;
-		DetailText urlDetail = new DetailText(getString(R.string.detail_url),
-				originalLink);
+		DetailText urlDetail = new DetailText(getString(R.string.detail_url), originalLink);
 		urlDetail.setAction(new DetailAction() {
 			public void execute(Detail detailsP) {
-				if ((task.isTorrent || task.isNZB)
-						&& tabManager.getSlideToTabName().equals(TAB_GENERAL)) {
+				if ((task.isTorrent || task.isNZB) && tabManager.getSlideToTabName().equals(TAB_GENERAL)) {
 					Synodroid app = (Synodroid) getApplication();
 					task.originalLink = originalLink;
-					app.executeAsynchronousAction(DetailActivity.this,
-							new DownloadOriginalLinkAction(task), false);
+					app.executeAsynchronousAction(DetailActivity.this, new DownloadOriginalLinkAction(task), false);
 				}
 			}
 		});
 		result.add(urlDetail);
 		// Username
-		result.add(new DetailText(getString(R.string.detail_username),
-				details.userName));
+		result.add(new DetailText(getString(R.string.detail_username), details.userName));
 		return result;
 	}
 
@@ -759,34 +670,22 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 
 		// ------------ Status
 		try {
-			result.add(new DetailText(getString(R.string.detail_status),
-					TaskStatus.getLabel(this, details.status)));
+			result.add(new DetailText(getString(R.string.detail_status), TaskStatus.getLabel(this, details.status)));
 		} catch (NullPointerException e) {
-			result.add(new DetailText(getString(R.string.detail_status),
-					getString(R.string.detail_unknown)));
+			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
 		} catch (IllegalArgumentException e) {
-			result.add(new DetailText(getString(R.string.detail_status),
-					getString(R.string.detail_unknown)));
+			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
 		}
 		// ------------ Transfered
-		String transfered = getString(R.string.detail_progress_download)
-				+ " "
-				+ Utils.bytesToFileSize(details.bytesDownloaded,
-						getString(R.string.detail_unknown));
+		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
 		if (details.isTorrent) {
-			String upload = getString(R.string.detail_progress_upload)
-					+ " "
-					+ Utils.bytesToFileSize(details.bytesUploaded,
-							getString(R.string.detail_unknown)) + " ("
-					+ details.bytesRatio + " %)";
-			Detail2Text tr = new Detail2Text(
-					getString(R.string.detail_transfered));
+			String upload = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " (" + details.bytesRatio + " %)";
+			Detail2Text tr = new Detail2Text(getString(R.string.detail_transfered));
 			tr.setValue1(transfered);
 			tr.setValue2(upload);
 			result.add(tr);
 		} else {
-			result.add(new DetailText(getString(R.string.detail_transfered),
-					transfered));
+			result.add(new DetailText(getString(R.string.detail_transfered), transfered));
 		}
 		// ------------- Progress
 		long downloaded = details.bytesDownloaded;
@@ -812,37 +711,26 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		// If it is a torrent
 		Detail proDetail = null;
 		if (details.isTorrent) {
-			Detail2Progress progDetail = new Detail2Progress(
-					getString(R.string.detail_progress));
+			Detail2Progress progDetail = new Detail2Progress(getString(R.string.detail_progress));
 			proDetail = progDetail;
-			progDetail.setProgress1(
-					getString(R.string.detail_progress_download) + " "
-							+ downPerStr, downPer);
-			progDetail.setProgress2(getString(R.string.detail_progress_upload)
-					+ " " + upPercStr, upPerc);
+			progDetail.setProgress1(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
+			progDetail.setProgress2(getString(R.string.detail_progress_upload) + " " + upPercStr, upPerc);
 		} else {
-			DetailProgress progDetail = new DetailProgress(
-					getString(R.string.detail_progress),
-					R.layout.details_progress_template1);
+			DetailProgress progDetail = new DetailProgress(getString(R.string.detail_progress), R.layout.details_progress_template1);
 			proDetail = progDetail;
-			progDetail.setProgress(getString(R.string.detail_progress_download)
-					+ " " + downPerStr, downPer);
+			progDetail.setProgress(getString(R.string.detail_progress_download) + " " + downPerStr, downPer);
 		}
 		result.add(proDetail);
 		// ------------ Speed
-		String speed = getString(R.string.detail_progress_download) + " "
-				+ details.speedDownload + " KB/s";
+		String speed = getString(R.string.detail_progress_download) + " " + details.speedDownload + " KB/s";
 		if (details.isTorrent) {
-			speed = speed + " - " + getString(R.string.detail_progress_upload)
-					+ " " + details.speedUpload + " KB/s";
+			speed = speed + " - " + getString(R.string.detail_progress_upload) + " " + details.speedUpload + " KB/s";
 		}
 		result.add(new DetailText(getString(R.string.detail_speed), speed));
 		// ------------ Peers
 		if (details.isTorrent) {
 			String peers = details.peersCurrent + " / " + details.peersTotal;
-			DetailProgress peersDetail = new DetailProgress(
-					getString(R.string.detail_peers),
-					R.layout.details_progress_template2);
+			DetailProgress peersDetail = new DetailProgress(getString(R.string.detail_peers), R.layout.details_progress_template2);
 			int pProgress = 0;
 			if (details.peersTotal != 0) {
 				pProgress = (int) ((details.peersCurrent * 100) / details.peersTotal);
@@ -859,8 +747,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			if (details.leechers != null)
 				leechStr = details.leechers.toString();
 			String seeders = seedStr + " - " + leechStr;
-			result.add(new DetailText(
-					getString(R.string.detail_seeders_leechers), seeders));
+			result.add(new DetailText(getString(R.string.detail_seeders_leechers), seeders));
 		}
 		// ------------ ETAs
 		String etaUpload = getString(R.string.detail_unknown);
@@ -886,10 +773,8 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		TaskStatus tsk_status = details.getStatus();
 
 		Long timeLeftTime = null;
-		if (details.seedingInterval != 0
-				&& tsk_status == TaskStatus.TASK_SEEDING) {
-			timeLeftTime = (details.seedingInterval * 60)
-					- details.seedingElapsed;
+		if (details.seedingInterval != 0 && tsk_status == TaskStatus.TASK_SEEDING) {
+			timeLeftTime = (details.seedingInterval * 60) - details.seedingElapsed;
 			if (timeLeftTime < 0) {
 				timeLeftTime = null;
 			}
@@ -921,29 +806,22 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		Detail etaDet = null;
 		// If it is a torrent then show the upload ETA
 		if (details.isTorrent) {
-			Detail2Text etaDetail = new Detail2Text(
-					getString(R.string.detail_eta));
+			Detail2Text etaDetail = new Detail2Text(getString(R.string.detail_eta));
 			etaDet = etaDetail;
-			etaDetail.setValue1(getString(R.string.detail_progress_download)
-					+ " " + etaDownload);
-			etaDetail.setValue2(getString(R.string.detail_progress_upload)
-					+ " " + etaUpload);
+			etaDetail.setValue1(getString(R.string.detail_progress_download) + " " + etaDownload);
+			etaDetail.setValue2(getString(R.string.detail_progress_upload) + " " + etaUpload);
 		}
 		// Otherwise only show the download ETA
 		else {
-			DetailText etaDetail = new DetailText(
-					getString(R.string.detail_eta));
+			DetailText etaDetail = new DetailText(getString(R.string.detail_eta));
 			etaDet = etaDetail;
-			etaDetail.setValue(getString(R.string.detail_progress_download)
-					+ " " + etaDownload);
+			etaDetail.setValue(getString(R.string.detail_progress_download) + " " + etaDownload);
 		}
 		result.add(etaDet);
 		// ------------ Pieces
 		if (details.isTorrent) {
 			String pieces = details.piecesCurrent + " / " + details.piecesTotal;
-			DetailProgress piecesDetail = new DetailProgress(
-					getString(R.string.detail_pieces),
-					R.layout.details_progress_template2);
+			DetailProgress piecesDetail = new DetailProgress(getString(R.string.detail_pieces), R.layout.details_progress_template2);
 			int piProgress = 0;
 			if (details.piecesTotal != 0) {
 				piProgress = (int) ((details.piecesCurrent * 100) / details.piecesTotal);
@@ -960,9 +838,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang.
-	 * String, java.lang.String)
+	 * @see org.jared.synodroid.common.ui.TabListener#selectedTabChanged(java.lang. String, java.lang.String)
 	 */
 	public void selectedTabChanged(String oldTabId, String newTabIdP) {
 		// If showing the Files tab then retrieve task's files
@@ -973,13 +849,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 				if (server != null) {
 					// Clear the list just before updating items
 					fileAdapter.updateFiles(new ArrayList<TaskFile>());
-					server.executeAsynchronousAction(this, new GetFilesAction(
-							task), false);
+					server.executeAsynchronousAction(this, new GetFilesAction(task), false);
 				}
 			} else {
 				fileAdapter.updateFiles(new ArrayList<TaskFile>());
-				Toast toast = Toast.makeText(this,
-						getString(R.string.downloadOnly), Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(this, getString(R.string.downloadOnly), Toast.LENGTH_SHORT);
 				toast.show();
 			}
 
@@ -997,33 +871,23 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		Synodroid app = (Synodroid) getApplication();
 
 		if (app.getServer().getDsmVersion() == DSMVersion.VERSION3_1) {
-			List<TaskFile> modifiedTaskFiles = fileAdapter
-					.getModifiedTaskList();
+			List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
 			if (modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) {
-				UpdateFilesAction update = new UpdateFilesAction(task,
-						modifiedTaskFiles);
-				app.getServer().executeAsynchronousAction(this, update,
-						forceRefreshP);
+				UpdateFilesAction update = new UpdateFilesAction(task, modifiedTaskFiles);
+				app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
 				seedingChanged = false;
 			} else if (seedingChanged) {
-				UpdateTaskPropertiesAction update = new UpdateTaskPropertiesAction(
-						task, ul_rate, dl_rate, priority, max_peers,
-						destination, seedingRatio, seedingTime);
-				app.getServer().executeAsynchronousAction(this, update,
-						forceRefreshP);
+				UpdateTaskPropertiesAction update = new UpdateTaskPropertiesAction(task, ul_rate, dl_rate, priority, max_peers, destination, seedingRatio, seedingTime);
+				app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
 				seedingChanged = false;
 			}
 
 		} else {
-			List<TaskFile> modifiedTaskFiles = fileAdapter
-					.getModifiedTaskList();
-			if ((modifiedTaskFiles != null && modifiedTaskFiles.size() > 0)
-					|| (seedingChanged)) {
+			List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
+			if ((modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) || (seedingChanged)) {
 
-				UpdateTaskAction update = new UpdateTaskAction(task,
-						modifiedTaskFiles, seedingRatio, seedingTime);
-				app.getServer().executeAsynchronousAction(this, update,
-						forceRefreshP);
+				UpdateTaskAction update = new UpdateTaskAction(task, modifiedTaskFiles, seedingRatio, seedingTime);
+				app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
 				seedingChanged = false;
 			}
 		}

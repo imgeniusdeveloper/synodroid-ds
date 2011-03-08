@@ -46,8 +46,7 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * This class represents a Synology server. It manages the connection and also
- * the automatic refresh to retrieve the torrent list.
+ * This class represents a Synology server. It manages the connection and also the automatic refresh to retrieve the torrent list.
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -100,21 +99,13 @@ public class SynoServer {
 	HashMap<String, String> map = new HashMap<String, String>();
 
 	private void initMap() {
-		map.put("commfail",
-				"Connection failed. Please check your network settings.");
-		map
-				.put("err_creating_volume",
-						"Processing volume settings. Please try again later when it's finished.");
+		map.put("commfail", "Connection failed. Please check your network settings.");
+		map.put("err_creating_volume", "Processing volume settings. Please try again later when it's finished.");
 		map.put("err_pass", "The password is invalid.");
 		map.put("error_baddns", "The value of the DNS server is invalid.");
 		map.put("error_bademail", "Invalid email format.");
-		map
-				.put("error_badgate",
-						"The value of the default gateway is invalid.");
-		map
-				.put(
-						"error_badhost",
-						"The server name you entered is invalid, please refer to Help for more information.");
+		map.put("error_badgate", "The value of the default gateway is invalid.");
+		map.put("error_badhost", "The server name you entered is invalid, please refer to Help for more information.");
 		map.put("error_badhostname", "Invalid hostname format.");
 		map.put("error_badip", "The IP address you entered is invalid.");
 		map.put("error_badmask", "The subnet mask you entered is invalid.");
@@ -126,134 +117,65 @@ public class SynoServer {
 		map.put("error_emptyhost", "You have not entered the server name.");
 		map.put("error_emptyip", "You have not entered the IP address.");
 		map.put("error_emptymask", "You have not entered the subnet mask.");
-		map
-				.put("error_lock",
-						"The system is updating security information. Please try again later.");
-		map
-				.put("error_no_enough_space",
-						"Operation failed because the available volume size is insufficient.");
-		map
-				.put(
-						"error_nogate",
-						"You have not entered the default gateway yet. Are you sure you want to apply these settings?");
+		map.put("error_lock", "The system is updating security information. Please try again later.");
+		map.put("error_no_enough_space", "Operation failed because the available volume size is insufficient.");
+		map.put("error_nogate", "You have not entered the default gateway yet. Are you sure you want to apply these settings?");
 		map.put("error_noiporhostname", "Invalid IP or hostname.");
-		map
-				.put("error_notmatch",
-						"The IP address and the default gateway belong to two different subnets.");
+		map.put("error_notmatch", "The IP address and the default gateway belong to two different subnets.");
 		map.put("error_system", "The operation failed.");
 		map.put("loadres_fail", "Failed to load the required resources.");
 		map.put("loadsetting_fail", "Failed to load system settings.");
-		map
-				.put(
-						"proc_askwait",
-						"It is not proper to execute the specified command now. Please try again later.");
-		map
-				.put("proc_conflict",
-						"The specified command is prohibited now. Please try again later.");
-		map
-				.put(
-						"proc_lock",
-						"The server will not perform your request currently because the system resource is being used. Please try again later.");
+		map.put("proc_askwait", "It is not proper to execute the specified command now. Please try again later.");
+		map.put("proc_conflict", "The specified command is prohibited now. Please try again later.");
+		map.put("proc_lock", "The server will not perform your request currently because the system resource is being used. Please try again later.");
 		map.put("warn_abort", "The action was aborted.");
-		map.put("download_msg_reach_limit",
-				"Files in Download Queue have exceeded the maximum limit.");
-		map
-				.put("error_task_add_dup_file",
-						"The file you are trying to download already exists in the destination folder.");
-		map.put("error_task_add_exceed_max",
-				"You can add up to 20 links at a time.");
+		map.put("download_msg_reach_limit", "Files in Download Queue have exceeded the maximum limit.");
+		map.put("error_task_add_dup_file", "The file you are trying to download already exists in the destination folder.");
+		map.put("error_task_add_exceed_max", "You can add up to 20 links at a time.");
 		map.put("error_task_add_new_dl_failed", "Failed to add new task.");
 		map.put("error_task_not_found", "The task does not exist.");
 		map.put("download_dl_not_enabled", "Download Service is disabled.");
 		map.put("download_empty_input_file", "Please open the file to create.");
 		map.put("download_empty_input_url", "Please enter the URL.");
 		map.put("download_emule_not_enabled", "eMule is not enabled.");
-		map
-				.put(
-						"download_end_desc",
-						"This feature is mainly designed for those tasks which cannot be completed or encountered unknown errors.");
-		map.put("download_end_note_finished",
-				"You cannot end this task because the download is complete.");
-		map
-				.put("download_end_note_no_file",
-						"You cannot end this task because the download has not yet started.");
-		map
-				.put(
-						"download_end_warning",
-						"Files in this task will be stopped and moved to the selected shared folder. You cannot resume/restart this task after it's being moved.");
-		map.put("download_err_network",
-				"Failed to establish network connection.");
+		map.put("download_end_desc", "This feature is mainly designed for those tasks which cannot be completed or encountered unknown errors.");
+		map.put("download_end_note_finished", "You cannot end this task because the download is complete.");
+		map.put("download_end_note_no_file", "You cannot end this task because the download has not yet started.");
+		map.put("download_end_warning", "Files in this task will be stopped and moved to the selected shared folder. You cannot resume/restart this task after it's being moved.");
+		map.put("download_err_network", "Failed to establish network connection.");
 		map.put("download_err_no_file_to_end", "File(s) not found.");
-		map.put("download_err_no_privilege",
-				"You have no right to see current task.");
-		map.put("download_err_no_such_task",
-				"Invalid task ID or task has been deleted.");
+		map.put("download_err_no_privilege", "You have no right to see current task.");
+		map.put("download_err_no_such_task", "Invalid task ID or task has been deleted.");
 		map.put("download_err_read_nzb_fail", "Failed to read NZB file.");
 		map.put("download_err_read_torrent_fail", "Failed to read torrent.");
 		map.put("download_err_select_num", "You can only select one task.");
-		map.put("download_err_tmploc_not_exist",
-				"Temporary download location no longer exists or is crashed.");
-		map
-				.put("download_error_bad_urls_found",
-						"One or more invalid links have been found and will be omitted.");
-		map
-				.put(
-						"download_error_dl_rss",
-						"Failed to download RSS file. Please make sure the download link and your network settings are correct.");
-		map.put("download_error_exceed_dest_fs_max_size_short",
-				"File cannot exceed 4GB at destination file system.");
-		map
-				.put(
-						"download_error_exceed_fs_max_size",
-						"Download service or destination folder is under a FAT file system and cannot store files over 4GB.");
-		map.put("download_error_exceed_fs_max_size_short",
-				"File cannot exceed 4GB.");
-		map.put("download_error_exceed_temp_fs_max_size_short",
-				"File cannot exceed 4GB at location file system.");
-		map.put("download_error_invalid_rss",
-				"The RSS file is empty or invalid.");
-		map
-				.put(
-						"download_error_ln_exceed_fs_max_size",
-						"One or more files cannot be moved to the destination folder, because its file system (FAT) does not allow single file size over 4 GB.");
-		map
-				.put(
-						"download_error_not_in_dl_schedule",
-						"This service is only available during the time specified in the download schedule.");
-		map.put("download_error_rss_no_selection",
-				"Please select at least one task to download.");
+		map.put("download_err_tmploc_not_exist", "Temporary download location no longer exists or is crashed.");
+		map.put("download_error_bad_urls_found", "One or more invalid links have been found and will be omitted.");
+		map.put("download_error_dl_rss", "Failed to download RSS file. Please make sure the download link and your network settings are correct.");
+		map.put("download_error_exceed_dest_fs_max_size_short", "File cannot exceed 4GB at destination file system.");
+		map.put("download_error_exceed_fs_max_size", "Download service or destination folder is under a FAT file system and cannot store files over 4GB.");
+		map.put("download_error_exceed_fs_max_size_short", "File cannot exceed 4GB.");
+		map.put("download_error_exceed_temp_fs_max_size_short", "File cannot exceed 4GB at location file system.");
+		map.put("download_error_invalid_rss", "The RSS file is empty or invalid.");
+		map.put("download_error_ln_exceed_fs_max_size", "One or more files cannot be moved to the destination folder, because its file system (FAT) does not allow single file size over 4 GB.");
+		map.put("download_error_not_in_dl_schedule", "This service is only available during the time specified in the download schedule.");
+		map.put("download_error_rss_no_selection", "Please select at least one task to download.");
 		map.put("download_error_rss_not_dl", "RSS file not found.");
 		map.put("download_error_server_error", "Unexpected error occurred!");
-		map.put("download_error_share_not_found",
-				"No writeable shared folder found.");
-		map.put("download_error_user_removed",
-				"Your user does not exist or has been removed.");
-		map.put("download_error_wrong_file_extension",
-				"The file extension is incorrect.");
+		map.put("download_error_share_not_found", "No writeable shared folder found.");
+		map.put("download_error_user_removed", "Your user does not exist or has been removed.");
+		map.put("download_error_wrong_file_extension", "The file extension is incorrect.");
 		map.put("download_error_wrong_file_format", "Incorrect file format.");
-		map.put("download_error_wrong_files_format",
-				"The format of your file(s) is invalid.");
-		map.put("download_error_wrong_rss_url",
-				"The URL should start with http://.");
-		map.put("download_error_wrong_url",
-				"The URL should start with http://, https://, or ftp://.");
-		map.put("download_msg_action_failed",
-				"Failed to finish the requested operation.");
-		map
-				.put("download_msg_ask_help2",
-						"Please consult the system administrator to solve this problem.");
-		map
-				.put(
-						"download_msg_end_done_del_err",
-						"Successfully ended the selected task. However, system failed to remove the download task.  Please remove the task manually.");
+		map.put("download_error_wrong_files_format", "The format of your file(s) is invalid.");
+		map.put("download_error_wrong_rss_url", "The URL should start with http://.");
+		map.put("download_error_wrong_url", "The URL should start with http://, https://, or ftp://.");
+		map.put("download_msg_action_failed", "Failed to finish the requested operation.");
+		map.put("download_msg_ask_help2", "Please consult the system administrator to solve this problem.");
+		map.put("download_msg_end_done_del_err", "Successfully ended the selected task. However, system failed to remove the download task.  Please remove the task manually.");
 		map.put("download_msg_invalid_user", "Invalid user.");
-		map.put("download_msg_reach_limit",
-				"Number of download tasks has reached the maximum limit.");
+		map.put("download_msg_reach_limit", "Number of download tasks has reached the maximum limit.");
 		map.put("download_need_auth", "Authentication required");
-		map
-				.put(
-						"download_redirect_confirm",
-						"Download Station is not enabled. Do you want to configure the Download Station settings?");
+		map.put("download_redirect_confirm", "Download Station is not enabled. Do you want to configure the Download Station settings?");
 		map.put("download_task_broken_link", "Broken Link");
 		map.put("download_task_dest_deny", "Shared folder access denied.");
 		map.put("download_task_dest_not_exist", "Shared folder not found.");
@@ -269,90 +191,47 @@ public class SynoServer {
 		map.put("download_task_seeding", "Seeding");
 		map.put("download_task_timeout", "Connection Timeout");
 		map.put("download_task_waiting", "Waiting");
-		map.put("download_upload_erro_files",
-				"The content of file(s) is invalid.");
-		map.put("download_upload_exceed_maximum_filesize",
-				"The size of following file(s) exceeds the maximum file size.");
-		map
-				.put(
-						"download_upload_zerobyte_filesize",
-						"The following files will not be uploaded because the file size is either 0 KB or over the maximum file size, or unknown error occurs when the files are added to the upload list.");
+		map.put("download_upload_erro_files", "The content of file(s) is invalid.");
+		map.put("download_upload_exceed_maximum_filesize", "The size of following file(s) exceeds the maximum file size.");
+		map.put("download_upload_zerobyte_filesize", "The following files will not be uploaded because the file size is either 0 KB or over the maximum file size, or unknown error occurs when the files are added to the upload list.");
 		map.put("error_auth", "Authorization Required");
 		map.put("error_bad_field", "Field value is invalid.");
-		map
-				.put("error_encryption_long_path",
-						"The name of the encrypted file or folder should be within 143 characters.");
+		map.put("error_encryption_long_path", "The name of the encrypted file or folder should be within 143 characters.");
 		map.put("error_hint", "Click on [_BACK_] to return to the last page. ");
-		map.put("error_long_path",
-				"File/folder name should be within 255 characters.");
+		map.put("error_long_path", "File/folder name should be within 255 characters.");
 		map.put("error_nochoosefile", "Please choose a file.");
 		map.put("error_noshare", "The selected shared folder does not exist.");
 		map.put("error_page", "The page is not found");
-		map.put("error_page_desc",
-				"Sorry, the page you are looking for is not found.");
-		map
-				.put(
-						"error_port_conflict",
-						"One of the port numbers is used by another service. Please choose another port range.");
-		map
-				.put("error_repswd",
-						"Inconsistent password. Please enter it again.");
+		map.put("error_page_desc", "Sorry, the page you are looking for is not found.");
+		map.put("error_port_conflict", "One of the port numbers is used by another service. Please choose another port range.");
+		map.put("error_repswd", "Inconsistent password. Please enter it again.");
 		map.put("error_rmvnone", "You have not selected any item to remove.");
-		map
-				.put("error_select_one",
-						"You cannot apply settings to multiple items at the same time.");
-		map.put("error_service_datamove_failed",
-				"Failed to process the operation. Please check system log.");
-		map.put("error_service_start_failed",
-				"Failed to start service. Please check system log.");
-		map.put("error_service_stop_failed",
-				"Failed to stop service. Please check system log.");
+		map.put("error_select_one", "You cannot apply settings to multiple items at the same time.");
+		map.put("error_service_datamove_failed", "Failed to process the operation. Please check system log.");
+		map.put("error_service_start_failed", "Failed to start service. Please check system log.");
+		map.put("error_service_stop_failed", "Failed to stop service. Please check system log.");
 		map.put("error_subject", "Data can not be applied.");
-		map
-				.put(
-						"error_system_abnormal_steps",
-						"System partition has crashed. Please back up data and replace the damaged disks as soon as possible. Then reinstall the system with Synology Assistant.");
+		map.put("error_system_abnormal_steps", "System partition has crashed. Please back up data and replace the damaged disks as soon as possible. Then reinstall the system with Synology Assistant.");
 		map.put("error_system_abnormal_warning", "Warning");
 		map.put("error_timeout", "Connection Expired.");
 		map.put("error_unknown", "Unknown error occurred.");
-		map
-				.put(
-						"error_unknown_desc",
-						"The system failed to perform the requested operation, there is an unknown error.");
+		map.put("error_unknown_desc", "The system failed to perform the requested operation, there is an unknown error.");
 		map.put("error_volume_readonly", "The volume is read only.");
-		map.put("error_cantlogin",
-				"The account or password is invalid. Please try again.");
-		map
-				.put("error_expired",
-						"Your account has been disabled. Please contact the administrator.");
-		map.put("error_guest",
-				"Cannot login as guest. Please use another account to login.");
-		map.put("error_interrupt",
-				"You have signed in on another computer. Please log in again.");
-		map.put("error_noprivilege",
-				"You are not authorized to use this service.");
-		map
-				.put(
-						"error_systemfull",
-						"You cannot login to the system because the disk space is full currently. Please restart the system and try again.");
+		map.put("error_cantlogin", "The account or password is invalid. Please try again.");
+		map.put("error_expired", "Your account has been disabled. Please contact the administrator.");
+		map.put("error_guest", "Cannot login as guest. Please use another account to login.");
+		map.put("error_interrupt", "You have signed in on another computer. Please log in again.");
+		map.put("error_noprivilege", "You are not authorized to use this service.");
+		map.put("error_systemfull", "You cannot login to the system because the disk space is full currently. Please restart the system and try again.");
 		map.put("error_timeout", "Connection expired. Please login again.");
-		map.put("error_kad_not_connected",
-				"You are not connected to the Kad network.");
-		map.put("error_search_key_empty",
-				"Please enter a keyword to search for.");
-		map
-				.put("error_search_key_too_short",
-						"The search keyword is too short. Please enter more than two characters.");
+		map.put("error_kad_not_connected", "You are not connected to the Kad network.");
+		map.put("error_search_key_empty", "Please enter a keyword to search for.");
+		map.put("error_search_key_too_short", "The search keyword is too short. Please enter more than two characters.");
 		map.put("error_server_not_connected", "Please connect to a server.");
-		map.put("error_emule_not_running",
-				"eMule service is activating. Please try again later.");
-		map
-				.put("error_invalid_link_found",
-						"One or more invalid ED2K links have been found and will be ignored.");
-		map.put("error_server_add_duplicate",
-				"The server is already on the server list.");
-		map.put("error_server_add_new_server_failed",
-				"Failed to add the new server.");
+		map.put("error_emule_not_running", "eMule service is activating. Please try again later.");
+		map.put("error_invalid_link_found", "One or more invalid ED2K links have been found and will be ignored.");
+		map.put("error_server_add_duplicate", "The server is already on the server list.");
+		map.put("error_server_add_new_server_failed", "Failed to add the new server.");
 		map.put("error_server_empty_ip", "Please enter the IP address.");
 		map.put("error_server_empty_link", "Please enter the ED2K link.");
 		map.put("error_server_empty_port", "Please enter the port number.");
@@ -360,33 +239,23 @@ public class SynoServer {
 		map.put("error_server_invalid_met_url", "Invalid server.met URL");
 		map.put("error_server_not_found", "Server not found.");
 		map.put("error_server_remove_failed", "Failed to remove the server.");
-		map.put("error_server_update_met_failed",
-				"Failed to update server list.");
-		map
-				.put("error_dl_port_in_used",
-						"This port number is reserved for system use only. Please use other numbers.");
-		map.put("error_dl_same_time",
-				"Start time and stop time should be different.");
-		map.put("error_emule_port_conflict",
-				"TCP port conflicts with the TCP port in BitTorrent.");
-		map.put("error_emule_udp_conflict",
-				"UDP port conflicts with the DHT UDP port in BitTorrent.");
+		map.put("error_server_update_met_failed", "Failed to update server list.");
+		map.put("error_dl_port_in_used", "This port number is reserved for system use only. Please use other numbers.");
+		map.put("error_dl_same_time", "Start time and stop time should be different.");
+		map.put("error_emule_port_conflict", "TCP port conflicts with the TCP port in BitTorrent.");
+		map.put("error_emule_udp_conflict", "UDP port conflicts with the DHT UDP port in BitTorrent.");
 	}
 
 	/**
-	 * Static intialization of the SSL factory to accept each certificate, even
-	 * if a certificate is self signed
+	 * Static intialization of the SSL factory to accept each certificate, even if a certificate is self signed
 	 */
 	static {
 		SSLContext sc;
 		try {
 			sc = SSLContext.getInstance("TLS");
-			sc.init(null, new TrustManager[] { new AcceptAllTrustManager() },
-					new SecureRandom());
-			HttpsURLConnection
-					.setDefaultSSLSocketFactory(sc.getSocketFactory());
-			HttpsURLConnection
-					.setDefaultHostnameVerifier(new AcceptAllHostNameVerifier());
+			sc.init(null, new TrustManager[] { new AcceptAllTrustManager() }, new SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection.setDefaultHostnameVerifier(new AcceptAllHostNameVerifier());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -400,11 +269,9 @@ public class SynoServer {
 	}
 
 	/**
-	 * Constructor which set all server's informations. No connection are made
-	 * when calling the constructor.
+	 * Constructor which set all server's informations. No connection are made when calling the constructor.
 	 */
-	public SynoServer(String nicknameP, SynoServerConnection localConP,
-			SynoServerConnection publicConnP, String userP, String passwordP) {
+	public SynoServer(String nicknameP, SynoServerConnection localConP, SynoServerConnection publicConnP, String userP, String passwordP) {
 		nickname = nicknameP;
 		localConnection = localConP;
 		publicConnection = publicConnP;
@@ -416,29 +283,25 @@ public class SynoServer {
 	}
 
 	/**
-	 * Set a new recurrent action. The collector thread is interrupted to
-	 * executed the new recurrent action immediatly
+	 * Set a new recurrent action. The collector thread is interrupted to executed the new recurrent action immediatly
 	 * 
 	 * @param handlerP
 	 *            The handler which will receive the response
 	 * @param recurrentActionP
 	 *            the recurrentAction to set
 	 */
-	public void setRecurrentAction(ResponseHandler handlerP,
-			SynoAction recurrentActionP) {
+	public void setRecurrentAction(ResponseHandler handlerP, SynoAction recurrentActionP) {
 		bindResponseHandler(handlerP);
 		recurrentAction = recurrentActionP;
 	}
 
 	/**
-	 * Connect to the server. It is a requirement to connect to the NAS server
-	 * before any attempt to call a method of this class.
+	 * Connect to the server. It is a requirement to connect to the NAS server before any attempt to call a method of this class.
 	 * 
 	 * @return
 	 * @throws DSMException
 	 */
-	public void connect(final ResponseHandler handlerP,
-			final List<SynoAction> actionQueueP, boolean publicP) {
+	public void connect(final ResponseHandler handlerP, final List<SynoAction> actionQueueP, boolean publicP) {
 		// Set the connection according to the public or local parameter
 		if (publicP) {
 			currentConn = publicConnection;
@@ -457,18 +320,15 @@ public class SynoServer {
 						// If the action's queue is not empty
 						if (actionQueueP != null) {
 							for (SynoAction taskAction : actionQueueP) {
-								executeAsynchronousAction(handler, taskAction,
-										false);
+								executeAsynchronousAction(handler, taskAction, false);
 							}
 						}
-						// If everything is fine then start to collect
-						// informations
+						// If everything is fine then start to collect informations
 						boolean silentMode = false;
 						while (connected && !stop) {
 							try {
 								// Update the progressbar
-								fireMessage(SynoServer.this.handler,
-										ResponseHandler.MSG_OPERATION_PENDING);
+								fireMessage(SynoServer.this.handler, ResponseHandler.MSG_OPERATION_PENDING);
 								// Execute the recurrent action
 								SynoAction toDo = null;
 								synchronized (this) {
@@ -477,11 +337,9 @@ public class SynoServer {
 									}
 								}
 								if (toDo != null) {
-									toDo.execute(SynoServer.this.handler,
-											SynoServer.this);
+									toDo.execute(SynoServer.this.handler, SynoServer.this);
 								}
-								// In case we are disconnected before the
-								// response is
+								// In case we are disconnected before the response is
 								// received
 								if (connected) {
 									// If auto refresh
@@ -503,11 +361,9 @@ public class SynoServer {
 									}
 								}
 							}
-							// Nothing to do. It may be a force refresh after an
-							// action!
+							// Nothing to do. It may be a force refresh after an action!
 							catch (InterruptedException iex) {
-								Log.d(Synodroid.DS_TAG,
-										"Been interrupted while sleeping...");
+								Log.d(Synodroid.DS_TAG, "Been interrupted while sleeping...");
 								setInterrupted(true);
 							}
 							// All others exceptions
@@ -525,18 +381,14 @@ public class SynoServer {
 					// Connection error
 					catch (DSMException e) {
 						Log.d(Synodroid.DS_TAG, "DSMException occured", e);
-						fireMessage(SynoServer.this.handler,
-								ResponseHandler.MSG_ERROR, translateError(
-										SynoServer.this.handler, e));
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, e));
 					}
 					// Programmation exception
 					catch (Exception e) {
 						Log.d(Synodroid.DS_TAG, "Exception occured", e);
 						// This is most likely a connection timeout
 						DSMException ex = new DSMException(e);
-						fireMessage(SynoServer.this.handler,
-								ResponseHandler.MSG_ERROR, translateError(
-										SynoServer.this.handler, ex));
+						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, ex));
 					}
 					// Set the connection to null to force connection next time
 					finally {
@@ -631,10 +483,8 @@ public class SynoServer {
 		// Get the reason
 		String jsoReason = dsmExP.getJsonReason();
 		// If no JSON reason, try to find the reason in the root DSMException
-		if (jsoReason == null && dsmExP.getRootException() != null
-				&& dsmExP.getRootException() instanceof DSMException) {
-			jsoReason = ((DSMException) dsmExP.getRootException())
-					.getJsonReason();
+		if (jsoReason == null && dsmExP.getRootException() != null && dsmExP.getRootException() instanceof DSMException) {
+			jsoReason = ((DSMException) dsmExP.getRootException()).getJsonReason();
 		}
 		// If there's is a wellknown reason
 		if (jsoReason != null) {
@@ -649,8 +499,7 @@ public class SynoServer {
 				String mapMessage = map.get(jsoReason);
 				if (mapMessage == null) {
 					msg += ": " + jsoReason;
-					Log.d(Synodroid.DS_TAG, "JSON's error not trapped: "
-							+ jsoReason);
+					Log.d(Synodroid.DS_TAG, "JSON's error not trapped: " + jsoReason);
 				} else {
 					msg = "DSM Error: " + mapMessage;
 				}
@@ -661,9 +510,7 @@ public class SynoServer {
 			if (dsmExP.getRootException() instanceof SocketException) {
 				msg = handlerP.getString(R.string.connect_nohost);
 			} else if (dsmExP.getRootException() instanceof SSLException) {
-				msg = MessageFormat.format(handlerP
-						.getString(R.string.connect_ssl_error),
-						new Object[] { dsmExP.getCause().getMessage() });
+				msg = MessageFormat.format(handlerP.getString(R.string.connect_ssl_error), new Object[] { dsmExP.getCause().getMessage() });
 			} else if (dsmExP.getRootException() instanceof SocketTimeoutException) {
 				msg = handlerP.getString(R.string.connect_nohost);
 			} else {
@@ -683,8 +530,7 @@ public class SynoServer {
 	 */
 	@Override
 	public String toString() {
-		return (currentConn.protocol.name() + "://" + currentConn.host + ":" + currentConn.port)
-				.toLowerCase();
+		return (currentConn.protocol.name() + "://" + currentConn.host + ":" + currentConn.port).toLowerCase();
 	}
 
 	/**
@@ -714,8 +560,7 @@ public class SynoServer {
 	 * @return the url
 	 */
 	public String getUrl() {
-		return (currentConn.protocol.name() + "://" + currentConn.host + ":" + currentConn.port)
-				.toLowerCase();
+		return (currentConn.protocol.name() + "://" + currentConn.host + ":" + currentConn.port).toLowerCase();
 	}
 
 	/**
@@ -834,11 +679,9 @@ public class SynoServer {
 	 * @param actionP
 	 *            The action to execute
 	 * @param forceRefreshP
-	 *            Flag to set if a refresh is needed after the completion of the
-	 *            action
+	 *            Flag to set if a refresh is needed after the completion of the action
 	 */
-	public void executeAsynchronousAction(final ResponseHandler handlerP,
-			final SynoAction actionP, final boolean forceRefreshP) {
+	public void executeAsynchronousAction(final ResponseHandler handlerP, final SynoAction actionP, final boolean forceRefreshP) {
 		executeAsynchronousAction(handlerP, actionP, forceRefreshP, true);
 	}
 
@@ -848,40 +691,30 @@ public class SynoServer {
 	 * @param actionP
 	 *            The action to execute
 	 * @param forceRefreshP
-	 *            Flag to set if a refresh is needed after the completion of the
-	 *            action
+	 *            Flag to set if a refresh is needed after the completion of the action
 	 */
-	public void executeAsynchronousAction(final ResponseHandler handlerP,
-			final SynoAction actionP, final boolean forceRefreshP,
-			final boolean showToast) {
+	public void executeAsynchronousAction(final ResponseHandler handlerP, final SynoAction actionP, final boolean forceRefreshP, final boolean showToast) {
 		Runnable runnable = new Runnable() {
 			public void run() {
 				// An operation is pending
 				fireMessage(handlerP, ResponseHandler.MSG_OPERATION_PENDING);
-				Log.d(Synodroid.DS_TAG, "Executing action: "
-						+ actionP.getName());
+				Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
 				try {
 					// If a Toast must be shown
 					if (actionP.isToastable() && showToast) {
 						int resId = actionP.getToastId();
-						String fileName = (actionP.getTask() != null ? actionP
-								.getTask().fileName : "");
-						String text = handlerP.getString(resId,
-								new Object[] { fileName });
+						String fileName = (actionP.getTask() != null ? actionP.getTask().fileName : "");
+						String text = handlerP.getString(resId, new Object[] { fileName });
 						fireMessage(handlerP, ResponseHandler.MSG_TOAST, text);
 					}
 					actionP.execute(handlerP, SynoServer.this);
 				} catch (DSMException ex) {
 					Log.e("SynoDroid DS", "Unexpected DSM error", ex);
-					fireMessage(handlerP, ResponseHandler.MSG_ERROR,
-							SynoServer.this.translateError(
-									SynoServer.this.handler, ex));
+					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));
 				} catch (Exception e) {
 					Log.e("SynoDroid DS", "Unexpected error", e);
 					DSMException ex = new DSMException(e);
-					fireMessage(handlerP, ResponseHandler.MSG_ERROR,
-							SynoServer.this.translateError(
-									SynoServer.this.handler, ex));
+					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));
 				} finally {
 					fireMessage(handlerP, ResponseHandler.MSG_OPERATION_DONE);
 					// Interrup the collector's thread so it will refresh
@@ -905,11 +738,9 @@ public class SynoServer {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private HttpURLConnection createConnection(String uriP, String requestP,
-			String methodP) throws MalformedURLException, IOException {
+	private HttpURLConnection createConnection(String uriP, String requestP, String methodP) throws MalformedURLException, IOException {
 		// Prepare the connection
-		HttpURLConnection con = (HttpURLConnection) new URL(getUrl()
-				+ Uri.encode(uriP, "/")).openConnection();
+		HttpURLConnection con = (HttpURLConnection) new URL(getUrl() + Uri.encode(uriP, "/")).openConnection();
 
 		// Add cookies if exist
 		if (cookies != null) {
@@ -939,8 +770,7 @@ public class SynoServer {
 	 * @return A JSONObject containing the response of the server
 	 * @throws DSMException
 	 */
-	public JSONObject sendJSONRequest(String uriP, String requestP,
-			String methodP) throws Exception {
+	public JSONObject sendJSONRequest(String uriP, String requestP, String methodP) throws Exception {
 		HttpURLConnection con = null;
 		OutputStreamWriter wr = null;
 		BufferedReader br = null;
@@ -948,8 +778,7 @@ public class SynoServer {
 		try {
 
 			// For some reason in Gingerbread I often get a response code of -1.
-			// Here I retry for a maximum of MAX_RETRY to send the request and
-			// it usually succeed at the second try...
+			// Here I retry for a maximum of MAX_RETRY to send the request and it usually succeed at the second try...
 			int retry = 0;
 			int MAX_RETRY = 2;
 			while (retry <= MAX_RETRY) {
@@ -971,38 +800,32 @@ public class SynoServer {
 				}
 
 				// Now read the reponse and build a string with it
-				br = new BufferedReader(new InputStreamReader(con
-						.getInputStream()));
+				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 				sb = new StringBuffer();
 				String line;
 				while ((line = br.readLine()) != null) {
 					sb.append(line);
 				}
 				br.close();
-				// Verify is response if not -1, otherwise take reason from the
-				// header
+				// Verify is response if not -1, otherwise take reason from the header
 				if (con.getResponseCode() == -1) {
 					retry++;
-					Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: "
-							+ retry + ")");
+					Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
 				} else {
 					Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 					JSONObject respJSO = new JSONObject(sb.toString());
 					return respJSO;
 				}
 			}
-			throw new Exception(
-					"Failed to read response from server. Please reconnect!");
+			throw new Exception("Failed to read response from server. Please reconnect!");
 		}
 		// Special for SSL Handshake failure
 		catch (IOException ioex) {
 			Log.e(Synodroid.DS_TAG, "Unexpected error", ioex);
 			String msg = ioex.getMessage();
 			if (msg != null && msg.indexOf("SSL handshake failure") != -1) {
-				// Don't need to translate: the opposite message (HTTP on a SSL
-				// port) is in english and come from the server
-				throw new Exception(
-						"SSL handshake failure.\n\nVerify if you don't speak HTTPS to a standard server port.\n");
+				// Don't need to translate: the opposite message (HTTP on a SSL port) is in english and come from the server
+				throw new Exception("SSL handshake failure.\n\nVerify if you don't speak HTTPS to a standard server port.\n");
 			} else {
 				throw ioex;
 			}
@@ -1033,8 +856,7 @@ public class SynoServer {
 			// Create the connection
 			conn = createConnection(uriP, "", "POST");
 			conn.setRequestProperty("Connection", "Keep-Alive");
-			conn.setRequestProperty("Content-Type",
-					"multipart/form-data;boundary=" + multiPartP.getBoundary());
+			conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + multiPartP.getBoundary());
 
 			// Write the multipart
 			multiPartP.writeData(conn.getOutputStream());
@@ -1043,8 +865,7 @@ public class SynoServer {
 			int code = conn.getResponseCode();
 			String resp = conn.getResponseMessage();
 			// Now read the reponse and build a string with it
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn
-					.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			StringBuffer sb = new StringBuffer();
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -1054,8 +875,7 @@ public class SynoServer {
 
 			Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 			JSONObject respJSO = new JSONObject(sb.toString());
-			Log.d(Synodroid.DS_TAG, "Multipart response is: " + code + "/"
-					+ resp + "/" + respJSO);
+			Log.d(Synodroid.DS_TAG, "Multipart response is: " + code + "/" + resp + "/" + respJSO);
 		} catch (Exception e) {
 			Log.e(Synodroid.DS_TAG, "Error while sending multipart", e);
 		}
@@ -1067,8 +887,7 @@ public class SynoServer {
 			// Create the connection
 			con = createConnection(uriP, requestP, "GET");
 			// Add the parameters
-			OutputStreamWriter wr = new OutputStreamWriter(con
-					.getOutputStream());
+			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 			wr.write(requestP);
 			// Send the request
 			wr.flush();
@@ -1081,8 +900,7 @@ public class SynoServer {
 				Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 			}
 			// Now read the reponse and build a string with it
-			BufferedReader br = new BufferedReader(new InputStreamReader(con
-					.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			StringBuffer sb = new StringBuffer();
 			String line;
 			try {
@@ -1149,8 +967,7 @@ public class SynoServer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((nickname == null) ? 0 : nickname.hashCode());
+		result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());
 		return result;
 	}
 

@@ -46,9 +46,7 @@ public class UpdateTaskPropertiesAction implements SynoAction {
 	 * @param seedingRatioP
 	 * @param seedingIntervalP
 	 */
-	public UpdateTaskPropertiesAction(Task taskP, int ul_rateP, int dl_rateP,
-			int priorityP, int max_peersP, String destinationP,
-			int seeding_ratioP, int seeding_intervalP) {
+	public UpdateTaskPropertiesAction(Task taskP, int ul_rateP, int dl_rateP, int priorityP, int max_peersP, String destinationP, int seeding_ratioP, int seeding_intervalP) {
 		task = taskP;
 		ul_rate = ul_rateP;
 		dl_rate = dl_rateP;
@@ -62,15 +60,10 @@ public class UpdateTaskPropertiesAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid
-	 * .common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid.common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		serverP.getDSMHandlerFactory().getDSHandler().setTaskProperty(task,
-				ul_rate, dl_rate, priority, max_peers, destination,
-				seeding_ratio, seeding_interval);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().setTaskProperty(task, ul_rate, dl_rate, priority, max_peers, destination, seeding_ratio, seeding_interval);
 	}
 
 	/*

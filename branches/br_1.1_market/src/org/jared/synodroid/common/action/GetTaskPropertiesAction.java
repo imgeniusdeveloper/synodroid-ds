@@ -47,16 +47,11 @@ public class GetTaskPropertiesAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid
-	 * .common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid.common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		TaskProperties tp = serverP.getDSMHandlerFactory().getDSHandler()
-				.getTaskProperty(task);
-		serverP.fireMessage(handlerP, ResponseHandler.MSG_PROPERTIES_RECEIVED,
-				tp);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		TaskProperties tp = serverP.getDSMHandlerFactory().getDSHandler().getTaskProperty(task);
+		serverP.fireMessage(handlerP, ResponseHandler.MSG_PROPERTIES_RECEIVED, tp);
 	}
 
 	/*

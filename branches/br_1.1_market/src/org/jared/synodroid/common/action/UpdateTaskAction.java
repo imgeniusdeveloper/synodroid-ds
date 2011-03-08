@@ -48,8 +48,7 @@ public class UpdateTaskAction implements SynoAction {
 	 * @param seedingRatioP
 	 * @param seedingIntervalP
 	 */
-	public UpdateTaskAction(Task taskP, List<TaskFile> filesP,
-			int seedingRatioP, int seedingIntervalP) {
+	public UpdateTaskAction(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) {
 		task = taskP;
 		files = filesP;
 		seedingRatio = seedingRatioP;
@@ -59,14 +58,10 @@ public class UpdateTaskAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid
-	 * .common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid.common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		serverP.getDSMHandlerFactory().getDSHandler().updateTask(task, files,
-				seedingRatio, seedingInterval);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().updateTask(task, files, seedingRatio, seedingInterval);
 	}
 
 	/*

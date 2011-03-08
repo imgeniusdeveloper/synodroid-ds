@@ -25,16 +25,14 @@ import android.view.ViewParent;
 import android.widget.Scroller;
 
 /**
- * The workspace is a wide area with a infinite number of screens. Each screen
- * contains a view. A workspace is meant to be used with a fixed width only.<br/>
+ * The workspace is a wide area with a infinite number of screens. Each screen contains a view. A workspace is meant to be used with a fixed width only.<br/>
  * <br/>
  * This code has been done by using com.android.launcher.Workspace.java
  */
 public class WorkspaceView extends ViewGroup {
 	private static final int INVALID_SCREEN = -1;
 
-	// The velocity at which a fling gesture will cause us to snap to the next
-	// screen
+	// The velocity at which a fling gesture will cause us to snap to the next screen
 	private static final int SNAP_VELOCITY = 1000;
 
 	// the default screen index
@@ -80,8 +78,7 @@ public class WorkspaceView extends ViewGroup {
 	 * @param context
 	 *            The application's context.
 	 * @param attrs
-	 *            The attribtues set containing the Workspace's customization
-	 *            values.
+	 *            The attribtues set containing the Workspace's customization values.
 	 */
 	public WorkspaceView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
@@ -93,8 +90,7 @@ public class WorkspaceView extends ViewGroup {
 	 * @param context
 	 *            The application's context.
 	 * @param attrs
-	 *            The attribtues set containing the Workspace's customization
-	 *            values.
+	 *            The attribtues set containing the Workspace's customization values.
 	 * @param defStyle
 	 *            Unused.
 	 */
@@ -117,8 +113,7 @@ public class WorkspaceView extends ViewGroup {
 	}
 
 	/**
-	 * Set a new distance that a touch can wander before we think the user is
-	 * scrolling in pixels slop<br/>
+	 * Set a new distance that a touch can wander before we think the user is scrolling in pixels slop<br/>
 	 * 
 	 * @param touchSlopP
 	 */
@@ -168,8 +163,7 @@ public class WorkspaceView extends ViewGroup {
 	}
 
 	/**
-	 * Registers the specified listener on each screen contained in this
-	 * workspace.
+	 * Registers the specified listener on each screen contained in this workspace.
 	 * 
 	 * @param l
 	 *            The listener used to respond to long clicks.
@@ -193,10 +187,7 @@ public class WorkspaceView extends ViewGroup {
 	}
 
 	/**
-	 * ViewGroup.dispatchDraw() supports many features we don't need: clip to
-	 * padding, layout animation, animation listener, disappearing children,
-	 * etc. The following implementation attempts to fast-track the drawing
-	 * dispatch by drawing only what we know needs to be drawn.
+	 * ViewGroup.dispatchDraw() supports many features we don't need: clip to padding, layout animation, animation listener, disappearing children, etc. The following implementation attempts to fast-track the drawing dispatch by drawing only what we know needs to be drawn.
 	 */
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
@@ -206,12 +197,10 @@ public class WorkspaceView extends ViewGroup {
 			if (x + wallpaperWidth < getRight() - getLeft()) {
 				x = getRight() - getLeft() - wallpaperWidth;
 			}
-			canvas.drawBitmap(wallpaper, x,
-					(getBottom() - getTop() - wallpaperHeight) / 2, paint);
+			canvas.drawBitmap(wallpaper, x, (getBottom() - getTop() - wallpaperHeight) / 2, paint);
 		}
 		// Determine if we need to draw every child or only the current screen
-		boolean fastDraw = touchState != TOUCH_STATE_SCROLLING
-				&& nextScreen == INVALID_SCREEN;
+		boolean fastDraw = touchState != TOUCH_STATE_SCROLLING && nextScreen == INVALID_SCREEN;
 		// If we are not scrolling or flinging, draw only the current screen
 		if (fastDraw) {
 			View v = getChildAt(currentScreen);
@@ -220,10 +209,8 @@ public class WorkspaceView extends ViewGroup {
 			}
 		} else {
 			final long drawingTime = getDrawingTime();
-			// If we are flinging, draw only the current screen and the target
-			// screen
-			if (nextScreen >= 0 && nextScreen < getChildCount()
-					&& Math.abs(currentScreen - nextScreen) == 1) {
+			// If we are flinging, draw only the current screen and the target screen
+			if (nextScreen >= 0 && nextScreen < getChildCount() && Math.abs(currentScreen - nextScreen) == 1) {
 				drawChild(canvas, getChildAt(currentScreen), drawingTime);
 				drawChild(canvas, getChildAt(nextScreen), drawingTime);
 			} else {
@@ -254,14 +241,11 @@ public class WorkspaceView extends ViewGroup {
 		// Compute wallpaper
 		if (wallpaperLoaded) {
 			wallpaperLoaded = false;
-			wallpaper = centerToFit(wallpaper, width, MeasureSpec
-					.getSize(heightMeasureSpec), getContext());
+			wallpaper = centerToFit(wallpaper, width, MeasureSpec.getSize(heightMeasureSpec), getContext());
 			wallpaperWidth = wallpaper.getWidth();
 			wallpaperHeight = wallpaper.getHeight();
 		}
-		wallpaperOffset = wallpaperWidth > width ? (count * width - wallpaperWidth)
-				/ ((count - 1) * (float) width)
-				: 1.0f;
+		wallpaperOffset = wallpaperWidth > width ? (count * width - wallpaperWidth) / ((count - 1) * (float) width) : 1.0f;
 		if (firstWallpaperLayout) {
 			scrollTo(currentScreen * width, 0);
 			firstWallpaperLayout = false;
@@ -272,16 +256,14 @@ public class WorkspaceView extends ViewGroup {
 	 * Overrided method to layout child
 	 */
 	@Override
-	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		int childLeft = 0;
 		final int count = getChildCount();
 		for (int i = 0; i < count; i++) {
 			final View child = getChildAt(i);
 			if (child.getVisibility() != View.GONE) {
 				final int childWidth = child.getMeasuredWidth();
-				child.layout(childLeft, 0, childLeft + childWidth, child
-						.getMeasuredHeight());
+				child.layout(childLeft, 0, childLeft + childWidth, child.getMeasuredHeight());
 				childLeft += childWidth;
 			}
 		}
@@ -304,9 +286,7 @@ public class WorkspaceView extends ViewGroup {
 	}
 
 	/**
-	 * This method JUST determines whether we want to intercept the motion. If
-	 * we return true, onTouchEvent will be called and we do the actual
-	 * scrolling there.
+	 * This method JUST determines whether we want to intercept the motion. If we return true, onTouchEvent will be called and we do the actual scrolling there.
 	 */
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -315,12 +295,10 @@ public class WorkspaceView extends ViewGroup {
 		}
 
 		/*
-		 * Shortcut the most recurring case: the user is in the dragging state
-		 * and he is moving his finger. We want to intercept this motion.
+		 * Shortcut the most recurring case: the user is in the dragging state and he is moving his finger. We want to intercept this motion.
 		 */
 		final int action = ev.getAction();
-		if ((action == MotionEvent.ACTION_MOVE)
-				&& (touchState != TOUCH_STATE_REST)) {
+		if ((action == MotionEvent.ACTION_MOVE) && (touchState != TOUCH_STATE_REST)) {
 			return true;
 		}
 
@@ -330,8 +308,7 @@ public class WorkspaceView extends ViewGroup {
 		switch (action) {
 		case MotionEvent.ACTION_MOVE:
 			/*
-			 * Locally do absolute value. mLastMotionX is set to the y value of
-			 * the down event.
+			 * Locally do absolute value. mLastMotionX is set to the y value of the down event.
 			 */
 			final int xDiff = (int) Math.abs(x - lastMotionX);
 			final int yDiff = (int) Math.abs(y - lastMotionY);
@@ -347,10 +324,8 @@ public class WorkspaceView extends ViewGroup {
 				// Either way, cancel any pending longpress
 				if (allowLongPress) {
 					allowLongPress = false;
-					// Try canceling the long press. It could also have been
-					// scheduled
-					// by a distant descendant, so use the mAllowLongPress flag
-					// to block
+					// Try canceling the long press. It could also have been scheduled
+					// by a distant descendant, so use the mAllowLongPress flag to block
 					// everything
 					final View currentView = getChildAt(currentScreen);
 					currentView.cancelLongPress();
@@ -365,12 +340,9 @@ public class WorkspaceView extends ViewGroup {
 			allowLongPress = true;
 
 			/*
-			 * If being flinged and user touches the screen, initiate drag;
-			 * otherwise don't. mScroller.isFinished should be false when being
-			 * flinged.
+			 * If being flinged and user touches the screen, initiate drag; otherwise don't. mScroller.isFinished should be false when being flinged.
 			 */
-			touchState = scroller.isFinished() ? TOUCH_STATE_REST
-					: TOUCH_STATE_SCROLLING;
+			touchState = scroller.isFinished() ? TOUCH_STATE_REST : TOUCH_STATE_SCROLLING;
 			break;
 
 		case MotionEvent.ACTION_CANCEL:
@@ -380,8 +352,7 @@ public class WorkspaceView extends ViewGroup {
 		}
 
 		/*
-		 * The only time we want to intercept motion events is if we are in the
-		 * drag mode.
+		 * The only time we want to intercept motion events is if we are in the drag mode.
 		 */
 		return touchState != TOUCH_STATE_REST;
 	}
@@ -405,8 +376,7 @@ public class WorkspaceView extends ViewGroup {
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
 			/*
-			 * If being flinged and user touches, stop the fling. isFinished
-			 * will be false if being flinged.
+			 * If being flinged and user touches, stop the fling. isFinished will be false if being flinged.
 			 */
 			if (!scroller.isFinished()) {
 				scroller.abortAnimation();
@@ -426,9 +396,7 @@ public class WorkspaceView extends ViewGroup {
 						scrollBy(Math.max(-getScrollX(), deltaX), 0);
 					}
 				} else if (deltaX > 0) {
-					final int availableToScroll = getChildAt(
-							getChildCount() - 1).getRight()
-							- getScrollX() - getWidth();
+					final int availableToScroll = getChildAt(getChildCount() - 1).getRight() - getScrollX() - getWidth();
 					if (availableToScroll > 0) {
 						scrollBy(Math.min(availableToScroll, deltaX), 0);
 					}
@@ -444,8 +412,7 @@ public class WorkspaceView extends ViewGroup {
 				if (velocityX > SNAP_VELOCITY && currentScreen > 0) {
 					// Fling hard enough to move left
 					scrollToScreen(currentScreen - 1);
-				} else if (velocityX < -SNAP_VELOCITY
-						&& currentScreen < getChildCount() - 1) {
+				} else if (velocityX < -SNAP_VELOCITY && currentScreen < getChildCount() - 1) {
 					// Fling hard enough to move right
 					scrollToScreen(currentScreen + 1);
 				} else {
@@ -471,8 +438,7 @@ public class WorkspaceView extends ViewGroup {
 	 */
 	private void snapToDestination() {
 		final int screenWidth = getWidth();
-		final int whichScreen = (getScrollX() + (screenWidth / 2))
-				/ screenWidth;
+		final int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
 		Log.d("workspace", "snapToDestination");
 		scrollToScreen(whichScreen);
 	}
@@ -490,15 +456,13 @@ public class WorkspaceView extends ViewGroup {
 		nextScreen = whichScreen;
 
 		View focusedChild = getFocusedChild();
-		if (focusedChild != null && changingScreens
-				&& focusedChild == getChildAt(currentScreen)) {
+		if (focusedChild != null && changingScreens && focusedChild == getChildAt(currentScreen)) {
 			focusedChild.clearFocus();
 		}
 
 		final int newX = whichScreen * getWidth();
 		final int delta = newX - getScrollX();
-		Log.d("workspace", "newX=" + newX + " scrollX=" + getScrollX()
-				+ " delta=" + delta);
+		Log.d("workspace", "newX=" + newX + " scrollX=" + getScrollX() + " delta=" + delta);
 		scroller.startScroll(getScrollX(), 0, delta, 0, Math.abs(delta) * 2);
 		invalidate();
 	}
@@ -529,8 +493,7 @@ public class WorkspaceView extends ViewGroup {
 	 * Scroll to the left right screen
 	 */
 	public void scrollLeft() {
-		if (nextScreen == INVALID_SCREEN && currentScreen > 0
-				&& scroller.isFinished()) {
+		if (nextScreen == INVALID_SCREEN && currentScreen > 0 && scroller.isFinished()) {
 			scrollToScreen(currentScreen - 1);
 		}
 	}
@@ -539,8 +502,7 @@ public class WorkspaceView extends ViewGroup {
 	 * Scroll to the next right screen
 	 */
 	public void scrollRight() {
-		if (nextScreen == INVALID_SCREEN && currentScreen < getChildCount() - 1
-				&& scroller.isFinished()) {
+		if (nextScreen == INVALID_SCREEN && currentScreen < getChildCount() - 1 && scroller.isFinished()) {
 			scrollToScreen(currentScreen + 1);
 		}
 	}
@@ -566,8 +528,7 @@ public class WorkspaceView extends ViewGroup {
 	}
 
 	/**
-	 * Return a view instance according to the tag parameter or null if the view
-	 * could not be found
+	 * Return a view instance according to the tag parameter or null if the view could not be found
 	 * 
 	 * @param tag
 	 * @return
@@ -677,21 +638,17 @@ public class WorkspaceView extends ViewGroup {
 	 * @param context
 	 * @return
 	 */
-	static Bitmap centerToFit(Bitmap bitmap, int width, int height,
-			Context context) {
+	static Bitmap centerToFit(Bitmap bitmap, int width, int height, Context context) {
 		final int bitmapWidth = bitmap.getWidth();
 		final int bitmapHeight = bitmap.getHeight();
 
 		if (bitmapWidth < width || bitmapHeight < height) {
 			// Normally should get the window_background color of the context
 			int color = Integer.valueOf("FF191919", 16);
-			Bitmap centered = Bitmap.createBitmap(bitmapWidth < width ? width
-					: bitmapWidth, bitmapHeight < height ? height
-					: bitmapHeight, Bitmap.Config.RGB_565);
+			Bitmap centered = Bitmap.createBitmap(bitmapWidth < width ? width : bitmapWidth, bitmapHeight < height ? height : bitmapHeight, Bitmap.Config.RGB_565);
 			Canvas canvas = new Canvas(centered);
 			canvas.drawColor(color);
-			canvas.drawBitmap(bitmap, (width - bitmapWidth) / 2.0f,
-					(height - bitmapHeight) / 2.0f, null);
+			canvas.drawBitmap(bitmap, (width - bitmapWidth) / 2.0f, (height - bitmapHeight) / 2.0f, null);
 			bitmap = centered;
 		}
 		return bitmap;

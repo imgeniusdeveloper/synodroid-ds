@@ -47,8 +47,7 @@ public class ServerAdapter extends BaseAdapter {
 	 */
 	public ServerAdapter(Context ctxP, ServiceInfo[] infosP) {
 		infos = infosP;
-		inflater = (LayoutInflater) ctxP
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) ctxP.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/*
@@ -81,16 +80,14 @@ public class ServerAdapter extends BaseAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.widget.Adapter#getView(int, android.view.View,
-	 * android.view.ViewGroup)
+	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
 		} else {
-			view = (LinearLayout) inflater.inflate(R.layout.wizard_serverrow,
-					parentP, false);
+			view = (LinearLayout) inflater.inflate(R.layout.wizard_serverrow, parentP, false);
 		}
 		bindView(view, infos[positionP]);
 		return view;

@@ -29,16 +29,11 @@ public class EnumShareAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
-	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		List<SharedDirectory> dirs = serverP.getDSMHandlerFactory()
-				.getDSHandler().enumSharedDirectory();
-		String dir = serverP.getDSMHandlerFactory().getDSHandler()
-				.getSharedDirectory();
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		List<SharedDirectory> dirs = serverP.getDSMHandlerFactory().getDSHandler().enumSharedDirectory();
+		String dir = serverP.getDSMHandlerFactory().getDSHandler().getSharedDirectory();
 		if (dir != null) {
 			SharedDirectory foo = new SharedDirectory(dir);
 			int index = dirs.indexOf(foo);
@@ -46,8 +41,7 @@ public class EnumShareAction implements SynoAction {
 				dirs.get(index).isCurrent = true;
 			}
 		}
-		serverP.fireMessage(handlerP,
-				ResponseHandler.MSG_SHARED_DIRECTORIES_RETRIEVED, dirs);
+		serverP.fireMessage(handlerP, ResponseHandler.MSG_SHARED_DIRECTORIES_RETRIEVED, dirs);
 	}
 
 	/*

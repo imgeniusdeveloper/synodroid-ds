@@ -34,13 +34,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
- * An adaptor for task's details. This adaptor aims to create a view for each
- * detail in the listView
+ * An adaptor for task's details. This adaptor aims to create a view for each detail in the listView
  * 
  * @author eric.taix at gmail.com
  */
-public class DetailAdapter extends BaseAdapter implements
-		AdapterView.OnItemClickListener {
+public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
 	// List of detail
 	private List<Detail> details = new ArrayList<Detail>();
@@ -59,8 +57,7 @@ public class DetailAdapter extends BaseAdapter implements
 	 */
 	public DetailAdapter(DetailActivity activityP) {
 		activity = activityP;
-		inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
@@ -143,8 +140,7 @@ public class DetailAdapter extends BaseAdapter implements
 	}
 
 	/**
-	 * Return the view used for the item at position indexP. Always try to reuse
-	 * an old view
+	 * Return the view used for the item at position indexP. Always try to reuse an old view
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		Detail detail = details.get(positionP);
@@ -155,17 +151,14 @@ public class DetailAdapter extends BaseAdapter implements
 		// Create a new instance according to the class of the detail
 		else {
 			if (detail instanceof Detail2Progress) {
-				view = (LinearLayout) inflater.inflate(
-						R.layout.details_2progress_template, parentP, false);
+				view = (LinearLayout) inflater.inflate(R.layout.details_2progress_template, parentP, false);
 			} else if (detail instanceof DetailProgress) {
 				int res = ((DetailProgress) detail).getRes();
 				view = (LinearLayout) inflater.inflate(res, parentP, false);
 			} else if (detail instanceof Detail2Text) {
-				view = (LinearLayout) inflater.inflate(
-						R.layout.details_2text_template, parentP, false);
+				view = (LinearLayout) inflater.inflate(R.layout.details_2text_template, parentP, false);
 			} else {
-				view = (LinearLayout) inflater.inflate(
-						R.layout.details_text_template, parentP, false);
+				view = (LinearLayout) inflater.inflate(R.layout.details_text_template, parentP, false);
 			}
 		}
 		// Binds commons datas
@@ -235,14 +228,12 @@ public class DetailAdapter extends BaseAdapter implements
 	 * @param viewP
 	 * @param torrentP
 	 */
-	private void bindDetail2Progress(LinearLayout viewP,
-			final Detail2Progress detailP) {
+	private void bindDetail2Progress(LinearLayout viewP, final Detail2Progress detailP) {
 		// The label for the first progress
 		TextView label = (TextView) viewP.findViewById(R.id.id_detail_value1);
 		label.setText(detailP.getLabel1());
 		// The value for the first progress
-		ProgressBar value = (ProgressBar) viewP
-				.findViewById(R.id.id_detail_progress1);
+		ProgressBar value = (ProgressBar) viewP.findViewById(R.id.id_detail_progress1);
 		value.setProgress(detailP.getValue1());
 
 		// The label for the second progress
@@ -259,22 +250,19 @@ public class DetailAdapter extends BaseAdapter implements
 	 * @param viewP
 	 * @param torrentP
 	 */
-	private void bindDetailProgress(LinearLayout viewP,
-			final DetailProgress detailP) {
+	private void bindDetailProgress(LinearLayout viewP, final DetailProgress detailP) {
 		// The label for the first progress
 		TextView label = (TextView) viewP.findViewById(R.id.id_detail_value);
 		label.setText(detailP.getLabel());
 		// The value for the first progress
-		ProgressBar value = (ProgressBar) viewP
-				.findViewById(R.id.id_detail_progress);
+		ProgressBar value = (ProgressBar) viewP.findViewById(R.id.id_detail_progress);
 		value.setProgress(detailP.getValue());
 	}
 
 	/**
 	 * Click on a item
 	 */
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Detail detail = details.get(position);
 		if (detail != null) {
 			if (detail.getAction() != null) {

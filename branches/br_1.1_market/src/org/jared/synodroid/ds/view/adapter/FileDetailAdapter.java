@@ -37,8 +37,7 @@ import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
- * An adaptor for task's files. This adaptor aims to create a view for each
- * detail in the listView
+ * An adaptor for task's files. This adaptor aims to create a view for each detail in the listView
  * 
  * @author eric.taix at gmail.com
  */
@@ -66,8 +65,7 @@ public class FileDetailAdapter extends BaseAdapter {
 	public FileDetailAdapter(DetailActivity activityP, Task taskP) {
 		task = taskP;
 		activity = activityP;
-		inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
@@ -119,8 +117,7 @@ public class FileDetailAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * Return the view used for the item at position indexP. Always try to reuse
-	 * an old view
+	 * Return the view used for the item at position indexP. Always try to reuse an old view
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		TaskFile file = files.get(positionP);
@@ -130,8 +127,7 @@ public class FileDetailAdapter extends BaseAdapter {
 		}
 		// Create a new instance according to the class of the detail
 		else {
-			view = (RelativeLayout) inflater.inflate(R.layout.file_template,
-					parentP, false);
+			view = (RelativeLayout) inflater.inflate(R.layout.file_template, parentP, false);
 		}
 		// Binds datas
 		bindData(view, file);
@@ -154,14 +150,12 @@ public class FileDetailAdapter extends BaseAdapter {
 		fileSize.setText(fileP.filesize);
 
 		// Is the file has to be download
-		CheckBox downloadFile = (CheckBox) viewP
-				.findViewById(R.id.id_file_to_download);
+		CheckBox downloadFile = (CheckBox) viewP.findViewById(R.id.id_file_to_download);
 		downloadFile.setTag(fileP.name);
 		downloadFile.setVisibility((task.isTorrent ? View.VISIBLE : View.GONE));
 		downloadFile.setChecked(fileP.download);
 		downloadFile.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				String tag = (String) buttonView.getTag();
 				TaskFile file = new TaskFile();
 				file.name = tag;
@@ -175,10 +169,8 @@ public class FileDetailAdapter extends BaseAdapter {
 				}
 			}
 		});
-		// Changing the checkbox state is only able if the download is not
-		// finished
-		downloadFile.setEnabled((task.status.equals(TaskStatus.TASK_DOWNLOADING
-				.name()) ? true : false));
+		// Changing the checkbox state is only able if the download is not finished
+		downloadFile.setEnabled((task.status.equals(TaskStatus.TASK_DOWNLOADING.name()) ? true : false));
 	}
 
 	/**

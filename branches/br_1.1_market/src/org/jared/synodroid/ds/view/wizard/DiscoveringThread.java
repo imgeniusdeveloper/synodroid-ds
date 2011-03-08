@@ -34,8 +34,7 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * A thread which try to discover NAS on the local network (use the ZeroConf
- * protocol).
+ * A thread which try to discover NAS on the local network (use the ZeroConf protocol).
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -65,8 +64,7 @@ public class DiscoveringThread extends Thread {
 	@Override
 	public void run() {
 		JmDNS jmdns = null;
-		WifiManager wifi = (WifiManager) context
-				.getSystemService(Context.WIFI_SERVICE);
+		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		MulticastLock lock = wifi.createMulticastLock("fliing_lock");
 		lock.setReferenceCounted(true);
 		try {
@@ -98,18 +96,15 @@ public class DiscoveringThread extends Thread {
 	}
 
 	/**
-	 * Return local IP adress. This method iterates to each network interface
-	 * and try to find something different that loopback address
+	 * Return local IP adress. This method iterates to each network interface and try to find something different that loopback address
 	 * 
 	 * @return
 	 */
 	private static InetAddress getLocalIpAddress() {
 		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface
-					.getNetworkInterfaces(); en.hasMoreElements();) {
+			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf
-						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
 					if (!inetAddress.isLoopbackAddress()) {
 						return inetAddress;

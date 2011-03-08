@@ -22,8 +22,7 @@ import android.widget.TextView;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class ListPreferenceWithValue extends ListPreference implements
-		PreferenceWithValue {
+public class ListPreferenceWithValue extends ListPreference implements PreferenceWithValue {
 
 	private TextView value;
 	// The current value
@@ -77,8 +76,7 @@ public class ListPreferenceWithValue extends ListPreference implements
 	private void initInternalChangeListener() {
 		// Call the super method as we overrided it
 		super.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference,
-					Object newValue) {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				int index = findIndexOfValue(newValue.toString());
 				if (index != -1) {
 					value.setText(getEntries()[index]);
@@ -98,9 +96,7 @@ public class ListPreferenceWithValue extends ListPreference implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue
-	 * ()
+	 * @see org.jared.synodroid.common.preference.PreferenceWithValue#getPrintableValue()
 	 */
 	public String getPrintableValue() {
 		String v = getValue();
@@ -114,20 +110,15 @@ public class ListPreferenceWithValue extends ListPreference implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeandroid.preference.Preference#setOnPreferenceChangeListener(android.
-	 * preference .Preference.OnPreferenceChangeListener)
+	 * @see android.preference.Preference#setOnPreferenceChangeListener(android.preference .Preference.OnPreferenceChangeListener)
 	 */
 	@Override
-	public void setOnPreferenceChangeListener(
-			OnPreferenceChangeListener onPreferenceChangeListener) {
+	public void setOnPreferenceChangeListener(OnPreferenceChangeListener onPreferenceChangeListener) {
 		listener = onPreferenceChangeListener;
 	}
 
 	/**
-	 * Return the current value. This value is NOT the value stored in the
-	 * SharedPreference but the current value in the view editor of this
-	 * preference. Useful when you want to retrieve the new value before the
-	 * preference is updated
+	 * Return the current value. This value is NOT the value stored in the SharedPreference but the current value in the view editor of this preference. Useful when you want to retrieve the new value before the preference is updated
 	 * 
 	 * @return
 	 */
@@ -153,9 +144,7 @@ public class ListPreferenceWithValue extends ListPreference implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * android.preference.ListPreference#setEntryValues(java.lang.CharSequence
-	 * [])
+	 * @see android.preference.ListPreference#setEntryValues(java.lang.CharSequence[])
 	 */
 	@Override
 	public void setEntryValues(CharSequence[] entryValuesP) {
@@ -174,8 +163,7 @@ public class ListPreferenceWithValue extends ListPreference implements
 	 * @param summaryP
 	 * @return
 	 */
-	public static ListPreferenceWithValue create(Context contextP, String keyP,
-			int titleP, int summaryP, String[] versions) {
+	public static ListPreferenceWithValue create(Context contextP, String keyP, int titleP, int summaryP, String[] versions) {
 		ListPreferenceWithValue pref = new ListPreferenceWithValue(contextP);
 		pref.setKey(keyP);
 		pref.setTitle(titleP);

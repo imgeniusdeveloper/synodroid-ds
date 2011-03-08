@@ -60,19 +60,15 @@ public class DSHandlerDSM31Factory extends DSMHandlerFactory {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSMHandlerFactory#connect(org.jared
-	 * .synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.protocol.DSMHandlerFactory#connect(org.jared .synodroid.common.SynoServer)
 	 */
 	@Override
 	public void connect() throws Exception {
 		String result = null;
 		String reason = null;
 		String pass = server.getPassword();
-		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY,
-				server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
-		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder
-				.toString(), "POST");
+		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
+		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
 		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);
 		// If no success or not login success

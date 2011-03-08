@@ -53,10 +53,7 @@ public interface ResponseHandler {
 	public static final int MSG_PROPERTIES_RECEIVED = 100012;
 
 	/**
-	 * Handle the response. BE CAREFUL this method will NOT be called from the
-	 * main thread. So don't try to interact with the UI. Prefer to use
-	 * SynodroidActivity subclass and then implements your code in handleMessage
-	 * method.
+	 * Handle the response. BE CAREFUL this method will NOT be called from the main thread. So don't try to interact with the UI. Prefer to use SynodroidActivity subclass and then implements your code in handleMessage method.
 	 * 
 	 * @param msgP
 	 */
@@ -71,8 +68,7 @@ public interface ResponseHandler {
 	public String getString(int idP);
 
 	/**
-	 * Return a String according to a ressource id and the current locale and
-	 * also replace parameters
+	 * Return a String according to a ressource id and the current locale and also replace parameters
 	 * 
 	 * @param idP
 	 * @param paramsP

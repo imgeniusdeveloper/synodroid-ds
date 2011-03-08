@@ -51,8 +51,7 @@ public class PreferenceFacade {
 	/**
 	 * Load servers from the SharedPreference
 	 */
-	public static void processLoadingServers(
-			SharedPreferences sharedPreferencesP, PreferenceProcessor processorP) {
+	public static void processLoadingServers(SharedPreferences sharedPreferencesP, PreferenceProcessor processorP) {
 		// Read all preferences
 		Map<String, ?> prefs = sharedPreferencesP.getAll();
 		for (String key : prefs.keySet()) {
@@ -70,16 +69,10 @@ public class PreferenceFacade {
 							int id = Integer.parseInt(idStr);
 							// Retreive server's informations
 							Properties props = new Properties();
-							props.setProperty(NICKNAME_SUFFIX,
-									convert2String(prefs.get(SERVER_PREFIX + id
-											+ NICKNAME_SUFFIX)));
-							props.setProperty(DSM_SUFFIX, convert2String(prefs
-									.get(SERVER_PREFIX + id + DSM_SUFFIX)));
-							props.setProperty(USER_SUFFIX, convert2String(prefs
-									.get(SERVER_PREFIX + id + USER_SUFFIX)));
-							props.setProperty(PASSWORD_SUFFIX,
-									convert2String(prefs.get(SERVER_PREFIX + id
-											+ PASSWORD_SUFFIX)));
+							props.setProperty(NICKNAME_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + NICKNAME_SUFFIX)));
+							props.setProperty(DSM_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + DSM_SUFFIX)));
+							props.setProperty(USER_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + USER_SUFFIX)));
+							props.setProperty(PASSWORD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + PASSWORD_SUFFIX)));
 							loadConnectionProperties(false, props, prefs, id);
 							loadConnectionProperties(true, props, prefs, id);
 							// Process the current server's item
@@ -102,38 +95,23 @@ public class PreferenceFacade {
 	 * @param prefs
 	 * @param id
 	 */
-	private static void loadConnectionProperties(boolean localP,
-			Properties props, Map<String, ?> prefs, int id) {
+	private static void loadConnectionProperties(boolean localP, Properties props, Map<String, ?> prefs, int id) {
 		String localRadical = "";
 		if (localP) {
 			localRadical += PreferenceFacade.WLAN_RADICAL;
 		}
-		props.setProperty(localRadical + PROTOCOL_SUFFIX, convert2String(prefs
-				.get(SERVER_PREFIX + id + localRadical + PROTOCOL_SUFFIX)));
-		props.setProperty(localRadical + HOST_SUFFIX, convert2String(prefs
-				.get(SERVER_PREFIX + id + localRadical + HOST_SUFFIX)));
-		props.setProperty(localRadical + PORT_SUFFIX, convert2String(prefs
-				.get(SERVER_PREFIX + id + localRadical + PORT_SUFFIX)));
-		props.setProperty(localRadical + REFRESHSTATE_SUFFIX,
-				convert2String(prefs.get(SERVER_PREFIX + id + localRadical
-						+ REFRESHSTATE_SUFFIX)));
-		props.setProperty(localRadical + REFRESHVALUE_SUFFIX,
-				convert2String(prefs.get(SERVER_PREFIX + id + localRadical
-						+ REFRESHVALUE_SUFFIX)));
-		props.setProperty(localRadical + SHOWUPLOAD_SUFFIX,
-				convert2String(prefs.get(SERVER_PREFIX + id + localRadical
-						+ SHOWUPLOAD_SUFFIX)));
+		props.setProperty(localRadical + PROTOCOL_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + PROTOCOL_SUFFIX)));
+		props.setProperty(localRadical + HOST_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + HOST_SUFFIX)));
+		props.setProperty(localRadical + PORT_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + PORT_SUFFIX)));
+		props.setProperty(localRadical + REFRESHSTATE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + REFRESHSTATE_SUFFIX)));
+		props.setProperty(localRadical + REFRESHVALUE_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + REFRESHVALUE_SUFFIX)));
+		props.setProperty(localRadical + SHOWUPLOAD_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + SHOWUPLOAD_SUFFIX)));
 		// Don't try to load SSID if public mode
 		if (localP) {
-			props.setProperty(localRadical + SSID_SUFFIX, convert2String(prefs
-					.get(SERVER_PREFIX + id + localRadical + SSID_SUFFIX)));
-			props.setProperty(localRadical + USEWIFI_SUFFIX,
-					convert2String(prefs.get(SERVER_PREFIX + id + localRadical
-							+ USEWIFI_SUFFIX)));
+			props.setProperty(localRadical + SSID_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + SSID_SUFFIX)));
+			props.setProperty(localRadical + USEWIFI_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + USEWIFI_SUFFIX)));
 		} else {
-			props.setProperty(localRadical + USEEXT_SUFFIX,
-					convert2String(prefs.get(SERVER_PREFIX + id + localRadical
-							+ USEEXT_SUFFIX)));
+			props.setProperty(localRadical + USEEXT_SUFFIX, convert2String(prefs.get(SERVER_PREFIX + id + localRadical + USEEXT_SUFFIX)));
 		}
 	}
 
@@ -153,11 +131,9 @@ public class PreferenceFacade {
 	/**
 	 * Load all servers from the shared preference
 	 */
-	public static ArrayList<SynoServer> loadServers(Context contextP,
-			final SharedPreferences sharedPreferencesP) {
+	public static ArrayList<SynoServer> loadServers(Context contextP, final SharedPreferences sharedPreferencesP) {
 		// Determine the current network access
-		WifiManager wifiMgr = (WifiManager) contextP
-				.getSystemService(Context.WIFI_SERVICE);
+		WifiManager wifiMgr = (WifiManager) contextP.getSystemService(Context.WIFI_SERVICE);
 		boolean wifiOn = wifiMgr.isWifiEnabled();
 		final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
 		final boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
@@ -168,30 +144,18 @@ public class PreferenceFacade {
 			public void process(int idP, String keyP, Properties propertiesP) {
 				try {
 
-					SynoServerConnection loc = SynoServerConnection
-							.createFromProperties(true, propertiesP);
-					SynoServerConnection pub = SynoServerConnection
-							.createFromProperties(false, propertiesP);
+					SynoServerConnection loc = SynoServerConnection.createFromProperties(true, propertiesP);
+					SynoServerConnection pub = SynoServerConnection.createFromProperties(false, propertiesP);
 
-					SynoServer server = new SynoServer(
-							propertiesP
-									.getProperty(PreferenceFacade.NICKNAME_SUFFIX),
-							loc,
-							pub,
-							propertiesP
-									.getProperty(PreferenceFacade.USER_SUFFIX),
-							propertiesP
-									.getProperty(PreferenceFacade.PASSWORD_SUFFIX));
+					SynoServer server = new SynoServer(propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX), loc, pub, propertiesP.getProperty(PreferenceFacade.USER_SUFFIX), propertiesP.getProperty(PreferenceFacade.PASSWORD_SUFFIX));
 					// DSM version
-					DSMVersion vers = DSMVersion.titleOf(propertiesP
-							.getProperty(PreferenceFacade.DSM_SUFFIX));
+					DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
 					if (vers == null) {
 						vers = DSMVersion.VERSION2_1;
 					}
 					server.setDsmVersion(vers);
 					// Sort informations
-					String sortAttr = sharedPreferencesP.getString("sort",
-							"task_id");
+					String sortAttr = sharedPreferencesP.getString("sort", "task_id");
 					boolean asc = sharedPreferencesP.getBoolean("asc", true);
 					server.setSortAttribute(sortAttr);
 					server.setAscending(asc);
@@ -199,12 +163,9 @@ public class PreferenceFacade {
 					if (pub != null) {
 						result.add(server);
 					}
-					// Or if this server has a local connection AND the wifi is
-					// connected AND one SSID matchs
+					// Or if this server has a local connection AND the wifi is connected AND one SSID matchs
 					else {
-						if (loc != null && wifiConnected && loc != null
-								&& loc.wifiSSID != null
-								&& loc.wifiSSID.size() > 0) {
+						if (loc != null && wifiConnected && loc != null && loc.wifiSSID != null && loc.wifiSSID.size() > 0) {
 							for (String ssid : loc.wifiSSID) {
 								if (ssid.equals(currentWifi.getSSID())) {
 									result.add(server);
@@ -213,11 +174,7 @@ public class PreferenceFacade {
 						}
 					}
 				} catch (Exception ex) {
-					Log
-							.d(
-									Synodroid.DS_TAG,
-									"An exception occured while loading servers from preference",
-									ex);
+					Log.d(Synodroid.DS_TAG, "An exception occured while loading servers from preference", ex);
 				}
 			}
 		});

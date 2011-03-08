@@ -43,14 +43,10 @@ public class UpdateFilesAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
-	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP)
-			throws Exception {
-		serverP.getDSMHandlerFactory().getDSHandler().setFilePriority(task,
-				files);
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().setFilePriority(task, files);
 	}
 
 	/*

@@ -23,17 +23,13 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 /**
- * A Preference that displays a list of entries as a dialog and allows multiple
- * selections
+ * A Preference that displays a list of entries as a dialog and allows multiple selections
  * <p>
- * This preference will store a string into the SharedPreferences. This string
- * will be the values selected from the {@link #setEntryValues(CharSequence[])}
- * array.
+ * This preference will store a string into the SharedPreferences. This string will be the values selected from the {@link #setEntryValues(CharSequence[])} array.
  * </p>
  */
 public class ListPreferenceMultiSelect extends ListPreference {
-	// Need to make sure the SEPARATOR is unique and weird enough that it
-	// doesn't
+	// Need to make sure the SEPARATOR is unique and weird enough that it doesn't
 	// match one of the entries.
 	// Not using any fancy symbols because this is interpreted as a regex for
 	// splitting strings.
@@ -60,25 +56,20 @@ public class ListPreferenceMultiSelect extends ListPreference {
 		CharSequence[] entries = getEntries();
 		CharSequence[] entryValues = getEntryValues();
 
-		if (entries == null || entryValues == null
-				|| entries.length != entryValues.length) {
-			throw new IllegalStateException(
-					"ListPreference requires an entries array and an entryValues array which are both the same length");
+		if (entries == null || entryValues == null || entries.length != entryValues.length) {
+			throw new IllegalStateException("ListPreference requires an entries array and an entryValues array which are both the same length");
 		}
 
 		restoreCheckedEntries();
-		builder.setMultiChoiceItems(entries, mClickedDialogEntryIndices,
-				new DialogInterface.OnMultiChoiceClickListener() {
-					public void onClick(DialogInterface dialog, int which,
-							boolean val) {
-						mClickedDialogEntryIndices[which] = val;
-					}
-				});
+		builder.setMultiChoiceItems(entries, mClickedDialogEntryIndices, new DialogInterface.OnMultiChoiceClickListener() {
+			public void onClick(DialogInterface dialog, int which, boolean val) {
+				mClickedDialogEntryIndices[which] = val;
+			}
+		});
 	}
 
 	/**
-	 * Parse a string which contains values separate by separator and returns a
-	 * string array
+	 * Parse a string which contains values separate by separator and returns a string array
 	 * 
 	 * @param val
 	 * @return

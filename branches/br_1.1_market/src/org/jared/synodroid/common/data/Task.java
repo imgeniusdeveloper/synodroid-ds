@@ -21,8 +21,7 @@ import java.io.Serializable;
 import org.jared.synodroid.common.SynoServer;
 
 /**
- * A simple data container for a torrent. This class is used to display
- * 'general' information about a torrent file.<br/>
+ * A simple data container for a torrent. This class is used to display 'general' information about a torrent file.<br/>
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
