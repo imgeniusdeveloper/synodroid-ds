@@ -18,15 +18,19 @@ package org.jared.synodroid.common.ui;
 
 /**
  * Listener of Tab event
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public interface TabListener {
 
 	/**
 	 * The selected tab has been changed
-	 * @param oldTabId The previous selected tab or null
-	 * @param newTabIdP The new selected tab
+	 * 
+	 * @param oldTabId
+	 *            The previous selected tab or null
+	 * @param newTabIdP
+	 *            The new selected tab
 	 */
 	public void selectedTabChanged(String oldTabId, String newTabIdP);
-	
+
 }

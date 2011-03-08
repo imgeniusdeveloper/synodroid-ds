@@ -39,7 +39,8 @@ import android.widget.TextView;
  * 
  * @author eric.taix at gmail.com
  */
-public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class DetailAdapter extends BaseAdapter implements
+		AdapterView.OnItemClickListener {
 
 	// List of detail
 	private List<Detail> details = new ArrayList<Detail>();
@@ -52,13 +53,14 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 	 * Constructor
 	 * 
 	 * @param activityP
-	 *          The current activity
+	 *            The current activity
 	 * @param torrentsP
-	 *          List of torrent
+	 *            List of torrent
 	 */
 	public DetailAdapter(DetailActivity activityP) {
 		activity = activityP;
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
@@ -79,8 +81,7 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 	public int getCount() {
 		if (details != null) {
 			return details.size();
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
@@ -89,7 +90,7 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 	 * Return the torrent at the defined index
 	 * 
 	 * @param indexP
-	 *          The index to use starting from 0
+	 *            The index to use starting from 0
 	 * @return Instance of Torrent
 	 */
 	public Object getItem(int indexP) {
@@ -120,14 +121,11 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 		Detail detail = details.get(position);
 		if (detail instanceof DetailText) {
 			return 0;
-		}
-		else if (detail instanceof Detail2Progress) {
+		} else if (detail instanceof Detail2Progress) {
 			return 1;
-		}
-		else if (detail instanceof DetailProgress) {
+		} else if (detail instanceof DetailProgress) {
 			return 2;
-		}
-		else if (detail instanceof Detail2Text) {
+		} else if (detail instanceof Detail2Text) {
 			return 3;
 		}
 		// By default this is a DetailText
@@ -157,17 +155,17 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 		// Create a new instance according to the class of the detail
 		else {
 			if (detail instanceof Detail2Progress) {
-				view = (LinearLayout) inflater.inflate(R.layout.details_2progress_template, parentP, false);
-			}
-			else if (detail instanceof DetailProgress) {
-				int res = ((DetailProgress)detail).getRes();				
+				view = (LinearLayout) inflater.inflate(
+						R.layout.details_2progress_template, parentP, false);
+			} else if (detail instanceof DetailProgress) {
+				int res = ((DetailProgress) detail).getRes();
 				view = (LinearLayout) inflater.inflate(res, parentP, false);
-			}
-			else if (detail instanceof Detail2Text) {
-				view = (LinearLayout) inflater.inflate(R.layout.details_2text_template, parentP, false);
-			}
-			else {
-				view = (LinearLayout) inflater.inflate(R.layout.details_text_template, parentP, false);
+			} else if (detail instanceof Detail2Text) {
+				view = (LinearLayout) inflater.inflate(
+						R.layout.details_2text_template, parentP, false);
+			} else {
+				view = (LinearLayout) inflater.inflate(
+						R.layout.details_text_template, parentP, false);
 			}
 		}
 		// Binds commons datas
@@ -175,14 +173,11 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 		// If this is a text detail
 		if (detail instanceof DetailText) {
 			bindDetailText(view, (DetailText) detail);
-		}
-		else if (detail instanceof Detail2Progress) {
+		} else if (detail instanceof Detail2Progress) {
 			bindDetail2Progress(view, (Detail2Progress) detail);
-		}
-		else if (detail instanceof DetailProgress) {
+		} else if (detail instanceof DetailProgress) {
 			bindDetailProgress(view, (DetailProgress) detail);
-		}
-		else if (detail instanceof Detail2Text) {
+		} else if (detail instanceof Detail2Text) {
 			bindDetail2Text(view, (Detail2Text) detail);
 		}
 		return view;
@@ -202,8 +197,7 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 		ImageView img = (ImageView) viewP.findViewById(R.id.id_detail_action);
 		if (detailP.getAction() != null) {
 			img.setVisibility(View.VISIBLE);
-		}
-		else {
+		} else {
 			img.setVisibility(View.INVISIBLE);
 		}
 	}
@@ -234,19 +228,21 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 		value = (TextView) viewP.findViewById(R.id.id_detail_value2);
 		value.setText(detailP.getValue2());
 	}
-	
+
 	/**
 	 * Bind torrent's data with widget for a Detail2Progress instance
 	 * 
 	 * @param viewP
 	 * @param torrentP
 	 */
-	private void bindDetail2Progress(LinearLayout viewP, final Detail2Progress detailP) {
+	private void bindDetail2Progress(LinearLayout viewP,
+			final Detail2Progress detailP) {
 		// The label for the first progress
 		TextView label = (TextView) viewP.findViewById(R.id.id_detail_value1);
 		label.setText(detailP.getLabel1());
 		// The value for the first progress
-		ProgressBar value = (ProgressBar) viewP.findViewById(R.id.id_detail_progress1);
+		ProgressBar value = (ProgressBar) viewP
+				.findViewById(R.id.id_detail_progress1);
 		value.setProgress(detailP.getValue1());
 
 		// The label for the second progress
@@ -263,24 +259,27 @@ public class DetailAdapter extends BaseAdapter implements AdapterView.OnItemClic
 	 * @param viewP
 	 * @param torrentP
 	 */
-	private void bindDetailProgress(LinearLayout viewP, final DetailProgress detailP) {
+	private void bindDetailProgress(LinearLayout viewP,
+			final DetailProgress detailP) {
 		// The label for the first progress
 		TextView label = (TextView) viewP.findViewById(R.id.id_detail_value);
 		label.setText(detailP.getLabel());
 		// The value for the first progress
-		ProgressBar value = (ProgressBar) viewP.findViewById(R.id.id_detail_progress);
+		ProgressBar value = (ProgressBar) viewP
+				.findViewById(R.id.id_detail_progress);
 		value.setProgress(detailP.getValue());
 	}
-	
-    /**
-     * Click on a item
-     */
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Detail detail = details.get(position);
-        if (detail != null) {
-          if (detail.getAction() != null) {
-            detail.executeAction();
-          }
-        }
-    }	
+
+	/**
+	 * Click on a item
+	 */
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		Detail detail = details.get(position);
+		if (detail != null) {
+			if (detail.getAction() != null) {
+				detail.executeAction();
+			}
+		}
+	}
 }

@@ -68,12 +68,14 @@ class DSHandlerDSM22 implements DSHandler {
 	 * 
 	 * @see org.jared.synodroid.common.Protocol#getAllTask()
 	 */
-	public TaskContainer getAllTask(int startP, int limitP, String sortAttrP, boolean ascendingP) throws Exception {
+	public TaskContainer getAllTask(int startP, int limitP, String sortAttrP,
+			boolean ascendingP) throws Exception {
 		ArrayList<Task> result = new ArrayList<Task>();
 		TaskContainer container = new TaskContainer(result);
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getall");
+			QueryBuilder getAllRequest = new QueryBuilder().add("action",
+					"getall");
 			getAllRequest.add("start", "" + startP);
 			getAllRequest.add("limit", "" + limitP);
 			getAllRequest.add("sort", sortAttrP.toLowerCase());
@@ -82,7 +84,8 @@ class DSHandlerDSM22 implements DSHandler {
 			// Execute
 			JSONObject jso = null;
 			synchronized (server) {
-				jso = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				jso = server.sendJSONRequest(DM_URI, getAllRequest.toString(),
+						"GET");
 			}
 			boolean success = jso.getBoolean("success");
 			// If request succeded
@@ -109,9 +112,9 @@ class DSHandlerDSM22 implements DSHandler {
 					if (index != -1) {
 						prog = prog.substring(0, index);
 						try {
-							task.downloadProgress = (int) Float.parseFloat(prog);
-						}
-						catch (NumberFormatException ex) {
+							task.downloadProgress = (int) Float
+									.parseFloat(prog);
+						} catch (NumberFormatException ex) {
 							// Set to unknown
 							task.downloadProgress = -1;
 						}
@@ -152,14 +155,17 @@ class DSHandlerDSM22 implements DSHandler {
 		// If we are logged on
 		if (server.isConnected()) {
 			try {
-				QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + taskP.taskId);
+				QueryBuilder getAllRequest = new QueryBuilder().add("action",
+						"delete").add("idList", "" + taskP.taskId);
 				// Execute
 				synchronized (server) {
-					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+					server.sendJSONRequest(DM_URI, getAllRequest.toString(),
+							"GET");
 				}
-			}
-			catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while deleting id:" + taskP.taskId, e);
+			} catch (Exception e) {
+				Log.e("SynoDroid DS",
+						"Not expected exception occured while deleting id:"
+								+ taskP.taskId, e);
 				throw e;
 			}
 		}
@@ -174,14 +180,17 @@ class DSHandlerDSM22 implements DSHandler {
 		// If we are logged on
 		if (server.isConnected()) {
 			try {
-				QueryBuilder getAllRequest = new QueryBuilder().add("action", "clear").add("idList", "");
+				QueryBuilder getAllRequest = new QueryBuilder().add("action",
+						"clear").add("idList", "");
 				// Execute
 				synchronized (server) {
-					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+					server.sendJSONRequest(DM_URI, getAllRequest.toString(),
+							"GET");
 				}
-			}
-			catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while clearing tasks", e);
+			} catch (Exception e) {
+				Log.e("SynoDroid DS",
+						"Not expected exception occured while clearing tasks",
+						e);
 				throw e;
 			}
 		}
@@ -197,7 +206,8 @@ class DSHandlerDSM22 implements DSHandler {
 	public void resume(Task taskP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "resume").add("idList", "" + taskP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action",
+					"resume").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
 				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
@@ -230,7 +240,8 @@ class DSHandlerDSM22 implements DSHandler {
 	public void stop(Task taskP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "stop").add("idList", "" + taskP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action",
+					"stop").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
 				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
@@ -242,13 +253,18 @@ class DSHandlerDSM22 implements DSHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#stopAll(List<org.jared.synodroid
-	 * . common.data.Task>)
+	 * org.jared.synodroid.common.protocol.DSHandler#stopAll(List<org.jared.
+	 * synodroid . common.data.Task>)
 	 */
 	public void stopAll(List<Task> taskP) throws Exception {
 		for (Task task : taskP) {
-			if (task.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || task.status.equals(TaskStatus.TASK_PRE_SEEDING.toString()) || task.status.equals(TaskStatus.TASK_SEEDING.toString())
-			    || task.status.equals(TaskStatus.TASK_HASH_CHECKING.toString()) || task.status.equals(TaskStatus.TASK_WAITING.toString())) {
+			if (task.status.equals(TaskStatus.TASK_DOWNLOADING.toString())
+					|| task.status.equals(TaskStatus.TASK_PRE_SEEDING
+							.toString())
+					|| task.status.equals(TaskStatus.TASK_SEEDING.toString())
+					|| task.status.equals(TaskStatus.TASK_HASH_CHECKING
+							.toString())
+					|| task.status.equals(TaskStatus.TASK_WAITING.toString())) {
 				stop(task);
 			}
 		}
@@ -265,11 +281,13 @@ class DSHandlerDSM22 implements DSHandler {
 		ArrayList<TaskFile> result = new ArrayList<TaskFile>();
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getfilelist").add("taskid", "" + taskP.taskId);
+			QueryBuilder getAllRequest = new QueryBuilder().add("action",
+					"getfilelist").add("taskid", "" + taskP.taskId);
 			// Execute
 			JSONObject json = null;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(),
+						"GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If request succeded
@@ -301,11 +319,14 @@ class DSHandlerDSM22 implements DSHandler {
 		TaskDetail result = new TaskDetail();
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getAllRequest = new QueryBuilder().add("action", "getone").add("taskid", "" + taskP.taskId).add("update", "1");
+			QueryBuilder getAllRequest = new QueryBuilder().add("action",
+					"getone").add("taskid", "" + taskP.taskId).add("update",
+					"1");
 			// Execute
 			JSONObject json = null;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(),
+						"GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If successful then build details list
@@ -314,9 +335,11 @@ class DSHandlerDSM22 implements DSHandler {
 				if (data.has("stime"))
 					result.seedingDate = data.getString("stime");
 				if (data.has("totalpeer"))
-					result.peersTotal = Utils.toLong(data.getString("totalpeer"));
+					result.peersTotal = Utils.toLong(data
+							.getString("totalpeer"));
 				if (data.has("currpeer"))
-					result.peersCurrent = Utils.toLong(data.getString("currpeer"));
+					result.peersCurrent = Utils.toLong(data
+							.getString("currpeer"));
 				if (data.has("istorrent"))
 					result.isTorrent = data.getBoolean("istorrent");
 				if (data.has("speed")) {
@@ -327,8 +350,7 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					if (m.find() && m.groupCount() >= 2) {
 						result.speedDownload = Utils.toDouble(m.group(2));
-					}
-					else {
+					} else {
 						result.speedDownload = result.speedUpload;
 					}
 				}
@@ -337,19 +359,24 @@ class DSHandlerDSM22 implements DSHandler {
 				if (data.has("username"))
 					result.userName = data.getString("username");
 				if (data.has("totalpieces"))
-					result.piecesTotal = Utils.toLong(data.getString("totalpieces"));
+					result.piecesTotal = Utils.toLong(data
+							.getString("totalpieces"));
 				if (data.has("transfered")) {
 					Pattern p = Pattern.compile("((\\d*\\.\\d*)\\s[KMGT]B)");
 					Matcher m = p.matcher(data.getString("transfered"));
 					if (m.find() && m.groupCount() >= 1) {
-						result.bytesUploaded = Utils.fileSizeToBytes(m.group(1));
+						result.bytesUploaded = Utils
+								.fileSizeToBytes(m.group(1));
 					}
-					// If you could find another matching group, it means downmload
+					// If you could find another matching group, it means
+					// downmload
 					// informations are present
 					if (m.find() && m.groupCount() >= 1) {
-						result.bytesDownloaded = Utils.fileSizeToBytes(m.group(1));
+						result.bytesDownloaded = Utils.fileSizeToBytes(m
+								.group(1));
 					}
-					// Otherwise download informations were the first matching (no upload
+					// Otherwise download informations were the first matching
+					// (no upload
 					// information)
 					else {
 						result.bytesDownloaded = result.bytesUploaded;
@@ -357,7 +384,7 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					result.bytesRatio = 0;
 					if (result.bytesDownloaded != 0) {
-						result.bytesRatio = (int)(((float)result.bytesUploaded / (float)result.bytesDownloaded) * 100);
+						result.bytesRatio = (int) (((float) result.bytesUploaded / (float) result.bytesDownloaded) * 100);
 					}
 				}
 				if (data.has("seedelapsed"))
@@ -375,13 +402,15 @@ class DSHandlerDSM22 implements DSHandler {
 				if (data.has("seeding_interval"))
 					result.seedingInterval = data.getInt("seeding_interval");
 				if (data.has("currpieces"))
-					result.piecesCurrent = Utils.toLong(data.getString("currpieces"));
+					result.piecesCurrent = Utils.toLong(data
+							.getString("currpieces"));
 				if (data.has("id"))
 					result.taskId = data.getInt("id");
 				if (data.has("seeding_ratio"))
 					result.seedingRatio = data.getInt("seeding_ratio");
 				if (data.has("filesize"))
-					result.fileSize = Utils.fileSizeToBytes(data.getString("filesize"));
+					result.fileSize = Utils.fileSizeToBytes(data
+							.getString("filesize"));
 				if (data.has("seeders_leechers")) {
 					Pattern p = Pattern.compile("(\\d+)(/)(\\d+)");
 					String v = data.getString("seeders_leechers");
@@ -399,8 +428,7 @@ class DSHandlerDSM22 implements DSHandler {
 				String reason = "";
 				if (json.has("reason")) {
 					reason = json.getString("reason");
-				}
-				else if (json.has("errno")) {
+				} else if (json.has("errno")) {
 					JSONObject err = json.getJSONObject("errno");
 					reason = err.getString("key");
 				}
@@ -413,30 +441,38 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jared.synodroid.common.protocol.DSHandler#upload(android.net.Uri)
+	 * @see
+	 * org.jared.synodroid.common.protocol.DSHandler#upload(android.net.Uri)
 	 */
 	public void upload(Uri uriP) throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
 			if (uriP.getPath() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder(
+						"-----------7dabb2d41348");
 
 				// The field's part
-				builder.addPart(new Part("field").setContent("task_id".getBytes()));
+				builder.addPart(new Part("field").setContent("task_id"
+						.getBytes()));
 				// The direction's part
-				builder.addPart(new Part("direction").setContent("ASC".getBytes()));
+				builder.addPart(new Part("direction").setContent("ASC"
+						.getBytes()));
 				// The url_http's part
 				builder.addPart(new Part("url_http").setContent("".getBytes()));
 				// The url_https's part
-				builder.addPart(new Part("url_https").setContent("".getBytes()));
+				builder
+						.addPart(new Part("url_https")
+								.setContent("".getBytes()));
 				// The url_ftp's part
 				builder.addPart(new Part("url_ftp").setContent("".getBytes()));
 
 				// The upload_type's part
-				builder.addPart(new Part("upload_type").setContent("torrent".getBytes()));
+				builder.addPart(new Part("upload_type").setContent("torrent"
+						.getBytes()));
 				// The torrent's part
-				Part filePart = new Part("torrent").addExtra("filename", uriP.getPath());
+				Part filePart = new Part("torrent").addExtra("filename", uriP
+						.getPath());
 				filePart.setContentType("application/octet-stream");
 
 				// Get the stream according to the Uri
@@ -458,44 +494,55 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			if (uriP.toString() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder(
+						"-----------7dabb2d41348");
 
 				// The field's part
-				builder.addPart(new Part("field").setContent("task_id".getBytes()));
+				builder.addPart(new Part("field").setContent("task_id"
+						.getBytes()));
 				// The direction's part
-				builder.addPart(new Part("direction").setContent("ASC".getBytes()));
+				builder.addPart(new Part("direction").setContent("ASC"
+						.getBytes()));
 
 				if (uriP.toString().toLowerCase().startsWith("https:")) {
 					// The url_http's part
-					builder.addPart(new Part("url_http").setContent("".getBytes()));
+					builder.addPart(new Part("url_http").setContent(""
+							.getBytes()));
 					// The url_https's part
-					builder.addPart(new Part("url_https").setContent(uriP.toString().getBytes()));
+					builder.addPart(new Part("url_https").setContent(uriP
+							.toString().getBytes()));
 					// The url_ftp's part
-					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
-				}
-				else if (uriP.toString().toLowerCase().startsWith("http:")) {
+					builder.addPart(new Part("url_ftp").setContent(""
+							.getBytes()));
+				} else if (uriP.toString().toLowerCase().startsWith("http:")) {
 					// The url_http's part
-					builder.addPart(new Part("url_http").setContent(uriP.toString().getBytes()));
+					builder.addPart(new Part("url_http").setContent(uriP
+							.toString().getBytes()));
 					// The url_https's part
-					builder.addPart(new Part("url_https").setContent("".getBytes()));
+					builder.addPart(new Part("url_https").setContent(""
+							.getBytes()));
 					// The url_ftp's part
-					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
-				}
-				else if (uriP.toString().toLowerCase().startsWith("ftp:")) {
+					builder.addPart(new Part("url_ftp").setContent(""
+							.getBytes()));
+				} else if (uriP.toString().toLowerCase().startsWith("ftp:")) {
 					// The url_http's part
-					builder.addPart(new Part("url_http").setContent("".getBytes()));
+					builder.addPart(new Part("url_http").setContent(""
+							.getBytes()));
 					// The url_https's part
-					builder.addPart(new Part("url_https").setContent("".getBytes()));
+					builder.addPart(new Part("url_https").setContent(""
+							.getBytes()));
 					// The url_ftp's part
-					builder.addPart(new Part("url_ftp").setContent(uriP.toString().getBytes()));
-				}
-				else {
+					builder.addPart(new Part("url_ftp").setContent(uriP
+							.toString().getBytes()));
+				} else {
 					return;
 				}
 				// The url_ftp's part
-				builder.addPart(new Part("url").setContent(uriP.toString().getBytes()));
+				builder.addPart(new Part("url").setContent(uriP.toString()
+						.getBytes()));
 				// The upload_type's part
-				builder.addPart(new Part("upload_type").setContent("url".getBytes()));
+				builder.addPart(new Part("upload_type").setContent("url"
+						.getBytes()));
 
 				// Execute
 				synchronized (server) {
@@ -509,19 +556,23 @@ class DSHandlerDSM22 implements DSHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#getTaskProperty(org.jared.synodroid
-	 * .common.data.Task)
+	 * org.jared.synodroid.common.protocol.DSHandler#getTaskProperty(org.jared
+	 * .synodroid .common.data.Task)
 	 */
-	public TaskProperties getTaskProperty(Task taskP) throws Exception{
+	public TaskProperties getTaskProperty(Task taskP) throws Exception {
 		TaskProperties out = null;
 		return out;
 	}
-	
-	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval ) throws Exception{}
-	
-	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception{}
-	
-	
+
+	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate,
+			int priority, int max_peers, String destination, int seeding_ratio,
+			int seeding_interval) throws Exception {
+	}
+
+	public void setFilePriority(final Task taskP, List<TaskFile> filesP)
+			throws Exception {
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -529,9 +580,12 @@ class DSHandlerDSM22 implements DSHandler {
 	 * org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid
 	 * .common.data.Task, java.util.List, int, int)
 	 */
-	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {
+	public void updateTask(Task taskP, List<TaskFile> filesP,
+			int seedingRatioP, int seedingIntervalP) throws Exception {
 		// Create the JSON request
-		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "applytask").add("taskid", "" + taskP.taskId).add("update", "1");
+		QueryBuilder updateTaskRequest = new QueryBuilder().add("action",
+				"applytask").add("taskid", "" + taskP.taskId)
+				.add("update", "1");
 		// If files update is needed
 		if (filesP != null && filesP.size() > 0) {
 			JSONObject data = new JSONObject();
@@ -550,7 +604,8 @@ class DSHandlerDSM22 implements DSHandler {
 		// Execute it to the server
 		JSONObject json = null;
 		synchronized (server) {
-			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(), "POST");
+			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(),
+					"POST");
 		}
 		boolean success = json.getBoolean("success");
 		// If not successful then throw an exception
@@ -558,8 +613,7 @@ class DSHandlerDSM22 implements DSHandler {
 			String reason = "";
 			if (json.has("reason")) {
 				reason = json.getString("reason");
-			}
-			else if (json.has("errno")) {
+			} else if (json.has("errno")) {
 				JSONObject err = json.getJSONObject("errno");
 				reason = err.getString("key");
 			}
@@ -575,11 +629,13 @@ class DSHandlerDSM22 implements DSHandler {
 	public List<SharedDirectory> enumSharedDirectory() throws Exception {
 		List<SharedDirectory> result = new ArrayList<SharedDirectory>();
 		// Create the JSON request
-		QueryBuilder updateTaskRequest = new QueryBuilder().add("action", "enumshares");
+		QueryBuilder updateTaskRequest = new QueryBuilder().add("action",
+				"enumshares");
 		// Execute it to the server
 		JSONObject json = null;
 		synchronized (server) {
-			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(), "GET");
+			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(),
+					"GET");
 		}
 		boolean success = json.getBoolean("success");
 		// If request succeded
@@ -598,8 +654,7 @@ class DSHandlerDSM22 implements DSHandler {
 			String reason = "";
 			if (json.has("reason")) {
 				reason = json.getString("reason");
-			}
-			else if (json.has("errno")) {
+			} else if (json.has("errno")) {
 				JSONObject err = json.getJSONObject("errno");
 				reason = err.getString("key");
 			}
@@ -612,13 +667,15 @@ class DSHandlerDSM22 implements DSHandler {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#setSharedDirectory(java.lang
-	 * .String)
+	 * org.jared.synodroid.common.protocol.DSHandler#setSharedDirectory(java
+	 * .lang .String)
 	 */
-	public void setSharedDirectory(Task taskP, String directoryP) throws Exception {
+	public void setSharedDirectory(Task taskP, String directoryP)
+			throws Exception {
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder setShared = new QueryBuilder().add("action", "shareset").add("share", directoryP);
+			QueryBuilder setShared = new QueryBuilder().add("action",
+					"shareset").add("share", directoryP);
 			if (taskP != null) {
 				setShared.add("taskid", "" + taskP.taskId);
 			}
@@ -638,11 +695,13 @@ class DSHandlerDSM22 implements DSHandler {
 		String result = null;
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getShared = new QueryBuilder().add("action", "shareget");
+			QueryBuilder getShared = new QueryBuilder().add("action",
+					"shareget");
 			// Execute
 			JSONObject json;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getShared.toString(), "GET");
+				json = server.sendJSONRequest(DM_URI, getShared.toString(),
+						"GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If request succeded
@@ -654,12 +713,13 @@ class DSHandlerDSM22 implements DSHandler {
 				String reason = "";
 				if (json.has("reason")) {
 					reason = json.getString("reason");
-				}
-				else if (json.has("errno")) {
+				} else if (json.has("errno")) {
 					JSONObject err = json.getJSONObject("errno");
 					reason = err.getString("key");
-					// Means that no shared directory has been set currently: don't throw an exception
-					if (reason!=null && reason.equals("download_error_user_removed")) {
+					// Means that no shared directory has been set currently:
+					// don't throw an exception
+					if (reason != null
+							&& reason.equals("download_error_user_removed")) {
 						return "";
 					}
 				}
@@ -680,7 +740,9 @@ class DSHandlerDSM22 implements DSHandler {
 		StringBuffer result = null;
 		// If we are logged on
 		if (server.isConnected()) {
-			QueryBuilder getOriginal = new QueryBuilder().add("action", "torrent").add("id", "" + taskP.taskId).add("_rn", "" + System.currentTimeMillis());
+			QueryBuilder getOriginal = new QueryBuilder().add("action",
+					"torrent").add("id", "" + taskP.taskId).add("_rn",
+					"" + System.currentTimeMillis());
 			// Execute
 			synchronized (server) {
 				String uri = DM_URI + "/" + taskP.originalLink;

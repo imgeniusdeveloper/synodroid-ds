@@ -8,7 +8,6 @@
  */
 package org.jared.synodroid.ds;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,16 +32,16 @@ import android.widget.TextView;
  * 
  * @author Steve Garon (synodroid at gmail dot com)
  */
-public class HelpActivity extends Activity{
+public class HelpActivity extends Activity {
 	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
 	private static final String PREFERENCE_GENERAL = "general_cat";
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		//ignore orientation change
+		// ignore orientation change
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -50,51 +49,59 @@ public class HelpActivity extends Activity{
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);      
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		
+
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View help = inflater.inflate(R.layout.help, null, false);
 		Button helpBtn = (Button) help.findViewById(R.id.id_email);
 		helpBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				try{
-					final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+				try {
+					final Intent emailIntent = new Intent(
+							android.content.Intent.ACTION_SEND);
 					emailIntent.setType("plain/text");
-					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"synodroid@gmail.com"});
-					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Synodroid help");
+					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+							new String[] { "synodroid@gmail.com" });
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+							"Synodroid help");
 					startActivity(emailIntent);
-				}
-				catch (Exception e){
-					AlertDialog.Builder builder = new AlertDialog.Builder(HelpActivity.this);
-				    builder.setMessage(R.string.err_noemail);
-				    builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK",
-				            new DialogInterface.OnClickListener() {
-				              public void onClick(DialogInterface dialog, int id) {
-				                dialog.cancel();
-				              }
-				            });
-				    AlertDialog errorDialog = builder.create();
-				    try{
-				    	errorDialog.show();
-				    }
-					catch (BadTokenException ex){
-						//Unable to show dialog probably because intent has been closed. Ignoring...
+				} catch (Exception e) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							HelpActivity.this);
+					builder.setMessage(R.string.err_noemail);
+					builder.setTitle(getString(R.string.connect_error_title))
+							.setCancelable(false).setPositiveButton("OK",
+									new DialogInterface.OnClickListener() {
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+					AlertDialog errorDialog = builder.create();
+					try {
+						errorDialog.show();
+					} catch (BadTokenException ex) {
+						// Unable to show dialog probably because intent has
+						// been closed. Ignoring...
 					}
 				}
 			}
 		});
 		TextView main_web = (TextView) help.findViewById(R.id.syno_main_web);
-		main_web.setText(Html.fromHtml("<a href=\"http://www.synology.com\">www.synology.com</a>"));
+		main_web
+				.setText(Html
+						.fromHtml("<a href=\"http://www.synology.com\">www.synology.com</a>"));
 		main_web.setMovementMethod(LinkMovementMethod.getInstance());
-		
+
 		TextView buy = (TextView) help.findViewById(R.id.syno_buy_web);
-		buy.setText(Html.fromHtml("<a href=\"http://www.synology.com/support/wheretobuy.php\">www.synology.com/support/wheretobuy.php</a>"));
+		buy
+				.setText(Html
+						.fromHtml("<a href=\"http://www.synology.com/support/wheretobuy.php\">www.synology.com/support/wheretobuy.php</a>"));
 		buy.setMovementMethod(LinkMovementMethod.getInstance());
 
-		
 		setContentView(help);
-		
+
 	}
 
 	/*
@@ -106,8 +113,6 @@ public class HelpActivity extends Activity{
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		super.onPrepareDialog(id, dialog);
 	}
-
-	
 
 	/*
 	 * (non-Javadoc)
@@ -127,14 +132,15 @@ public class HelpActivity extends Activity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		//Check for fullscreen
-		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
-		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)){
-			//Set fullscreen or not
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);  	
-		}
-		else{
+
+		// Check for fullscreen
+		SharedPreferences preferences = getSharedPreferences(
+				PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)) {
+			// Set fullscreen or not
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}

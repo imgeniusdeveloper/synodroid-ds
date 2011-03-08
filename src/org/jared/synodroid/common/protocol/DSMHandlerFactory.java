@@ -40,32 +40,36 @@ public abstract class DSMHandlerFactory {
 	 * 
 	 * @return
 	 */
-	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP) {
+	public final static DSMHandlerFactory getFactory(DSMVersion versionP,
+			SynoServer serverP) {
 		DSMHandlerFactory result = null;
 		// Depending on DSM version
 		switch (versionP) {
-          case VERSION2_1:
-            return new DSHandlerDSM22Factory(serverP);
-		  case VERSION2_2:
-		  	return new DSHandlerDSM22Factory(serverP);
-		  case VERSION2_3:
-		  	return new DSHandlerDSM22Factory(serverP);
-          case VERSION3_0:
-            return new DSHandlerDSM22Factory(serverP);
-          case VERSION3_1:
-            return new DSHandlerDSM31Factory(serverP);
+		case VERSION2_1:
+			return new DSHandlerDSM22Factory(serverP);
+		case VERSION2_2:
+			return new DSHandlerDSM22Factory(serverP);
+		case VERSION2_3:
+			return new DSHandlerDSM22Factory(serverP);
+		case VERSION3_0:
+			return new DSHandlerDSM22Factory(serverP);
+		case VERSION3_1:
+			return new DSHandlerDSM31Factory(serverP);
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Connect to a SynoServer. This method MUST be called prior to any other methods.
+	 * Connect to a SynoServer. This method MUST be called prior to any other
+	 * methods.
+	 * 
 	 * @param serverP
 	 */
 	public abstract void connect() throws Exception;
 
 	/**
 	 * Return the Download station handler
+	 * 
 	 * @return
 	 */
 	public abstract DSHandler getDSHandler();

@@ -49,7 +49,8 @@ import android.widget.TextView;
  * 
  * @author eric.taix at gmail.com
  */
-public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class TaskAdapter extends BaseAdapter implements
+		AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
 	// List of torrent
 	private List<Task> tasks = new ArrayList<Task>();
@@ -68,14 +69,16 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * Constructor
 	 * 
 	 * @param activityP
-	 *          The current activity
+	 *            The current activity
 	 * @param torrentsP
-	 *          List of torrent
+	 *            List of torrent
 	 */
 	public TaskAdapter(DownloadActivity activityP) {
 		activity = activityP;
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Bitmap bitmap = BitmapFactory.decodeResource(activityP.getResources(), R.drawable.progress_unknown);
+		inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Bitmap bitmap = BitmapFactory.decodeResource(activityP.getResources(),
+				R.drawable.progress_unknown);
 		bitmap = Utils.getRoundedCornerBitmap(bitmap, 4);
 		unknownDrawable = new BitmapDrawable(bitmap);
 	}
@@ -133,8 +136,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	public int getCount() {
 		if (tasks != null) {
 			return tasks.size();
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
@@ -143,7 +145,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * Return the torrent at the defined index
 	 * 
 	 * @param indexP
-	 *          The index to use starting from 0
+	 *            The index to use starting from 0
 	 * @return Instance of Torrent
 	 */
 	public Object getItem(int indexP) {
@@ -161,10 +163,9 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * @param indexP
 	 */
 	public long getItemId(int indexP) {
-		try{
+		try {
 			return tasks.get(indexP).taskId;
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			return 0;
 		}
 	}
@@ -177,9 +178,9 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
-		}
-		else {
-			view = (LinearLayout) inflater.inflate(R.layout.task_template, parentP, false);
+		} else {
+			view = (LinearLayout) inflater.inflate(R.layout.task_template,
+					parentP, false);
 		}
 		bindView(view, tasks.get(positionP));
 		return view;
@@ -197,35 +198,45 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		IconFacade.bindTorrentStatus(activity, image, taskP);
 
 		// The name of the torrent
-		TextView torrentName = (TextView) viewP.findViewById(R.id.id_torrent_name);
+		TextView torrentName = (TextView) viewP
+				.findViewById(R.id.id_torrent_name);
 		torrentName.setText(taskP.fileName);
 
 		// The torrent size
-		TextView torrentSize = (TextView) viewP.findViewById(R.id.id_torrent_total_size);
+		TextView torrentSize = (TextView) viewP
+				.findViewById(R.id.id_torrent_total_size);
 		torrentSize.setText(taskP.totalSize);
 
 		// The torrent's owner
-		TextView torrentCurrentSize = (TextView) viewP.findViewById(R.id.id_torrent_username);
+		TextView torrentCurrentSize = (TextView) viewP
+				.findViewById(R.id.id_torrent_username);
 		torrentCurrentSize.setText(taskP.creator);
 
 		// Get progress bar
-		ProgressBar downProgress = (ProgressBar) viewP.findViewById(R.id.id_download_progress);
-		ProgressBar upProgress = (ProgressBar) viewP.findViewById(R.id.id_upload_progress);
-		ProgressBar unknownProgress = (ProgressBar) viewP.findViewById(R.id.id_unknow_progress);
+		ProgressBar downProgress = (ProgressBar) viewP
+				.findViewById(R.id.id_download_progress);
+		ProgressBar upProgress = (ProgressBar) viewP
+				.findViewById(R.id.id_upload_progress);
+		ProgressBar unknownProgress = (ProgressBar) viewP
+				.findViewById(R.id.id_unknow_progress);
 		unknownProgress.setBackgroundDrawable(unknownDrawable);
 		// If state is DOWNLOADING or SEEDING or PAUSED
-		if (taskP.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || taskP.status.equals(TaskStatus.TASK_SEEDING.toString()) || taskP.status.equals(TaskStatus.TASK_PAUSED.toString())) {
+		if (taskP.status.equals(TaskStatus.TASK_DOWNLOADING.toString())
+				|| taskP.status.equals(TaskStatus.TASK_SEEDING.toString())
+				|| taskP.status.equals(TaskStatus.TASK_PAUSED.toString())) {
 			downProgress.setVisibility(View.VISIBLE);
 			// If a known value
 			if (taskP.downloadProgress != -1) {
 				downProgress.setProgress(taskP.downloadProgress);
 			}
 			// According to the user's preferences AND if it is a Torrent
-			SynoServer server = ((Synodroid) activity.getApplication()).getServer();
+			SynoServer server = ((Synodroid) activity.getApplication())
+					.getServer();
 			if (server.getConnection().showUpload) {
 				// If a known value
 				if (taskP.uploadProgress != -1) {
-					upProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);
+					upProgress.setVisibility(taskP.isTorrent ? View.VISIBLE
+							: View.INVISIBLE);
 					unknownProgress.setVisibility(View.GONE);
 					upProgress.setProgress(taskP.uploadProgress);
 				}
@@ -233,10 +244,11 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 				else {
 					upProgress.setVisibility(View.GONE);
 					// Show only for a torrent
-					unknownProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);
+					unknownProgress
+							.setVisibility(taskP.isTorrent ? View.VISIBLE
+									: View.INVISIBLE);
 				}
-			}
-			else {
+			} else {
 				upProgress.setVisibility(View.INVISIBLE);
 				unknownProgress.setVisibility(View.GONE);
 			}
@@ -248,7 +260,8 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 			unknownProgress.setVisibility(View.GONE);
 		}
 		// The current rates
-		TextView torrentRates = (TextView) viewP.findViewById(R.id.id_torrent_speed);
+		TextView torrentRates = (TextView) viewP
+				.findViewById(R.id.id_torrent_speed);
 		String rates = "";
 		if (taskP.downloadRate.length() > 0) {
 			rates += "D:" + taskP.downloadRate + "    ";
@@ -259,7 +272,8 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		torrentRates.setText(rates);
 
 		// The estimated time left
-		TextView torrentETA = (TextView) viewP.findViewById(R.id.id_torrent_eta);
+		TextView torrentETA = (TextView) viewP
+				.findViewById(R.id.id_torrent_eta);
 		torrentETA.setText(taskP.eta);
 	}
 
@@ -275,14 +289,16 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	/**
 	 * Click on a item
 	 */
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 		Task task = tasks.get(position);
 		if (task != null) {
 			activity.onTaskClicked(task);
 		}
 	}
 
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
 		Task task = tasks.get(position);
 		if (task != null) {
 			activity.onTaskLongClicked(task);

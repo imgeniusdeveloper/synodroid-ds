@@ -20,6 +20,7 @@ import java.util.Properties;
 
 /**
  * A part of a multipart request
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class Part {
@@ -30,25 +31,28 @@ public class Part {
 	private Properties extras = new Properties();
 	// The data
 	private byte[] data;
-	// The content-type (don't set 'content-type:' but just application/octet-stream for example
+	// The content-type (don't set 'content-type:' but just
+	// application/octet-stream for example
 	private String contentType = null;
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param nameP
 	 * @param extrasP
 	 */
 	public Part(String nameP) {
-	  name = nameP;	
+		name = nameP;
 	}
-	
+
 	public Part addExtra(String nameP, String valueP) {
 		extras.put(nameP, valueP);
 		return this;
 	}
-	
+
 	/**
 	 * Set the content
+	 * 
 	 * @param dataP
 	 * @return
 	 */
@@ -58,39 +62,39 @@ public class Part {
 	}
 
 	/**
-   * @return the name
-   */
-  public String getName() {
-  	return name;
-  }
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
 	/**
-   * @return the extras
-   */
-  public Properties getExtras() {
-  	return extras;
-  }
+	 * @return the extras
+	 */
+	public Properties getExtras() {
+		return extras;
+	}
 
 	/**
-   * @return the data
-   */
-  public byte[] getContent() {
-  	return data;
-  }
+	 * @return the data
+	 */
+	public byte[] getContent() {
+		return data;
+	}
 
 	/**
-   * @return the contentType
-   */
-  public String getContentType() {
-  	return contentType;
-  }
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
 
 	/**
-   * @param contentType the contentType to set
-   */
-  public void setContentType(String contentType) {
-  	this.contentType = contentType;
-  }
-  
-  
+	 * @param contentType
+	 *            the contentType to set
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+
 }

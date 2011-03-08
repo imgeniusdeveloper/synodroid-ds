@@ -50,7 +50,7 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 	 * Constructor for the DSM 2.2 handler
 	 * 
 	 * @param serverP
-	 *          The synology server
+	 *            The synology server
 	 */
 	public DSHandlerDSM22Factory(SynoServer serverP) {
 		server = serverP;
@@ -69,8 +69,10 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 		String result = null;
 		String reason = null;
 		String pass = server.getPassword();
-		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
-		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
+		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY,
+				server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
+		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder
+				.toString(), "POST");
 		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);
 		// If no success or not login success

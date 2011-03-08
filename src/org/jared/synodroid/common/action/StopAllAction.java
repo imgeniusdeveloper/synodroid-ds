@@ -31,7 +31,7 @@ import org.jared.synodroid.ds.R;
 public class StopAllAction implements SynoAction {
 
 	private List<Task> tasks;
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -39,39 +39,52 @@ public class StopAllAction implements SynoAction {
 		tasks = tasksP;
 	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
-   */
-  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-  	serverP.getDSMHandlerFactory().getDSHandler().stopAll(tasks);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
+	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 */
+	public void execute(ResponseHandler handlerP, SynoServer serverP)
+			throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().stopAll(tasks);
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getName()
-   */
-  public String getName() {
-	  return "Pausing all running tasks...";
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getName()
+	 */
+	public String getName() {
+		return "Pausing all running tasks...";
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getToastId()
-   */
-  public int getToastId() {
-	  return R.string.action_pauseall;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getToastId()
+	 */
+	public int getToastId() {
+		return R.string.action_pauseall;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#isToastable()
-   */
-  public boolean isToastable() {
-	  return true;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#isToastable()
+	 */
+	public boolean isToastable() {
+		return true;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.ds.action.TaskAction#getTask()
-   */
-  public Task getTask() {
-	  return null;
-  }
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.ds.action.TaskAction#getTask()
+	 */
+	public Task getTask() {
+		return null;
+	}
+
 }

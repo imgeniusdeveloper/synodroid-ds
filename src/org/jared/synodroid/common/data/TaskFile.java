@@ -17,7 +17,8 @@
 package org.jared.synodroid.common.data;
 
 /**
- * A simple data container for a file 
+ * A simple data container for a file
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class TaskFile {
@@ -28,44 +29,42 @@ public class TaskFile {
 	public String filesize;
 	// A flag to know if the file will be downloaded or not
 	public boolean download;
-	//Task numeric ID
+	// Task numeric ID
 	public int id = 0;
-	
-	
-	/* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-	  final int prime = 31;
-	  int result = 1;
-	  result = prime * result + ((name == null) ? 0 : name.hashCode());
-	  return result;
-  }
-  
-  
-	/* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-	  if (this == obj)
-		  return true;
-	  if (obj == null)
-		  return false;
-	  if (getClass() != obj.getClass())
-		  return false;
-	  TaskFile other = (TaskFile) obj;
-	  if (name == null) {
-		  if (other.name != null)
-			  return false;
-	  }
-	  else if (!name.equals(other.name))
-		  return false;
-	  return true;
-  }
-	
-	
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TaskFile other = (TaskFile) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
 }

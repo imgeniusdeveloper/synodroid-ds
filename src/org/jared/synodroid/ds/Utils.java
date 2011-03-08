@@ -115,7 +115,8 @@ public class Utils {
 	}
 
 	/**
-	 * Utility method to convert a string into an int and log if an error occured
+	 * Utility method to convert a string into an int and log if an error
+	 * occured
 	 * 
 	 * @param valueP
 	 * @return
@@ -167,7 +168,8 @@ public class Utils {
 			try {
 				result = (int) Double.parseDouble(p);
 			}
-			// Nothing to do: it is not an integer, os just return the default value
+			// Nothing to do: it is not an integer, os just return the default
+			// value
 			catch (NumberFormatException ex) {
 			}
 		}
@@ -192,14 +194,11 @@ public class Utils {
 				double size = Double.parseDouble(valStr);
 				if (unitStr.equals("kb")) {
 					size = size * 1000;
-				}
-				else if (unitStr.equals("mb")) {
+				} else if (unitStr.equals("mb")) {
 					size = size * 1000 * 1000;
-				}
-				else if (unitStr.equals("gb")) {
+				} else if (unitStr.equals("gb")) {
 					size = size * 1000 * 1000 * 1000;
-				}
-				else if (unitStr.equals("tb")) {
+				} else if (unitStr.equals("tb")) {
 					size = size * 1000 * 1000 * 1000 * 1000;
 				}
 				result = (long) size;
@@ -227,16 +226,13 @@ public class Utils {
 			if (bytes > 1000l * 1000l * 1000l * 1000l) {
 				val = val / (1000l * 1000l * 1000l * 1000l);
 				unit = "TB";
-			}
-			else if (bytes > 1000l * 1000l * 1000l) {
+			} else if (bytes > 1000l * 1000l * 1000l) {
 				val = val / (1000l * 1000l * 1000l);
 				unit = "GB";
-			}
-			else if (bytes > 1000l * 1000l) {
+			} else if (bytes > 1000l * 1000l) {
 				val = val / (1000l * 1000l);
 				unit = "MB";
-			}
-			else if (bytes > 1000l) {
+			} else if (bytes > 1000l) {
 				val = val / 1000l;
 				unit = "KB";
 			}
@@ -249,55 +245,58 @@ public class Utils {
 	 * Compute the upload percentage according to the filesize and the ratio
 	 * 
 	 * @param detailP
-	 * @return Return an integer could have been compute otherwise it returns null
+	 * @return Return an integer could have been compute otherwise it returns
+	 *         null
 	 */
 	public static Integer computeUploadPercent(TaskDetail detailP) {
 		Integer result = null;
 		long uploaded = detailP.bytesUploaded;
 		double ratio = ((double) (detailP.seedingRatio)) / 100.0d;
-		// If seeding ratio is 0, we suppose it is 100 => When a task is paused then
-		// the server returns 0 which is not the correct anwser even if the task is
+		// If seeding ratio is 0, we suppose it is 100 => When a task is paused
+		// then
+		// the server returns 0 which is not the correct anwser even if the task
+		// is
 		// paused
 		if (detailP.seedingRatio == 0) {
 			ratio = 1.0d;
 		}
 		if (ratio != 0 && detailP.fileSize != -1) {
-			try{
-				result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
-			}
-			catch (ArithmeticException e){
+			try {
+				result = new Integer(
+						(int) ((uploaded * 100) / (detailP.fileSize * ratio)));
+			} catch (ArithmeticException e) {
 				result = new Integer(100);
 			}
-			
-			
+
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Create a rounded bitmap
-	 * @param bitmap The original bitmap
+	 * 
+	 * @param bitmap
+	 *            The original bitmap
 	 * @return
 	 */
-  public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
-    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-        bitmap.getHeight(), Config.ARGB_8888);
-    Canvas canvas = new Canvas(output);
- 
-    final int color = 0xff424242;
-    final Paint paint = new Paint();
-    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-    final RectF rectF = new RectF(rect);
- 
-    paint.setAntiAlias(true);
-    canvas.drawARGB(0, 0, 0, 0);
-    paint.setColor(color);
-    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
- 
-    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-    canvas.drawBitmap(bitmap, rect, rect, paint);
-    return output;
-  }
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+				.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
 
-	
+		final int color = 0xff424242;
+		final Paint paint = new Paint();
+		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		final RectF rectF = new RectF(rect);
+
+		paint.setAntiAlias(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(color);
+		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(bitmap, rect, rect, paint);
+		return output;
+	}
+
 }

@@ -52,26 +52,27 @@ public class SwipeGestureListener extends SimpleOnGestureListener {
 	 * .MotionEvent, android.view.MotionEvent, float, float)
 	 */
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
 		try {
 			if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_Y_DISTANCE) {
 				return true;
 			}
 			// Swipe right
-			if (e1.getX() - e2.getX() > SWIPE_MIN_X_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+			if (e1.getX() - e2.getX() > SWIPE_MIN_X_DISTANCE
+					&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 				tabManager.nextTab();
 				return true;
 			}
 			// Swipe left
-			else if (e2.getX() - e1.getX() > SWIPE_MIN_X_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+			else if (e2.getX() - e1.getX() > SWIPE_MIN_X_DISTANCE
+					&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 				tabManager.previousTab();
 				return true;
-			}
-			else {
+			} else {
 				return true;
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// nothing
 			System.out.println("No");
 			return true;

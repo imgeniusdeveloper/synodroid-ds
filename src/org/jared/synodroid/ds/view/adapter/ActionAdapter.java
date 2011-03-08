@@ -47,11 +47,12 @@ public class ActionAdapter extends BaseAdapter {
 	 * Constructor
 	 * 
 	 * @param ctxP
-	 *          The context
+	 *            The context
 	 */
 	public ActionAdapter(Context ctxP, Task taskP) {
 		actions = TaskActionMenu.createActions(ctxP, taskP);
-		inflater = (LayoutInflater) ctxP.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) ctxP
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/*
@@ -91,15 +92,14 @@ public class ActionAdapter extends BaseAdapter {
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
-		}
-		else {
-			view = (LinearLayout)inflater.inflate(R.layout.action_template, parentP, false);
+		} else {
+			view = (LinearLayout) inflater.inflate(R.layout.action_template,
+					parentP, false);
 		}
 		TextView textView = (TextView) view.findViewById(R.id.id_action);
 		textView.setEnabled(actions.get(positionP).isEnabled());
 		textView.setText(actions.get(positionP).getTitle());
 		return view;
 	}
-	
-	
+
 }
