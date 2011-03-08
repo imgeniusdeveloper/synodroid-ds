@@ -23,27 +23,39 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * This class trust everything even if the certificate is self signed
+ * 
  * @author Eric Taix (eric.taix at gmail dot com)
  */
 public class AcceptAllTrustManager implements X509TrustManager {
-	
-	
-  /* (non-Javadoc)
-   * @see javax.net.ssl.X509TrustManager#checkClientTrusted(java.security.cert.X509Certificate[], java.lang.String)
-   */
-  public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-  }
 
-	/* (non-Javadoc)
-   * @see javax.net.ssl.X509TrustManager#checkServerTrusted(java.security.cert.X509Certificate[], java.lang.String)
-   */
-  public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.net.ssl.X509TrustManager#checkClientTrusted(java.security.cert.
+	 * X509Certificate[], java.lang.String)
+	 */
+	public void checkClientTrusted(X509Certificate[] chain, String authType)
+			throws CertificateException {
+	}
 
-	/* (non-Javadoc)
-   * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
-   */
-  public X509Certificate[] getAcceptedIssuers() {
-	  return null;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.net.ssl.X509TrustManager#checkServerTrusted(java.security.cert.
+	 * X509Certificate[], java.lang.String)
+	 */
+	public void checkServerTrusted(X509Certificate[] chain, String authType)
+			throws CertificateException {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
+	 */
+	public X509Certificate[] getAcceptedIssuers() {
+		return null;
+	}
 }

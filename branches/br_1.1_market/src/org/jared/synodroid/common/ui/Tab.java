@@ -18,131 +18,147 @@ package org.jared.synodroid.common.ui;
 
 /**
  * A tab instance
+ * 
  * @author Eric Taix
  */
 public class Tab {
 
-  // The tab' unique id
-  private String id;;
-  // The normal icon id
-  private int iconNormal;
-  // The selected icon id
-  private int iconSelected;
-  // The logo icon
-  private int logoId;
-  // The logo's text id
-  private int logoTextId;
-  /**
-   * The minimal constructor
-   * @param idP
-   */
-  public Tab(String idP) {
-    id = idP;
-  }
-
-  /**
-   * The constructor which initialize the label and the icon
-   * @param idP
-   * @param label
-   * @param iconP
-   */
-  public Tab(String idP, int iconNormalP, int iconSelectedP) {
-    this(idP);
-    iconNormal = iconNormalP;
-    iconSelected = iconSelectedP;
-  }
-  
-  /**
-   * @return the id
-   */
-  public String getId() {
-    return id;
-  }
-
-  /**
-   * @param idP the id to set
-   */
-  public void setId(String idP) {
-    id = idP;
-  }
-
-  /**
-   * @return the iconNormal
-   */
-  public int getIconNormal() {
-    return iconNormal;
-  }
-
-  /**
-   * @param iconNormalP the iconNormal to set
-   */
-  public void setIconNormal(int iconNormalP) {
-    iconNormal = iconNormalP;
-  }
-
-  /**
-   * @return the iconSelected
-   */
-  public int getIconSelected() {
-    return iconSelected;
-  }
-
-  /**
-   * @param iconSelectedP the iconSelected to set
-   */
-  public void setIconSelected(int iconSelectedP) {
-    iconSelected = iconSelectedP;
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    return result;
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    Tab other = (Tab) obj;
-    if (id == null) {
-      if (other.id != null) return false;
-    }
-    else if (!id.equals(other.id)) return false;
-    return true;
-  }
-
-  /**
-   * Set the logo (image and text to be displayed during the slide animation)
-   * @param logoIdP
-   * @param logoTextIdP
-   */
-  public void setLogo(int logoIdP, int logoTextIdP) {
-  	logoId = logoIdP;
-  	logoTextId = logoTextIdP;
-  }
+	// The tab' unique id
+	private String id;;
+	// The normal icon id
+	private int iconNormal;
+	// The selected icon id
+	private int iconSelected;
+	// The logo icon
+	private int logoId;
+	// The logo's text id
+	private int logoTextId;
 
 	/**
-   * @return the logoId
-   */
-  public int getLogoId() {
-  	return logoId;
-  }
+	 * The minimal constructor
+	 * 
+	 * @param idP
+	 */
+	public Tab(String idP) {
+		id = idP;
+	}
 
 	/**
-   * @return the logoTextId
-   */
-  public int getLogoTextId() {
-  	return logoTextId;
-  }
-  
+	 * The constructor which initialize the label and the icon
+	 * 
+	 * @param idP
+	 * @param label
+	 * @param iconP
+	 */
+	public Tab(String idP, int iconNormalP, int iconSelectedP) {
+		this(idP);
+		iconNormal = iconNormalP;
+		iconSelected = iconSelectedP;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param idP
+	 *            the id to set
+	 */
+	public void setId(String idP) {
+		id = idP;
+	}
+
+	/**
+	 * @return the iconNormal
+	 */
+	public int getIconNormal() {
+		return iconNormal;
+	}
+
+	/**
+	 * @param iconNormalP
+	 *            the iconNormal to set
+	 */
+	public void setIconNormal(int iconNormalP) {
+		iconNormal = iconNormalP;
+	}
+
+	/**
+	 * @return the iconSelected
+	 */
+	public int getIconSelected() {
+		return iconSelected;
+	}
+
+	/**
+	 * @param iconSelectedP
+	 *            the iconSelected to set
+	 */
+	public void setIconSelected(int iconSelectedP) {
+		iconSelected = iconSelectedP;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tab other = (Tab) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Set the logo (image and text to be displayed during the slide animation)
+	 * 
+	 * @param logoIdP
+	 * @param logoTextIdP
+	 */
+	public void setLogo(int logoIdP, int logoTextIdP) {
+		logoId = logoIdP;
+		logoTextId = logoTextIdP;
+	}
+
+	/**
+	 * @return the logoId
+	 */
+	public int getLogoId() {
+		return logoId;
+	}
+
+	/**
+	 * @return the logoTextId
+	 */
+	public int getLogoTextId() {
+		return logoTextId;
+	}
+
 }

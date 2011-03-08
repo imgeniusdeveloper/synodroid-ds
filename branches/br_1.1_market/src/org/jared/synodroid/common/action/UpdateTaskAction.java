@@ -26,6 +26,7 @@ import org.jared.synodroid.ds.R;
 
 /**
  * Update a task (files and parameters)
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class UpdateTaskAction implements SynoAction {
@@ -38,50 +39,66 @@ public class UpdateTaskAction implements SynoAction {
 	private int seedingRatio;
 	// The seeing interval (in minutes)
 	private int seedingInterval;
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param taskP
 	 * @param filesP
 	 * @param seedingRatioP
 	 * @param seedingIntervalP
 	 */
-	public UpdateTaskAction(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) {
+	public UpdateTaskAction(Task taskP, List<TaskFile> filesP,
+			int seedingRatioP, int seedingIntervalP) {
 		task = taskP;
 		files = filesP;
 		seedingRatio = seedingRatioP;
 		seedingInterval = seedingIntervalP;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid.common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.action.SynoAction#execute(org.jared.synodroid
+	 * .common.protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
 	 */
-	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {		
-  	serverP.getDSMHandlerFactory().getDSHandler().updateTask(task, files, seedingRatio, seedingInterval);
+	public void execute(ResponseHandler handlerP, SynoServer serverP)
+			throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().updateTask(task, files,
+				seedingRatio, seedingInterval);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jared.synodroid.common.action.SynoAction#getName()
 	 */
 	public String getName() {
-	  return "Updating task "+task.taskId;
+		return "Updating task " + task.taskId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jared.synodroid.common.action.SynoAction#getTask()
 	 */
 	public Task getTask() {
 		return task;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jared.synodroid.common.action.SynoAction#getToastId()
 	 */
 	public int getToastId() {
 		return R.string.action_updating;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.jared.synodroid.common.action.SynoAction#isToastable()
 	 */
 	public boolean isToastable() {

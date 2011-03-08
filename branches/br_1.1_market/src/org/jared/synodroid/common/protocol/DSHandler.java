@@ -35,16 +35,17 @@ public interface DSHandler {
 
 	/**
 	 * For DSM version 2.3 and before (to confirm to DSM 3.0 and upper), startP
-	 * parameter MUST be a multiple of 25 and limitP parameter must be 25. Return
-	 * all torrent
+	 * parameter MUST be a multiple of 25 and limitP parameter must be 25.
+	 * Return all torrent
 	 * 
 	 * @param startP
-	 *          The start index (from 0) to retrieve
+	 *            The start index (from 0) to retrieve
 	 * @param limitP
-	 *          The maximum number of task to retrieve
+	 *            The maximum number of task to retrieve
 	 * @return
 	 */
-	public TaskContainer getAllTask(int startP, int limitP, String sortAttrP, boolean ascendingP) throws Exception;
+	public TaskContainer getAllTask(int startP, int limitP, String sortAttrP,
+			boolean ascendingP) throws Exception;
 
 	/**
 	 * Stop a torrent
@@ -111,27 +112,31 @@ public interface DSHandler {
 	 * Get Properties of a task
 	 * 
 	 * @param taskP
-	 *          The task to update
+	 *            The task to update
 	 */
 	public TaskProperties getTaskProperty(final Task taskP) throws Exception;
-	
-	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval ) throws Exception;
-	
-	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception;
-	
+
+	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate,
+			int priority, int max_peers, String destination, int seeding_ratio,
+			int seeding_interval) throws Exception;
+
+	public void setFilePriority(final Task taskP, List<TaskFile> filesP)
+			throws Exception;
+
 	/**
 	 * Update a task
 	 * 
 	 * @param taskP
-	 *          The task to update
+	 *            The task to update
 	 * @param filesP
-	 *          the file list (only modified files)
+	 *            the file list (only modified files)
 	 * @param seedingRatioP
-	 *          The new seeding ratio in %
+	 *            The new seeding ratio in %
 	 * @param seedingIntervalP
-	 *          The new seeding interval (in minutes)
+	 *            The new seeding interval (in minutes)
 	 */
-	public void updateTask(final Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception;
+	public void updateTask(final Task taskP, List<TaskFile> filesP,
+			int seedingRatioP, int seedingIntervalP) throws Exception;
 
 	/**
 	 * Retrieve all shared directories according to the user's autorizations
@@ -147,7 +152,8 @@ public interface DSHandler {
 	 * @param directoryP
 	 * @throws Exception
 	 */
-	public void setSharedDirectory(Task taskP, String directoryP) throws Exception;
+	public void setSharedDirectory(Task taskP, String directoryP)
+			throws Exception;
 
 	/**
 	 * Get the global current shared directory
@@ -166,17 +172,18 @@ public interface DSHandler {
 
 	/**
 	 * Resume all paused tasks
+	 * 
 	 * @param taskP
 	 * @throws Exception
 	 */
 	public void resumeAll(List<Task> taskP) throws Exception;
-	
+
 	/**
 	 * Pause all running tasks
+	 * 
 	 * @param taskP
 	 * @throws Exception
 	 */
 	public void stopAll(List<Task> taskP) throws Exception;
 
-	
 }

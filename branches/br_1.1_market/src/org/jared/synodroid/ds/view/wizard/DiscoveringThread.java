@@ -34,7 +34,9 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * A thread which try to discover NAS on the local network (use the ZeroConf protocol).
+ * A thread which try to discover NAS on the local network (use the ZeroConf
+ * protocol).
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class DiscoveringThread extends Thread {
@@ -43,9 +45,10 @@ public class DiscoveringThread extends Thread {
 	private Context context;
 	// The message handler
 	private DiscoveringHandler handler;
-	
+
 	/**
 	 * The constructor
+	 * 
 	 * @param ctxP
 	 * @param hdlP
 	 */
@@ -53,14 +56,17 @@ public class DiscoveringThread extends Thread {
 		context = ctxP;
 		handler = hdlP;
 	}
-	
-	/* (non-Javadoc)
-   * @see java.lang.Thread#run()
-   */
-  @Override
-  public void run() {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
+	@Override
+	public void run() {
 		JmDNS jmdns = null;
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		WifiManager wifi = (WifiManager) context
+				.getSystemService(Context.WIFI_SERVICE);
 		MulticastLock lock = wifi.createMulticastLock("fliing_lock");
 		lock.setReferenceCounted(true);
 		try {
@@ -72,46 +78,45 @@ public class DiscoveringThread extends Thread {
 			msg.what = DiscoveringHandler.MSG_SERVER_FOUND;
 			msg.obj = infos;
 			handler.sendMessage(msg);
-		}
-		catch (SecurityException e){
-			//Could not acquire lock. Fake no server found...
+		} catch (SecurityException e) {
+			// Could not acquire lock. Fake no server found...
 			ServiceInfo[] infos = new ServiceInfo[0];
 			Message msg = new Message();
 			msg.what = DiscoveringHandler.MSG_SERVER_FOUND;
 			msg.obj = infos;
 			handler.sendMessage(msg);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (jmdns != null)
 				jmdns.close();
 			if (lock != null) {
-				if (lock.isHeld()) lock.release();
+				if (lock.isHeld())
+					lock.release();
 			}
 		}
-  }
-  
+	}
+
 	/**
-	 * Return local IP adress. This method iterates to each network interface and
-	 * try to find something different that loopback address
+	 * Return local IP adress. This method iterates to each network interface
+	 * and try to find something different that loopback address
 	 * 
 	 * @return
 	 */
 	private static InetAddress getLocalIpAddress() {
 		try {
-			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+			for (Enumeration<NetworkInterface> en = NetworkInterface
+					.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
-				for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+				for (Enumeration<InetAddress> enumIpAddr = intf
+						.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 					InetAddress inetAddress = enumIpAddr.nextElement();
 					if (!inetAddress.isLoopbackAddress()) {
 						return inetAddress;
 					}
 				}
 			}
-		}
-		catch (SocketException ex) {
+		} catch (SocketException ex) {
 			Log.e(Synodroid.DS_TAG, ex.toString());
 		}
 		return null;

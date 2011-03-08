@@ -18,14 +18,16 @@ package org.jared.synodroid.common.preference;
 
 /**
  * A interface which has a simple method to retrieve the current value
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public interface PreferenceWithValue {
 
 	/**
 	 * Return the current readable value
+	 * 
 	 * @return
 	 */
 	public String getPrintableValue();
-	
+
 }

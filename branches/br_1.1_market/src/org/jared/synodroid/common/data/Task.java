@@ -108,16 +108,15 @@ public class Task implements Serializable {
 			return false;
 		return true;
 	}
-	
-	public TaskStatus getStatus(){
+
+	public TaskStatus getStatus() {
 		TaskStatus taskStat;
-		try{
+		try {
 			taskStat = TaskStatus.valueOf(status);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			taskStat = TaskStatus.TASK_UNKNOWN;
 		}
-		
+
 		return taskStat;
 	}
 }

@@ -56,7 +56,8 @@ public class LastUpdateStrategy implements NextTaskStrategy {
 					boolean a2 = isActive(t2);
 					// t1 and t2 are active
 					if (a1 && a2) {
-						return (t1.uploadTimestamp < t2.uploadTimestamp ? -1 : 1);
+						return (t1.uploadTimestamp < t2.uploadTimestamp ? -1
+								: 1);
 					}
 					// No active task
 					else if (!a1 && !a2) {
@@ -79,17 +80,18 @@ public class LastUpdateStrategy implements NextTaskStrategy {
 	}
 
 	/**
-	 * Determine if t1 and t2 are active (downloading, seeding or pause without an
-	 * upload value)
+	 * Determine if t1 and t2 are active (downloading, seeding or pause without
+	 * an upload value)
 	 * 
 	 * @param taskP
 	 * @return
 	 */
 	private boolean isActive(Task taskP) {
-		if (TaskStatus.TASK_DOWNLOADING.toString().equals(taskP.status) || TaskStatus.TASK_SEEDING.toString().equals(taskP.status) || (TaskStatus.TASK_PAUSED.toString().equals(taskP.status) && taskP.uploadProgress == -1)) {
+		if (TaskStatus.TASK_DOWNLOADING.toString().equals(taskP.status)
+				|| TaskStatus.TASK_SEEDING.toString().equals(taskP.status)
+				|| (TaskStatus.TASK_PAUSED.toString().equals(taskP.status) && taskP.uploadProgress == -1)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

@@ -46,7 +46,6 @@ public class ServerWizard {
 	private static final int MSG_OPTIONS_HTTPS_EDITED = 4;
 	private static final int MSG_OPTIONS_INTERNET_EDITED = 5;
 
-	
 	private HashMap<String, Object> metaData = new HashMap<String, Object>();
 	private boolean canceled = false;
 
@@ -95,7 +94,7 @@ public class ServerWizard {
 					optionsHTTPSDialog = null;
 					editOptionsInternet();
 					break;
-					// Options have been edited
+				// Options have been edited
 				case MSG_OPTIONS_INTERNET_EDITED:
 					optionsInternetDialog.dismiss();
 					optionsInternetDialog = null;
@@ -111,7 +110,8 @@ public class ServerWizard {
 	// The cancel listener available for every dialogs
 	private DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			// If we want to add a message when the user cancel the wizard: it's here
+			// If we want to add a message when the user cancel the wizard: it's
+			// here
 			// !
 			canceled = true;
 		}
@@ -143,7 +143,8 @@ public class ServerWizard {
 	 */
 	public ServerWizard(DownloadPreferenceActivity ctxP, String wifiSSIDP) {
 		context = ctxP;
-		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		cancelSeq = context.getText(R.string.button_cancel);
 		metaData.put(META_WIFI, wifiSSIDP);
 	}
@@ -169,16 +170,21 @@ public class ServerWizard {
 	 * Edit HTTPS options
 	 */
 	private void editOptionsSecure() {
-		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_options_secured, null);
+		LinearLayout ll = (LinearLayout) inflater.inflate(
+				R.layout.wizard_options_secured, null);
 		final CheckBox httpsCB = (CheckBox) ll.findViewById(R.id.https_option);
-		optionsHTTPSDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_options_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				metaData.put(META_HTTPS, httpsCB.isChecked());
-				Message msg = new Message();
-				msg.what = MSG_OPTIONS_HTTPS_EDITED;
-				handler.sendMessage(msg);
-			}
-		}).create();
+		optionsHTTPSDialog = new WizardBuilder(context).setTitle(
+				context.getText(R.string.wizard_options_title)).setView(ll)
+				.setPositiveButton(context.getText(R.string.button_ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								metaData.put(META_HTTPS, httpsCB.isChecked());
+								Message msg = new Message();
+								msg.what = MSG_OPTIONS_HTTPS_EDITED;
+								handler.sendMessage(msg);
+							}
+						}).create();
 		optionsHTTPSDialog.show();
 	}
 
@@ -186,24 +192,31 @@ public class ServerWizard {
 	 * Edit Internet options
 	 */
 	private void editOptionsInternet() {
-		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_options_internet, null);
+		LinearLayout ll = (LinearLayout) inflater.inflate(
+				R.layout.wizard_options_internet, null);
 		final CheckBox ddnsCB = (CheckBox) ll.findViewById(R.id.ddns_option);
 		final EditText ddnsET = (EditText) ll.findViewById(R.id.ddns_hostname);
 		ddnsET.setEnabled(false);
 		ddnsCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				ddnsET.setEnabled(isChecked);
 			}
 		});
-		optionsInternetDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_options_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				metaData.put(META_DDNS, ddnsCB.isChecked());
-				metaData.put(META_DDNS_NAME, ddnsET.getText().toString());
-				Message msg = new Message();
-				msg.what = MSG_OPTIONS_INTERNET_EDITED;
-				handler.sendMessage(msg);
-			}
-		}).create();
+		optionsInternetDialog = new WizardBuilder(context).setTitle(
+				context.getText(R.string.wizard_options_title)).setView(ll)
+				.setPositiveButton(context.getText(R.string.button_ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								metaData.put(META_DDNS, ddnsCB.isChecked());
+								metaData.put(META_DDNS_NAME, ddnsET.getText()
+										.toString());
+								Message msg = new Message();
+								msg.what = MSG_OPTIONS_INTERNET_EDITED;
+								handler.sendMessage(msg);
+							}
+						}).create();
 		optionsInternetDialog.show();
 	}
 
@@ -212,15 +225,19 @@ public class ServerWizard {
 	 */
 	private void selectDSM() {
 		final DSMVersion[] versions = DSMVersion.values();
-		dsmDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_selectdsm_title)).setAdapter(new ArrayAdapter<DSMVersion>(context, R.layout.wizard_dsmrow, R.id.label, versions), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				DSMVersion dsm = versions[which];
-				metaData.put(META_DSM, dsm.getTitle());
-				Message msg = new Message();
-				msg.what = MSG_DSM_SELECTED;
-				handler.sendMessage(msg);
-			}
-		}).create();
+		dsmDialog = new WizardBuilder(context).setTitle(
+				context.getText(R.string.wizard_selectdsm_title)).setAdapter(
+				new ArrayAdapter<DSMVersion>(context, R.layout.wizard_dsmrow,
+						R.id.label, versions),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						DSMVersion dsm = versions[which];
+						metaData.put(META_DSM, dsm.getTitle());
+						Message msg = new Message();
+						msg.what = MSG_DSM_SELECTED;
+						handler.sendMessage(msg);
+					}
+				}).create();
 		dsmDialog.show();
 	}
 
@@ -228,18 +245,25 @@ public class ServerWizard {
 	 * Show and edit user informations (username & password)
 	 */
 	private void editUser() {
-		LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_user_pass_form, null);
+		LinearLayout ll = (LinearLayout) inflater.inflate(
+				R.layout.wizard_user_pass_form, null);
 		final TextView uView = (TextView) ll.findViewById(R.id.user);
 		final TextView pView = (TextView) ll.findViewById(R.id.password);
-		userDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_user_title)).setView(ll).setPositiveButton(context.getText(R.string.button_ok), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				metaData.put(META_USERNAME, uView.getText().toString());
-				metaData.put(META_PASSWORD, pView.getText().toString());
-				Message msg = new Message();
-				msg.what = MSG_USER_EDITED;
-				handler.sendMessage(msg);
-			}
-		}).create();
+		userDialog = new WizardBuilder(context).setTitle(
+				context.getText(R.string.wizard_user_title)).setView(ll)
+				.setPositiveButton(context.getText(R.string.button_ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								metaData.put(META_USERNAME, uView.getText()
+										.toString());
+								metaData.put(META_PASSWORD, pView.getText()
+										.toString());
+								Message msg = new Message();
+								msg.what = MSG_USER_EDITED;
+								handler.sendMessage(msg);
+							}
+						}).create();
 		userDialog.show();
 	}
 
@@ -247,18 +271,22 @@ public class ServerWizard {
 	 * Select the server to create
 	 */
 	private void selectServer(final ServiceInfo[] infos) {
-		serverDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_selectserver_title)).setAdapter(new ServerAdapter(context, infos), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				ServiceInfo si = infos[which];
-				metaData.put(META_SCHEME, si.getApplication());
-				metaData.put(META_NAME, si.getName());
-				metaData.put(META_PORT, si.getPort());
-				metaData.put(META_HOST, si.getHostAddress());
-				Message msg = new Message();
-				msg.what = MSG_SERVER_SELECTED;
-				handler.sendMessage(msg);
-			}
-		}).create();
+		serverDialog = new WizardBuilder(context).setTitle(
+				context.getText(R.string.wizard_selectserver_title))
+				.setAdapter(new ServerAdapter(context, infos),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								ServiceInfo si = infos[which];
+								metaData.put(META_SCHEME, si.getApplication());
+								metaData.put(META_NAME, si.getName());
+								metaData.put(META_PORT, si.getPort());
+								metaData.put(META_HOST, si.getHostAddress());
+								Message msg = new Message();
+								msg.what = MSG_SERVER_SELECTED;
+								handler.sendMessage(msg);
+							}
+						}).create();
 		serverDialog.show();
 	}
 
@@ -268,13 +296,15 @@ public class ServerWizard {
 	private void discoverServer() {
 		// Create or show the search dialog
 		if (searchDialog == null) {
-			LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.wizard_discover_server, null);
+			LinearLayout ll = (LinearLayout) inflater.inflate(
+					R.layout.wizard_discover_server, null);
 			TextView tv = (TextView) ll.findViewById(R.id.searching_text_id);
 			tv.setText(context.getText(R.string.wizard_searching_msg));
-			searchDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_searching_title)).setView(ll).create();
+			searchDialog = new WizardBuilder(context).setTitle(
+					context.getText(R.string.wizard_searching_title)).setView(
+					ll).create();
 			searchDialog.show();
-		}
-		else {
+		} else {
 			searchDialog.show();
 		}
 		// Launch the thead to search for servers

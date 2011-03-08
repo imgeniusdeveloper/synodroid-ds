@@ -18,6 +18,7 @@ package org.jared.synodroid.ds.view.adapter;
 
 /**
  * A detail with 2 progress bar
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -31,23 +32,25 @@ public class Detail2Progress extends Detail {
 	private String label2;
 	// The second progress value
 	private int value2;
-	
+
 	/**
 	 * The default constructor
 	 */
-	public Detail2Progress() {		
+	public Detail2Progress() {
 	}
-	
+
 	/**
 	 * The constructor which define the name of this detail
+	 * 
 	 * @param nameP
 	 */
 	public Detail2Progress(String nameP) {
 		setName(nameP);
 	}
-	
+
 	/**
 	 * Set the first progress bar (label and value)
+	 * 
 	 * @param labelP
 	 * @param valueP
 	 */
@@ -58,6 +61,7 @@ public class Detail2Progress extends Detail {
 
 	/**
 	 * Set the second progress bar (label and value)
+	 * 
 	 * @param labelP
 	 * @param valueP
 	 */
@@ -67,31 +71,31 @@ public class Detail2Progress extends Detail {
 	}
 
 	/**
-   * @return the label1
-   */
-  public String getLabel1() {
-  	return label1;
-  }
+	 * @return the label1
+	 */
+	public String getLabel1() {
+		return label1;
+	}
 
 	/**
-   * @return the value1
-   */
-  public int getValue1() {
-  	return value1;
-  }
+	 * @return the value1
+	 */
+	public int getValue1() {
+		return value1;
+	}
 
 	/**
-   * @return the label2
-   */
-  public String getLabel2() {
-  	return label2;
-  }
+	 * @return the label2
+	 */
+	public String getLabel2() {
+		return label2;
+	}
 
 	/**
-   * @return the value2
-   */
-  public int getValue2() {
-  	return value2;
-  }
+	 * @return the value2
+	 */
+	public int getValue2() {
+		return value2;
+	}
 
 }

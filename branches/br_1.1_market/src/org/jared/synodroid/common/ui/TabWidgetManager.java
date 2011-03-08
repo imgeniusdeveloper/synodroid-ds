@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 /**
  * A tab manager which is able to manage multiple tabs.
  * 
@@ -32,57 +31,64 @@ import android.widget.TextView;
  */
 public class TabWidgetManager implements View.OnClickListener {
 
-  private static final String TAG_SELECTED_SUFFIX = "_selected";
-  private static final String TAG_NORMAL_SUFFIX = "_normal";
-  private static final String TAG_FRAME = "FRAME";
+	private static final String TAG_SELECTED_SUFFIX = "_selected";
+	private static final String TAG_NORMAL_SUFFIX = "_normal";
+	private static final String TAG_FRAME = "FRAME";
 
-  // The current visible frame
-  private int currentIndex = -1;
+	// The current visible frame
+	private int currentIndex = -1;
 	// The current visible frame
 	private int nextIndex = -1;
-  // The tabs list
-  private ArrayList<Tab> tabs = new ArrayList<Tab>();
-  // The view list
-  private ArrayList<View> views = new ArrayList<View>();
-  // The associated activity
-  private Activity activity;
-  // The drawable which is used to show the selected state
-  private int sliderDrawable;
-  // The inflater
-  private LayoutInflater inflater;
-  // The content's frame
+	// The tabs list
+	private ArrayList<Tab> tabs = new ArrayList<Tab>();
+	// The view list
+	private ArrayList<View> views = new ArrayList<View>();
+	// The associated activity
+	private Activity activity;
+	// The drawable which is used to show the selected state
+	private int sliderDrawable;
+	// The inflater
+	private LayoutInflater inflater;
+	// The content's frame
 	private FrameLayout contentFrame;
-  // The sliders frame
-  private LinearLayout selectedTabFrame;
-  // The normal tabs frame
-  private LinearLayout normalTabFrame;
-  // The main content view
-  private LinearLayout mainContentView;
-  // The main tabs view
-  private LinearLayout mainTabsView;
-  // Flag to know if a animation is playing
-  private boolean animPlaying = false;
-  // The tablistener
-  private TabListener tabListener;
+	// The sliders frame
+	private LinearLayout selectedTabFrame;
+	// The normal tabs frame
+	private LinearLayout normalTabFrame;
+	// The main content view
+	private LinearLayout mainContentView;
+	// The main tabs view
+	private LinearLayout mainTabsView;
+	// Flag to know if a animation is playing
+	private boolean animPlaying = false;
+	// The tablistener
+	private TabListener tabListener;
 	// The title view
 	private View logoView;
 	// The logo image
 	private ImageView logoimage;
 	// The logo text
 	private TextView logoText;
-  /**
-   * The default constructor
-   */
-  public TabWidgetManager(Activity activityP, int sliderDrawableP) {
+
+	/**
+	 * The default constructor
+	 */
+	public TabWidgetManager(Activity activityP, int sliderDrawableP) {
 		activity = activityP;
 		sliderDrawable = sliderDrawableP;
 		// Get the main inflater
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mainContentView = (LinearLayout) inflater.inflate(R.layout.tabs_content, null, false);
-		contentFrame = (FrameLayout) mainContentView.findViewById(R.id.id_tab_content);
-		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null, false);
-		selectedTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_selected_tabs);
-		normalTabFrame = (LinearLayout) mainTabsView.findViewById(R.id.id_normal_tabs);
+		inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mainContentView = (LinearLayout) inflater.inflate(
+				R.layout.tabs_content, null, false);
+		contentFrame = (FrameLayout) mainContentView
+				.findViewById(R.id.id_tab_content);
+		mainTabsView = (LinearLayout) inflater.inflate(R.layout.tabs_tab, null,
+				false);
+		selectedTabFrame = (LinearLayout) mainTabsView
+				.findViewById(R.id.id_selected_tabs);
+		normalTabFrame = (LinearLayout) mainTabsView
+				.findViewById(R.id.id_normal_tabs);
 		// Add the title view which will be displayed a short time when the user
 		// click on a tab
 		logoView = inflater.inflate(R.layout.tab_title, null, false);
@@ -91,222 +97,239 @@ public class TabWidgetManager implements View.OnClickListener {
 		logoimage = (ImageView) logoView.findViewById(R.id.logoImage);
 		logoText = (TextView) logoView.findViewById(R.id.logoText);
 		contentFrame.addView(logoView);
-  }
+	}
 
-  /**
-   * Add a new tab with an associated View
-   * 
-   * @param tabP
-   * @param viewP The associated view
-   */
-  public void addTab(Tab tabP, View viewP) {
-    tabs.add(tabP);
+	/**
+	 * Add a new tab with an associated View
+	 * 
+	 * @param tabP
+	 * @param viewP
+	 *            The associated view
+	 */
+	public void addTab(Tab tabP, View viewP) {
+		tabs.add(tabP);
 
-    // Add the associated view to the frame
-    if (viewP != null) {
-      views.add(viewP);
-      contentFrame.addView(viewP);
-      viewP.setTag("" + tabP.getId() + TAG_FRAME);
-      viewP.setVisibility(View.INVISIBLE);
-    }
-    // Add images to the appropriated frame
-    ImageView normal = new ImageView(activity);
-    normal.setTag("" + tabP.getId() + TAG_NORMAL_SUFFIX);
-    normal.setVisibility(View.VISIBLE);
-    normal.setImageResource(tabP.getIconNormal());
-    normal.setOnClickListener(this);
-    normalTabFrame.addView(normal);
-    ImageView selected = new ImageView(activity);
-    selected.setTag("" + tabP.getId() + TAG_SELECTED_SUFFIX);
-    selected.setOnClickListener(this);
-    selected.setVisibility(View.INVISIBLE);
-    selected.setImageResource(sliderDrawable);
-    selectedTabFrame.addView(selected);
-    // If this is the first tab
-    if (tabs.size() == 1) {
-      setTab(tabP.getId());
-    }
-    		
+		// Add the associated view to the frame
+		if (viewP != null) {
+			views.add(viewP);
+			contentFrame.addView(viewP);
+			viewP.setTag("" + tabP.getId() + TAG_FRAME);
+			viewP.setVisibility(View.INVISIBLE);
+		}
+		// Add images to the appropriated frame
+		ImageView normal = new ImageView(activity);
+		normal.setTag("" + tabP.getId() + TAG_NORMAL_SUFFIX);
+		normal.setVisibility(View.VISIBLE);
+		normal.setImageResource(tabP.getIconNormal());
+		normal.setOnClickListener(this);
+		normalTabFrame.addView(normal);
+		ImageView selected = new ImageView(activity);
+		selected.setTag("" + tabP.getId() + TAG_SELECTED_SUFFIX);
+		selected.setOnClickListener(this);
+		selected.setVisibility(View.INVISIBLE);
+		selected.setImageResource(sliderDrawable);
+		selectedTabFrame.addView(selected);
+		// If this is the first tab
+		if (tabs.size() == 1) {
+			setTab(tabP.getId());
+		}
+
 		// Set or reset the logoView in front of all other views
-        logoView.bringToFront();
-  }
+		logoView.bringToFront();
+	}
 
-  /**
-   * Return the view corresponding to the tabP parameter or null if the tab does not exist
-   * 
-   * @param tabP
-   * @return
-   */
-  public View getTab(Tab tabP) {
-    int index = tabs.indexOf(tabP);
-    if (index != -1) {
-      return views.get(index);
-    }
-    else {
-      return null;
-    }
-  }
+	/**
+	 * Return the view corresponding to the tabP parameter or null if the tab
+	 * does not exist
+	 * 
+	 * @param tabP
+	 * @return
+	 */
+	public View getTab(Tab tabP) {
+		int index = tabs.indexOf(tabP);
+		if (index != -1) {
+			return views.get(index);
+		} else {
+			return null;
+		}
+	}
 
-  /*
-   * (non-Javadoc)
-   * @see android.view.View.OnClickListener#onClick(android.view.View)
-   */
-  public void onClick(View viewP) {
-    String tagID = (String) viewP.getTag();
-    // Determine the suffix's length
-    int suffixLength = TAG_NORMAL_SUFFIX.length();
-    if (tagID.endsWith(TAG_SELECTED_SUFFIX)) {
-      suffixLength = TAG_SELECTED_SUFFIX.length();
-    }
-    tagID = tagID.substring(0, tagID.length() - suffixLength);
-    slideTo(tagID);
-    if (tagID.equals(this.getNameAtId(this.currentIndex)) && tagID.equals("SEARCH")){
-    	this.activity.onSearchRequested();
-    }
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
+	public void onClick(View viewP) {
+		String tagID = (String) viewP.getTag();
+		// Determine the suffix's length
+		int suffixLength = TAG_NORMAL_SUFFIX.length();
+		if (tagID.endsWith(TAG_SELECTED_SUFFIX)) {
+			suffixLength = TAG_SELECTED_SUFFIX.length();
+		}
+		tagID = tagID.substring(0, tagID.length() - suffixLength);
+		slideTo(tagID);
+		if (tagID.equals(this.getNameAtId(this.currentIndex))
+				&& tagID.equals("SEARCH")) {
+			this.activity.onSearchRequested();
+		}
+	}
 
-  /**
-   * Return the main content view according to the differents tabs
-   * 
-   * @param contextP
-   * @return
-   */
-  public View getContentView() {
-    return mainContentView;
-  }
+	/**
+	 * Return the main content view according to the differents tabs
+	 * 
+	 * @param contextP
+	 * @return
+	 */
+	public View getContentView() {
+		return mainContentView;
+	}
 
-  /**
-   * Return the tab view
-   * 
-   * @param contextP
-   * @return
-   */
-  public View getTabView() {
-    return mainTabsView;
-  }
+	/**
+	 * Return the tab view
+	 * 
+	 * @param contextP
+	 * @return
+	 */
+	public View getTabView() {
+		return mainTabsView;
+	}
 
-  /**
-   * Slide to a new tab.
-   * 
-   * @param The tagId to select
-   * @return
-   */
-  public void slideTo(String tabIdP) {
-    // If there is no current animation
-    if (!animPlaying) {
-      Tab fake = new Tab(tabIdP);
-      int index = tabs.indexOf(fake);
-      if (index != -1 /* && index != currentIndex */) {
-        // Retrieve tabs
-        Tab fromTab = tabs.get(currentIndex);
-        final Tab toTab = tabs.get(index);
-        // Show the logo
-        if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
-          setSelected(currentIndex, View.INVISIBLE);
-          					logoimage.setImageResource(toTab.getLogoId());
+	/**
+	 * Slide to a new tab.
+	 * 
+	 * @param The
+	 *            tagId to select
+	 * @return
+	 */
+	public void slideTo(String tabIdP) {
+		// If there is no current animation
+		if (!animPlaying) {
+			Tab fake = new Tab(tabIdP);
+			int index = tabs.indexOf(fake);
+			if (index != -1 /* && index != currentIndex */) {
+				// Retrieve tabs
+				Tab fromTab = tabs.get(currentIndex);
+				final Tab toTab = tabs.get(index);
+				// Show the logo
+				if (currentIndex != index
+						&& (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
+					setSelected(currentIndex, View.INVISIBLE);
+					logoimage.setImageResource(toTab.getLogoId());
 					logoText.setText(activity.getString(toTab.getLogoTextId()));
 					logoView.setVisibility(View.VISIBLE);
-        }
+				}
 
-        // Create animation
-        float factor = 1.0f * (index - currentIndex);
-        Animation animSlider = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                factor, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        animSlider.setDuration(400);
-        // Retrieve the source slider
-        final ImageView slider = (ImageView) selectedTabFrame.findViewWithTag("" + fromTab.getId()
-                + TAG_SELECTED_SUFFIX);
-        animSlider.setAnimationListener(new AnimationListener() {
-          public void onAnimationStart(Animation animation) {
-          }
+				// Create animation
+				float factor = 1.0f * (index - currentIndex);
+				Animation animSlider = new TranslateAnimation(
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, factor,
+						Animation.RELATIVE_TO_SELF, 0.0f,
+						Animation.RELATIVE_TO_SELF, 0.0f);
+				animSlider.setDuration(400);
+				// Retrieve the source slider
+				final ImageView slider = (ImageView) selectedTabFrame
+						.findViewWithTag("" + fromTab.getId()
+								+ TAG_SELECTED_SUFFIX);
+				animSlider.setAnimationListener(new AnimationListener() {
+					public void onAnimationStart(Animation animation) {
+					}
 
-          public void onAnimationRepeat(Animation animation) {
-          }
+					public void onAnimationRepeat(Animation animation) {
+					}
 
-          public void onAnimationEnd(Animation animation) {
-            setTab(toTab.getId());
-            animPlaying = false;
-          }
-        });
-        // Start the animation
-        animPlaying = true;
-        slider.startAnimation(animSlider);
-      }
-    }
-  }
+					public void onAnimationEnd(Animation animation) {
+						setTab(toTab.getId());
+						animPlaying = false;
+					}
+				});
+				// Start the animation
+				animPlaying = true;
+				slider.startAnimation(animSlider);
+			}
+		}
+	}
 
-  /**
-   * Slide to a new tab.
-   * 
-   * @param The tagId to select
-   * @return
-   */
-  public void selectTab(String tabIdP) {
-    // If there is no current animation
-    if (!animPlaying) {
-      Tab fake = new Tab(tabIdP);
-      int index = tabs.indexOf(fake);
-      if (index != -1 /* && index != currentIndex */) {
-        // Retrieve tabs
-        Tab toTab = tabs.get(index);
-        // Show the logo
-        if (currentIndex != index && (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
-          setSelected(currentIndex, View.INVISIBLE);
-          					logoimage.setImageResource(toTab.getLogoId());
+	/**
+	 * Slide to a new tab.
+	 * 
+	 * @param The
+	 *            tagId to select
+	 * @return
+	 */
+	public void selectTab(String tabIdP) {
+		// If there is no current animation
+		if (!animPlaying) {
+			Tab fake = new Tab(tabIdP);
+			int index = tabs.indexOf(fake);
+			if (index != -1 /* && index != currentIndex */) {
+				// Retrieve tabs
+				Tab toTab = tabs.get(index);
+				// Show the logo
+				if (currentIndex != index
+						&& (toTab.getLogoId() != 0 || toTab.getLogoTextId() != 0)) {
+					setSelected(currentIndex, View.INVISIBLE);
+					logoimage.setImageResource(toTab.getLogoId());
 					logoText.setText(activity.getString(toTab.getLogoTextId()));
 					logoView.setVisibility(View.VISIBLE);
-        }
+				}
 
-        setTab(toTab.getId());
-      }
-    }
-  }
-  
-  /**
-   * Change the current selected tab
-   */
-  private void setTab(String tabId) {
-    // Try to find the associated tab
-    Tab fake = new Tab(tabId);
-    int newIndex = tabs.indexOf(fake);
-    // If the view was found AND if this is a new tab
-    String oldId = null;
-    if (newIndex != -1 /* && currentIndex != newIndex */) {
-      if (currentIndex != -1) {
-        Tab oldTab = tabs.get(currentIndex);
-        oldId = oldTab.getId();
-        setSelected(currentIndex, View.INVISIBLE);
-      }
-      setSelected(newIndex, View.VISIBLE);
-      // If exist fire the tab event
-      if (tabListener != null) {
-        tabListener.selectedTabChanged(oldId, tabId);
-      }
-      // Change the current index
-      currentIndex = newIndex;
+				setTab(toTab.getId());
+			}
+		}
+	}
+
+	/**
+	 * Change the current selected tab
+	 */
+	private void setTab(String tabId) {
+		// Try to find the associated tab
+		Tab fake = new Tab(tabId);
+		int newIndex = tabs.indexOf(fake);
+		// If the view was found AND if this is a new tab
+		String oldId = null;
+		if (newIndex != -1 /* && currentIndex != newIndex */) {
+			if (currentIndex != -1) {
+				Tab oldTab = tabs.get(currentIndex);
+				oldId = oldTab.getId();
+				setSelected(currentIndex, View.INVISIBLE);
+			}
+			setSelected(newIndex, View.VISIBLE);
+			// If exist fire the tab event
+			if (tabListener != null) {
+				tabListener.selectedTabChanged(oldId, tabId);
+			}
+			// Change the current index
+			currentIndex = newIndex;
 			nextIndex = newIndex;
-    }
-  }
+		}
+	}
 
-  /**
-   * Change the selected state of a tab and of the associated view
-   * 
-   * @param indexP
-   * @param visibilityP
-   */
-  private void setSelected(int indexP, int visibilityP) {
-    Tab tab = tabs.get(indexP);
-    ImageView img = (ImageView) selectedTabFrame.findViewWithTag(tab.getId() + TAG_SELECTED_SUFFIX);
-    if (img != null) {
-      img.setVisibility(visibilityP);
-      // If the tab have a different images (normal + selected)
-      int imgSelected = tab.getIconSelected();
-      if (imgSelected != 0) {
-        ImageView icon = (ImageView) normalTabFrame.findViewWithTag(tab.getId() + TAG_NORMAL_SUFFIX);
-        icon.setImageResource((visibilityP == View.VISIBLE ? tab.getIconSelected() : tab.getIconNormal()));
-      }
-    }
-    		View view = (View) contentFrame.findViewWithTag(tab.getId() + TAG_FRAME);
+	/**
+	 * Change the selected state of a tab and of the associated view
+	 * 
+	 * @param indexP
+	 * @param visibilityP
+	 */
+	private void setSelected(int indexP, int visibilityP) {
+		Tab tab = tabs.get(indexP);
+		ImageView img = (ImageView) selectedTabFrame.findViewWithTag(tab
+				.getId()
+				+ TAG_SELECTED_SUFFIX);
+		if (img != null) {
+			img.setVisibility(visibilityP);
+			// If the tab have a different images (normal + selected)
+			int imgSelected = tab.getIconSelected();
+			if (imgSelected != 0) {
+				ImageView icon = (ImageView) normalTabFrame.findViewWithTag(tab
+						.getId()
+						+ TAG_NORMAL_SUFFIX);
+				icon.setImageResource((visibilityP == View.VISIBLE ? tab
+						.getIconSelected() : tab.getIconNormal()));
+			}
+		}
+		View view = (View) contentFrame
+				.findViewWithTag(tab.getId() + TAG_FRAME);
 		if (view != null) {
 			view.setVisibility(visibilityP);
 			// If the view is visible, then hide the logo view
@@ -314,72 +337,74 @@ public class TabWidgetManager implements View.OnClickListener {
 				logoView.setVisibility(View.INVISIBLE);
 			}
 		}
-  }
+	}
 
-	public int getSlideToIndex(){
+	public int getSlideToIndex() {
 		return nextIndex;
 	}
-	
-	public String getSlideToTabName(){
-		try{
+
+	public String getSlideToTabName() {
+		try {
 			Tab tab = tabs.get(nextIndex);
 			return tab.getId();
-		}catch(Exception e) {}
+		} catch (Exception e) {
+		}
 		return "";
 	}
-	
-	public int getCurrentTabIndex(){
+
+	public int getCurrentTabIndex() {
 		return currentIndex;
 	}
-	
-	public Tab getCurrentTab(){
+
+	public Tab getCurrentTab() {
 		return tabs.get(currentIndex);
 	}
-	
-	public String getNameAtId(int x){
+
+	public String getNameAtId(int x) {
 		Tab tab = tabs.get(x);
 		return tab.getId();
 	}
-	
-	public String getCurrentTabName(){
+
+	public String getCurrentTabName() {
 		Tab tab = tabs.get(currentIndex);
 		return tab.getId();
 	}
-	
-  /**
-   * Change the selected tab to the next one (on the right)
-   */
-  public void nextTab() {
-    if (currentIndex < tabs.size() - 1) {
+
+	/**
+	 * Change the selected tab to the next one (on the right)
+	 */
+	public void nextTab() {
+		if (currentIndex < tabs.size() - 1) {
 			nextIndex = currentIndex + 1;
 			Tab tab = tabs.get(nextIndex);
-      slideTo(tab.getId());
-    }
-  }
+			slideTo(tab.getId());
+		}
+	}
 
-  /**
-   * Change the selected tab to the previous one (on the left)
-   */
-  public void previousTab() {
-    if (currentIndex > 0) {
+	/**
+	 * Change the selected tab to the previous one (on the left)
+	 */
+	public void previousTab() {
+		if (currentIndex > 0) {
 			nextIndex = currentIndex - 1;
 			Tab tab = tabs.get(nextIndex);
-      slideTo(tab.getId());
-    }
-  }
+			slideTo(tab.getId());
+		}
+	}
 
-  /**
-   * @return the tabListener
-   */
-  public TabListener getTabListener() {
-    return tabListener;
-  }
+	/**
+	 * @return the tabListener
+	 */
+	public TabListener getTabListener() {
+		return tabListener;
+	}
 
-  /**
-   * @param tabListener the tabListener to set
-   */
-  public void setTabListener(TabListener tabListenerP) {
-    tabListener = tabListenerP;
-  }
+	/**
+	 * @param tabListener
+	 *            the tabListener to set
+	 */
+	public void setTabListener(TabListener tabListenerP) {
+		tabListener = tabListenerP;
+	}
 
 }

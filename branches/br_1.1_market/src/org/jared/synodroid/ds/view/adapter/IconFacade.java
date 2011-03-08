@@ -39,8 +39,9 @@ public class IconFacade {
 	 * @param viewP
 	 * @param siteP
 	 */
-	public static void bindTorrentStatus(Context ctxP, ImageView viewP, Task torrentP) {
-		//Trap invalid task status and replace by unknown
+	public static void bindTorrentStatus(Context ctxP, ImageView viewP,
+			Task torrentP) {
+		// Trap invalid task status and replace by unknown
 		int id = 0;
 		Animation animation = null;
 		switch (torrentP.getStatus()) {
@@ -59,8 +60,10 @@ public class IconFacade {
 			break;
 		case TASK_HASH_CHECKING:
 			id = R.drawable.dl_hash;
-			animation = AnimationUtils.loadAnimation(ctxP, R.anim.rotate_indefinitely);
-			// Can not be set in the XML (LinearInterpolar is not public: arghhh)
+			animation = AnimationUtils.loadAnimation(ctxP,
+					R.anim.rotate_indefinitely);
+			// Can not be set in the XML (LinearInterpolar is not public:
+			// arghhh)
 			animation.setInterpolator(new LinearInterpolator());
 			break;
 		case TASK_FINISHING:
@@ -70,11 +73,11 @@ public class IconFacade {
 		case TASK_UNKNOWN:
 		case TASK_ERROR:
 		case TASK_ERROR_DEST_NO_EXIST:
-	  	case TASK_ERROR_DEST_DENY:
-	  	case TASK_ERROR_QUOTA_REACHED:
-	  	case TASK_ERROR_TIMEOUT:
-	  	case TASK_ERROR_EXCEED_MAX_FS_SIZE:
-	  	case TASK_ERROR_BROKEN_LINK:
+		case TASK_ERROR_DEST_DENY:
+		case TASK_ERROR_QUOTA_REACHED:
+		case TASK_ERROR_TIMEOUT:
+		case TASK_ERROR_EXCEED_MAX_FS_SIZE:
+		case TASK_ERROR_BROKEN_LINK:
 		case TASK_ERROR_DISK_FULL:
 		case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
 		case TASK_ERROR_EXCEED_MAX_DEST_FS_SIZE:

@@ -18,6 +18,7 @@ package org.jared.synodroid.ds.view.adapter;
 
 /**
  * A detail with a simple text value
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -27,7 +28,7 @@ public class Detail2Text extends Detail {
 	private String value1;
 	// The value 2 of this detail
 	private String value2;
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -43,7 +44,7 @@ public class Detail2Text extends Detail {
 	public Detail2Text(String nameP) {
 		setName(nameP);
 	}
-	
+
 	/**
 	 * Constructor which initialize the name/value
 	 * 
@@ -54,7 +55,7 @@ public class Detail2Text extends Detail {
 		setName(nameP);
 		value1 = valueP;
 	}
-	
+
 	/**
 	 * @return the value
 	 */
@@ -67,24 +68,25 @@ public class Detail2Text extends Detail {
 
 	/**
 	 * @param value
-	 *          the value to set
+	 *            the value to set
 	 */
 	public void setValue1(String value) {
 		this.value1 = value;
 	}
 
 	/**
-   * @return the value2
-   */
-  public String getValue2() {
-  	return value2;
-  }
+	 * @return the value2
+	 */
+	public String getValue2() {
+		return value2;
+	}
 
 	/**
-   * @param value2 the value2 to set
-   */
-  public void setValue2(String value2) {
-  	this.value2 = value2;
-  }
+	 * @param value2
+	 *            the value2 to set
+	 */
+	public void setValue2(String value2) {
+		this.value2 = value2;
+	}
 
 }

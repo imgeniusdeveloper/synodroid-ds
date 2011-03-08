@@ -34,45 +34,59 @@ public class UpdateFilesAction implements SynoAction {
 	// The torrent to resume
 	private Task task;
 	private List<TaskFile> files;
-	
+
 	public UpdateFilesAction(Task taskP, List<TaskFile> filesP) {
 		task = taskP;
 		files = filesP;
 	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
-   */
-  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-  	serverP.getDSMHandlerFactory().getDSHandler().setFilePriority(task, files);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.
+	 * TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 */
+	public void execute(ResponseHandler handlerP, SynoServer serverP)
+			throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().setFilePriority(task,
+				files);
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getName()
-   */
-  public String getName() {
-	  return "Updating task "+task.taskId;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getName()
+	 */
+	public String getName() {
+		return "Updating task " + task.taskId;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getToastId()
-   */
-  public int getToastId() {
-	  return R.string.action_updating;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getToastId()
+	 */
+	public int getToastId() {
+		return R.string.action_updating;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#isToastable()
-   */
-  public boolean isToastable() {
-	  return true;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#isToastable()
+	 */
+	public boolean isToastable() {
+		return true;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.ds.action.TaskAction#getTask()
-   */
-  public Task getTask() {
-	  return task;
-  }
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.ds.action.TaskAction#getTask()
+	 */
+	public Task getTask() {
+		return task;
+	}
+
 }

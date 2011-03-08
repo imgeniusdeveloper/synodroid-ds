@@ -14,65 +14,68 @@ package org.jared.synodroid.common.data;
  * @author Eric Taix (eric.taix at gmail dot com)
  */
 public enum DSMVersion {
-  VERSION2_1("DSM 2.1"), VERSION2_2("DSM 2.2"), VERSION2_3("DSM 2.3"), VERSION3_0("DSM 3.0"), VERSION3_1("DSM 3.1");
+	VERSION2_1("DSM 2.1"), VERSION2_2("DSM 2.2"), VERSION2_3("DSM 2.3"), VERSION3_0(
+			"DSM 3.0"), VERSION3_1("DSM 3.1");
 
-  // The title of this version
-  private final String title;
-
-  /**
-   * Constructor which set the title to be displayed in the UI
-   * 
-   * @param titleP
-   */
-  private DSMVersion(String titleP) {
-    title = titleP;
-  }
-
-  /**
-   * Return the title of this value
-   * 
-   * @return
-   */
-  public String getTitle() {
-    return title;
-  }
-  
-  /* (non-Javadoc)
-   * @see java.lang.Enum#toString()
-   */
-  @Override
-  public String toString() {
-    return title;
-  }
+	// The title of this version
+	private final String title;
 
 	/**
-   * Return the instance according to the title value
-   * 
-   * @param valueP
-   * @return
-   */
-  public static DSMVersion titleOf(String titleP) {
-    DSMVersion[] versions = DSMVersion.values();
-    for (DSMVersion dsmVersion : versions) {
-      if (dsmVersion.getTitle().equalsIgnoreCase(titleP)) {
-        return dsmVersion;
-      }
-    }
-    return null;
-  }
+	 * Constructor which set the title to be displayed in the UI
+	 * 
+	 * @param titleP
+	 */
+	private DSMVersion(String titleP) {
+		title = titleP;
+	}
 
-  /**
-   * Return an array of values
-   * 
-   * @return
-   */
-  public static String[] getValues() {
-    DSMVersion[] versions = DSMVersion.values();
-    String[] values = new String[versions.length];
-    for (int iLoop = 0; iLoop < versions.length; iLoop++) {
-      values[iLoop] = versions[iLoop].getTitle();
-    }
-    return values;
-  }
+	/**
+	 * Return the title of this value
+	 * 
+	 * @return
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Enum#toString()
+	 */
+	@Override
+	public String toString() {
+		return title;
+	}
+
+	/**
+	 * Return the instance according to the title value
+	 * 
+	 * @param valueP
+	 * @return
+	 */
+	public static DSMVersion titleOf(String titleP) {
+		DSMVersion[] versions = DSMVersion.values();
+		for (DSMVersion dsmVersion : versions) {
+			if (dsmVersion.getTitle().equalsIgnoreCase(titleP)) {
+				return dsmVersion;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Return an array of values
+	 * 
+	 * @return
+	 */
+	public static String[] getValues() {
+		DSMVersion[] versions = DSMVersion.values();
+		String[] values = new String[versions.length];
+		for (int iLoop = 0; iLoop < versions.length; iLoop++) {
+			values[iLoop] = versions[iLoop].getTitle();
+		}
+		return values;
+	}
 
 }

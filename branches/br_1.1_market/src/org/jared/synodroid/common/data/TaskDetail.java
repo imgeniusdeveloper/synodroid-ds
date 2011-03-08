@@ -18,9 +18,9 @@ package org.jared.synodroid.common.data;
 
 import java.io.Serializable;
 
-
 /**
  * The detail of a task. Every attributs are public.
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -37,7 +37,7 @@ public class TaskDetail implements Serializable {
 	public double speedUpload = 0;
 	// The current download speed
 	public double speedDownload = 0;
-	
+
 	// The filename
 	public String fileName;
 	// The file size in bytes
@@ -53,12 +53,12 @@ public class TaskDetail implements Serializable {
 	public Long piecesCurrent;
 	// The total number of pieces
 	public Long piecesTotal;
-	
+
 	// The number of bytes uploaded
 	public long bytesUploaded;
 	// The number of bytes downloaded
 	public long bytesDownloaded;
-	
+
 	// The sedding time elapsed
 	public long seedingElapsed;
 
@@ -70,12 +70,12 @@ public class TaskDetail implements Serializable {
 	public int seedingInterval;
 	// The current seeding ratio
 	public int seedingRatio;
-	
+
 	// The current peers
 	public Long peersCurrent;
 	// The total number of peers
 	public Long peersTotal;
-	
+
 	// The unique ID of this task
 	public int taskId;
 
@@ -84,17 +84,15 @@ public class TaskDetail implements Serializable {
 	// The number of leechers
 	public Long leechers;
 	public int bytesRatio;
-	
-	public TaskStatus getStatus(){
+
+	public TaskStatus getStatus() {
 		TaskStatus taskStat;
-		try{
+		try {
 			taskStat = TaskStatus.valueOf(status);
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			taskStat = TaskStatus.TASK_UNKNOWN;
 		}
-		
+
 		return taskStat;
 	}
 }
-
