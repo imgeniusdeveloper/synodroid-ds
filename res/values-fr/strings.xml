@@ -331,5 +331,6 @@
 <string name="task_parameters">Propriétés de la tâche</string>
 <string name="downloadOnly">Ne fonctionne seulement lorsque la tâche est en téléchargement...</string>
 
+<string name="port_mismatch">Le protocole ne correspond pas au port sélectionné.</string>
 
 </resources>

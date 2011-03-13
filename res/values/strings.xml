@@ -332,4 +332,6 @@
 <string name="task_parameters">Task Properties</string>
 <string name="downloadOnly">Only works when task is downloading...</string>
 
+<string name="port_mismatch">The protocol does not match the selected port.</string>
+
 </resources>

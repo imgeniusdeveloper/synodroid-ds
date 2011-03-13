@@ -58,47 +58,65 @@ public class ServerWizard {
 				switch (msg.what) {
 				// A server was found
 				case MSG_SERVER_FOUND:
-					searchDialog.dismiss();
-					searchDialog = null;
-					ServiceInfo[] servInfos = (ServiceInfo[]) msg.obj;
-					// At least one or more servers
-					if (servInfos != null && servInfos.length > 0) {
-						selectServer(servInfos);
+					try{
+						searchDialog.dismiss(); 
+						searchDialog = null;
+						ServiceInfo[] servInfos = (ServiceInfo[]) msg.obj;
+						// At least one or more servers
+						if (servInfos != null && servInfos.length > 0) {
+							selectServer(servInfos);
+						}
+						// No server could be found
+						else {
+							context.onWizardFinished(null);
+						}
 					}
-					// No server could be found
-					else {
-						context.onWizardFinished(null);
-					}
+					catch (IllegalArgumentException e) {}
 					break;
 				// A server was selected
 				case MSG_SERVER_SELECTED:
-					serverDialog.dismiss();
-					serverDialog = null;
-					editUser();
+					try{ 
+						serverDialog.dismiss(); 
+						serverDialog = null;
+						editUser();
+					}
+					catch (IllegalArgumentException e) {}
 					break;
 				// User informations has been edited
 				case MSG_USER_EDITED:
-					userDialog.dismiss();
-					userDialog = null;
-					selectDSM();
+					try{ 
+						userDialog.dismiss(); 
+						userDialog = null;
+						selectDSM();
+					}
+					catch (IllegalArgumentException e) {}
 					break;
 				// User informations has been edited
 				case MSG_DSM_SELECTED:
-					dsmDialog.dismiss();
-					dsmDialog = null;
-					editOptionsSecure();
+					try{ 
+						dsmDialog.dismiss(); 
+						dsmDialog = null;
+						editOptionsSecure();
+					}
+					catch (IllegalArgumentException e) {}
 					break;
 				// Options have been edited
 				case MSG_OPTIONS_HTTPS_EDITED:
-					optionsHTTPSDialog.dismiss();
-					optionsHTTPSDialog = null;
-					editOptionsInternet();
+					try{ 
+						optionsHTTPSDialog.dismiss();
+						optionsHTTPSDialog = null;
+						editOptionsInternet();
+					}
+					catch (IllegalArgumentException e) {}
 					break;
 				// Options have been edited
 				case MSG_OPTIONS_INTERNET_EDITED:
-					optionsInternetDialog.dismiss();
-					optionsInternetDialog = null;
-					createServers();
+					try{ 
+						optionsInternetDialog.dismiss(); 
+						optionsInternetDialog = null;
+						createServers();
+					}
+					catch (IllegalArgumentException e) {}
 					break;
 				default:
 					break;
