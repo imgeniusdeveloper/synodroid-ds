@@ -510,9 +510,9 @@ public class SynoServer {
 			if (dsmExP.getRootException() instanceof SocketException) {
 				msg = handlerP.getString(R.string.connect_nohost);
 			} else if (dsmExP.getRootException() instanceof SSLException) {
-				try{
+				try {
 					msg = MessageFormat.format(handlerP.getString(R.string.connect_ssl_error), new Object[] { dsmExP.getCause().getMessage() });
-				}catch (Exception e){
+				} catch (Exception e) {
 					msg = handlerP.getString(R.string.port_mismatch);
 				}
 			} else if (dsmExP.getRootException() instanceof SocketTimeoutException) {

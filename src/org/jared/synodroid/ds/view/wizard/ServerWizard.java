@@ -58,8 +58,8 @@ public class ServerWizard {
 				switch (msg.what) {
 				// A server was found
 				case MSG_SERVER_FOUND:
-					try{
-						searchDialog.dismiss(); 
+					try {
+						searchDialog.dismiss();
 						searchDialog = null;
 						ServiceInfo[] servInfos = (ServiceInfo[]) msg.obj;
 						// At least one or more servers
@@ -70,53 +70,53 @@ public class ServerWizard {
 						else {
 							context.onWizardFinished(null);
 						}
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				// A server was selected
 				case MSG_SERVER_SELECTED:
-					try{ 
-						serverDialog.dismiss(); 
+					try {
+						serverDialog.dismiss();
 						serverDialog = null;
 						editUser();
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				// User informations has been edited
 				case MSG_USER_EDITED:
-					try{ 
-						userDialog.dismiss(); 
+					try {
+						userDialog.dismiss();
 						userDialog = null;
 						selectDSM();
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				// User informations has been edited
 				case MSG_DSM_SELECTED:
-					try{ 
-						dsmDialog.dismiss(); 
+					try {
+						dsmDialog.dismiss();
 						dsmDialog = null;
 						editOptionsSecure();
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				// Options have been edited
 				case MSG_OPTIONS_HTTPS_EDITED:
-					try{ 
+					try {
 						optionsHTTPSDialog.dismiss();
 						optionsHTTPSDialog = null;
 						editOptionsInternet();
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				// Options have been edited
 				case MSG_OPTIONS_INTERNET_EDITED:
-					try{ 
-						optionsInternetDialog.dismiss(); 
+					try {
+						optionsInternetDialog.dismiss();
 						optionsInternetDialog = null;
 						createServers();
+					} catch (IllegalArgumentException e) {
 					}
-					catch (IllegalArgumentException e) {}
 					break;
 				default:
 					break;
