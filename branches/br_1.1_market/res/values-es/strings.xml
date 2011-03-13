@@ -329,4 +329,6 @@
 <string name="task_parameters">Propiedades de la tarea</string>
 <string name="downloadOnly">Sólo funciona cuando la tarea está en descarga...</string>
 
+<string name="port_mismatch">El protocolo no coincide con el puerto seleccionado.</string>
+
 </resources>
