@@ -870,11 +870,12 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 	private void updateTask(boolean forceRefreshP) {
 		Synodroid app = (Synodroid) getApplication();
 		SynoServer server = null;
-		try{
+		try {
 			server = app.getServer();
-		} catch (Exception e){}
-		
-		if (server != null){
+		} catch (Exception e) {
+		}
+
+		if (server != null) {
 			if (server.getDsmVersion() == DSMVersion.VERSION3_1) {
 				List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
 				if (modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) {
@@ -886,11 +887,11 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 					app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
 					seedingChanged = false;
 				}
-	
+
 			} else {
 				List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
 				if ((modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) || (seedingChanged)) {
-	
+
 					UpdateTaskAction update = new UpdateTaskAction(task, modifiedTaskFiles, seedingRatio, seedingTime);
 					app.getServer().executeAsynchronousAction(this, update, forceRefreshP);
 					seedingChanged = false;
