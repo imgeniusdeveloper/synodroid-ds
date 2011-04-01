@@ -211,6 +211,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			// Set the the title (the filename)
 			title.setText(task.fileName);
 		} else {
+			super.onCreate(savedInstanceState);
 			this.finish();
 		}
 	}
