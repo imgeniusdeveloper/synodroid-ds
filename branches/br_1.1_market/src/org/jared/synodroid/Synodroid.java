@@ -101,10 +101,10 @@ public class Synodroid extends CrashReportingApplication {
 	 * @param activityP
 	 * @param serverP
 	 */
-	public synchronized void connectServer(DownloadActivity activityP, SynoServer serverP, List<SynoAction> actionQueueP) {
+	public synchronized void connectServer(DownloadActivity activityP, SynoServer serverP, List<SynoAction> actionQueueP, boolean automated) {
 		// if (currentServer == null || !currentServer.isAlive() || !currentServer.equals(serverP)) {
 		// First disconnect the old server
-		if (currentServer != null) {
+		if (currentServer != null && !automated) {
 			currentServer.disconnect();
 		}
 		// Set the recurrent action
@@ -272,7 +272,7 @@ public class Synodroid extends CrashReportingApplication {
 			ArrayList<SynoAction> actionQueue = new ArrayList<SynoAction>();
 			actionQueue.add(actionP);
 			activityP.alreadyCanceled = false;
-			activityP.showDialogToConnect(true, actionQueue);
+			activityP.showDialogToConnect(true, actionQueue, true);
 		}
 	}
 

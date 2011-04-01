@@ -68,19 +68,19 @@ public class SynoServer {
 	// The password
 	private String password;
 	// The sort atttribut
-	private String sortAttribute = "task_id";
+	private String sortAttribute;
 	// Is the sort ascending
-	private boolean ascending = true;
+	private boolean ascending;
 
 	// The recurrent action to execute
 	private SynoAction recurrentAction = null;
 
 	// Are we connected with the server: login+passwd?
-	private boolean connected = false;
+	private boolean connected;
 	// Flag to stop the server's collector
-	private boolean stop = false;
+	private boolean stop;
 	// Flag to pause the thread until it is interrupted
-	private boolean pause = false;
+	private boolean pause;
 	// The DSM protocol handler
 	private DSMHandlerFactory dsmFactory;
 	// The data's collector thread
@@ -89,7 +89,7 @@ public class SynoServer {
 	private List<String> cookies;
 
 	// Flag to know is the server has been interrupted while sleeping
-	private boolean interrupted = false;
+	private boolean interrupted;
 
 	// Binded DownloadActivity
 	private ResponseHandler handler;
@@ -110,10 +110,7 @@ public class SynoServer {
 		map.put("error_badip", "The IP address you entered is invalid.");
 		map.put("error_badmask", "The subnet mask you entered is invalid.");
 		map.put("error_badport", "The port number should be from 1 to 65535.");
-		map
-				.put(
-						"error_badserver",
-						"Failed to apply the network time server setting, the possible reasons are:<br>Cannot find the network time server. Please check if you have assigned a correct DNS server and default gateway, or try to enter the IP instead of a network time server name.<br>The network time server does not exist or is temporarily unavailable.<br>The server you have entered is not a NTP (network time protocol) server.<br>The network connection to the network time server is unstable or in low quality.<br>Please try again after checking the possible reasons above.");
+		map.put("error_badserver", "Failed to apply the network time server setting, the possible reasons are:<br>Cannot find the network time server. Please check if you have assigned a correct DNS server and default gateway, or try to enter the IP instead of a network time server name.<br>The network time server does not exist or is temporarily unavailable.<br>The server you have entered is not a NTP (network time protocol) server.<br>The network connection to the network time server is unstable or in low quality.<br>Please try again after checking the possible reasons above.");
 		map.put("error_emptyhost", "You have not entered the server name.");
 		map.put("error_emptyip", "You have not entered the IP address.");
 		map.put("error_emptymask", "You have not entered the subnet mask.");
@@ -266,6 +263,12 @@ public class SynoServer {
 	 */
 	public SynoServer() {
 		initMap();
+		connected = false;
+		stop = false;
+		pause = false;
+		interrupted = false;
+		ascending = true;
+		sortAttribute = "task_id";
 	}
 
 	/**
@@ -319,6 +322,7 @@ public class SynoServer {
 						doConnection(false);
 						// If the action's queue is not empty
 						if (actionQueueP != null) {
+							Log.d(Synodroid.DS_TAG, "There are items to execute in the queue...");
 							for (SynoAction taskAction : actionQueueP) {
 								executeAsynchronousAction(handler, taskAction, false);
 							}
@@ -392,7 +396,10 @@ public class SynoServer {
 					}
 					// Set the connection to null to force connection next time
 					finally {
-						connected = false;
+						synchronized (this){
+							connected = false;
+						}
+						Log.d(Synodroid.DS_TAG, "Server forced to reconnect.");
 					}
 				}
 			};
@@ -414,7 +421,9 @@ public class SynoServer {
 		// Connect: try to...
 		dsmFactory.connect();
 		// Here we are connected
-		connected = true;
+		synchronized (this){
+			connected = true;	
+		}
 		// Send a connected message
 		if (!silentModeP) {
 			fireMessage(SynoServer.this.handler, ResponseHandler.MSG_CONNECTED);
@@ -433,16 +442,17 @@ public class SynoServer {
 	/**
 	 * Disconnect from the server
 	 */
-	public void disconnect() {
+	synchronized public void disconnect() {
 		connected = false;
 		stop = true;
 		collector.interrupt();
+		Log.d(Synodroid.DS_TAG, "Server disconnected.");
 	}
 
 	/**
 	 * Saves the last error for future retrieval
 	 */
-	public void setLastError(String error) {
+	synchronized public void setLastError(String error) {
 		lasterror = error;
 	}
 
@@ -613,36 +623,40 @@ public class SynoServer {
 	 * @param nickname
 	 *            the nickname to set
 	 */
-	public void setNickname(String nickname) {
+	synchronized public void setNickname(String nickname) {
 		this.nickname = nickname;
 		connected = false;
+		Log.d(Synodroid.DS_TAG, "Server nickname updated.");
 	}
 
 	/**
 	 * @param user
 	 *            the user to set
 	 */
-	public void setUser(String user) {
+	synchronized public void setUser(String user) {
 		this.user = user;
 		connected = false;
+		Log.d(Synodroid.DS_TAG, "Username updated on server.");
 	}
 
 	/**
 	 * @param password
 	 *            the password to set
 	 */
-	public void setPassword(String password) {
+	synchronized public void setPassword(String password) {
 		this.password = password;
 		connected = false;
+		Log.d(Synodroid.DS_TAG, "Password updated on server.");
 	}
 
 	/**
 	 * @param dsmVersion
 	 *            the dsmVersion to set
 	 */
-	public void setDsmVersion(DSMVersion dsmVersion) {
+	synchronized public void setDsmVersion(DSMVersion dsmVersion) {
 		this.dsmVersion = dsmVersion;
 		connected = false;
+		Log.d(Synodroid.DS_TAG, "DSM Handler updated.");
 		// Create the appropriated factory
 		dsmFactory = DSMHandlerFactory.getFactory(dsmVersion, this);
 	}
@@ -651,7 +665,7 @@ public class SynoServer {
 	 * @param sortAttribute
 	 *            the sortAttribute to set
 	 */
-	public void setSortAttribute(String sortAttribute) {
+	synchronized public void setSortAttribute(String sortAttribute) {
 		this.sortAttribute = sortAttribute;
 	}
 
@@ -659,7 +673,7 @@ public class SynoServer {
 	 * @param ascending
 	 *            the ascending to set
 	 */
-	public void setAscending(boolean ascending) {
+	synchronized public void setAscending(boolean ascending) {
 		this.ascending = ascending;
 	}
 
@@ -799,7 +813,9 @@ public class SynoServer {
 				Map<String, List<String>> headers = con.getHeaderFields();
 				List<String> newCookie = headers.get("set-cookie");
 				if (newCookie != null) {
-					cookies = newCookie;
+					synchronized (this){
+						cookies = newCookie;
+					}
 					Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 				}
 
@@ -900,7 +916,9 @@ public class SynoServer {
 			Map<String, List<String>> headers = con.getHeaderFields();
 			List<String> newCookie = headers.get("set-cookie");
 			if (newCookie != null) {
-				cookies = newCookie;
+				synchronized (this){
+					cookies = newCookie;
+				}
 				Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 			}
 			// Now read the reponse and build a string with it
@@ -941,7 +959,7 @@ public class SynoServer {
 	/**
 	 * Force a refresh by interrupting the sleep
 	 */
-	public void forceRefresh() {
+	synchronized public void forceRefresh() {
 		if (collector != null) {
 			collector.interrupt();
 		}
@@ -950,14 +968,14 @@ public class SynoServer {
 	/**
 	 * Pause the server's thread
 	 */
-	public void pause() {
+	synchronized public void pause() {
 		pause = true;
 	}
 
 	/**
 	 * Resume the server's thread
 	 */
-	public void resume() {
+	synchronized public void resume() {
 		pause = false;
 		collector.interrupt();
 	}
@@ -1020,7 +1038,7 @@ public class SynoServer {
 	 * @param interruptedP
 	 *            the interrupted to set
 	 */
-	public void setInterrupted(boolean interruptedP) {
+	synchronized public void setInterrupted(boolean interruptedP) {
 		interrupted = interruptedP;
 	}
 
@@ -1044,7 +1062,7 @@ public class SynoServer {
 	 * @param localConnectionP
 	 *            the localConnection to set
 	 */
-	public void setLocalConnection(SynoServerConnection localConnectionP) {
+	synchronized public void setLocalConnection(SynoServerConnection localConnectionP) {
 		localConnection = localConnectionP;
 	}
 
@@ -1059,7 +1077,7 @@ public class SynoServer {
 	 * @param publicConnectionP
 	 *            the publicConnection to set
 	 */
-	public void setPublicConnection(SynoServerConnection publicConnectionP) {
+	synchronized public void setPublicConnection(SynoServerConnection publicConnectionP) {
 		publicConnection = publicConnectionP;
 	}
 
