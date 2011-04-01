@@ -238,7 +238,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 						// Ask to reconnect when connection is lost.
 						if (server != null) {
 							if (!server.isConnected()) {
-								showDialogToConnect(false, null);
+								showDialogToConnect(false, null, false);
 							}
 						}
 					}
@@ -672,7 +672,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 * @see org.jared.synodroid.common.ui.TitleClicklistener#onTitleClicked(android .view.View)
 	 */
 	public void onTitleClicked(View viewP) {
-		showDialogToConnect(false, null);
+		showDialogToConnect(false, null, false);
 	}
 
 	/*
@@ -895,7 +895,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	/**
 	 * Show the dialog to connect to a server
 	 */
-	public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<SynoAction> actionQueueP) {
+	public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<SynoAction> actionQueueP, final boolean automated) {
 		if (!connectDialogOpened) {
 			final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(this, PreferenceManager.getDefaultSharedPreferences(this));
 			// If at least one server
@@ -916,7 +916,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 						public void onClick(DialogInterface dialog, int item) {
 							SynoServer server = servers.get(item);
 							// Change the server
-							((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
+							((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP, automated);
 							dialog.dismiss();
 						}
 					});
@@ -936,7 +936,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 					if (servers.size() > 0) {
 						SynoServer server = servers.get(0);
 						// Change the server
-						((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP);
+						((Synodroid) getApplication()).connectServer(DownloadActivity.this, server, actionQueueP, automated);
 					}
 				}
 			}
@@ -1094,7 +1094,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// No server then display the connection dialog
 		else {
 			if (connectToServer)
-				showDialogToConnect(true, null);
+				showDialogToConnect(true, null, true);
 		}
 	}
 
@@ -1148,7 +1148,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 */
 	public void onEulaAgreedTo() {
 		licenceAccepted = true;
-		showDialogToConnect(true, null);
+		showDialogToConnect(true, null, false);
 	}
 
 	/*
