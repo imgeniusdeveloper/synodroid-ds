@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.http.util.ByteArrayBuffer;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
+import org.jared.synodroid.common.SearchViewBinder;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.action.AddTaskAction;
 import org.jared.synodroid.common.action.ClearAllTaskAction;
@@ -647,7 +648,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				} else {
 					emptyText.setVisibility(TextView.GONE);
 					resList.setVisibility(ListView.VISIBLE);
-					resList.setAdapter(new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to));
+					SimpleCursorAdapter cursor = new SimpleCursorAdapter(DownloadActivity.this, R.layout.search_row, cur, from, to);
+					cursor.setViewBinder(new SearchViewBinder());
+					resList.setAdapter(cursor);
 				}
 			}
 		}
