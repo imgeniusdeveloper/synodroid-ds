@@ -419,14 +419,13 @@ public class SynoServer {
 			fireMessage(handler, ResponseHandler.MSG_CONNECTING);
 		}
 		// Connect: try to...
-		dsmFactory.connect();
-		// Here we are connected
-		synchronized (this){
-			connected = true;	
-		}
+		boolean need_shared = !dsmFactory.connect();
 		// Send a connected message
 		if (!silentModeP) {
 			fireMessage(SynoServer.this.handler, ResponseHandler.MSG_CONNECTED);
+		}
+		if (need_shared){
+			fireMessage(SynoServer.this.handler, ResponseHandler.MSG_SHARED_NOT_SET);
 		}
 	}
 
@@ -955,6 +954,13 @@ public class SynoServer {
 	public boolean isConnected() {
 		return connected;
 	}
+	
+	/**
+	 * Set server connection flag
+	 */
+	synchronized public void setConnected(boolean status) {
+		connected = status;
+	}
 
 	/**
 	 * Force a refresh by interrupting the sleep
@@ -1081,4 +1087,7 @@ public class SynoServer {
 		publicConnection = publicConnectionP;
 	}
 
+	public ResponseHandler getResponseHandler(){
+		return handler;
+	}
 }

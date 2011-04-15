@@ -62,7 +62,7 @@ public abstract class DSMHandlerFactory {
 	 * 
 	 * @param serverP
 	 */
-	public abstract void connect() throws Exception;
+	public abstract boolean connect() throws Exception;
 
 	/**
 	 * Return the Download station handler

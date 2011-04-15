@@ -52,6 +52,7 @@ public interface ResponseHandler {
 
 	public static final int MSG_PROPERTIES_RECEIVED = 100012;
 
+	public static final int MSG_SHARED_NOT_SET = 100013;
 	/**
 	 * Handle the response. BE CAREFUL this method will NOT be called from the main thread. So don't try to interact with the UI. Prefer to use SynodroidActivity subclass and then implements your code in handleMessage method.
 	 * 
