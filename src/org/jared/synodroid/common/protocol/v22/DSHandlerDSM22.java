@@ -631,6 +631,11 @@ class DSHandlerDSM22 implements DSHandler {
 					if (reason != null && reason.equals("download_error_user_removed")) {
 						return "";
 					}
+				} else if (json.has("disable_err")) {
+					reason = json.getString("disable_err");
+					if (reason.equals("none") || reason.equals("sharenotfound")){
+						return "";
+					}
 				}
 				throw new DSMException(reason);
 			}

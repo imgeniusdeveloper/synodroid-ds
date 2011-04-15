@@ -305,6 +305,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				// Unable to show dialog probably because intent has been closed. Ignoring...
 			}
 		}
+		else if (msg.what == ResponseHandler.MSG_SHARED_NOT_SET) {
+			Synodroid app = (Synodroid) getApplication();
+			app.executeAsynchronousAction(this, new EnumShareAction(), false);
+		}
 	}
 
 	/**
@@ -632,17 +636,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		protected void onPostExecute(Cursor cur) {
 
 			if (cur == null) {
-				SpinnerSort.setVisibility(Spinner.GONE);
-				SpinnerSource.setVisibility(Spinner.GONE);
+				emptyText.setVisibility(TextView.VISIBLE);
 				resList.setVisibility(ListView.GONE);
-				emptyText.setText(R.string.provider_missing);
-				btnInstall.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						Intent goToMarket = null;
-						goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.transdroid.search"));
-						startActivity(goToMarket);
-					}
-				});
+				emptyText.setText(getString(R.string.no_results) + " " + lastSearch);
 			} else {// Show results in the list
 				if (cur.getCount() == 0) {
 					emptyText.setVisibility(TextView.VISIBLE);

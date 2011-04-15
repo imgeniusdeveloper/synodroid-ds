@@ -63,7 +63,7 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 	 * @see org.jared.synodroid.common.protocol.DSMHandlerFactory#connect(org.jared .synodroid.common.SynoServer)
 	 */
 	@Override
-	public void connect() throws Exception {
+	public boolean connect() throws Exception {
 		String result = null;
 		String reason = null;
 		String pass = server.getPassword();
@@ -75,6 +75,16 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 		if (result == null || !result.equals(LOGIN_RESULT_SUCCESS)) {
 			reason = respJSO.getString(LOGIN_ERROR_REASON);
 			throw new DSMException(reason);
+		}
+		else{
+			server.setConnected(true);
+			result = dsHandler.getSharedDirectory();
+			if (result.equals("")){
+				return false;
+			}
+			else{
+				return true;
+			}
 		}
 
 	}
