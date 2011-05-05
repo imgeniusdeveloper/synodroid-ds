@@ -151,7 +151,7 @@ public class PreferenceFacade {
 					// DSM version
 					DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
 					if (vers == null) {
-						vers = DSMVersion.VERSION2_1;
+						vers = DSMVersion.VERSION2_2;
 					}
 					server.setDsmVersion(vers);
 					// Sort informations

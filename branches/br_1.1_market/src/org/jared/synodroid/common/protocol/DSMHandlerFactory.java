@@ -43,8 +43,6 @@ public abstract class DSMHandlerFactory {
 		DSMHandlerFactory result = null;
 		// Depending on DSM version
 		switch (versionP) {
-		case VERSION2_1:
-			return new DSHandlerDSM22Factory(serverP);
 		case VERSION2_2:
 			return new DSHandlerDSM22Factory(serverP);
 		case VERSION2_3:
