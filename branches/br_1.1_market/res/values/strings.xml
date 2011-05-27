@@ -75,7 +75,7 @@
 <string name="button_delete">Delete</string>
 <string name="menu_add_server">Add a server</string>
 <string name="label_default_server_prefix">Server </string>
-<string name="hint_default_server">Click to edit</string>
+<string name="hint_default_server">Invalid server, click to edit</string>
 <string name="menu_refresh">Refresh</string>
 <string name="title_cat_connection">Public connection parameters</string>
 <string name="title_cat_connection_local">Local connection parameters</string>
@@ -333,5 +333,8 @@
 <string name="downloadOnly">Only works when task is downloading...</string>
 
 <string name="port_mismatch">The protocol does not match the selected port.</string>
+
+<string name="debug">Debug</string>
+<string name="hint_debug">Activate debugging logs</string>
 
 </resources>

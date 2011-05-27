@@ -896,7 +896,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	 */
 	public void showDialogToConnect(boolean autoConnectIfOnlyOneServerP, final List<SynoAction> actionQueueP, final boolean automated) {
 		if (!connectDialogOpened) {
-			final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(this, PreferenceManager.getDefaultSharedPreferences(this));
+			final ArrayList<SynoServer> servers = PreferenceFacade.loadServers(this, PreferenceManager.getDefaultSharedPreferences(this), ((Synodroid)getApplication()).DEBUG);
 			// If at least one server
 			if (servers.size() != 0) {
 				// If more than 1 server OR if we don't want to autoconnect then

@@ -95,6 +95,7 @@ public class SynoServer {
 	private ResponseHandler handler;
 
 	private String lasterror;
+	private boolean DEBUG;
 
 	HashMap<String, String> map = new HashMap<String, String>();
 
@@ -261,7 +262,7 @@ public class SynoServer {
 	/**
 	 * A new SynoServer with no informations
 	 */
-	public SynoServer() {
+	/*public SynoServer() {
 		initMap();
 		connected = false;
 		stop = false;
@@ -269,19 +270,21 @@ public class SynoServer {
 		interrupted = false;
 		ascending = true;
 		sortAttribute = "task_id";
-	}
+		DEBUG = false;
+	}*/
 
 	/**
 	 * Constructor which set all server's informations. No connection are made when calling the constructor.
 	 */
-	public SynoServer(String nicknameP, SynoServerConnection localConP, SynoServerConnection publicConnP, String userP, String passwordP) {
+	public SynoServer(String nicknameP, SynoServerConnection localConP, SynoServerConnection publicConnP, String userP, String passwordP, boolean debug) {
 		nickname = nicknameP;
 		localConnection = localConP;
 		publicConnection = publicConnP;
 		user = userP;
 		password = passwordP;
+		DEBUG = debug;
 		// Create the appropriated factory
-		dsmFactory = DSMHandlerFactory.getFactory(dsmVersion, this);
+		dsmFactory = DSMHandlerFactory.getFactory(dsmVersion, this, DEBUG);
 		initMap();
 	}
 
@@ -322,7 +325,7 @@ public class SynoServer {
 						doConnection(false);
 						// If the action's queue is not empty
 						if (actionQueueP != null) {
-							Log.d(Synodroid.DS_TAG, "There are items to execute in the queue...");
+							if (DEBUG) Log.d(Synodroid.DS_TAG, "There are items to execute in the queue...");
 							for (SynoAction taskAction : actionQueueP) {
 								executeAsynchronousAction(handler, taskAction, false);
 							}
@@ -367,7 +370,7 @@ public class SynoServer {
 							}
 							// Nothing to do. It may be a force refresh after an action!
 							catch (InterruptedException iex) {
-								Log.d(Synodroid.DS_TAG, "Been interrupted while sleeping...");
+								if (DEBUG) Log.d(Synodroid.DS_TAG, "Been interrupted while sleeping...");
 								setInterrupted(true);
 							}
 							// All others exceptions
@@ -384,12 +387,12 @@ public class SynoServer {
 					}
 					// Connection error
 					catch (DSMException e) {
-						Log.d(Synodroid.DS_TAG, "DSMException occured", e);
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "DSMException occured", e);
 						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, e));
 					}
 					// Programmation exception
 					catch (Exception e) {
-						Log.d(Synodroid.DS_TAG, "Exception occured", e);
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception occured", e);
 						// This is most likely a connection timeout
 						DSMException ex = new DSMException(e);
 						fireMessage(SynoServer.this.handler, ResponseHandler.MSG_ERROR, translateError(SynoServer.this.handler, ex));
@@ -399,7 +402,7 @@ public class SynoServer {
 						synchronized (this){
 							connected = false;
 						}
-						Log.d(Synodroid.DS_TAG, "Server forced to reconnect.");
+						if (DEBUG) Log.d(Synodroid.DS_TAG, "Server forced to reconnect.");
 					}
 				}
 			};
@@ -445,7 +448,7 @@ public class SynoServer {
 		connected = false;
 		stop = true;
 		collector.interrupt();
-		Log.d(Synodroid.DS_TAG, "Server disconnected.");
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "Server disconnected.");
 	}
 
 	/**
@@ -508,7 +511,7 @@ public class SynoServer {
 				String mapMessage = map.get(jsoReason);
 				if (mapMessage == null) {
 					msg += ": " + jsoReason;
-					Log.d(Synodroid.DS_TAG, "JSON's error not trapped: " + jsoReason);
+					if (DEBUG) Log.d(Synodroid.DS_TAG, "JSON's error not trapped: " + jsoReason);
 				} else {
 					msg = "DSM Error: " + mapMessage;
 				}
@@ -625,7 +628,7 @@ public class SynoServer {
 	synchronized public void setNickname(String nickname) {
 		this.nickname = nickname;
 		connected = false;
-		Log.d(Synodroid.DS_TAG, "Server nickname updated.");
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "Server nickname updated.");
 	}
 
 	/**
@@ -635,7 +638,7 @@ public class SynoServer {
 	synchronized public void setUser(String user) {
 		this.user = user;
 		connected = false;
-		Log.d(Synodroid.DS_TAG, "Username updated on server.");
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "Username updated on server.");
 	}
 
 	/**
@@ -645,7 +648,7 @@ public class SynoServer {
 	synchronized public void setPassword(String password) {
 		this.password = password;
 		connected = false;
-		Log.d(Synodroid.DS_TAG, "Password updated on server.");
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "Password updated on server.");
 	}
 
 	/**
@@ -655,9 +658,9 @@ public class SynoServer {
 	synchronized public void setDsmVersion(DSMVersion dsmVersion) {
 		this.dsmVersion = dsmVersion;
 		connected = false;
-		Log.d(Synodroid.DS_TAG, "DSM Handler updated.");
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "DSM Handler updated.");
 		// Create the appropriated factory
-		dsmFactory = DSMHandlerFactory.getFactory(dsmVersion, this);
+		dsmFactory = DSMHandlerFactory.getFactory(dsmVersion, this, DEBUG);
 	}
 
 	/**
@@ -715,7 +718,7 @@ public class SynoServer {
 			public void run() {
 				// An operation is pending
 				fireMessage(handlerP, ResponseHandler.MSG_OPERATION_PENDING);
-				Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
+				if (DEBUG) Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
 				try {
 					// If a Toast must be shown
 					if (actionP.isToastable() && showToast) {
@@ -726,10 +729,10 @@ public class SynoServer {
 					}
 					actionP.execute(handlerP, SynoServer.this);
 				} catch (DSMException ex) {
-					Log.e("SynoDroid DS", "Unexpected DSM error", ex);
+					if (DEBUG) Log.e(Synodroid.DS_TAG, "Unexpected DSM error", ex);
 					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));
 				} catch (Exception e) {
-					Log.e("SynoDroid DS", "Unexpected error", e);
+					if (DEBUG) Log.e(Synodroid.DS_TAG, "Unexpected error", e);
 					DSMException ex = new DSMException(e);
 					fireMessage(handlerP, ResponseHandler.MSG_ERROR, SynoServer.this.translateError(SynoServer.this.handler, ex));
 				} finally {
@@ -763,7 +766,7 @@ public class SynoServer {
 		if (cookies != null) {
 			for (String cookie : cookies) {
 				con.addRequestProperty("Cookie", cookie);
-				Log.d(Synodroid.DS_TAG, "Added cookie: " + cookie);
+				if (DEBUG) Log.d(Synodroid.DS_TAG, "Added cookie: " + cookie);
 			}
 		}
 		con.setDoOutput(true);
@@ -771,7 +774,7 @@ public class SynoServer {
 		con.setUseCaches(false);
 		con.setRequestMethod(methodP);
 		con.setConnectTimeout(20000);
-		Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
+		if (DEBUG) Log.d(Synodroid.DS_TAG, methodP + ": " + uriP + "?" + requestP);
 		return con;
 	}
 
@@ -815,7 +818,7 @@ public class SynoServer {
 					synchronized (this){
 						cookies = newCookie;
 					}
-					Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+					if (DEBUG) Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 				}
 
 				// Now read the reponse and build a string with it
@@ -829,9 +832,9 @@ public class SynoServer {
 				// Verify is response if not -1, otherwise take reason from the header
 				if (con.getResponseCode() == -1) {
 					retry++;
-					Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
+					if (DEBUG) Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
 				} else {
-					Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
+					if (DEBUG) Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 					JSONObject respJSO = new JSONObject(sb.toString());
 					return respJSO;
 				}
@@ -840,7 +843,7 @@ public class SynoServer {
 		}
 		// Special for SSL Handshake failure
 		catch (IOException ioex) {
-			Log.e(Synodroid.DS_TAG, "Unexpected error", ioex);
+			if (DEBUG) Log.e(Synodroid.DS_TAG, "Unexpected error", ioex);
 			String msg = ioex.getMessage();
 			if (msg != null && msg.indexOf("SSL handshake failure") != -1) {
 				// Don't need to translate: the opposite message (HTTP on a SSL port) is in english and come from the server
@@ -851,7 +854,7 @@ public class SynoServer {
 		}
 		// Unexpected exception
 		catch (Exception ex) {
-			Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
+			if (DEBUG) Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
 			throw ex;
 		}
 		// Finally close everything
@@ -892,11 +895,11 @@ public class SynoServer {
 			}
 			br.close();
 
-			Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
+			if (DEBUG) Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
 			JSONObject respJSO = new JSONObject(sb.toString());
-			Log.d(Synodroid.DS_TAG, "Multipart response is: " + code + "/" + resp + "/" + respJSO);
+			if (DEBUG) Log.d(Synodroid.DS_TAG, "Multipart response is: " + code + "/" + resp + "/" + respJSO);
 		} catch (Exception e) {
-			Log.e(Synodroid.DS_TAG, "Error while sending multipart", e);
+			if (DEBUG) Log.e(Synodroid.DS_TAG, "Error while sending multipart", e);
 		}
 	}
 
@@ -918,7 +921,7 @@ public class SynoServer {
 				synchronized (this){
 					cookies = newCookie;
 				}
-				Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+				if (DEBUG) Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 			}
 			// Now read the reponse and build a string with it
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -937,7 +940,7 @@ public class SynoServer {
 		}
 		// Unexpected exception
 		catch (Exception ex) {
-			Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
+			if (DEBUG) Log.e(Synodroid.DS_TAG, "Unexpected error", ex);
 			throw ex;
 		}
 		// Finally close everything
@@ -1090,4 +1093,9 @@ public class SynoServer {
 	public ResponseHandler getResponseHandler(){
 		return handler;
 	}
+	
+	public void setDebugLvl(boolean debug) {
+		DEBUG = debug;
+	}
+
 }

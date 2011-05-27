@@ -39,6 +39,7 @@ public class MultipartBuilder {
 	private String boundary;
 	// The different parts
 	private ArrayList<Part> parts = new ArrayList<Part>();
+	private boolean DEBUG;
 
 	/**
 	 * Constructor
@@ -48,9 +49,9 @@ public class MultipartBuilder {
 	 * @param outputP
 	 *            The output
 	 */
-	public MultipartBuilder(String boundaryP) {
+	public MultipartBuilder(String boundaryP, boolean debug) {
 		boundary = boundaryP;
-
+		DEBUG = debug;
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class MultipartBuilder {
 			dos.flush();
 			dos.close();
 		} catch (IOException e) {
-			Log.e(Synodroid.DS_TAG, "Error while write multipart", e);
+			if (DEBUG) Log.e(Synodroid.DS_TAG, "Error while write multipart", e);
 		}
 	}
 

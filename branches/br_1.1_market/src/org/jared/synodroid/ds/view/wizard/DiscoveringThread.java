@@ -44,6 +44,7 @@ public class DiscoveringThread extends Thread {
 	private Context context;
 	// The message handler
 	private DiscoveringHandler handler;
+	private boolean DEBUG;
 
 	/**
 	 * The constructor
@@ -51,9 +52,10 @@ public class DiscoveringThread extends Thread {
 	 * @param ctxP
 	 * @param hdlP
 	 */
-	public DiscoveringThread(Context ctxP, DiscoveringHandler hdlP) {
+	public DiscoveringThread(Context ctxP, DiscoveringHandler hdlP, boolean debug) {
 		context = ctxP;
 		handler = hdlP;
+		DEBUG = debug;
 	}
 
 	/*
@@ -69,7 +71,7 @@ public class DiscoveringThread extends Thread {
 		lock.setReferenceCounted(true);
 		try {
 			lock.acquire();
-			InetAddress addr = getLocalIpAddress();
+			InetAddress addr = getLocalIpAddress(DEBUG);
 			jmdns = JmDNS.create(addr);
 			ServiceInfo[] infos = jmdns.list("_http._tcp.local.");
 			Message msg = new Message();
@@ -100,7 +102,7 @@ public class DiscoveringThread extends Thread {
 	 * 
 	 * @return
 	 */
-	private static InetAddress getLocalIpAddress() {
+	private static InetAddress getLocalIpAddress(boolean debug) {
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
@@ -112,7 +114,7 @@ public class DiscoveringThread extends Thread {
 				}
 			}
 		} catch (SocketException ex) {
-			Log.e(Synodroid.DS_TAG, ex.toString());
+			if (debug) Log.e(Synodroid.DS_TAG, ex.toString());
 		}
 		return null;
 	}

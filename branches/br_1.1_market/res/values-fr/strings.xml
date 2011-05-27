@@ -75,7 +75,7 @@
 <string name="button_delete">Supprimer</string>
 <string name="menu_add_server">Ajouter serveur</string>
 <string name="label_default_server_prefix">Serveur </string>
-<string name="hint_default_server">Cliquer pour modifier</string>
+<string name="hint_default_server">Serveur non valide, cliquer pour modifier</string>
 <string name="menu_refresh">Rafraichir</string>
 <string name="title_cat_connection">Paramêtres de connexion publique</string>
 <string name="title_cat_connection_local">Paramêtres de connexion locale</string>
@@ -332,5 +332,8 @@
 <string name="downloadOnly">Ne fonctionne seulement lorsque la tâche est en téléchargement...</string>
 
 <string name="port_mismatch">Le protocole ne correspond pas au port sélectionné.</string>
+
+<string name="debug">Débogage</string>
+<string name="hint_debug">Activer journaux de débogage</string>
 
 </resources>

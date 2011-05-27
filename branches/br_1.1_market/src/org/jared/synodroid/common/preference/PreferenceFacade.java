@@ -131,23 +131,24 @@ public class PreferenceFacade {
 	/**
 	 * Load all servers from the shared preference
 	 */
-	public static ArrayList<SynoServer> loadServers(Context contextP, final SharedPreferences sharedPreferencesP) {
+	public static ArrayList<SynoServer> loadServers(Context contextP, final SharedPreferences sharedPreferencesP, boolean debug) {
 		// Determine the current network access
 		WifiManager wifiMgr = (WifiManager) contextP.getSystemService(Context.WIFI_SERVICE);
 		boolean wifiOn = wifiMgr.isWifiEnabled();
 		final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
 		final boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
-
+		final boolean DEBUG = debug;
+		
 		// Create the servers list
 		final ArrayList<SynoServer> result = new ArrayList<SynoServer>();
 		processLoadingServers(sharedPreferencesP, new PreferenceProcessor() {
 			public void process(int idP, String keyP, Properties propertiesP) {
 				try {
 
-					SynoServerConnection loc = SynoServerConnection.createFromProperties(true, propertiesP);
-					SynoServerConnection pub = SynoServerConnection.createFromProperties(false, propertiesP);
+					SynoServerConnection loc = SynoServerConnection.createFromProperties(true, propertiesP, DEBUG);
+					SynoServerConnection pub = SynoServerConnection.createFromProperties(false, propertiesP, DEBUG);
 
-					SynoServer server = new SynoServer(propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX), loc, pub, propertiesP.getProperty(PreferenceFacade.USER_SUFFIX), propertiesP.getProperty(PreferenceFacade.PASSWORD_SUFFIX));
+					SynoServer server = new SynoServer(propertiesP.getProperty(PreferenceFacade.NICKNAME_SUFFIX), loc, pub, propertiesP.getProperty(PreferenceFacade.USER_SUFFIX), propertiesP.getProperty(PreferenceFacade.PASSWORD_SUFFIX), DEBUG);
 					// DSM version
 					DSMVersion vers = DSMVersion.titleOf(propertiesP.getProperty(PreferenceFacade.DSM_SUFFIX));
 					if (vers == null) {
@@ -174,7 +175,7 @@ public class PreferenceFacade {
 						}
 					}
 				} catch (Exception ex) {
-					Log.d(Synodroid.DS_TAG, "An exception occured while loading servers from preference", ex);
+					if (DEBUG) Log.e(Synodroid.DS_TAG, "An exception occured while loading servers from preference", ex);
 				}
 			}
 		});

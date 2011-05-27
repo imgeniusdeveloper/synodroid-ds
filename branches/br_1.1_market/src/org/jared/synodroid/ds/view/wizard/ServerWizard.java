@@ -48,6 +48,7 @@ public class ServerWizard {
 
 	private HashMap<String, Object> metaData = new HashMap<String, Object>();
 	private boolean canceled = false;
+	private boolean DEBUG;
 
 	// ====================================================================
 	// The message handler
@@ -158,11 +159,12 @@ public class ServerWizard {
 	 * 
 	 * @param ctxP
 	 */
-	public ServerWizard(DownloadPreferenceActivity ctxP, String wifiSSIDP) {
+	public ServerWizard(DownloadPreferenceActivity ctxP, String wifiSSIDP, boolean debug) {
 		context = ctxP;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		cancelSeq = context.getText(R.string.button_cancel);
 		metaData.put(META_WIFI, wifiSSIDP);
+		DEBUG = debug;
 	}
 
 	/**
@@ -294,7 +296,7 @@ public class ServerWizard {
 			searchDialog.show();
 		}
 		// Launch the thead to search for servers
-		DiscoveringThread thread = new DiscoveringThread(context, handler);
+		DiscoveringThread thread = new DiscoveringThread(context, handler, DEBUG);
 		thread.start();
 	}
 

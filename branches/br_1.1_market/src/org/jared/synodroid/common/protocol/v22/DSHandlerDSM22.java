@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.Task;
@@ -44,14 +45,16 @@ class DSHandlerDSM22 implements DSHandler {
 
 	/* The Synology's server */
 	private SynoServer server;
-
+	private boolean DEBUG;
+	
 	/**
 	 * The constructor
 	 * 
 	 * @param serverP
 	 */
-	public DSHandlerDSM22(SynoServer serverP) {
+	public DSHandlerDSM22(SynoServer serverP, boolean debug) {
 		server = serverP;
+		DEBUG = debug;
 	}
 
 	/*
@@ -155,7 +158,7 @@ class DSHandlerDSM22 implements DSHandler {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 				}
 			} catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while deleting id:" + taskP.taskId, e);
+				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while deleting id:" + taskP.taskId, e);
 				throw e;
 			}
 		}
@@ -176,7 +179,7 @@ class DSHandlerDSM22 implements DSHandler {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 				}
 			} catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while clearing tasks", e);
+				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while clearing tasks", e);
 				throw e;
 			}
 		}
@@ -400,7 +403,7 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			if (uriP.getPath() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348", DEBUG);
 
 				// The field's part
 				builder.addPart(new Part("field").setContent("task_id".getBytes()));
@@ -438,7 +441,7 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			if (uriP.toString() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348", DEBUG);
 
 				// The field's part
 				builder.addPart(new Part("field").setContent("task_id".getBytes()));
