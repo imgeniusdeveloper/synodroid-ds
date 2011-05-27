@@ -19,7 +19,6 @@ package org.jared.synodroid.ds;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.data.TaskDetail;
 
 import android.graphics.Bitmap;
@@ -30,7 +29,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
-import android.util.Log;
 
 /**
  * As usual a utility class
@@ -128,14 +126,12 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0l;
-			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
 
 	/**
-	 * Utility method to convert a string into an double and log if an error
-	 * occured
+	 * Utility method to convert a string into an double and log if an error occured
 	 * 
 	 * @param valueP
 	 * @return
@@ -148,14 +144,12 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0.0d;
-			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
 
 	/**
-	 * Extract from percent string (with the caracter '%') the percentage int
-	 * value
+	 * Extract from percent string (with the caracter '%') the percentage int value
 	 * 
 	 * @param percentP
 	 * @return
@@ -192,21 +186,17 @@ public class Utils {
 				double size = Double.parseDouble(valStr);
 				if (unitStr.equals("kb")) {
 					size = size * 1000;
-				}
-				else if (unitStr.equals("mb")) {
+				} else if (unitStr.equals("mb")) {
 					size = size * 1000 * 1000;
-				}
-				else if (unitStr.equals("gb")) {
+				} else if (unitStr.equals("gb")) {
 					size = size * 1000 * 1000 * 1000;
-				}
-				else if (unitStr.equals("tb")) {
+				} else if (unitStr.equals("tb")) {
 					size = size * 1000 * 1000 * 1000 * 1000;
 				}
 				result = (long) size;
 			}
 			// Not a number
 			catch (NumberFormatException ex) {
-				Log.e(Synodroid.DS_TAG, "Can't convert: " + sizeP, ex);
 			}
 		}
 		return result;
@@ -227,16 +217,13 @@ public class Utils {
 			if (bytes > 1000l * 1000l * 1000l * 1000l) {
 				val = val / (1000l * 1000l * 1000l * 1000l);
 				unit = "TB";
-			}
-			else if (bytes > 1000l * 1000l * 1000l) {
+			} else if (bytes > 1000l * 1000l * 1000l) {
 				val = val / (1000l * 1000l * 1000l);
 				unit = "GB";
-			}
-			else if (bytes > 1000l * 1000l) {
+			} else if (bytes > 1000l * 1000l) {
 				val = val / (1000l * 1000l);
 				unit = "MB";
-			}
-			else if (bytes > 1000l) {
+			} else if (bytes > 1000l) {
 				val = val / 1000l;
 				unit = "KB";
 			}
@@ -262,42 +249,40 @@ public class Utils {
 			ratio = 1.0d;
 		}
 		if (ratio != 0 && detailP.fileSize != -1) {
-			try{
+			try {
 				result = new Integer((int) ((uploaded * 100) / (detailP.fileSize * ratio)));
-			}
-			catch (ArithmeticException e){
+			} catch (ArithmeticException e) {
 				result = new Integer(100);
 			}
-			
-			
+
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Create a rounded bitmap
-	 * @param bitmap The original bitmap
+	 * 
+	 * @param bitmap
+	 *            The original bitmap
 	 * @return
 	 */
-  public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
-    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-        bitmap.getHeight(), Config.ARGB_8888);
-    Canvas canvas = new Canvas(output);
- 
-    final int color = 0xff424242;
-    final Paint paint = new Paint();
-    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-    final RectF rectF = new RectF(rect);
- 
-    paint.setAntiAlias(true);
-    canvas.drawARGB(0, 0, 0, 0);
-    paint.setColor(color);
-    canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
- 
-    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-    canvas.drawBitmap(bitmap, rect, rect, paint);
-    return output;
-  }
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
 
-	
+		final int color = 0xff424242;
+		final Paint paint = new Paint();
+		final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		final RectF rectF = new RectF(rect);
+
+		paint.setAntiAlias(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(color);
+		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(bitmap, rect, rect, paint);
+		return output;
+	}
+
 }

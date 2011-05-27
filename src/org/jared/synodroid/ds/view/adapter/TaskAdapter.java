@@ -44,8 +44,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
- * An adaptor for torrents list. This adaptor aims to create a view for each
- * item in the listView
+ * An adaptor for torrents list. This adaptor aims to create a view for each item in the listView
  * 
  * @author eric.taix at gmail.com
  */
@@ -68,9 +67,9 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * Constructor
 	 * 
 	 * @param activityP
-	 *          The current activity
+	 *            The current activity
 	 * @param torrentsP
-	 *          List of torrent
+	 *            List of torrent
 	 */
 	public TaskAdapter(DownloadActivity activityP) {
 		activity = activityP;
@@ -133,8 +132,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	public int getCount() {
 		if (tasks != null) {
 			return tasks.size();
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
@@ -143,7 +141,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * Return the torrent at the defined index
 	 * 
 	 * @param indexP
-	 *          The index to use starting from 0
+	 *            The index to use starting from 0
 	 * @return Instance of Torrent
 	 */
 	public Object getItem(int indexP) {
@@ -161,19 +159,21 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 	 * @param indexP
 	 */
 	public long getItemId(int indexP) {
-		return tasks.get(indexP).taskId;
+		try {
+			return tasks.get(indexP).taskId;
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 
 	/**
-	 * Return the view used for the item at position indexP. Always try to reuse
-	 * an old view
+	 * Return the view used for the item at position indexP. Always try to reuse an old view
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
-		}
-		else {
+		} else {
 			view = (LinearLayout) inflater.inflate(R.layout.task_template, parentP, false);
 		}
 		bindView(view, tasks.get(positionP));
@@ -230,8 +230,7 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 					// Show only for a torrent
 					unknownProgress.setVisibility(taskP.isTorrent ? View.VISIBLE : View.INVISIBLE);
 				}
-			}
-			else {
+			} else {
 				upProgress.setVisibility(View.INVISIBLE);
 				unknownProgress.setVisibility(View.GONE);
 			}

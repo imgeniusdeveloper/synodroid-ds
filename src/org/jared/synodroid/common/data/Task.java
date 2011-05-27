@@ -21,8 +21,7 @@ import java.io.Serializable;
 import org.jared.synodroid.common.SynoServer;
 
 /**
- * A simple data container for a torrent. This class is used to display
- * 'general' information about a torrent file.<br/>
+ * A simple data container for a torrent. This class is used to display 'general' information about a torrent file.<br/>
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -107,5 +106,16 @@ public class Task implements Serializable {
 		if (taskId != other.taskId)
 			return false;
 		return true;
+	}
+
+	public TaskStatus getStatus() {
+		TaskStatus taskStat;
+		try {
+			taskStat = TaskStatus.valueOf(status);
+		} catch (Exception e) {
+			taskStat = TaskStatus.TASK_UNKNOWN;
+		}
+
+		return taskStat;
 	}
 }

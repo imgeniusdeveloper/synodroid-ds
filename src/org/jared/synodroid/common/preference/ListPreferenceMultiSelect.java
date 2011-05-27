@@ -23,12 +23,9 @@ import android.preference.ListPreference;
 import android.util.AttributeSet;
 
 /**
- * A Preference that displays a list of entries as a dialog and allows multiple
- * selections
+ * A Preference that displays a list of entries as a dialog and allows multiple selections
  * <p>
- * This preference will store a string into the SharedPreferences. This string
- * will be the values selected from the {@link #setEntryValues(CharSequence[])}
- * array.
+ * This preference will store a string into the SharedPreferences. This string will be the values selected from the {@link #setEntryValues(CharSequence[])} array.
  * </p>
  */
 public class ListPreferenceMultiSelect extends ListPreference {
@@ -73,6 +70,7 @@ public class ListPreferenceMultiSelect extends ListPreference {
 
 	/**
 	 * Parse a string which contains values separate by separator and returns a string array
+	 * 
 	 * @param val
 	 * @return
 	 */
@@ -80,13 +78,12 @@ public class ListPreferenceMultiSelect extends ListPreference {
 		if ("".equals(val))
 			return null;
 		else
-			try{
+			try {
 				return ((String) val).split(SEPARATOR);
-			}
-			catch (Exception e){
+			} catch (Exception e) {
 				return null;
 			}
-			
+
 	}
 
 	/**

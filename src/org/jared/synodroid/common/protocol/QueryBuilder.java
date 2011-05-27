@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 
 /**
  * Utility class which help to create a query string
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class QueryBuilder {
@@ -27,15 +28,16 @@ public class QueryBuilder {
 	private static final String SEPARATOR = "&";
 	// The final query
 	private StringBuilder query = new StringBuilder();
-	
+
 	/**
 	 * Constructor
 	 */
-	public QueryBuilder() {		
+	public QueryBuilder() {
 	}
-	
+
 	/**
 	 * Add a new key / value pair
+	 * 
 	 * @param keyP
 	 * @param valueP
 	 * @return
@@ -51,13 +53,14 @@ public class QueryBuilder {
 		query.append(key).append("=").append(val);
 		return this;
 	}
-	
+
 	/**
 	 * Return the final query
+	 * 
 	 * @return
 	 */
 	@Override
-  public String toString() {
-	  return query.toString();
-  }
+	public String toString() {
+		return query.toString();
+	}
 }

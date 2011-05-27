@@ -20,6 +20,7 @@ import android.os.Handler;
 
 /**
  * A specific handler for server discovering message
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class DiscoveringHandler extends Handler {

@@ -31,8 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * An adapter which is able to build an action list according to the task's
- * state
+ * An adapter which is able to build an action list according to the task's state
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -47,7 +46,7 @@ public class ActionAdapter extends BaseAdapter {
 	 * Constructor
 	 * 
 	 * @param ctxP
-	 *          The context
+	 *            The context
 	 */
 	public ActionAdapter(Context ctxP, Task taskP) {
 		actions = TaskActionMenu.createActions(ctxP, taskP);
@@ -84,22 +83,19 @@ public class ActionAdapter extends BaseAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.widget.Adapter#getView(int, android.view.View,
-	 * android.view.ViewGroup)
+	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
-		}
-		else {
-			view = (LinearLayout)inflater.inflate(R.layout.action_template, parentP, false);
+		} else {
+			view = (LinearLayout) inflater.inflate(R.layout.action_template, parentP, false);
 		}
 		TextView textView = (TextView) view.findViewById(R.id.id_action);
 		textView.setEnabled(actions.get(positionP).isEnabled());
 		textView.setText(actions.get(positionP).getTitle());
 		return view;
 	}
-	
-	
+
 }

@@ -46,9 +46,9 @@ public class ServerWizard {
 	private static final int MSG_OPTIONS_HTTPS_EDITED = 4;
 	private static final int MSG_OPTIONS_INTERNET_EDITED = 5;
 
-	
 	private HashMap<String, Object> metaData = new HashMap<String, Object>();
 	private boolean canceled = false;
+	private boolean DEBUG;
 
 	// ====================================================================
 	// The message handler
@@ -59,47 +59,65 @@ public class ServerWizard {
 				switch (msg.what) {
 				// A server was found
 				case MSG_SERVER_FOUND:
-					searchDialog.dismiss();
-					searchDialog = null;
-					ServiceInfo[] servInfos = (ServiceInfo[]) msg.obj;
-					// At least one or more servers
-					if (servInfos != null && servInfos.length > 0) {
-						selectServer(servInfos);
-					}
-					// No server could be found
-					else {
-						context.onWizardFinished(null);
+					try {
+						searchDialog.dismiss();
+						searchDialog = null;
+						ServiceInfo[] servInfos = (ServiceInfo[]) msg.obj;
+						// At least one or more servers
+						if (servInfos != null && servInfos.length > 0) {
+							selectServer(servInfos);
+						}
+						// No server could be found
+						else {
+							context.onWizardFinished(null);
+						}
+					} catch (IllegalArgumentException e) {
 					}
 					break;
 				// A server was selected
 				case MSG_SERVER_SELECTED:
-					serverDialog.dismiss();
-					serverDialog = null;
-					editUser();
+					try {
+						serverDialog.dismiss();
+						serverDialog = null;
+						editUser();
+					} catch (IllegalArgumentException e) {
+					}
 					break;
 				// User informations has been edited
 				case MSG_USER_EDITED:
-					userDialog.dismiss();
-					userDialog = null;
-					selectDSM();
+					try {
+						userDialog.dismiss();
+						userDialog = null;
+						selectDSM();
+					} catch (IllegalArgumentException e) {
+					}
 					break;
 				// User informations has been edited
 				case MSG_DSM_SELECTED:
-					dsmDialog.dismiss();
-					dsmDialog = null;
-					editOptionsSecure();
+					try {
+						dsmDialog.dismiss();
+						dsmDialog = null;
+						editOptionsSecure();
+					} catch (IllegalArgumentException e) {
+					}
 					break;
 				// Options have been edited
 				case MSG_OPTIONS_HTTPS_EDITED:
-					optionsHTTPSDialog.dismiss();
-					optionsHTTPSDialog = null;
-					editOptionsInternet();
+					try {
+						optionsHTTPSDialog.dismiss();
+						optionsHTTPSDialog = null;
+						editOptionsInternet();
+					} catch (IllegalArgumentException e) {
+					}
 					break;
-					// Options have been edited
+				// Options have been edited
 				case MSG_OPTIONS_INTERNET_EDITED:
-					optionsInternetDialog.dismiss();
-					optionsInternetDialog = null;
-					createServers();
+					try {
+						optionsInternetDialog.dismiss();
+						optionsInternetDialog = null;
+						createServers();
+					} catch (IllegalArgumentException e) {
+					}
 					break;
 				default:
 					break;
@@ -141,11 +159,12 @@ public class ServerWizard {
 	 * 
 	 * @param ctxP
 	 */
-	public ServerWizard(DownloadPreferenceActivity ctxP, String wifiSSIDP) {
+	public ServerWizard(DownloadPreferenceActivity ctxP, String wifiSSIDP, boolean debug) {
 		context = ctxP;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		cancelSeq = context.getText(R.string.button_cancel);
 		metaData.put(META_WIFI, wifiSSIDP);
+		DEBUG = debug;
 	}
 
 	/**
@@ -273,12 +292,11 @@ public class ServerWizard {
 			tv.setText(context.getText(R.string.wizard_searching_msg));
 			searchDialog = new WizardBuilder(context).setTitle(context.getText(R.string.wizard_searching_title)).setView(ll).create();
 			searchDialog.show();
-		}
-		else {
+		} else {
 			searchDialog.show();
 		}
 		// Launch the thead to search for servers
-		DiscoveringThread thread = new DiscoveringThread(context, handler);
+		DiscoveringThread thread = new DiscoveringThread(context, handler, DEBUG);
 		thread.start();
 	}
 

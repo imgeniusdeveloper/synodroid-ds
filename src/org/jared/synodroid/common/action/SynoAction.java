@@ -21,40 +21,39 @@ import org.jared.synodroid.common.protocol.ResponseHandler;
  */
 public interface SynoAction {
 
-  /**
-   * Execute the action on the specific server
-   * 
-   * @param activityP
-   * @param serverP
-   */
-  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception;
+	/**
+	 * Execute the action on the specific server
+	 * 
+	 * @param activityP
+	 * @param serverP
+	 */
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception;
 
-  /**
-   * Return the name of the action
-   * 
-   * @return
-   */
-  public String getName();
+	/**
+	 * Return the name of the action
+	 * 
+	 * @return
+	 */
+	public String getName();
 
-  /**
-   * Return true if a toast must be shown when this action is executed
-   * 
-   * @return
-   */
-  public boolean isToastable();
+	/**
+	 * Return true if a toast must be shown when this action is executed
+	 * 
+	 * @return
+	 */
+	public boolean isToastable();
 
-  /**
-   * Return the resource id to use when a toast must be shown
-   * 
-   * @return
-   */
-  public int getToastId();
+	/**
+	 * Return the resource id to use when a toast must be shown
+	 * 
+	 * @return
+	 */
+	public int getToastId();
 
-  /**
-   * Return the task associated with this task. May return null if no
-   * specific task is associated.
-   * 
-   * @return
-   */
-  public Task getTask();
+	/**
+	 * Return the task associated with this task. May return null if no specific task is associated.
+	 * 
+	 * @return
+	 */
+	public Task getTask();
 }

@@ -25,8 +25,7 @@ import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskStatus;
 
 /**
- * This implementation retrieve the next task to update according to the lastest
- * timestamp.<br/>
+ * This implementation retrieve the next task to update according to the lastest timestamp.<br/>
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -35,9 +34,7 @@ public class LastUpdateStrategy implements NextTaskStrategy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.action.NextTaskStrategy#getNextTask(java.util
-	 * .List)
+	 * @see org.jared.synodroid.common.action.NextTaskStrategy#getNextTask(java.util .List)
 	 */
 	public Task getNextTask(List<Task> currentTasksP) {
 		if (currentTasksP != null && currentTasksP.size() > 0) {
@@ -79,8 +76,7 @@ public class LastUpdateStrategy implements NextTaskStrategy {
 	}
 
 	/**
-	 * Determine if t1 and t2 are active (downloading, seeding or pause without an
-	 * upload value)
+	 * Determine if t1 and t2 are active (downloading, seeding or pause without an upload value)
 	 * 
 	 * @param taskP
 	 * @return
@@ -88,8 +84,7 @@ public class LastUpdateStrategy implements NextTaskStrategy {
 	private boolean isActive(Task taskP) {
 		if (TaskStatus.TASK_DOWNLOADING.toString().equals(taskP.status) || TaskStatus.TASK_SEEDING.toString().equals(taskP.status) || (TaskStatus.TASK_PAUSED.toString().equals(taskP.status) && taskP.uploadProgress == -1)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

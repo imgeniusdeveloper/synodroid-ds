@@ -18,6 +18,7 @@ package org.jared.synodroid.ds.view.adapter;
 
 /**
  * A detail with a simple text value
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -25,8 +26,7 @@ public class DetailText extends Detail {
 
 	// The value of this detail
 	private String value;
-	
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -42,7 +42,7 @@ public class DetailText extends Detail {
 	public DetailText(String nameP) {
 		setName(nameP);
 	}
-	
+
 	/**
 	 * Constructor which initialize the name/value
 	 * 
@@ -53,7 +53,7 @@ public class DetailText extends Detail {
 		setName(nameP);
 		value = valueP;
 	}
-	
+
 	/**
 	 * @return the value
 	 */
@@ -66,7 +66,7 @@ public class DetailText extends Detail {
 
 	/**
 	 * @param value
-	 *          the value to set
+	 *            the value to set
 	 */
 	public void setValue(String value) {
 		this.value = value;

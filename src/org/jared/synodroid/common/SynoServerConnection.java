@@ -43,7 +43,7 @@ public class SynoServerConnection {
 	 * @param props
 	 * @return
 	 */
-	public static SynoServerConnection createFromProperties(boolean local, Properties props) {
+	public static SynoServerConnection createFromProperties(boolean local, Properties props, boolean debug) {
 		SynoServerConnection result = null;
 		try {
 			String radical = "";
@@ -51,18 +51,17 @@ public class SynoServerConnection {
 			if (local) {
 				radical += PreferenceFacade.WLAN_RADICAL;
 				String usewifi = props.getProperty(radical + PreferenceFacade.USEWIFI_SUFFIX);
-				if (usewifi != null && usewifi.equals("true")){
+				if (usewifi != null && usewifi.equals("true")) {
 					valid = true;
 				}
-			}
-			else{
+			} else {
 				String useext = props.getProperty(radical + PreferenceFacade.USEEXT_SUFFIX);
-				if (useext != null && useext.equals("true")){
+				if (useext != null && useext.equals("true")) {
 					valid = true;
 				}
 			}
-			
-			if (valid){
+
+			if (valid) {
 				SynoProtocol protocol = SynoProtocol.valueOf(props.getProperty(radical + PreferenceFacade.PROTOCOL_SUFFIX));
 				int port = Integer.parseInt(props.getProperty(radical + PreferenceFacade.PORT_SUFFIX));
 				String host = props.getProperty(radical + PreferenceFacade.HOST_SUFFIX);
@@ -79,19 +78,16 @@ public class SynoServerConnection {
 						String[] ssids = ListPreferenceMultiSelectWithValue.parseStoredValue(separatedValues);
 						if (ssids != null) {
 							result.wifiSSID = Arrays.asList(ssids);
-						}
-						else{
+						} else {
 							result = null;
 						}
-					}
-					else{
+					} else {
 						result.wifiSSID = null;
 					}
 				}
 			}
-		}
-		catch (Exception ex) {
-      Log.d(Synodroid.DS_TAG, "An exception occured while loading " + (local ? "local":"public")+ " connection", ex);
+		} catch (Exception ex) {
+			if (debug) Log.d(Synodroid.DS_TAG, "An exception occured while loading " + (local ? "local" : "public") + " connection", ex);
 		}
 		return result;
 	}

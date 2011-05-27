@@ -20,10 +20,11 @@ import android.os.Message;
 
 /**
  * A interface which define a method to handle response from server
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public interface ResponseHandler {
-	
+
 	// Specify an update operation occurs
 	public static final int MSG_OPERATION_PENDING = 10000;
 	// Specify an update operation is finished
@@ -46,30 +47,33 @@ public interface ResponseHandler {
 	public static final int MSG_SHOW_DETAILS = 10009;
 	// Shared directories retrieved
 	public static final int MSG_SHARED_DIRECTORIES_RETRIEVED = 100010;
-    // Original file retrieved
-    public static final int MSG_ORIGINAL_FILE_RETRIEVED = 100011;
+	// Original file retrieved
+	public static final int MSG_ORIGINAL_FILE_RETRIEVED = 100011;
 
+	public static final int MSG_PROPERTIES_RECEIVED = 100012;
 
+	public static final int MSG_SHARED_NOT_SET = 100013;
 	/**
-	 * Handle the response. BE CAREFUL this method will NOT be called from the main thread.
-	 * So don't try to interact with the UI. Prefer to use SynodroidActivity subclass and then
-	 * implements your code in handleMessage method.
+	 * Handle the response. BE CAREFUL this method will NOT be called from the main thread. So don't try to interact with the UI. Prefer to use SynodroidActivity subclass and then implements your code in handleMessage method.
+	 * 
 	 * @param msgP
 	 */
-  public void handleReponse(Message msgP);
-  
-  /**
-   * Return a String according to a ressource id and the current locale
-   * @param idP
-   * @return
-   */
-  public String getString(int idP);
+	public void handleReponse(Message msgP);
 
-  /**
-   * Return a String according to a ressource id and the current locale and also replace parameters
-   * @param idP
-   * @param paramsP
-   * @return
-   */
-  public String getString(int idP, Object... paramsP);
+	/**
+	 * Return a String according to a ressource id and the current locale
+	 * 
+	 * @param idP
+	 * @return
+	 */
+	public String getString(int idP);
+
+	/**
+	 * Return a String according to a ressource id and the current locale and also replace parameters
+	 * 
+	 * @param idP
+	 * @param paramsP
+	 * @return
+	 */
+	public String getString(int idP, Object... paramsP);
 }

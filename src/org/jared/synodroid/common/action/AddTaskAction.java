@@ -49,16 +49,13 @@ public class AddTaskAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.ds
-	 * .DownloadActivity, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.ds .DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-		if (task.outside_url){
-			//Start task using url instead of reading file
+		if (task.outside_url) {
+			// Start task using url instead of reading file
 			serverP.getDSMHandlerFactory().getDSHandler().uploadUrl(uri);
-		}
-		else{
+		} else {
 			serverP.getDSMHandlerFactory().getDSHandler().upload(uri);
 		}
 	}

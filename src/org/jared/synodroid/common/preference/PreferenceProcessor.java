@@ -19,18 +19,21 @@ package org.jared.synodroid.common.preference;
 import java.util.Properties;
 
 /**
- * A simple interface which is able to do something when a server is loaded from the SharedPreference.
- * The intend of this interface is to reuse the loading preference algorythme but without any coupling to
- * action on the server. 
+ * A simple interface which is able to do something when a server is loaded from the SharedPreference. The intend of this interface is to reuse the loading preference algorythme but without any coupling to action on the server.
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public interface PreferenceProcessor {
 
 	/**
 	 * Process the current server read from the SharedPreference
-	 * @param idP The unique ID of the current read server
-	 * @param keyP The unique key used in the shared preferences
-	 * @param propretiesP The properties of the current server
+	 * 
+	 * @param idP
+	 *            The unique ID of the current read server
+	 * @param keyP
+	 *            The unique key used in the shared preferences
+	 * @param propretiesP
+	 *            The properties of the current server
 	 * @param summaryP
 	 * @return TRUE if the loop must be break: it is the case when a server connection is found in a WLAN
 	 */

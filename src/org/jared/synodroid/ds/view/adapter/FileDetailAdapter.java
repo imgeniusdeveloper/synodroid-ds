@@ -37,8 +37,7 @@ import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
- * An adaptor for task's files. This adaptor aims to create a view for each
- * detail in the listView
+ * An adaptor for task's files. This adaptor aims to create a view for each detail in the listView
  * 
  * @author eric.taix at gmail.com
  */
@@ -59,9 +58,9 @@ public class FileDetailAdapter extends BaseAdapter {
 	 * Constructor
 	 * 
 	 * @param activityP
-	 *          The current activity
+	 *            The current activity
 	 * @param torrentsP
-	 *          List of torrent
+	 *            List of torrent
 	 */
 	public FileDetailAdapter(DetailActivity activityP, Task taskP) {
 		task = taskP;
@@ -87,8 +86,7 @@ public class FileDetailAdapter extends BaseAdapter {
 	public int getCount() {
 		if (files != null) {
 			return files.size();
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
@@ -97,7 +95,7 @@ public class FileDetailAdapter extends BaseAdapter {
 	 * Return the torrent at the defined index
 	 * 
 	 * @param indexP
-	 *          The index to use starting from 0
+	 *            The index to use starting from 0
 	 * @return Instance of Torrent
 	 */
 	public Object getItem(int indexP) {
@@ -119,8 +117,7 @@ public class FileDetailAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * Return the view used for the item at position indexP. Always try to reuse
-	 * an old view
+	 * Return the view used for the item at position indexP. Always try to reuse an old view
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		TaskFile file = files.get(positionP);

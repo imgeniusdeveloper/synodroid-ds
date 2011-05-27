@@ -80,30 +80,29 @@ public class ServerAdapter extends BaseAdapter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.widget.Adapter#getView(int, android.view.View,
-	 * android.view.ViewGroup)
+	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	public View getView(int positionP, View convertViewP, ViewGroup parentP) {
 		LinearLayout view = null;
 		if (convertViewP != null) {
 			view = (LinearLayout) convertViewP;
-		}
-		else {
+		} else {
 			view = (LinearLayout) inflater.inflate(R.layout.wizard_serverrow, parentP, false);
 		}
 		bindView(view, infos[positionP]);
 		return view;
 	}
-	
+
 	/**
 	 * Bind view values
+	 * 
 	 * @param viewP
 	 * @param infoP
 	 */
 	private void bindView(LinearLayout viewP, ServiceInfo infoP) {
-		TextView nv = (TextView)viewP.findViewById(R.id.label);
+		TextView nv = (TextView) viewP.findViewById(R.id.label);
 		nv.setText(infoP.getName());
-		TextView dv = (TextView)viewP.findViewById(R.id.description);
+		TextView dv = (TextView) viewP.findViewById(R.id.description);
 		dv.setText(infoP.getURL());
 	}
 

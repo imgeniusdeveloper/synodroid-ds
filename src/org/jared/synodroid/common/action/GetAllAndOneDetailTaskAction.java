@@ -42,7 +42,7 @@ public class GetAllAndOneDetailTaskAction implements SynoAction {
 	private int taskDetailIndex = 0;
 	// The strategy to retrieve the next task
 	private NextTaskStrategy strategy = new LastUpdateStrategy();
-	
+
 	/**
 	 * Default constructor
 	 * 
@@ -58,9 +58,7 @@ public class GetAllAndOneDetailTaskAction implements SynoAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.common
-	 * .protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.common .protocol.ResponseHandler, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
 		// If we have to retrieve all tasks OR if there's no task currently OR if user unchecked 'Show upload' checkbox
@@ -79,11 +77,11 @@ public class GetAllAndOneDetailTaskAction implements SynoAction {
 				taskDetailIndex++;
 				if (taskDetailIndex >= taskAdapter.getCount()) {
 					taskDetailIndex = 0;
-				}				
+				}
 			}
 			// Otherwise get all tasks
 			else {
-				getAllAction.execute(handlerP, serverP);				
+				getAllAction.execute(handlerP, serverP);
 			}
 		}
 		allTask = !allTask;
@@ -91,13 +89,14 @@ public class GetAllAndOneDetailTaskAction implements SynoAction {
 
 	/**
 	 * Get the next task
+	 * 
 	 * @return
 	 */
 	private Task getNextTask() {
 		// Delegate to the strategy
 		return strategy.getNextTask(taskAdapter.getTaskList());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -24,7 +24,6 @@ import org.jared.synodroid.common.action.PauseTaskAction;
 import org.jared.synodroid.common.action.ResumeTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.Task;
-import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.R;
 
 import android.content.Context;
@@ -53,55 +52,55 @@ public class TaskActionMenu {
 	 */
 	public static List<TaskActionMenu> createActions(Context ctxP, Task taskP) {
 		ArrayList<TaskActionMenu> result = new ArrayList<TaskActionMenu>();
-		TaskStatus status = TaskStatus.valueOf(taskP.status);
-		switch (status) {
+		switch (taskP.getStatus()) {
 		case TASK_DOWNLOADING:
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_PRE_SEEDING:
 		case TASK_SEEDING:
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_cancel), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_PAUSED:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_ERROR:
 		case TASK_ERROR_DEST_NO_EXIST:
-	  	case TASK_ERROR_DEST_DENY:
-	  	case TASK_ERROR_QUOTA_REACHED:
-	  	case TASK_ERROR_TIMEOUT:
-	  	case TASK_ERROR_EXCEED_MAX_FS_SIZE:
-	  	case TASK_ERROR_BROKEN_LINK:
+		case TASK_ERROR_DEST_DENY:
+		case TASK_ERROR_QUOTA_REACHED:
+		case TASK_ERROR_TIMEOUT:
+		case TASK_ERROR_EXCEED_MAX_FS_SIZE:
+		case TASK_ERROR_BROKEN_LINK:
 		case TASK_ERROR_DISK_FULL:
 		case TASK_ERROR_EXCEED_MAX_TEMP_FS_SIZE:
 		case TASK_ERROR_EXCEED_MAX_DEST_FS_SIZE:
+		case TASK_UNKNOWN:
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_retry), new ResumeTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_FINISHING:
 		case TASK_FINISHED:
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_clear), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), true));
 			break;
 		case TASK_HASH_CHECKING:
 		case TASK_WAITING:
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_resume), new ResumeTaskAction(taskP), false));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_pause), new PauseTaskAction(taskP), true));
 			result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_delete), new DeleteTaskAction(taskP), true));
-			//result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
+			// result.add(new TaskActionMenu(taskP, ctxP.getString(R.string.action_details), new ShowDetailsAction(taskP), false));
 			break;
 		}
 		return result;

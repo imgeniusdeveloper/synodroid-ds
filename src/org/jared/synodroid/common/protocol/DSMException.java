@@ -16,9 +16,9 @@
  */
 package org.jared.synodroid.common.protocol;
 
-
 /**
  * Base exception of SynoDroid
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -28,9 +28,10 @@ public class DSMException extends Exception {
 	private String jsonReason;
 	// The root cause exception (more technical errors)
 	private Exception rootException;
-	
+
 	/**
 	 * Contructor for a JSON error
+	 * 
 	 * @param msgP
 	 */
 	public DSMException(String jsonReasonP) {
@@ -40,25 +41,26 @@ public class DSMException extends Exception {
 
 	/**
 	 * Contructor for a root exception
+	 * 
 	 * @param msgP
 	 */
 	public DSMException(Exception rootCauseP) {
 		super();
 		rootException = rootCauseP;
 	}
-	
-	/**
-   * @return the jsonReason
-   */
-  public String getJsonReason() {
-  	return jsonReason;
-  }
 
 	/**
-   * @return the rootException
-   */
-  public Exception getRootException() {
-  	return rootException;
-  }
-	
+	 * @return the jsonReason
+	 */
+	public String getJsonReason() {
+		return jsonReason;
+	}
+
+	/**
+	 * @return the rootException
+	 */
+	public Exception getRootException() {
+		return rootException;
+	}
+
 }
