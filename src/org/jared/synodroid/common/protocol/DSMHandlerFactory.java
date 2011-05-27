@@ -39,18 +39,18 @@ public abstract class DSMHandlerFactory {
 	 * 
 	 * @return
 	 */
-	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP) {
+	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP, boolean debug) {
 		DSMHandlerFactory result = null;
 		// Depending on DSM version
 		switch (versionP) {
 		case VERSION2_2:
-			return new DSHandlerDSM22Factory(serverP);
+			return new DSHandlerDSM22Factory(serverP, debug);
 		case VERSION2_3:
-			return new DSHandlerDSM22Factory(serverP);
+			return new DSHandlerDSM22Factory(serverP, debug);
 		case VERSION3_0:
-			return new DSHandlerDSM22Factory(serverP);
+			return new DSHandlerDSM22Factory(serverP, debug);
 		case VERSION3_1:
-			return new DSHandlerDSM31Factory(serverP);
+			return new DSHandlerDSM31Factory(serverP, debug);
 		}
 		return result;
 	}

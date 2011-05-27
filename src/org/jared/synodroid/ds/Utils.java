@@ -19,7 +19,6 @@ package org.jared.synodroid.ds;
 import java.text.DecimalFormat;
 import java.util.Date;
 
-import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.data.TaskDetail;
 
 import android.graphics.Bitmap;
@@ -30,7 +29,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
-import android.util.Log;
 
 /**
  * As usual a utility class
@@ -128,7 +126,6 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0l;
-			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
@@ -147,7 +144,6 @@ public class Utils {
 		// Not a number
 		catch (NumberFormatException ex) {
 			result = 0.0d;
-			// Log.e(Synodroid.DS_TAG, "Can't convert: " + valueP, ex);
 		}
 		return result;
 	}
@@ -201,7 +197,6 @@ public class Utils {
 			}
 			// Not a number
 			catch (NumberFormatException ex) {
-				Log.e(Synodroid.DS_TAG, "Can't convert: " + sizeP, ex);
 			}
 		}
 		return result;

@@ -45,6 +45,7 @@ public class DSHandlerDSM31Factory extends DSMHandlerFactory {
 	private SynoServer server;
 	// Download station handler
 	private DSHandler dsHandler;
+	private boolean DEBUG;
 
 	/**
 	 * Constructor for the DSM 3.1 handler
@@ -52,9 +53,10 @@ public class DSHandlerDSM31Factory extends DSMHandlerFactory {
 	 * @param serverP
 	 *            The synology server
 	 */
-	public DSHandlerDSM31Factory(SynoServer serverP) {
+	public DSHandlerDSM31Factory(SynoServer serverP, boolean debug) {
 		server = serverP;
-		dsHandler = new DSHandlerDSM31(serverP);
+		dsHandler = new DSHandlerDSM31(serverP, debug);
+		DEBUG = debug;
 	}
 
 	/*
@@ -69,7 +71,7 @@ public class DSHandlerDSM31Factory extends DSMHandlerFactory {
 		String pass = server.getPassword();
 		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
 		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
-		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);
 		// If no success or not login success
 		if (result == null || !result.equals(LOGIN_RESULT_SUCCESS)) {

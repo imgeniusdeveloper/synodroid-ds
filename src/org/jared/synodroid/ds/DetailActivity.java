@@ -546,7 +546,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			} catch (Exception e) {
 				// Unable to create file, likely because external storage is
 				// not currently mounted.
-				Log.w("ExternalStorage", "Error writing " + file, e);
+				if (((Synodroid)getApplication()).DEBUG) Log.w(Synodroid.DS_TAG, "Error writing " + file + " to SDCard.", e);
 				Toast toast = Toast.makeText(this, getString(R.string.action_download_original_failed), Toast.LENGTH_LONG);
 				toast.show();
 			}

@@ -77,6 +77,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
 	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
 	private static final String PREFERENCE_GENERAL = "general_cat";
+	private static final String PREFERENCE_DEBUG_LOG = "general_cat.debug_logging";
 	// Store the current max server id
 	private int maxServerId = 0;
 	// The dynamic servers category
@@ -149,6 +150,25 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				} else {
 					preferences.edit().putBoolean(PREFERENCE_FULLSCREEN, false).commit();
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+				}
+				return true;
+			}
+		});
+		
+		final CheckBoxPreference dbgLog = new CheckBoxPreference(this);
+		dbgLog.setKey(PREFERENCE_DEBUG_LOG);
+		dbgLog.setTitle(R.string.debug);
+		dbgLog.setSummary(R.string.hint_debug);
+		generalCategory.addPreference(dbgLog);
+		dbgLog.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				if (newValue.toString().equals("true")) {
+					preferences.edit().putBoolean(PREFERENCE_DEBUG_LOG, true).commit();
+					((Synodroid)getApplication()).enableDebugLog();
+				} else {
+					preferences.edit().putBoolean(PREFERENCE_DEBUG_LOG, false).commit();
+					((Synodroid)getApplication()).disableDebugLog();
 				}
 				return true;
 			}
@@ -268,7 +288,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
 			boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
 			if (wifiConnected) {
-				ServerWizard wiz = new ServerWizard(this, wifiMgr.getConnectionInfo().getSSID());
+				ServerWizard wiz = new ServerWizard(this, wifiMgr.getConnectionInfo().getSSID(), ((Synodroid)getApplication()).DEBUG);
 				wiz.start();
 			}
 			break;
@@ -343,7 +363,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.DSM_SUFFIX);
-
+								
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX);
@@ -385,9 +405,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		String summary = null, summary2 = null;
 		String usewifi = propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.USEWIFI_SUFFIX);
 		String useext = propertiesP.getProperty(PreferenceFacade.USEEXT_SUFFIX);
-
+		
 		if (usewifi != null && usewifi.equals("true")) {
-			summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));
+			String SSIDs = propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX);
+			if (SSIDs != null && !SSIDs.equals("")){
+				summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));	
+			}
 		}
 		if (useext != null && useext.equals("true")) {
 			summary2 = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
@@ -453,7 +476,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 						}
 						// Then do our job: refresh summaries
 						int catCount = screen.getPreferenceCount();
-						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null;
+						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null, ssids = null;
 						boolean usewifi = false, useext = false;
 						for (int cLoop = 0; cLoop < catCount; cLoop++) {
 							Preference cat = screen.getPreference(cLoop);
@@ -481,6 +504,8 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 											usewifi = ((CheckBoxPreference) pref).isChecked();
 										} else if (key.endsWith(PreferenceFacade.USEEXT_SUFFIX)) {
 											useext = ((CheckBoxPreference) pref).isChecked();
+										} else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX)){
+											ssids = ((PreferenceWithValue) pref).getPrintableValue();
 										}
 									}
 								}
@@ -493,7 +518,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 						// Build summaries
 						String summary1 = null, summary2 = null;
 						if (usewifi) {
-							summary1 = buildURL(protWLAN, hostWLAN, portWLAN);
+							if (ssids != null && !ssids.equals("")){
+								summary1 = buildURL(protWLAN, hostWLAN, portWLAN);	
+							}
+							
 						}
 						if (useext) {
 							summary2 = buildURL(prot, host, port);
@@ -526,7 +554,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password, false).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
 		// --- DSM Version
 		generalCategory.addPreference(ListPreferenceWithValue.create(this, keyP + PreferenceFacade.DSM_SUFFIX, R.string.label_dsm_version, R.string.hint_dsm_version, DSMVersion.getValues()));
-
+		
 		// Create local connection category
 		addConnectionCategory(keyP, screen, true, R.string.title_cat_connection_local);
 		// Create public connection category

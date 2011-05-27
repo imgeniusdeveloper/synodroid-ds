@@ -23,13 +23,16 @@ import org.jared.synodroid.ds.DetailActivity;
 import org.jared.synodroid.ds.DownloadActivity;
 import org.jared.synodroid.ds.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 
 /**
  * The application (single instance) which implements utility methods to access to the current server
@@ -39,9 +42,11 @@ import android.os.Bundle;
 public class Synodroid extends CrashReportingApplication {
 
 	private static final String GOOGLEDOC_FORM_ID = "dENyc3VzSFNwdzZScVJ0T3RPNk9tbVE6MQ";
-
+	private static final String PREFERENCE_GENERAL = "general_cat";
+	private static final String PREFERENCE_DEBUG_LOG = "general_cat.debug_logging";
+	
 	public static final String DS_TAG = "Synodroid DS";
-
+	public boolean DEBUG;
 	// The current server
 	private SynoServer currentServer = null;
 
@@ -83,6 +88,8 @@ public class Synodroid extends CrashReportingApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+		DEBUG = preferences.getBoolean(PREFERENCE_DEBUG_LOG, false) == true;	
 	}
 
 	/*
@@ -93,6 +100,16 @@ public class Synodroid extends CrashReportingApplication {
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
+	}
+	
+	public void enableDebugLog(){
+		DEBUG = true;
+		if (currentServer != null) currentServer.setDebugLvl(DEBUG);
+	}
+	
+	public void disableDebugLog(){
+		DEBUG = false;
+		if (currentServer != null) currentServer.setDebugLvl(DEBUG);
 	}
 
 	/**
@@ -116,19 +133,41 @@ public class Synodroid extends CrashReportingApplication {
 		// Determine the current network access
 		WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		boolean wifiOn = wifiMgr.isWifiEnabled();
+		if (DEBUG){
+			if (wifiOn){
+				Log.d(Synodroid.DS_TAG, "Wifi is: ENABLED.");	
+			}
+			else{
+				Log.d(Synodroid.DS_TAG, "Wifi is: DISABLED.");
+			}
+		}
+		
 		final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
 		final boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
+		
+		if (DEBUG){
+			if (wifiConnected){
+				Log.d(Synodroid.DS_TAG, "Wifi is: CONNECTED.");
+			}
+			else{
+				Log.d(Synodroid.DS_TAG, "Wifi is: DISCONNECTED.");
+			}
+		}
 		// If we are connected to a WIFI network, verify if SSID match
 		boolean pub = true;
 		String cur_ssid = currentWifi.getSSID();
 		if (wifiConnected && cur_ssid != null) {
+			if (DEBUG) Log.d(Synodroid.DS_TAG, "Wifi current SSID is: '" + cur_ssid+"'");
 			SynoServerConnection sc = currentServer.getLocalConnection();
 			if (sc != null) {
 				List<String> ssids = sc.wifiSSID;
 				if (ssids != null) {
+					if (DEBUG) Log.d(Synodroid.DS_TAG, "Local connection has an SSID list! Checking to find the right SSID...");
 					for (String ssid : ssids) {
+						if (DEBUG) Log.d(Synodroid.DS_TAG, "Comparing '"+ssid+"' with '" + cur_ssid+"' ...");
 						if (cur_ssid.equals(ssid)) {
 							pub = false;
+							if (DEBUG) Log.d(Synodroid.DS_TAG, "SSIDs are equal! Connecting using local connection...");
 							break;
 						}
 					}

@@ -75,7 +75,7 @@
 <string name="button_delete">Borrar</string>
 <string name="menu_add_server">Añadir un servidor</string>
 <string name="label_default_server_prefix">Servidor </string>
-<string name="hint_default_server">Click para editar</string>
+<string name="hint_default_server">Servidor no válido, click para editar</string>
 <string name="menu_refresh">Refrescar</string>
 <string name="title_cat_connection">Parámetros de conexión</string>
 <string name="title_cat_server">Parámetros generales</string>
@@ -330,5 +330,8 @@
 <string name="downloadOnly">Sólo funciona cuando la tarea está en descarga...</string>
 
 <string name="port_mismatch">El protocolo no coincide con el puerto seleccionado.</string>
+
+<string name="debug">Depuración</string>
+<string name="hint_debug">Activar la depuración de los registros</string>
 
 </resources>

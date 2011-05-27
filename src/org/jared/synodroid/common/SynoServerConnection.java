@@ -43,7 +43,7 @@ public class SynoServerConnection {
 	 * @param props
 	 * @return
 	 */
-	public static SynoServerConnection createFromProperties(boolean local, Properties props) {
+	public static SynoServerConnection createFromProperties(boolean local, Properties props, boolean debug) {
 		SynoServerConnection result = null;
 		try {
 			String radical = "";
@@ -87,7 +87,7 @@ public class SynoServerConnection {
 				}
 			}
 		} catch (Exception ex) {
-			Log.d(Synodroid.DS_TAG, "An exception occured while loading " + (local ? "local" : "public") + " connection", ex);
+			if (debug) Log.d(Synodroid.DS_TAG, "An exception occured while loading " + (local ? "local" : "public") + " connection", ex);
 		}
 		return result;
 	}
