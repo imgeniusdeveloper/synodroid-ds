@@ -77,6 +77,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	private static final String PREFERENCE_AUTO_CREATENOW = "auto.createnow";
 	private static final String PREFERENCE_FULLSCREEN = "general_cat.fullscreen";
 	private static final String PREFERENCE_GENERAL = "general_cat";
+	private static final String PREFERENCE_DEBUG_LOG = "general_cat.debug_logging";
 	// Store the current max server id
 	private int maxServerId = 0;
 	// The dynamic servers category
@@ -146,8 +147,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				if (newValue.toString().equals("true")) {
 					preferences.edit().putBoolean(PREFERENCE_FULLSCREEN, true).commit();
 					getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-				}
-				else {
+				} else {
 					preferences.edit().putBoolean(PREFERENCE_FULLSCREEN, false).commit();
 					getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 				}
@@ -155,10 +155,29 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			}
 		});
 		
+		final CheckBoxPreference dbgLog = new CheckBoxPreference(this);
+		dbgLog.setKey(PREFERENCE_DEBUG_LOG);
+		dbgLog.setTitle(R.string.debug);
+		dbgLog.setSummary(R.string.hint_debug);
+		generalCategory.addPreference(dbgLog);
+		dbgLog.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				SharedPreferences preferences = getSharedPreferences(PREFERENCE_GENERAL, Activity.MODE_PRIVATE);
+				if (newValue.toString().equals("true")) {
+					preferences.edit().putBoolean(PREFERENCE_DEBUG_LOG, true).commit();
+					((Synodroid)getApplication()).enableDebugLog();
+				} else {
+					preferences.edit().putBoolean(PREFERENCE_DEBUG_LOG, false).commit();
+					((Synodroid)getApplication()).disableDebugLog();
+				}
+				return true;
+			}
+		});
+
 		final Preference clearHistory = new Preference(this);
 		clearHistory.setTitle(R.string.clear_search_history);
 		generalCategory.addPreference(clearHistory);
-		clearHistory.setOnPreferenceClickListener(new OnPreferenceClickListener(){
+		clearHistory.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			public boolean onPreferenceClick(Preference arg0) {
 				clearSearchHistory();
@@ -166,7 +185,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				toast.show();
 				return false;
 			}
-			
+
 		});
 		// The dynamic servers category
 		serversCategory = (PreferenceCategory) prefScreen.getPreferenceManager().findPreference("servers_cat");
@@ -174,12 +193,11 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		reloadCurrentServers();
 	}
 
-	private void clearSearchHistory(){
-		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-				SynodroidSearchSuggestion.AUTHORITY, SynodroidSearchSuggestion.MODE);
+	private void clearSearchHistory() {
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, SynodroidSearchSuggestion.AUTHORITY, SynodroidSearchSuggestion.MODE);
 		suggestions.clearHistory();
 	}
-	
+
 	private void reloadCurrentServers() {
 		// Load current servers
 		serversCategory.removeAll();
@@ -201,8 +219,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		if (preferences.getBoolean(PREFERENCE_FULLSCREEN, false)) {
 			// Set fullscreen or not
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		else {
+		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}
@@ -225,13 +242,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
-		if (wizardPossible){
+		if (wizardPossible) {
 			menu.add(0, MENU_WIZARD, 0, getString(R.string.wizard_menu)).setIcon(R.drawable.ic_menu_wizard);
 			menu.add(0, MENU_CREATE, 1, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
 			menu.add(0, MENU_DELETE, 2, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
-				
-		}
-		else{
+
+		} else {
 			menu.add(0, MENU_CREATE, 0, getString(R.string.menu_add_server)).setIcon(android.R.drawable.ic_menu_add);
 			menu.add(0, MENU_DELETE, 1, getString(R.string.menu_delete_server)).setIcon(android.R.drawable.ic_menu_delete);
 		}
@@ -247,7 +263,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
 		boolean wizardPossible = Integer.parseInt(android.os.Build.VERSION.SDK) > 3;
-		if (wizardPossible){
+		if (wizardPossible) {
 			MenuItem wizardItem = menu.getItem(0);
 			if (wizardItem != null) {
 				WifiManager wifiMgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -257,7 +273,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				wizardItem.setEnabled(wifiConnected);
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -272,7 +288,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			final WifiInfo currentWifi = wifiMgr.getConnectionInfo();
 			boolean wifiConnected = (wifiOn && currentWifi.getNetworkId() != -1);
 			if (wifiConnected) {
-				ServerWizard wiz = new ServerWizard(this, wifiMgr.getConnectionInfo().getSSID());
+				ServerWizard wiz = new ServerWizard(this, wifiMgr.getConnectionInfo().getSSID(), ((Synodroid)getApplication()).DEBUG);
 				wiz.start();
 			}
 			break;
@@ -281,7 +297,9 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			maxServerId = maxServerId + 1;
 			// Create the create new server screen
 			PreferenceScreen screen = createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
-			showServerDialog(screen);
+			if (screen != null) {
+				showServerDialog(screen);
+			}
 			break;
 
 		// Delete one or more servers
@@ -340,7 +358,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 							// If we want to delete it then remove from the ServerCategory
 							if (serv.delete) {
 								editor.remove(serv.key + PreferenceFacade.USEEXT_SUFFIX);
-								editor.remove(serv.key + PreferenceFacade.USEWIFI_SUFFIX); 
+								editor.remove(serv.key + PreferenceFacade.USEWIFI_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.NICKNAME_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.USER_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.PASSWORD_SUFFIX);
@@ -353,7 +371,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SHOWUPLOAD_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHSTATE_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.WLAN_RADICAL + PreferenceFacade.REFRESHVALUE_SUFFIX);
-								
+
 								editor.remove(serv.key + PreferenceFacade.PROTOCOL_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.HOST_SUFFIX);
 								editor.remove(serv.key + PreferenceFacade.PORT_SUFFIX);
@@ -381,19 +399,20 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.jared.synodroid.ds.ServerProcessor#process(java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see org.jared.synodroid.ds.ServerProcessor#process(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void process(int idP, String keyP, Properties propertiesP) {
 		String summary = null, summary2 = null;
 		String usewifi = propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.USEWIFI_SUFFIX);
 		String useext = propertiesP.getProperty(PreferenceFacade.USEEXT_SUFFIX);
 		
-		if (usewifi != null && usewifi.equals("true")){
-			summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP
-		    .getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));
+		if (usewifi != null && usewifi.equals("true")) {
+			String SSIDs = propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX);
+			if (SSIDs != null && !SSIDs.equals("")){
+				summary = buildURL(propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX));	
+			}
 		}
-		if (useext != null && useext.equals("true")){
+		if (useext != null && useext.equals("true")) {
 			summary2 = buildURL(propertiesP.getProperty(PreferenceFacade.PROTOCOL_SUFFIX), propertiesP.getProperty(PreferenceFacade.HOST_SUFFIX), propertiesP.getProperty(PreferenceFacade.PORT_SUFFIX));
 		}
 		summary = getServerSummary(summary, summary2);
@@ -451,10 +470,13 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				screen.getDialog().setOnDismissListener(new OnDismissListener() {
 					public void onDismiss(DialogInterface dialog) {
 						// Don't forget to call the screen onDismiss method
-						screen.onDismiss(dialog);
+						try {
+							screen.onDismiss(dialog);
+						} catch (Exception e) {
+						}
 						// Then do our job: refresh summaries
 						int catCount = screen.getPreferenceCount();
-						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null;
+						String nickname = null, protWLAN = null, prot = null, hostWLAN = null, host = null, portWLAN = null, port = null, ssids = null;
 						boolean usewifi = false, useext = false;
 						for (int cLoop = 0; cLoop < catCount; cLoop++) {
 							Preference cat = screen.getPreference(cLoop);
@@ -466,30 +488,24 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 									if (key != null) {
 										if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PROTOCOL_SUFFIX)) {
 											protWLAN = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.PROTOCOL_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.PROTOCOL_SUFFIX)) {
 											prot = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.HOST_SUFFIX)) {
 											hostWLAN = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.HOST_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.HOST_SUFFIX)) {
 											host = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.PORT_SUFFIX)) {
 											portWLAN = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.PORT_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.PORT_SUFFIX)) {
 											port = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.NICKNAME_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.NICKNAME_SUFFIX)) {
 											nickname = ((PreferenceWithValue) pref).getPrintableValue();
-										}
-										else if (key.endsWith(PreferenceFacade.USEWIFI_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.USEWIFI_SUFFIX)) {
 											usewifi = ((CheckBoxPreference) pref).isChecked();
-										}
-										else if (key.endsWith(PreferenceFacade.USEEXT_SUFFIX)) {
+										} else if (key.endsWith(PreferenceFacade.USEEXT_SUFFIX)) {
 											useext = ((CheckBoxPreference) pref).isChecked();
+										} else if (key.endsWith(PreferenceFacade.WLAN_RADICAL + PreferenceFacade.SSID_SUFFIX)){
+											ssids = ((PreferenceWithValue) pref).getPrintableValue();
 										}
 									}
 								}
@@ -501,11 +517,14 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 						}
 						// Build summaries
 						String summary1 = null, summary2 = null;
-						if (usewifi){
-							summary1 = buildURL(protWLAN, hostWLAN, portWLAN);	
+						if (usewifi) {
+							if (ssids != null && !ssids.equals("")){
+								summary1 = buildURL(protWLAN, hostWLAN, portWLAN);	
+							}
+							
 						}
-						if (useext){
-							summary2 = buildURL(prot, host, port);	
+						if (useext) {
+							summary2 = buildURL(prot, host, port);
 						}
 						summary1 = getServerSummary(summary1, summary2);
 						screen.setSummary(summary1);
@@ -532,11 +551,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		// ---- Username
 		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.USER_SUFFIX, R.string.label_username, R.string.hint_username, true));
 		// ---- Password
-		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password, false).setInputType(
-		    InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+		generalCategory.addPreference(EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.PASSWORD_SUFFIX, R.string.label_password, R.string.hint_password, false).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
 		// --- DSM Version
 		generalCategory.addPreference(ListPreferenceWithValue.create(this, keyP + PreferenceFacade.DSM_SUFFIX, R.string.label_dsm_version, R.string.hint_dsm_version, DSMVersion.getValues()));
-
+		
 		// Create local connection category
 		addConnectionCategory(keyP, screen, true, R.string.title_cat_connection_local);
 		// Create public connection category
@@ -573,28 +591,27 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			useWifi.setSummaryOn(R.string.hint_usewifi_on);
 			useWifi.setSummaryOff(R.string.hint_usewifi_off);
 			connectionCategory.addPreference(useWifi);
-			
+
 			List<WifiConfiguration> wifis = wifiMgr.getConfiguredNetworks();
 			String[] wifiSSIDs = new String[wifis.size()];
 			for (int iLoop = 0; iLoop < wifis.size(); iLoop++) {
 				String ssid = wifis.get(iLoop).SSID;
-				if (ssid != null){
+				if (ssid != null) {
 					if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
 						ssid = ssid.substring(1, ssid.length() - 1);
 					}
 					wifiSSIDs[iLoop] = ssid;
 				}
 			}
-			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs);
+			WifiInfo currentWifi = wifiMgr.getConnectionInfo();
+			String cur_ssid = currentWifi.getSSID();
+
+			final ListPreferenceMultiSelectWithValue wifiSSIDPref = ListPreferenceMultiSelectWithValue.create(this, keyP + PreferenceFacade.SSID_SUFFIX, R.string.label_wifissid, R.string.hint_wifissid, wifiSSIDs, cur_ssid);
 			connectionCategory.addPreference(wifiSSIDPref);
 			if (!wifiMgr.isWifiEnabled() || wifiSSIDs.length == 0) {
 				connectionCategory.setEnabled(false);
 			}
-			else{
-				wifiSSIDPref.setValue(wifiSSIDs[0]);
-			}
-		}
-		else{
+		} else {
 			// ---- Use External Connection
 			CheckBoxPreference useExt = new CheckBoxPreference(this);
 			useExt.setKey(keyP + PreferenceFacade.USEEXT_SUFFIX);
@@ -606,7 +623,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			useExt.setSummaryOn(R.string.hint_useext_on);
 			useExt.setSummaryOff(R.string.hint_useext_off);
 			connectionCategory.addPreference(useExt);
-			
+
 		}
 
 		// ---- Protocol
@@ -643,13 +660,12 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 		autoRefresh.setSummaryOff(R.string.hint_autorefresh_off);
 		connectionCategory.addPreference(autoRefresh);
 		// -- Refresh value
-		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval, true).setInputType(
-		    InputType.TYPE_CLASS_NUMBER);
+		final EditTextPreferenceWithValue autoRefreshValue = EditTextPreferenceWithValue.create(this, keyP + PreferenceFacade.REFRESHVALUE_SUFFIX, R.string.label_refreshinterval, R.string.hint_refreshinterval, true).setInputType(InputType.TYPE_CLASS_NUMBER);
 		autoRefreshValue.setDefaultValue("15");
 		connectionCategory.addPreference(autoRefreshValue);
 		// Add dependencies. DON'T use 'setDependency()' when building Preferences
 		// at runtime
-		
+
 		if (showWifiP) {
 			connectionCategory.findPreference(keyP + PreferenceFacade.SSID_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.PROTOCOL_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
@@ -658,8 +674,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			connectionCategory.findPreference(keyP + PreferenceFacade.SHOWUPLOAD_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.USEWIFI_SUFFIX);
-		}	
-		else{
+		} else {
 			connectionCategory.findPreference(keyP + PreferenceFacade.PROTOCOL_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.HOST_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.PORT_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
@@ -667,7 +682,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
 			connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.USEEXT_SUFFIX);
 		}
-		
+
 		connectionCategory.findPreference(keyP + PreferenceFacade.REFRESHVALUE_SUFFIX).setDependency(keyP + PreferenceFacade.REFRESHSTATE_SUFFIX);
 	}
 
@@ -691,9 +706,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 	}
 
 	/**
-	 * This method is called when the wizard finished. The metadata should contain
-	 * information collected by the wizard. A null paramter means that no
-	 * information have been collected.
+	 * This method is called when the wizard finished. The metadata should contain information collected by the wizard. A null paramter means that no information have been collected.
 	 * 
 	 * @param metaDataP
 	 */
@@ -743,11 +756,10 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			showUpload = true;
 			refreshRate = "5";
 			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.USEWIFI_SUFFIX, true);
-		}
-		else{
+		} else {
 			editorP.putBoolean(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.USEEXT_SUFFIX, true);
 		}
-		
+
 		// Verify if at least host has been set
 		if (host != null && host.length() > 0) {
 			editorP.putString(PreferenceFacade.SERVER_PREFIX + maxServerId + localRadical + PreferenceFacade.PROTOCOL_SUFFIX, ((Boolean) metaDataP.get(ServerWizard.META_HTTPS)) ? "HTTPS" : "HTTP");
@@ -798,8 +810,7 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			if (key == null) {
 				if (other.key != null)
 					return false;
-			}
-			else if (!key.equals(other.key))
+			} else if (!key.equals(other.key))
 				return false;
 			return true;
 		}

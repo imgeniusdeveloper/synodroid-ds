@@ -25,7 +25,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
- 
+
 /**
  * A preference which shows the current value
  * 
@@ -38,7 +38,6 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	// The input type ot use in the dialog's EditText
 	private Integer inputType = null;
 	private boolean doTrim = false;
-
 
 	/**
 	 * Constructor
@@ -63,12 +62,11 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 		setLayoutResource(R.layout.preference_with_value);
 		setSingleLine(true);
 		doTrim = trim;
-		
+
 	}
 
 	/**
-	 * Set the input type for the dialog's EditText. Useful to set password, int,
-	 * or other specific type of input
+	 * Set the input type for the dialog's EditText. Useful to set password, int, or other specific type of input
 	 * 
 	 * @param inputTypeP
 	 */
@@ -110,10 +108,9 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 	 */
 	@Override
 	public void setText(String text) {
-		if (doTrim && text != null){
+		if (doTrim && text != null) {
 			super.setText(text.trim());
-		}
-		else{
+		} else {
 			super.setText(text);
 		}
 		updateValueInPreference(getText());
@@ -121,26 +118,29 @@ public class EditTextPreferenceWithValue extends EditTextPreference implements P
 
 	/**
 	 * Update the value showned in the preference
+	 * 
 	 * @param valueP
 	 */
 	private void updateValueInPreference(String valueP) {
 		// Prevent from showing a password
-	  EditText editText = getEditText();
-	  if (valueP != null && editText != null && (editText.getInputType()&InputType.TYPE_TEXT_VARIATION_PASSWORD)!=0 ) {
-	  	valueP = "*********************************************************************************************************************".substring(0, valueP.length());
-	  }
-	  // Show the value
+		EditText editText = getEditText();
+		if (valueP != null && editText != null && (editText.getInputType() & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0) {
+			valueP = "*********************************************************************************************************************".substring(0, valueP.length());
+		}
+		// Show the value
 		if (valueView != null) {
 			valueView.setText(valueP);
-		}		
+		}
 	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.preference.PreferenceWithValue#getValue()
-   */
-  public String getPrintableValue() {
-	  return getText();
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.preference.PreferenceWithValue#getValue()
+	 */
+	public String getPrintableValue() {
+		return getText();
+	}
 
 	/**
 	 * Convenient method to create an instance of EditTextPreference

@@ -19,10 +19,10 @@ package org.jared.synodroid.common.protocol;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.protocol.v22.DSHandlerDSM22Factory;
+import org.jared.synodroid.common.protocol.v31.DSHandlerDSM31Factory;
 
 /**
- * This is the protocol abstract factory. The goal of this class is to provide
- * the protocol factory implementation according to the DSM version
+ * This is the protocol abstract factory. The goal of this class is to provide the protocol factory implementation according to the DSM version
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
@@ -39,30 +39,32 @@ public abstract class DSMHandlerFactory {
 	 * 
 	 * @return
 	 */
-	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP) {
+	public final static DSMHandlerFactory getFactory(DSMVersion versionP, SynoServer serverP, boolean debug) {
 		DSMHandlerFactory result = null;
 		// Depending on DSM version
 		switch (versionP) {
-          case VERSION2_1:
-            return new DSHandlerDSM22Factory(serverP);
-		  case VERSION2_2:
-		  	return new DSHandlerDSM22Factory(serverP);
-		  case VERSION2_3:
-		  	return new DSHandlerDSM22Factory(serverP);
-          case VERSION3_0:
-            return new DSHandlerDSM22Factory(serverP);
+		case VERSION2_2:
+			return new DSHandlerDSM22Factory(serverP, debug);
+		case VERSION2_3:
+			return new DSHandlerDSM22Factory(serverP, debug);
+		case VERSION3_0:
+			return new DSHandlerDSM22Factory(serverP, debug);
+		case VERSION3_1:
+			return new DSHandlerDSM31Factory(serverP, debug);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Connect to a SynoServer. This method MUST be called prior to any other methods.
+	 * 
 	 * @param serverP
 	 */
-	public abstract void connect() throws Exception;
+	public abstract boolean connect() throws Exception;
 
 	/**
 	 * Return the Download station handler
+	 * 
 	 * @return
 	 */
 	public abstract DSHandler getDSHandler();

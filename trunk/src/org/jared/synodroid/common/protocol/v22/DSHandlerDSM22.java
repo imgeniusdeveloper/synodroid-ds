@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.data.TaskContainer;
 import org.jared.synodroid.common.data.TaskDetail;
 import org.jared.synodroid.common.data.TaskFile;
+import org.jared.synodroid.common.data.TaskProperties;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.common.protocol.DSHandler;
 import org.jared.synodroid.common.protocol.DSMException;
@@ -43,14 +45,16 @@ class DSHandlerDSM22 implements DSHandler {
 
 	/* The Synology's server */
 	private SynoServer server;
-
+	private boolean DEBUG;
+	
 	/**
 	 * The constructor
 	 * 
 	 * @param serverP
 	 */
-	public DSHandlerDSM22(SynoServer serverP) {
+	public DSHandlerDSM22(SynoServer serverP, boolean debug) {
 		server = serverP;
+		DEBUG = debug;
 	}
 
 	/*
@@ -109,8 +113,7 @@ class DSHandlerDSM22 implements DSHandler {
 						prog = prog.substring(0, index);
 						try {
 							task.downloadProgress = (int) Float.parseFloat(prog);
-						}
-						catch (NumberFormatException ex) {
+						} catch (NumberFormatException ex) {
 							// Set to unknown
 							task.downloadProgress = -1;
 						}
@@ -143,9 +146,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#delete(org.jared.synodroid
-	 * .common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#delete(org.jared.synodroid .common.data.Task)
 	 */
 	public void delete(Task taskP) throws Exception {
 		// If we are logged on
@@ -156,9 +157,8 @@ class DSHandlerDSM22 implements DSHandler {
 				synchronized (server) {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 				}
-			}
-			catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while deleting id:" + taskP.taskId, e);
+			} catch (Exception e) {
+				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while deleting id:" + taskP.taskId, e);
 				throw e;
 			}
 		}
@@ -178,9 +178,8 @@ class DSHandlerDSM22 implements DSHandler {
 				synchronized (server) {
 					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
 				}
-			}
-			catch (Exception e) {
-				Log.e("SynoDroid DS", "Not expected exception occured while clearing tasks", e);
+			} catch (Exception e) {
+				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while clearing tasks", e);
 				throw e;
 			}
 		}
@@ -189,9 +188,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#resume(org.jared.synodroid
-	 * .common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#resume(org.jared.synodroid .common.data.Task)
 	 */
 	public void resume(Task taskP) throws Exception {
 		// If we are logged on
@@ -207,9 +204,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#resumeAll(List<org.jared.
-	 * synodroid. common.data.Task>)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#resumeAll(List<org.jared. synodroid. common.data.Task>)
 	 */
 	public void resumeAll(List<Task> taskP) throws Exception {
 		for (Task task : taskP) {
@@ -222,9 +217,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#stop(org.jared.synodroid.
-	 * common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#stop(org.jared.synodroid. common.data.Task)
 	 */
 	public void stop(Task taskP) throws Exception {
 		// If we are logged on
@@ -240,14 +233,11 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#stopAll(List<org.jared.synodroid
-	 * . common.data.Task>)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#stopAll(List<org.jared.synodroid . common.data.Task>)
 	 */
 	public void stopAll(List<Task> taskP) throws Exception {
 		for (Task task : taskP) {
-			if (task.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || task.status.equals(TaskStatus.TASK_PRE_SEEDING.toString()) || task.status.equals(TaskStatus.TASK_SEEDING.toString())
-			    || task.status.equals(TaskStatus.TASK_HASH_CHECKING.toString()) || task.status.equals(TaskStatus.TASK_WAITING.toString())) {
+			if (task.status.equals(TaskStatus.TASK_DOWNLOADING.toString()) || task.status.equals(TaskStatus.TASK_PRE_SEEDING.toString()) || task.status.equals(TaskStatus.TASK_SEEDING.toString()) || task.status.equals(TaskStatus.TASK_HASH_CHECKING.toString()) || task.status.equals(TaskStatus.TASK_WAITING.toString())) {
 				stop(task);
 			}
 		}
@@ -256,9 +246,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#getFiles(org.jared.synodroid
-	 * .common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#getFiles(org.jared.synodroid .common.data.Task)
 	 */
 	public List<TaskFile> getFiles(Task taskP) throws Exception {
 		ArrayList<TaskFile> result = new ArrayList<TaskFile>();
@@ -292,9 +280,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#getDetails(org.jared.synodroid
-	 * .common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#getDetails(org.jared.synodroid .common.data.Task)
 	 */
 	public TaskDetail getDetails(Task taskP) throws Exception {
 		TaskDetail result = new TaskDetail();
@@ -326,8 +312,7 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					if (m.find() && m.groupCount() >= 2) {
 						result.speedDownload = Utils.toDouble(m.group(2));
-					}
-					else {
+					} else {
 						result.speedDownload = result.speedUpload;
 					}
 				}
@@ -356,7 +341,7 @@ class DSHandlerDSM22 implements DSHandler {
 					}
 					result.bytesRatio = 0;
 					if (result.bytesDownloaded != 0) {
-						result.bytesRatio = (int)(((float)result.bytesUploaded / (float)result.bytesDownloaded) * 100);
+						result.bytesRatio = (int) (((float) result.bytesUploaded / (float) result.bytesDownloaded) * 100);
 					}
 				}
 				if (data.has("seedelapsed"))
@@ -398,8 +383,7 @@ class DSHandlerDSM22 implements DSHandler {
 				String reason = "";
 				if (json.has("reason")) {
 					reason = json.getString("reason");
-				}
-				else if (json.has("errno")) {
+				} else if (json.has("errno")) {
 					JSONObject err = json.getJSONObject("errno");
 					reason = err.getString("key");
 				}
@@ -419,7 +403,7 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			if (uriP.getPath() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348", DEBUG);
 
 				// The field's part
 				builder.addPart(new Part("field").setContent("task_id".getBytes()));
@@ -457,7 +441,7 @@ class DSHandlerDSM22 implements DSHandler {
 		if (server.isConnected()) {
 			if (uriP.toString() != null) {
 				// Create the multipart
-				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348");
+				MultipartBuilder builder = new MultipartBuilder("-----------7dabb2d41348", DEBUG);
 
 				// The field's part
 				builder.addPart(new Part("field").setContent("task_id".getBytes()));
@@ -471,24 +455,21 @@ class DSHandlerDSM22 implements DSHandler {
 					builder.addPart(new Part("url_https").setContent(uriP.toString().getBytes()));
 					// The url_ftp's part
 					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
-				}
-				else if (uriP.toString().toLowerCase().startsWith("http:")) {
+				} else if (uriP.toString().toLowerCase().startsWith("http:")) {
 					// The url_http's part
 					builder.addPart(new Part("url_http").setContent(uriP.toString().getBytes()));
 					// The url_https's part
 					builder.addPart(new Part("url_https").setContent("".getBytes()));
 					// The url_ftp's part
 					builder.addPart(new Part("url_ftp").setContent("".getBytes()));
-				}
-				else if (uriP.toString().toLowerCase().startsWith("ftp:")) {
+				} else if (uriP.toString().toLowerCase().startsWith("ftp:")) {
 					// The url_http's part
 					builder.addPart(new Part("url_http").setContent("".getBytes()));
 					// The url_https's part
 					builder.addPart(new Part("url_https").setContent("".getBytes()));
 					// The url_ftp's part
 					builder.addPart(new Part("url_ftp").setContent(uriP.toString().getBytes()));
-				}
-				else {
+				} else {
 					return;
 				}
 				// The url_ftp's part
@@ -507,9 +488,23 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid
-	 * .common.data.Task, java.util.List, int, int)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#getTaskProperty(org.jared.synodroid .common.data.Task)
+	 */
+	public TaskProperties getTaskProperty(Task taskP) throws Exception {
+		TaskProperties out = null;
+		return out;
+	}
+
+	public void setTaskProperty(final Task taskP, int ul_rate, int dl_rate, int priority, int max_peers, String destination, int seeding_ratio, int seeding_interval) throws Exception {
+	}
+
+	public void setFilePriority(final Task taskP, List<TaskFile> filesP) throws Exception {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.protocol.DSHandler#updateTask(org.jared.synodroid .common.data.Task, java.util.List, int, int)
 	 */
 	public void updateTask(Task taskP, List<TaskFile> filesP, int seedingRatioP, int seedingIntervalP) throws Exception {
 		// Create the JSON request
@@ -540,8 +535,7 @@ class DSHandlerDSM22 implements DSHandler {
 			String reason = "";
 			if (json.has("reason")) {
 				reason = json.getString("reason");
-			}
-			else if (json.has("errno")) {
+			} else if (json.has("errno")) {
 				JSONObject err = json.getJSONObject("errno");
 				reason = err.getString("key");
 			}
@@ -580,8 +574,7 @@ class DSHandlerDSM22 implements DSHandler {
 			String reason = "";
 			if (json.has("reason")) {
 				reason = json.getString("reason");
-			}
-			else if (json.has("errno")) {
+			} else if (json.has("errno")) {
 				JSONObject err = json.getJSONObject("errno");
 				reason = err.getString("key");
 			}
@@ -593,9 +586,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#setSharedDirectory(java.lang
-	 * .String)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#setSharedDirectory(java.lang .String)
 	 */
 	public void setSharedDirectory(Task taskP, String directoryP) throws Exception {
 		// If we are logged on
@@ -636,12 +627,16 @@ class DSHandlerDSM22 implements DSHandler {
 				String reason = "";
 				if (json.has("reason")) {
 					reason = json.getString("reason");
-				}
-				else if (json.has("errno")) {
+				} else if (json.has("errno")) {
 					JSONObject err = json.getJSONObject("errno");
 					reason = err.getString("key");
 					// Means that no shared directory has been set currently: don't throw an exception
-					if (reason!=null && reason.equals("download_error_user_removed")) {
+					if (reason != null && reason.equals("download_error_user_removed")) {
+						return "";
+					}
+				} else if (json.has("disable_err")) {
+					reason = json.getString("disable_err");
+					if (reason.equals("none") || reason.equals("sharenotfound")){
 						return "";
 					}
 				}
@@ -654,9 +649,7 @@ class DSHandlerDSM22 implements DSHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSHandler#getOriginalLink(org.jared
-	 * .synodroid.common.data.Task)
+	 * @see org.jared.synodroid.common.protocol.DSHandler#getOriginalLink(org.jared .synodroid.common.data.Task)
 	 */
 	public StringBuffer getOriginalFile(Task taskP) throws Exception {
 		StringBuffer result = null;

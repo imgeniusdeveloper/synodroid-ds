@@ -18,6 +18,7 @@ package org.jared.synodroid.ds.view.adapter;
 
 /**
  * A detail with a progress bar
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 @SuppressWarnings("serial")
@@ -29,32 +30,34 @@ public class DetailProgress extends Detail {
 	private int value;
 	// The template resource id to use
 	private int res;
-	
+
 	/**
 	 * The default constructor
 	 */
 	public DetailProgress(int resP) {
 		res = resP;
 	}
-	
+
 	/**
 	 * The constructor which define the name of this detail
+	 * 
 	 * @param nameP
 	 */
 	public DetailProgress(String nameP, int resP) {
 		setName(nameP);
 		res = resP;
 	}
-	
+
 	/**
-   * @return the res
-   */
-  public int getRes() {
-  	return res;
-  }
+	 * @return the res
+	 */
+	public int getRes() {
+		return res;
+	}
 
 	/**
 	 * Set the first progress bar (label and value)
+	 * 
 	 * @param labelP
 	 * @param valueP
 	 */
@@ -64,16 +67,16 @@ public class DetailProgress extends Detail {
 	}
 
 	/**
-   * @return the label
-   */
-  public String getLabel() {
-  	return label;
-  }
+	 * @return the label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
 	/**
-   * @return the value
-   */
-  public int getValue() {
-  	return value;
-  }
+	 * @return the value
+	 */
+	public int getValue() {
+		return value;
+	}
 }

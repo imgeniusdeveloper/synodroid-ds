@@ -45,38 +45,48 @@ public class DSHandlerDSM22Factory extends DSMHandlerFactory {
 	private SynoServer server;
 	// Download station handler
 	private DSHandler dsHandler;
+	private boolean DEBUG;
 
 	/**
 	 * Constructor for the DSM 2.2 handler
 	 * 
 	 * @param serverP
-	 *          The synology server
+	 *            The synology server
 	 */
-	public DSHandlerDSM22Factory(SynoServer serverP) {
+	public DSHandlerDSM22Factory(SynoServer serverP, boolean debug) {
 		server = serverP;
-		dsHandler = new DSHandlerDSM22(serverP);
+		dsHandler = new DSHandlerDSM22(serverP, debug);
+		DEBUG = debug;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jared.synodroid.common.protocol.DSMHandlerFactory#connect(org.jared
-	 * .synodroid.common.SynoServer)
+	 * @see org.jared.synodroid.common.protocol.DSMHandlerFactory#connect(org.jared .synodroid.common.SynoServer)
 	 */
 	@Override
-	public void connect() throws Exception {
+	public boolean connect() throws Exception {
 		String result = null;
 		String reason = null;
 		String pass = server.getPassword();
 		QueryBuilder builder = new QueryBuilder().add(LOGIN_USERNAME_KEY, server.getUser()).add(LOGIN_PASSWORD_KEY, pass);
 		JSONObject respJSO = server.sendJSONRequest(LOGIN_URI, builder.toString(), "POST");
-		Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
+		if (DEBUG) Log.d(Synodroid.DS_TAG, "JSON response is:" + respJSO);
 		result = respJSO.getString(LOGIN_RESULT_KEY);
 		// If no success or not login success
 		if (result == null || !result.equals(LOGIN_RESULT_SUCCESS)) {
 			reason = respJSO.getString(LOGIN_ERROR_REASON);
 			throw new DSMException(reason);
+		}
+		else{
+			server.setConnected(true);
+			result = dsHandler.getSharedDirectory();
+			if (result.equals("")){
+				return false;
+			}
+			else{
+				return true;
+			}
 		}
 
 	}

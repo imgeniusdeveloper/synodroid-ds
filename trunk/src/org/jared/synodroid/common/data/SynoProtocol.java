@@ -23,17 +23,18 @@ package org.jared.synodroid.common.data;
  */
 public enum SynoProtocol {
 	HTTP, HTTPS;
-	
+
 	/**
 	 * Return an array of values
+	 * 
 	 * @return
 	 */
 	public static String[] getValues() {
 		SynoProtocol[] protocols = SynoProtocol.values();
 		String[] values = new String[protocols.length];
 		for (int iLoop = 0; iLoop < protocols.length; iLoop++) {
-	    values[iLoop] = protocols[iLoop].name();
-    }
+			values[iLoop] = protocols[iLoop].name();
+		}
 		return values;
 	}
 }

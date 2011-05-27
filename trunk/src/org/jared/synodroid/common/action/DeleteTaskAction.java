@@ -30,50 +30,60 @@ public class DeleteTaskAction implements SynoAction {
 
 	// The task to resume
 	private Task task;
-	
+
 	public DeleteTaskAction(Task taskP) {
 		task = taskP;
 	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
-   */
-  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-  	serverP.getDSMHandlerFactory().getDSHandler().delete(task);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 */
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().delete(task);
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getName()
-   */
-  public String getName() {
-	  if (task.taskId == -1){
-		  return "Removing all completed tasks...";
-	  }
-	  return "Removing task "+task.taskId;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getName()
+	 */
+	public String getName() {
+		if (task.taskId == -1) {
+			return "Removing all completed tasks...";
+		}
+		return "Removing task " + task.taskId;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getToastId()
-   */
-  public int getToastId() {
-	  if (task.taskId == -1){
-		  return R.string.action_clearall;
-	  }
-	  return R.string.action_deleting;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getToastId()
+	 */
+	public int getToastId() {
+		if (task.taskId == -1) {
+			return R.string.action_clearall;
+		}
+		return R.string.action_deleting;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#isToastable()
-   */
-  public boolean isToastable() {
-	  return true;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#isToastable()
+	 */
+	public boolean isToastable() {
+		return true;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.ds.action.TaskAction#getTask()
-   */
-  public Task getTask() {
-	  return task;
-  }
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.ds.action.TaskAction#getTask()
+	 */
+	public Task getTask() {
+		return task;
+	}
+
 }

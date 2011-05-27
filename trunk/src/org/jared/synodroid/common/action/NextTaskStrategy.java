@@ -21,11 +21,12 @@ import java.util.List;
 import org.jared.synodroid.common.data.Task;
 
 /**
- * This interface retrieve the next task to query about 
+ * This interface retrieve the next task to query about
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public interface NextTaskStrategy {
 
 	public Task getNextTask(List<Task> currentTasksP);
-	
+
 }

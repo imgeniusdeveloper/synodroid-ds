@@ -34,21 +34,22 @@ public class TaskContainer {
 	private String totalDown = "";
 	// The total number of task (this is not the size of tasks list as the server can't return all tasks in one request)
 	private int totalTasks = 0;
-	
+
 	/**
 	 * Default constructor
 	 */
-	public TaskContainer() {		
+	public TaskContainer() {
 	}
-	
+
 	/**
 	 * A constructor which initialize the tasks list
+	 * 
 	 * @param tasksP
 	 */
 	public TaskContainer(List<Task> tasksP) {
 		tasks = tasksP;
 	}
-	
+
 	/**
 	 * @return the tasks
 	 */
@@ -62,52 +63,55 @@ public class TaskContainer {
 
 	/**
 	 * @param tasks
-	 *          the tasks to set
+	 *            the tasks to set
 	 */
 	public void setTasks(ArrayList<Task> tasks) {
 		this.tasks = tasks;
 	}
 
 	/**
-   * @return the totalUp
-   */
-  public String getTotalUp() {
-  	return totalUp;
-  }
+	 * @return the totalUp
+	 */
+	public String getTotalUp() {
+		return totalUp;
+	}
 
 	/**
-   * @param totalUp the totalUp to set
-   */
-  public void setTotalUp(String totalUp) {
-  	this.totalUp = totalUp;
-  }
+	 * @param totalUp
+	 *            the totalUp to set
+	 */
+	public void setTotalUp(String totalUp) {
+		this.totalUp = totalUp;
+	}
 
 	/**
-   * @return the totalDown
-   */
-  public String getTotalDown() {
-  	return totalDown;
-  }
+	 * @return the totalDown
+	 */
+	public String getTotalDown() {
+		return totalDown;
+	}
 
 	/**
-   * @param totalDown the totalDown to set
-   */
-  public void setTotalDown(String totalDown) {
-  	this.totalDown = totalDown;
-  }
+	 * @param totalDown
+	 *            the totalDown to set
+	 */
+	public void setTotalDown(String totalDown) {
+		this.totalDown = totalDown;
+	}
 
 	/**
-   * @return the totalTasks
-   */
-  public int getTotalTasks() {
-  	return totalTasks;
-  }
+	 * @return the totalTasks
+	 */
+	public int getTotalTasks() {
+		return totalTasks;
+	}
 
 	/**
-   * @param totalTasks the totalTasks to set
-   */
-  public void setTotalTasks(int totalTasks) {
-  	this.totalTasks = totalTasks;
-  }
+	 * @param totalTasks
+	 *            the totalTasks to set
+	 */
+	public void setTotalTasks(int totalTasks) {
+		this.totalTasks = totalTasks;
+	}
 
 }

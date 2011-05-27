@@ -30,44 +30,52 @@ public class PauseTaskAction implements SynoAction {
 
 	// The torrent to stop
 	private Task task;
-	
+
 	public PauseTaskAction(Task taskP) {
 		task = taskP;
 	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
-   */
-  public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-  	serverP.getDSMHandlerFactory().getDSHandler().stop(task);
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#execute(org.jared.synodroid.ds.TorrentListActivity, org.jared.synodroid.common.SynoServer)
+	 */
+	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
+		serverP.getDSMHandlerFactory().getDSHandler().stop(task);
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getName()
-   */
-  public String getName() {
-	  return "Stop task "+task.taskId;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getName()
+	 */
+	public String getName() {
+		return "Stop task " + task.taskId;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#getToastId()
-   */
-  public int getToastId() {
-	  return R.string.action_pausing;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#getToastId()
+	 */
+	public int getToastId() {
+		return R.string.action_pausing;
+	}
 
-	/* (non-Javadoc)
-   * @see org.jared.synodroid.common.SynoAction#isToastable()
-   */
-  public boolean isToastable() {
-	  return true;
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.jared.synodroid.common.SynoAction#isToastable()
+	 */
+	public boolean isToastable() {
+		return true;
+	}
 
 	/**
-   * @return the task
-   */
-  public Task getTask() {
-  	return task;
-  }
-	
+	 * @return the task
+	 */
+	public Task getTask() {
+		return task;
+	}
+
 }

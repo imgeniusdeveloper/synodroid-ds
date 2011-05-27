@@ -16,9 +16,9 @@
  */
 package org.jared.synodroid.common.data;
 
-
 /**
  * A class which have a binary content of a file and the filename
+ * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
 public class OriginalFile {
@@ -27,5 +27,5 @@ public class OriginalFile {
 	public String fileName;
 	// Binary content
 	public StringBuffer rawData;
-	
+
 }
