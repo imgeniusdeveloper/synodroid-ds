@@ -578,7 +578,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 		@Override
 		protected void onPreExecute() {
-			Toast toast = Toast.makeText(DownloadActivity.this, getString(R.string.wait_for_download), Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(DownloadActivity.this, getString(R.string.wait_for_download), Toast.LENGTH_SHORT);
 			toast.show();
 		}
 

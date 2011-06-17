@@ -63,8 +63,6 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 	// A generic Handler which delegate to the activity
 	private Handler handler = new Handler() {
 		// The toast message
-		private Toast toast;
-
 		@Override
 		public void handleMessage(Message msgP) {
 			// According to the message
@@ -74,14 +72,11 @@ public abstract class SynodroidActivity extends Activity implements ResponseHand
 				break;
 			case MSG_TOAST:
 				String text = (String) msgP.obj;
-				toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
+				Toast toast = Toast.makeText(SynodroidActivity.this, text, Toast.LENGTH_LONG);
 				toast.show();
 				break;
 			default:
 				operationPending.setVisibility(View.INVISIBLE);
-				if (toast != null) {
-					toast.cancel();
-				}
 				break;
 			}
 			// Delegate to the sub class in case it have something to do
