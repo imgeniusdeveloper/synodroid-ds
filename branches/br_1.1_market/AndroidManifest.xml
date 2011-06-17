@@ -2,7 +2,7 @@
 <manifest
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:installLocation="auto"
-  package="org.jared.synodroid.ds" android:versionName="1.1.290" android:versionCode="290">
+  package="org.jared.synodroid.ds" android:versionName="1.1.294" android:versionCode="294">
   <application
     android:label="@string/app_name"
     android:allowTaskReparenting="false"
@@ -114,15 +114,12 @@
         <category android:name="android.intent.category.DEFAULT"></category>
       </intent-filter>
     </activity>
-    <activity 
-        android:name="org.acra.CrashReportDialog"
-        android:theme="@android:style/Theme.Dialog"
-        android:launchMode="singleInstance" />
     <provider android:name=".SynodroidSearchSuggestion"
               android:authorities="org.jared.synodroid.SynodroidSearchSuggestion" />
   </application>
   
   <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4"/>
+  <uses-permission android:name="android.permission.BROADCAST_STICKY"></uses-permission>
   <uses-permission android:name="android.permission.INTERNET"></uses-permission>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>

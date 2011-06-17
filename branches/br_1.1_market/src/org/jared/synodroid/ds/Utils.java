@@ -16,7 +16,6 @@
  */
 package org.jared.synodroid.ds;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.jared.synodroid.common.data.TaskDetail;
@@ -201,35 +200,23 @@ public class Utils {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * Convert a file size in bytes to a string representation
 	 * 
 	 * @param bytes
 	 * @return
 	 */
-	public static String bytesToFileSize(long bytes, String unknownStringP) {
-		DecimalFormat format = new DecimalFormat("#.##");
-		String result = unknownStringP;
-		if (bytes != -1) {
-			String unit = "B";
-			double val = bytes;
-			if (bytes > 1000l * 1000l * 1000l * 1000l) {
-				val = val / (1000l * 1000l * 1000l * 1000l);
-				unit = "TB";
-			} else if (bytes > 1000l * 1000l * 1000l) {
-				val = val / (1000l * 1000l * 1000l);
-				unit = "GB";
-			} else if (bytes > 1000l * 1000l) {
-				val = val / (1000l * 1000l);
-				unit = "MB";
-			} else if (bytes > 1000l) {
-				val = val / 1000l;
-				unit = "KB";
-			}
-			result = format.format(val) + " " + unit;
-		}
-		return result;
+	public static String bytesToFileSize(long bytes, boolean si, String fail) {
+	    try{
+			int unit = si ? 1000 : 1024;
+		    if (bytes < unit) return bytes + " B";
+		    int exp = (int) (Math.log(bytes) / Math.log(unit));
+		    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1)+"";
+		    return String.format("%.2f %sB", bytes / Math.pow(unit, exp), pre);
+	    } catch (Exception e){
+	    	return fail;
+	    }
 	}
 
 	/**

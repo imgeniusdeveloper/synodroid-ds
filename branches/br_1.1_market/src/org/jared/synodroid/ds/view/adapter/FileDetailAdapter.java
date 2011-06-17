@@ -24,6 +24,7 @@ import org.jared.synodroid.common.data.TaskFile;
 import org.jared.synodroid.common.data.TaskStatus;
 import org.jared.synodroid.ds.DetailActivity;
 import org.jared.synodroid.ds.R;
+import org.jared.synodroid.ds.Utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -147,8 +148,13 @@ public class FileDetailAdapter extends BaseAdapter {
 
 		// The file size
 		TextView fileSize = (TextView) viewP.findViewById(R.id.id_file_size);
-		fileSize.setText(fileP.filesize);
-
+		try{
+			fileSize.setText(Utils.bytesToFileSize(Long.parseLong(fileP.filesize), false, fileP.filesize));
+		}
+		catch (Exception ex){
+			fileSize.setText(fileP.filesize);
+		}
+		
 		// Is the file has to be download
 		CheckBox downloadFile = (CheckBox) viewP.findViewById(R.id.id_file_to_download);
 		downloadFile.setTag(fileP.name);
@@ -164,7 +170,13 @@ public class FileDetailAdapter extends BaseAdapter {
 					file = files.get(index);
 					if (isChecked != file.download) {
 						fileP.download = isChecked;
-						modifiedTasks.add(file);
+						try{
+							modifiedTasks.add(file);	
+						} catch (NullPointerException e){
+							modifiedTasks = new ArrayList<TaskFile>();
+							modifiedTasks.add(file);
+						}
+						
 					}
 				}
 			}

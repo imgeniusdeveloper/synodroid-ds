@@ -11,7 +11,6 @@ package org.jared.synodroid;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.acra.CrashReportingApplication;
 import org.jared.synodroid.common.SynoServer;
 import org.jared.synodroid.common.SynoServerConnection;
 import org.jared.synodroid.common.action.DeleteTaskAction;
@@ -25,13 +24,13 @@ import org.jared.synodroid.ds.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -39,9 +38,8 @@ import android.util.Log;
  * 
  * @author Eric Taix (eric.taix at gmail.com)
  */
-public class Synodroid extends CrashReportingApplication {
+public class Synodroid extends Application {
 
-	private static final String GOOGLEDOC_FORM_ID = "dENyc3VzSFNwdzZScVJ0T3RPNk9tbVE6MQ";
 	private static final String PREFERENCE_GENERAL = "general_cat";
 	private static final String PREFERENCE_DEBUG_LOG = "general_cat.debug_logging";
 	
@@ -49,36 +47,6 @@ public class Synodroid extends CrashReportingApplication {
 	public boolean DEBUG;
 	// The current server
 	private SynoServer currentServer = null;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.acra.CrashReportingApplication#getFormId()
-	 */
-	@Override
-	public String getFormId() {
-		return GOOGLEDOC_FORM_ID;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.acra.CrashReportingApplication#getCrashResources()
-	 */
-	@Override
-	public Bundle getCrashResources() {
-		Bundle result = new Bundle();
-		result.putInt(RES_NOTIF_TICKER_TEXT, R.string.crash_notif_ticker_text);
-		result.putInt(RES_NOTIF_TITLE, R.string.crash_notif_title);
-		result.putInt(RES_NOTIF_TEXT, R.string.crash_notif_text);
-		result.putInt(RES_NOTIF_ICON, android.R.drawable.stat_notify_error); // optional. default is a warning sign
-		result.putInt(RES_DIALOG_TEXT, R.string.crash_dialog_text);
-		result.putInt(RES_DIALOG_ICON, android.R.drawable.ic_dialog_info); // optional. default is a warning sign
-		result.putInt(RES_DIALOG_TITLE, R.string.crash_dialog_title); // optional. default is your application name
-		result.putInt(RES_DIALOG_COMMENT_PROMPT, R.string.crash_dialog_comment_prompt); // optional. when defined, adds a user text field input with this text resource as a label
-		result.putInt(RES_DIALOG_OK_TOAST, R.string.crash_dialog_ok_toast); // optional. Displays a Toast when the user accepts to send a report ("Thank you !" for example)
-		return result;
-	}
 
 	/*
 	 * (non-Javadoc)

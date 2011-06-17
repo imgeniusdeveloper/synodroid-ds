@@ -637,7 +637,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		DetailText destDetail = new DetailText(getString(R.string.detail_destination), details.destination);
 		result.add(destDetail);
 		// File size
-		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize, getString(R.string.detail_unknown))));
+		result.add(new DetailText(getString(R.string.detail_filesize), Utils.bytesToFileSize(details.fileSize, true, getString(R.string.detail_unknown))));
 		// Creation time
 		result.add(new DetailText(getString(R.string.detail_creationtime), Utils.computeDate(details.creationDate)));
 		// URL
@@ -678,9 +678,9 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			result.add(new DetailText(getString(R.string.detail_status), getString(R.string.detail_unknown)));
 		}
 		// ------------ Transfered
-		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, getString(R.string.detail_unknown));
+		String transfered = getString(R.string.detail_progress_download) + " " + Utils.bytesToFileSize(details.bytesDownloaded, true, getString(R.string.detail_unknown));
 		if (details.isTorrent) {
-			String upload = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, getString(R.string.detail_unknown)) + " (" + details.bytesRatio + " %)";
+			String upload = getString(R.string.detail_progress_upload) + " " + Utils.bytesToFileSize(details.bytesUploaded, true, getString(R.string.detail_unknown)) + " (" + details.bytesRatio + " %)";
 			Detail2Text tr = new Detail2Text(getString(R.string.detail_transfered));
 			tr.setValue1(transfered);
 			tr.setValue2(upload);
