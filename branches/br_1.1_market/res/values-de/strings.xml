@@ -272,7 +272,6 @@
 <string name="err_nomarket">Der Android Market ist nicht auf Ihrem Gerät installiert.\n\nKontaktieren Sie die Entwickler, um eine Kopie von Transdroid search zu bekommen.</string>
 <string name="err_provider_missing">Transdroid torrent search ist nicht installiert.\n\nFolgen Sie den Anweisungen im Suchen-Tab um es zu installieren.</string>
 <string name="help">Hilfe</string>
-<string name="err_noemail">Es ist keine Mail-Applikation definiert.\n\nBenutzen Sie den Link auf der "Informationen" Seite um Hilfe zu bekommen.</string>
 
 <string name="label_usewifi">Über WLAN verbinden</string>
 <string name="hint_usewifi_on">Verbunden mit einem oder mehreren WLAN-Netzwerken</string>
@@ -284,7 +283,56 @@
 <string name="cleared_search_history">Vorherige Suchen gelöscht.</string>
 <string name="wait_for_download">Schließen Sie Synodroid nicht, bis die Aufgabe hinzugefügt wurde.\nWarte auf Datei...</string>
 
+<string name="err_noemail">Es ist keine Mail-Applikation definiert.\n\nBenutzen Sie den Link auf der "Informationen" Seite um Hilfe zu bekommen.</string>
+<string name="app_help">FAQ: Häufig gestellte Fragen</string>
+<string name="email">Fordern sie Unterstützung per Mail an!</string>
+<string name="faq1">Wie finde ich einen Server?</string>
+<string name="rep1">Sie finden keinen server, sie müssen einen besitzen. Synodroid wurde geschrieben um ein Synology Network Attached Storage (NAS) zu steuern. Wenn sie kein Synology NAS besitzen ist diese App für sie nutzlos. Deinstallieren sie sie...</string>
+
+<string name="faq2">Wo kann ich ein Synology NAS kaufen?</string>
+<string name="rep2">Sehen sie auf der Synology website unter "Hier erhältlich" nach.</string>
+
+<string name="faq6">Was ist ein Synology NAS?</string>
+<string name="rep6">Suchen sie auf der Synology web site nach Informationen über ihre Produkte.</string>
+
+<string name="faq7">Wie kann ich eine Datei mit dieser App auf mein Telefon laden?</string>
+<string name="rep7">Diese App ist nicht dafür gedacht Dateien auf das Telefon zu laden. Sie ist nur dafür gedacht die \"Download Station\" sektion Ihres Synology NAS zu steuern.</string>
+
+<string name="faq3">Wie kann ich mich zu meinem Synology NAS verbinden?</string>
+<string name="rep3">Drücken Sie den Menu-Knopf Ihres Gerätes auf der Startseite von Synodroid und wählen sie Einstellungen. Drücken sie Menu erneut im Einstellungsfenster und wählen sie eine der folgenden Optionen:\n\n1. Einen Server suchen\n2. Einen Server hinzufügen</string>
+
+<string name="faq4">Die Serversuche findet mein Synology NAS nicht, warum?</string>
+<string name="rep4">Bevor Sie die Serversuche benutzen sollten sie folgendes wissen:\n\n- 1 -\nSie müssen mit dem selben WLAN verbunden sein wie Ihr NAS.\n\n- 2 -\nIhr NAS muss angeschaltet und betriebsbereit sein.\n\n- 3 -\nSie müssen Android 1.6 oder höher verwenden.\n\n** Info:\nWenn die Serversche für sie nicht funktioniert können sie Ihren Server immer noch manuell über "Server hinzufügen" in den Einstellungen hinzufügen.</string>
+
+<string name="faq5">Diese FAQ haben mir nicht geholfen. Was soll ich tun?</string>
+<string name="rep5">Schreiben sie den Entwicklern eine Email (auf Englisch) indem sie den Button unten benutzen.\n\nBitte stellen sie eine präzise Frage und geben sie uns Informationen zum Verstädnis des Problems.</string>
+
+
+
+<string name="ul_rate">Maximale Upload-Rate (KB\\s)</string>
+<string name="dl_rate">Maximale Download-Rate (KB\\s)</string>
+<string name="max_peers">Maximalle Anzahl an peers</string>
+<string name="priority">Download Priorität</string>
+<string name="destination">Zielordner</string>
+<string-array name="priority_array">
+<item>Hoch</item>
+<item>Normal</item>
+<item>Niedrig</item>
+</string-array>
+<string-array name="priority_array_value">
+<item>1</item>
+<item>0</item>
+<item>-1</item>
+</string-array>
+<string-array name="destination_array">
+</string-array>
+<string name="action_task_prop">Lade Eigenschaften der Aufgabe...</string>
+<string name="task_parameters">Eigenschaften der Aufgabe</string>
+<string name="downloadOnly">Funktioniert nur, wenn die Aufgabe herunterlädt...</string>
+
+<string name="port_mismatch">Das Protokoll passt nicht zum angegebenen Port.</string>
+
 <string name="debug">Debug</string>
-<string name="hint_debug">Aktivieren Sie das Debuggen Protokolle</string>
+<string name="hint_debug">Aktivieren Sie das Debugging-Protokoll</string>
 
 </resources>
