@@ -176,7 +176,11 @@ public class TaskAdapter extends BaseAdapter implements AdapterView.OnItemClickL
 		} else {
 			view = (LinearLayout) inflater.inflate(R.layout.task_template, parentP, false);
 		}
-		bindView(view, tasks.get(positionP));
+		try{
+			bindView(view, tasks.get(positionP));
+		}catch (IndexOutOfBoundsException e){
+			view = (LinearLayout) inflater.inflate(R.layout.empty_task_template, parentP, false);
+		}
 		return view;
 	}
 

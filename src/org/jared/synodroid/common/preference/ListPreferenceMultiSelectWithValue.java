@@ -103,7 +103,10 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
 		// For each SSID
 		if (ssids != null) {
 			for (String ssid : ssids) {
-				int index = findIndexOfValue(ssid);
+				int index = -1;
+				try{
+					index = findIndexOfValue(ssid);
+				}catch (Exception e){}
 				if (index != -1) {
 					if (result == null) {
 						result = getEntries()[index].toString();
@@ -111,6 +114,7 @@ public class ListPreferenceMultiSelectWithValue extends ListPreferenceMultiSelec
 						result = result + ", " + getEntries()[index].toString();
 					}
 				}
+				
 			}
 		}
 		return result;

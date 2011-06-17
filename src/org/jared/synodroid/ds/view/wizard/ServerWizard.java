@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.jmdns.ServiceInfo;
 
+import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.ds.DownloadPreferenceActivity;
 import org.jared.synodroid.ds.R;
@@ -12,6 +13,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -71,7 +73,8 @@ public class ServerWizard {
 						else {
 							context.onWizardFinished(null);
 						}
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				// A server was selected
@@ -80,7 +83,8 @@ public class ServerWizard {
 						serverDialog.dismiss();
 						serverDialog = null;
 						editUser();
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				// User informations has been edited
@@ -89,7 +93,8 @@ public class ServerWizard {
 						userDialog.dismiss();
 						userDialog = null;
 						selectDSM();
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				// User informations has been edited
@@ -98,7 +103,8 @@ public class ServerWizard {
 						dsmDialog.dismiss();
 						dsmDialog = null;
 						editOptionsSecure();
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				// Options have been edited
@@ -107,7 +113,8 @@ public class ServerWizard {
 						optionsHTTPSDialog.dismiss();
 						optionsHTTPSDialog = null;
 						editOptionsInternet();
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				// Options have been edited
@@ -116,7 +123,8 @@ public class ServerWizard {
 						optionsInternetDialog.dismiss();
 						optionsInternetDialog = null;
 						createServers();
-					} catch (IllegalArgumentException e) {
+					} catch (Exception e) {
+						if (DEBUG) Log.e(Synodroid.DS_TAG, "Exception thrown: ", e);
 					}
 					break;
 				default:
