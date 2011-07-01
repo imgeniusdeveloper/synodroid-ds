@@ -111,7 +111,9 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String PREFERENCE_GENERAL = "general_cat";
 	private static final String PREFERENCE_SEARCH_SOURCE = "general_cat.search_source";
 	private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
-
+	private static final String TORRENT_SEARCH_URL_DL = "http://code.google.com/p/transdroid-search/downloads/list";
+	private static final String TORRENT_SEARCH_URL_DL_MARKET = "market://details?id=org.transdroid.search";
+	
 	// The connection dialog ID
 	private static final int CONNECTION_DIALOG_ID = 1;
 	// No server configured
@@ -151,6 +153,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private TextView emptyText;
 	private ScrollView sv;
 	private Button btnInstall;
+	private Button btnAlternate;
 
 	private Spinner SpinnerSource, SpinnerSort;
 	private ArrayAdapter<CharSequence> AdapterSource, AdapterSort;
@@ -393,6 +396,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		emptyText = (TextView) searchContent.findViewById(R.id.empty);
 
 		btnInstall = (Button) searchContent.findViewById(R.id.btnTorSearchInst);
+		btnAlternate = (Button) searchContent.findViewById(R.id.btnTorSearchInstAlternate);
 		sv = (ScrollView) searchContent.findViewById(R.id.empty_scroll);
 
 		SpinnerSource = (Spinner) searchContent.findViewById(R.id.srcSpinner);
@@ -438,6 +442,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			}
 			emptyText.setText(getString(R.string.sites) + "\n" + s.toString());
 			btnInstall.setVisibility(Button.GONE);
+			btnAlternate.setVisibility(Button.GONE);
 			resList.setVisibility(ListView.GONE);
 
 		} else {
@@ -448,13 +453,38 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			btnInstall.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					Intent goToMarket = null;
-					goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=org.transdroid.search"));
+					goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(TORRENT_SEARCH_URL_DL_MARKET));
 					try {
 						startActivity(goToMarket);
 					} catch (Exception e) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
 						// By default the message is "Error Unknown"
 						builder.setMessage(R.string.err_nomarket);
+						builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+						AlertDialog errorDialog = builder.create();
+						try {
+							errorDialog.show();
+						} catch (BadTokenException ex) {
+							// Unable to show dialog probably because intent has been closed. Ignoring...
+						}
+					}
+
+				}
+			});
+			btnAlternate.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Intent goToMarket = null;
+					goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(TORRENT_SEARCH_URL_DL));
+					try {
+						startActivity(goToMarket);
+					} catch (Exception e) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+						// By default the message is "Error Unknown"
+						builder.setMessage(R.string.err_nobrowser);
 						builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();

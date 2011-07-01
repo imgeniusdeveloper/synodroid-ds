@@ -256,7 +256,7 @@
 <string name="wizard_user_title">User information</string>
 <string name="wizard_user_user_label">User</string>
 <string name="wizard_user_password_label">Password</string>
-<string name="installTorrentSearch">Install Transdroid Torrent Search</string>
+<string name="installTorrentSearch">Install Transdroid Torrent Search</string><string name="installTorrentSearchAlternate">Alternate download for Torrent Search</string>
 <string name="logo_search">Torrent Search</string>
 <string name="dialog_message_confirm_add">Are you sure you would like to start downloading that file?</string>
 <string name="provider_missing">Search provider not installed, click the button bellow to install it.\n\n Note: You will have to restart synodroid app to enable search after installing search provider...</string>
@@ -271,7 +271,7 @@
 <string name="wizard_ddns_host">DDNS hostname</string>
 <string name="wizard_selectdsm_title">Select DSM version</string>
 <string name="wizard_no_server_found">No server could be found on the network. Check your connection and try again.</string>
-<string name="err_nomarket">Android market is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string>
+<string name="err_nomarket">Android market is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string><string name="err_nobrowser">Android browser is not installed on your device.\n\nContact the developers to get a copy of Transdroid search.</string>
 <string name="err_provider_missing">Transdroid torrent search is not installed on your device.\n\nFollow the instructions on the search tab to install it.</string>
 <string name="help">Help</string>
 

@@ -256,6 +256,7 @@
 <string name="wizard_user_user_label">Usuario</string>
 <string name="wizard_user_password_label">Contraseña</string>
 <string name="installTorrentSearch">Instalar Buscador de Torrents Transdroid</string>
+<string name="installTorrentSearchAlternate">Descarga alternativa de Torrent Search</string>
 <string name="logo_search">Buscar Torrent</string>
 <string name="dialog_message_confirm_add">¿Está seguro de que quiere comenzar a descargar el archivo?</string>
 <string name="provider_missing">Proveedor de búsqueda no instalado,presione el botón inferior para instalarlo.\n\n Nota: Tendrá que reiniciar synodroid para habilitar después de instalar el proveedor de búsqueda...</string>
@@ -270,7 +271,7 @@
 <string name="wizard_ddns_host">Nombre de host DDNS</string>
 <string name="wizard_selectdsm_title">Seleccione versión de DSM</string>
 <string name="wizard_no_server_found">No se ha podido encontrar ningún servidor en la red. Comprueba tu conexión y pruebe de nuevo.</string>
-<string name="err_nomarket">Android market no está instalado en tu dispositivo.\n\nContacta con los desarrolladores para conseguir una copia de Transdroid search.</string>
+<string name="err_nobrowser">Android Browser no está instalado en tu dispositivo.\n\nContacta con los desarrolladores para conseguir una copia de Transdroid search.</string><string name="err_nomarket">Android market no está instalado en tu dispositivo.\n\nContacta con los desarrolladores para conseguir una copia de Transdroid search.</string>
 <string name="err_provider_missing">El buscador de torrents Transdroid no está instalado en tu dispositivo.\n\nSigue las instrucciones en la pestaña de búsqueda para instalarlo.</string>
 <string name="help">Ayuda</string>
 
