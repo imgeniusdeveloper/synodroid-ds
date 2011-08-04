@@ -1,0 +1,24 @@
+#How to provide log to the devs
+
+== Install a Logcat app ==
+
+ * Install "Quick System info" from the market
+ * Open the app
+ * Click the process page
+ * return to home
+
+== Perform actions in Synodroid ==
+
+ * Open synodroid
+ * Got to parameters
+ * Turn on debugging logs
+ * Perform actions that you want to log
+ * Return to home
+
+== Dump logcat == 
+
+ * Open Quick system info
+ * Long press the synodroid process
+ * press the show log button
+ * press menu and send the logs to synodroid devs
+
