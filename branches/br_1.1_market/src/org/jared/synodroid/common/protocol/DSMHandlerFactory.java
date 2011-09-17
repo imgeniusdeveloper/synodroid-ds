@@ -51,6 +51,8 @@ public abstract class DSMHandlerFactory {
 			return new DSHandlerDSM22Factory(serverP, debug);
 		case VERSION3_1:
 			return new DSHandlerDSM31Factory(serverP, debug);
+		case VERSION3_2:
+			return new DSHandlerDSM31Factory(serverP, debug);
 		}
 		return result;
 	}
