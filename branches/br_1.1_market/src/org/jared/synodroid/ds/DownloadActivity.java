@@ -85,6 +85,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -113,6 +114,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 	private static final String PREFERENCE_SEARCH_ORDER = "general_cat.search_order";
 	private static final String TORRENT_SEARCH_URL_DL = "http://code.google.com/p/transdroid-search/downloads/list";
 	private static final String TORRENT_SEARCH_URL_DL_MARKET = "market://details?id=org.transdroid.search";
+	private static final String SYNO_PRO_URL_DL_MARKET = "market://details?id=com.bigpupdev.synodroid";
 	
 	// The connection dialog ID
 	private static final int CONNECTION_DIALOG_ID = 1;
@@ -340,6 +342,34 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 
 	private void initAboutTab(LayoutInflater inflater) {
 		View about = inflater.inflate(R.layout.about, null, false);
+		
+		LinearLayout goPro = (LinearLayout) about.findViewById(R.id.upgrade);
+		goPro.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent goToMarket = null;
+				goToMarket = new Intent(Intent.ACTION_VIEW, Uri.parse(SYNO_PRO_URL_DL_MARKET));
+				try {
+					startActivity(goToMarket);
+				} catch (Exception e) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(DownloadActivity.this);
+					// By default the message is "Error Unknown"
+					builder.setMessage(R.string.err_nomarket_upgrade);
+					builder.setTitle(getString(R.string.connect_error_title)).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+					AlertDialog errorDialog = builder.create();
+					try {
+						errorDialog.show();
+					} catch (BadTokenException ex) {
+						// Unable to show dialog probably because intent has been closed. Ignoring...
+					}
+				}
+
+			}
+		});
+		
 		Button eulaBtn = (Button) about.findViewById(R.id.id_eula_view);
 		eulaBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -376,6 +406,10 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		TextView message = (TextView) about.findViewById(R.id.about_code);
 		message.setText(Html.fromHtml("<a href=\"http://code.google.com/p/synodroid-ds/\">http://code.google.com/p/synodroid-ds/</a>"));
 		message.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		TextView gplus = (TextView) about.findViewById(R.id.about_gplus);
+		gplus.setText(Html.fromHtml("<a href=\"https://plus.google.com/111893484035545745539\">"+getString(R.string.gplus_title)+"</a>"));
+		gplus.setMovementMethod(LinkMovementMethod.getInstance());
 
 		ImageView donate = (ImageView) about.findViewById(R.id.ImgViewDonate);
 		donate.setOnClickListener(new View.OnClickListener() {
