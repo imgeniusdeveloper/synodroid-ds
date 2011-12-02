@@ -43,6 +43,7 @@ class DSHandlerDSM31 implements DSHandler {
 
 	// DownloadManager constant declaration
 	private static final String DM_URI = "/download/downloadman.cgi";
+	private static final String DM_URI_NEW = "/webman/modules/DownloadStation/dlm/downloadman.cgi";
 	private static final String TORRENT_INFO = "/webman/modules/DownloadStation/dlm/torrent_info.cgi";
 
 	/* The Synology's server */
@@ -57,15 +58,6 @@ class DSHandlerDSM31 implements DSHandler {
 	public DSHandlerDSM31(SynoServer serverP, boolean debug) {
 		server = serverP;
 		DEBUG = debug;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jared.synodroid.common.protocol.DSHandler#getBaseURL()
-	 */
-	public String getBaseURL() {
-		return server.getUrl() + "/" + DM_URI;
 	}
 
 	/*
@@ -87,7 +79,7 @@ class DSHandlerDSM31 implements DSHandler {
 			// Execute
 			JSONObject jso = null;
 			synchronized (server) {
-				jso = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				jso = server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 			}
 			boolean success = jso.getBoolean("success");
 			// If request succeded
@@ -157,7 +149,7 @@ class DSHandlerDSM31 implements DSHandler {
 				QueryBuilder getAllRequest = new QueryBuilder().add("action", "delete").add("idList", "" + taskP.taskId);
 				// Execute
 				synchronized (server) {
-					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+					server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 				}
 			} catch (Exception e) {
 				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while deleting id:" + taskP.taskId, e);
@@ -178,7 +170,7 @@ class DSHandlerDSM31 implements DSHandler {
 				QueryBuilder getAllRequest = new QueryBuilder().add("action", "clear").add("idList", "");
 				// Execute
 				synchronized (server) {
-					server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+					server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 				}
 			} catch (Exception e) {
 				if (DEBUG) Log.e(Synodroid.DS_TAG, "Not expected exception occured while clearing tasks", e);
@@ -198,7 +190,7 @@ class DSHandlerDSM31 implements DSHandler {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "resume").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
-				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 			}
 		}
 	}
@@ -227,7 +219,7 @@ class DSHandlerDSM31 implements DSHandler {
 			QueryBuilder getAllRequest = new QueryBuilder().add("action", "stop").add("idList", "" + taskP.taskId);
 			// Execute
 			synchronized (server) {
-				server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 			}
 		}
 	}
@@ -293,7 +285,7 @@ class DSHandlerDSM31 implements DSHandler {
 			// Execute
 			JSONObject json = null;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getAllRequest.toString(), "GET");
+				json = server.sendJSONRequest(DM_URI_NEW, getAllRequest.toString(), "GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If successful then build details list
@@ -665,7 +657,7 @@ class DSHandlerDSM31 implements DSHandler {
 		// Execute it to the server
 		JSONObject json = null;
 		synchronized (server) {
-			json = server.sendJSONRequest(DM_URI, updateTaskRequest.toString(), "GET");
+			json = server.sendJSONRequest(DM_URI_NEW, updateTaskRequest.toString(), "GET");
 		}
 		boolean success = json.getBoolean("success");
 		// If request succeded
@@ -707,7 +699,7 @@ class DSHandlerDSM31 implements DSHandler {
 			}
 			// Execute
 			synchronized (server) {
-				server.sendJSONRequest(DM_URI, setShared.toString(), "POST");
+				server.sendJSONRequest(DM_URI_NEW, setShared.toString(), "POST");
 			}
 		}
 	}
@@ -725,7 +717,7 @@ class DSHandlerDSM31 implements DSHandler {
 			// Execute
 			JSONObject json;
 			synchronized (server) {
-				json = server.sendJSONRequest(DM_URI, getShared.toString(), "GET");
+				json = server.sendJSONRequest(DM_URI_NEW, getShared.toString(), "GET");
 			}
 			boolean success = json.getBoolean("success");
 			// If request succeded
@@ -768,7 +760,7 @@ class DSHandlerDSM31 implements DSHandler {
 			QueryBuilder getOriginal = new QueryBuilder().add("action", "torrent").add("id", "" + taskP.taskId).add("_rn", "" + System.currentTimeMillis());
 			// Execute
 			synchronized (server) {
-				String uri = DM_URI + "/" + taskP.originalLink;
+				String uri = DM_URI_NEW + "/" + taskP.originalLink;
 				result = server.download(uri, getOriginal.toString());
 			}
 		}
