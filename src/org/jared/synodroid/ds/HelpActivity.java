@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -80,6 +81,17 @@ public class HelpActivity extends Activity {
 				}
 			}
 		});
+		
+		Button gplusBtn = (Button) help.findViewById(R.id.id_gplus);
+		gplusBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				String url = "https://plus.google.com/111893484035545745539";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				startActivity(i);
+			}
+		});
+		
 		TextView main_web = (TextView) help.findViewById(R.id.syno_main_web);
 		main_web.setText(Html.fromHtml("<a href=\"http://www.synology.com\">www.synology.com</a>"));
 		main_web.setMovementMethod(LinkMovementMethod.getInstance());

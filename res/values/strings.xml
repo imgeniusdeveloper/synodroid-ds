@@ -337,4 +337,12 @@
 <string name="debug">Debug</string>
 <string name="hint_debug">Activate debugging logs</string>
 
+
+<string name="app_google_plus">Circle us out on Google+ for up to date Synodroid information:</string>
+<string name="gplus_title">Synodroid Google+ Page</string>
+<string name="syno_pro_banner_text">Get new features with Synodroid Pro... Press to get it!</string>
+<string name="gplus">Get support on Google+</string>    
+<string name="err_nomarket_upgrade">Android market is not installed on your device.\n\nContact the developers to get a copy of Synodroid Pro.</string>
+
+
 </resources>
