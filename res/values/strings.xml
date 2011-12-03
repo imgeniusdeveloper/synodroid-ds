@@ -342,5 +342,16 @@
 <string name="syno_pro_banner_text">Get new features with Synodroid Pro... Press to get it!</string>
 <string name="gplus">Get support on Google+</string>    
 <string name="err_nomarket_upgrade">Android market is not installed on your device.\n\nContact the developers to get a copy of Synodroid Pro.</string>
+<string name="add_wizard_srv_name">Server name:</string>
+<string-array name="add_wizard_srv_type_array">
+	<item>Wifi Only</item>
+	<item>Cellular Network Only</item>
+	<item>Wifi and Cellular Network</item>
+</string-array>
+<string name="add_wizard_srv_sel_title">Server Info</string>
+<string name="add_wizard_wifi_title">Wifi Connection</string>
+<string name="add_wizard_wifi_host">Server IP/Domain name:</string>
+<string name="add_wizard_cell_title">Cellular Connection</string>
+<string name="add_wizard_sec_title">Security</string>
 
 </resources>
