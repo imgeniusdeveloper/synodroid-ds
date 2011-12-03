@@ -337,4 +337,10 @@
 <string name="debug">Debug</string>
 <string name="hint_debug">Activeer debugging logboeken</string>
 
+<string name="app_google_plus">Controleer Synodroid op Google+ voor actuele informatie:</string>
+<string name="gplus_title">Synodroid Google+ pagina</string>
+<string name="syno_pro_banner_text">Krijg de nieuwe functies van Synodroid Pro... Klik hier!</string>
+<string name="err_nomarket_upgrade">Android market is niet geïnstalleerd op je toestel.\n\nContacteer de ontwikkelaars van Synodroid voor een kopie van Synodroid Pro.</string>
+<string name="gplus">Ondersteuning vragen op Google+</string>    
+
 </resources>
