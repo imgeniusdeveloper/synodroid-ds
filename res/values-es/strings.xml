@@ -335,4 +335,10 @@
 <string name="debug">Depuración</string>
 <string name="hint_debug">Activar la depuración de los registros</string>
 
+<string name="app_google_plus">Añadenos a Google+ para mantenerte informado sobre Synodroid:</string>
+<string name="gplus_title">Página de Synodroid en Google+</string>
+<string name="syno_pro_banner_text">Nuevas funcionalidad con Synodroid Pro... ¡Consíguelo!</string>
+<string name="err_nomarket_upgrade">Android market no está instalado en tu dispositivo\n\nContacta con los desarrolladores para obtener una copia de Synodroid Pro.</string>
+<string name="gplus">Obtén ayuda en Google+</string>    
+    
 </resources>
