@@ -336,9 +336,9 @@
 <string name="debug">Débogage</string>
 <string name="hint_debug">Activer journaux de débogage</string>
 
-<string name="app_google_plus">Ajoutez-nous sur Google+ pour de lìnformation à jour sur Synodroid:</string>
+<string name="app_google_plus">Ajoutez-nous sur Google+ pour de l\'information à jour sur Synodroid:</string>
 <string name="gplus_title">Page Google+ de Synodroid</string>
-<string name="syno_pro_banner_text">Nouvelles fonctionalitées avec Synodroid Pro... Pressez ici!</string>
+<string name="syno_pro_banner_text">Nouvelles fonctionalitées avec Synodroid Pro... Appuyez ici!</string>
 <string name="err_nomarket_upgrade">Android market n\'est pas installé sur votre appareil.\n\nContactez le développeur pour avoir une version de Synodroid Pro.</string>
 <string name="gplus">Recevez du support sur Google+</string>    
 <string name="add_wizard_srv_name">Nom du serveur:</string>

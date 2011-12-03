@@ -335,4 +335,21 @@
 <string name="debug">Debug</string>
 <string name="hint_debug">Aktivieren Sie das Debugging-Protokoll</string>
 
+<string name="app_google_plus">Fügen sie uns zu ihren Google+ Kreisen hinzu um immer die neuesten Informationen zu Synodroid zu bekommen:</string>
+<string name="gplus_title">Synodroid Google+ Seite</string>
+<string name="syno_pro_banner_text">Mehr Funktionen mit Synodroid Pro... Zum Market!</string>
+<string name="err_nomarket_upgrade">Der Android Market ist auf ihrem Gerät nicht installiert.\n\nKontaktieren sie die Entwickler um Synodroid Pro zu bekommen.</string>
+<string name="gplus">Support bei Google+</string>    
+<string name="add_wizard_srv_name">Servername:</string>
+<string-array name="add_wizard_srv_type_array">
+	<item>Nur WLAN</item>
+	<item>Nur Mobilfunk</item>
+	<item>WLAN und Mobilfunk</item>
+</string-array>
+<string name="add_wizard_srv_sel_title">Serverinfo</string>
+<string name="add_wizard_wifi_title">WLAN Verbindung</string>
+<string name="add_wizard_wifi_host">Server IP/Domainname:</string>
+<string name="add_wizard_cell_title">Mobilfunk</string>
+<string name="add_wizard_sec_title">Sicherheit</string>
+    
 </resources>
