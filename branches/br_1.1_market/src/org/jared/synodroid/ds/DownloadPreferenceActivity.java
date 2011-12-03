@@ -24,11 +24,11 @@ import org.jared.synodroid.common.preference.ListPreferenceWithValue;
 import org.jared.synodroid.common.preference.PreferenceFacade;
 import org.jared.synodroid.common.preference.PreferenceProcessor;
 import org.jared.synodroid.common.preference.PreferenceWithValue;
+import org.jared.synodroid.ds.view.wizard.AddServerWizard;
 import org.jared.synodroid.ds.view.wizard.ServerWizard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -51,12 +51,10 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.provider.SearchRecentSuggestions;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
 /**
@@ -294,12 +292,14 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 			break;
 		// Create a new server
 		case MENU_CREATE:
-			maxServerId = maxServerId + 1;
-			// Create the create new server screen
-			PreferenceScreen screen = createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
-			if (screen != null) {
-				showServerDialog(screen);
-			}
+			AddServerWizard wiz = new AddServerWizard(this, ((Synodroid)getApplication()).DEBUG);
+			wiz.start();
+//			maxServerId = maxServerId + 1;
+//			// Create the create new server screen
+//			PreferenceScreen screen = createServerPreference(maxServerId, serversCategory, PreferenceFacade.SERVER_PREFIX + maxServerId, getString(R.string.label_default_server_prefix) + maxServerId, getString(R.string.hint_default_server));
+//			if (screen != null) {
+//				showServerDialog(screen);
+//			}
 			break;
 
 		// Delete one or more servers
@@ -814,25 +814,5 @@ public class DownloadPreferenceActivity extends PreferenceActivity implements Pr
 				return false;
 			return true;
 		}
-	}
-
-	/**
-	 * Show the preference screen. It's a very bad implementation
-	 * 
-	 * @param screenP
-	 */
-	private void showServerDialog(PreferenceScreen screenP) {
-		ListView listView = new ListView(this);
-		screenP.bind(listView);
-
-		// Set the title bar if title is available, else no title bar
-		final CharSequence title = getTitle();
-		Dialog dialog = new Dialog(this, TextUtils.isEmpty(title) ? android.R.style.Theme_NoTitleBar : android.R.style.Theme);
-		dialog.setContentView(listView);
-		if (!TextUtils.isEmpty(title)) {
-			dialog.setTitle(title);
-		}
-		dialog.setOnDismissListener(screenP);
-		dialog.show();
 	}
 }

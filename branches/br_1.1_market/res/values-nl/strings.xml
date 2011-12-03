@@ -342,5 +342,16 @@
 <string name="syno_pro_banner_text">Krijg de nieuwe functies van Synodroid Pro... Klik hier!</string>
 <string name="err_nomarket_upgrade">Android market is niet geïnstalleerd op je toestel.\n\nContacteer de ontwikkelaars van Synodroid voor een kopie van Synodroid Pro.</string>
 <string name="gplus">Ondersteuning vragen op Google+</string>    
-
+<string name="add_wizard_srv_name">Server naam:</string>
+<string-array name="add_wizard_srv_type_array">
+	<item>Alleen Wifi</item>
+	<item>Alleen 3G</item>
+	<item>Wifi en 3G</item>
+</string-array>
+<string name="add_wizard_srv_sel_title">Server Info</string>
+<string name="add_wizard_wifi_title">Wifi Connectie</string>
+<string name="add_wizard_wifi_host">Server IP/Domein naam:</string>
+<string name="add_wizard_cell_title">3G Connectie</string>
+<string name="add_wizard_sec_title">Beveiliging</string>
+    
 </resources>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">Synodroid</string>
-    <string name="app_opensource">Projet Opensource</string>
-    <string name="app_url">http://code.google.com/p/synodroid-ds/</string>
+<string name="app_name">Synodroid</string>
+<string name="app_opensource">Projet Opensource</string>
+<string name="app_url">http://code.google.com/p/synodroid-ds/</string>
 
 <string name="connect_cant_connect">&quot;Impossible de se connecter à {0}. L'erreur est '{1}'.&quot;</string>
 <string name="unknow_reason">&quot;Une erreur s'est produite pour une raison inconnue.&quot;</string>
@@ -341,5 +341,16 @@
 <string name="syno_pro_banner_text">Nouvelles fonctionalitées avec Synodroid Pro... Pressez ici!</string>
 <string name="err_nomarket_upgrade">Android market n\'est pas installé sur votre appareil.\n\nContactez le développeur pour avoir une version de Synodroid Pro.</string>
 <string name="gplus">Recevez du support sur Google+</string>    
-
+<string name="add_wizard_srv_name">Nom du serveur:</string>
+<string-array name="add_wizard_srv_type_array">
+	<item>Wifi seulement</item>
+	<item>Réseau cellulaire seulement</item>
+	<item>Wifi et Réseau cellulaire</item>
+</string-array>
+<string name="add_wizard_srv_sel_title">Information de serveur</string>
+<string name="add_wizard_wifi_title">Connexion Wifi</string>
+<string name="add_wizard_wifi_host">IP ou Nom de domaine:</string>
+<string name="add_wizard_cell_title">Conexion Cellulaire</string>
+<string name="add_wizard_sec_title">Securité</string>
+    
 </resources>
