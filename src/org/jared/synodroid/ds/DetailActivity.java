@@ -390,7 +390,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 			app.executeAction(DetailActivity.this, new ResumeTaskAction(task), true);
 			return true;
 		case MENU_PARAMETERS:
-			if (app.getServer().getDsmVersion() == DSMVersion.VERSION3_1 || app.getServer().getDsmVersion() == DSMVersion.VERSION3_2) {
+			if (app.getServer().getDsmVersion() == DSMVersion.VERSION3_1 || app.getServer().getDsmVersion() == DSMVersion.VERSION3_2 || app.getServer().getDsmVersion() == DSMVersion.VERSION4_0) {
 				app.executeAsynchronousAction(DetailActivity.this, new EnumShareAction(), false, false);
 			} else {
 				try {
@@ -877,7 +877,7 @@ public class DetailActivity extends SynodroidActivity implements TabListener {
 		}
 
 		if (server != null) {
-			if (server.getDsmVersion() == DSMVersion.VERSION3_1 || server.getDsmVersion() == DSMVersion.VERSION3_2) {
+			if (server.getDsmVersion() == DSMVersion.VERSION3_1 || server.getDsmVersion() == DSMVersion.VERSION3_2 || app.getServer().getDsmVersion() == DSMVersion.VERSION4_0) {
 				List<TaskFile> modifiedTaskFiles = fileAdapter.getModifiedTaskList();
 				if (modifiedTaskFiles != null && modifiedTaskFiles.size() > 0) {
 					UpdateFilesAction update = new UpdateFilesAction(task, modifiedTaskFiles);
