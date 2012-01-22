@@ -802,42 +802,48 @@ public class SynoServer {
 			int retry = 0;
 			int MAX_RETRY = 2;
 			while (retry <= MAX_RETRY) {
-				// Create the connection
-				con = createConnection(uriP, requestP, methodP);
-				// Add the parameters
-				wr = new OutputStreamWriter(con.getOutputStream());
-				wr.write(requestP);
-				// Send the request
-				wr.flush();
-				wr.close();
-
-				// Try to retrieve the session cookie
-				Map<String, List<String>> headers = con.getHeaderFields();
-				List<String> newCookie = headers.get("set-cookie");
-				if (newCookie != null) {
-					synchronized (this){
-						cookies = newCookie;
+				try{
+					// Create the connection
+					con = createConnection(uriP, requestP, methodP);
+					// Add the parameters
+					wr = new OutputStreamWriter(con.getOutputStream());
+					wr.write(requestP);
+					// Send the request
+					wr.flush();
+					wr.close();
+	
+					// Try to retrieve the session cookie
+					Map<String, List<String>> headers = con.getHeaderFields();
+					List<String> newCookie = headers.get("set-cookie");
+					if (newCookie != null) {
+						synchronized (this){
+							cookies = newCookie;
+						}
+						if (DEBUG) Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
 					}
-					if (DEBUG) Log.d(Synodroid.DS_TAG, "Retreived cookies: " + cookies);
+					
+					// Now read the reponse and build a string with it
+					br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					sb = new StringBuffer();
+					String line;
+					while ((line = br.readLine()) != null) {
+						sb.append(line);
+					}
+					br.close();
+					// Verify is response if not -1, otherwise take reason from the header
+					if (con.getResponseCode() == -1) {
+						retry++;
+						if (DEBUG) Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
+					} else {
+						if (DEBUG) Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
+						JSONObject respJSO = new JSONObject(sb.toString());
+						return respJSO;
+					}
+				}catch (Exception e){
+					if (DEBUG) Log.e(Synodroid.DS_TAG, "Caught exception while contacting the server, retying...", e);
+					retry ++;
 				}
-
-				// Now read the reponse and build a string with it
-				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-				sb = new StringBuffer();
-				String line;
-				while ((line = br.readLine()) != null) {
-					sb.append(line);
-				}
-				br.close();
-				// Verify is response if not -1, otherwise take reason from the header
-				if (con.getResponseCode() == -1) {
-					retry++;
-					if (DEBUG) Log.d(Synodroid.DS_TAG, "Response code is -1 (retry: " + retry + ")");
-				} else {
-					if (DEBUG) Log.d(Synodroid.DS_TAG, "Response is: " + sb.toString());
-					JSONObject respJSO = new JSONObject(sb.toString());
-					return respJSO;
-				}
+				
 			}
 			throw new Exception("Failed to read response from server. Please reconnect!");
 		}
