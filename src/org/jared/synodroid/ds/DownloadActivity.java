@@ -840,10 +840,15 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			boolean out_url = false;
 			if (action.equals(Intent.ACTION_VIEW)) {
 				uri = intentP.getData();
-				if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
-					/** Download and fix URL */
-					new TorrentDownloadAndAdd().execute(uri.toString());
-					return false;
+				if (uri != null){
+					if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
+						/** Download and fix URL */
+						new TorrentDownloadAndAdd().execute(uri.toString());
+						return false;
+					}
+				}
+				else{
+					return true;
 				}
 			} else if (action.equals(Intent.ACTION_SEND)) {
 				String uriString = (String) intentP.getExtras().get(Intent.EXTRA_TEXT);
