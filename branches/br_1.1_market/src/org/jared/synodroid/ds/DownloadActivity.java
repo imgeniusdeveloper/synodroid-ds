@@ -8,16 +8,9 @@
  */
 package org.jared.synodroid.ds;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.util.ByteArrayBuffer;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SearchViewBinder;
@@ -64,7 +57,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
@@ -92,7 +84,6 @@ import android.widget.ScrollView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -574,8 +565,11 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				Dialog d = new AlertDialog.Builder(DownloadActivity.this).setTitle(R.string.dialog_title_confirm).setMessage(R.string.dialog_message_confirm_add).setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						TextView tv = (TextView) rl.findViewById(R.id.result_url);
-						String url = tv.getText().toString();
-						new TorrentDownloadAndAdd().execute(url);
+						Uri uri = Uri.parse(tv.getText().toString());
+
+						AddTaskAction addTask = new AddTaskAction(uri, true);
+					 	Synodroid app = (Synodroid) getApplication();
+					 	app.executeAction(DownloadActivity.this, addTask, true);
 					}
 				}).create();
 				// d.setOwnerActivity(this); // why can't the builder do this?
@@ -637,37 +631,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		Uri uri = Uri.parse(uriString);
 		// Then query all torrent sites (no selection nor projection nor sort):
 		return managedQuery(uri, null, null, null, null);
-	}
-
-	private class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
-		@Override
-		protected void onPreExecute() {
-			Toast toast = Toast.makeText(DownloadActivity.this, getString(R.string.wait_for_download), Toast.LENGTH_SHORT);
-			toast.show();
-		}
-
-		@Override
-		protected Uri doInBackground(String... params) {
-			try {
-				Uri uri = Uri.parse(params[0]);
-				return fixUri(uri);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Uri uri) {
-			boolean out_url = false;
-			if (uri != null) {
-				if (!uri.toString().startsWith("file:")) {
-					out_url = true;
-				}
-				AddTaskAction addTask = new AddTaskAction(uri, out_url);
-				Synodroid app = (Synodroid) getApplication();
-				app.executeAction(DownloadActivity.this, addTask, true);
-			}
-		}
 	}
 
 	private class TorrentSearchTask extends AsyncTask<String, Void, Cursor> {
@@ -780,53 +743,6 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 		// Debug.startMethodTracing("synodroid");
 	}
 
-	private Uri fixUri(Uri uri) {
-		try {
-			URL url = new URL(uri.toString()); // you can write here any link
-			File path = Environment.getExternalStorageDirectory();
-			path = new File(path, "data/org.jared.synodroid/");
-			path.mkdirs();
-			String temp[] = uri.toString().split("/");
-			String fname = temp[(temp.length) - 1];
-			if (!fname.toLowerCase().endsWith(".torrent") && !fname.toLowerCase().endsWith(".nzb")) {
-				fname += ".torrent";
-			}
-			File file = new File(path, fname);
-
-			long startTime = System.currentTimeMillis();
-			Log.d(Synodroid.DS_TAG, "Downloading " + uri.toString() + " to temp folder...");
-			Log.d(Synodroid.DS_TAG, "Temp file destination: " + file.getAbsolutePath());
-			/* Open a connection to that URL. */
-			URLConnection ucon = url.openConnection();
-
-			/*
-			 * Define InputStreams to read from the URLConnection.
-			 */
-			InputStream is = ucon.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-
-			/*
-			 * Read bytes to the Buffer until there is nothing more to read(-1).
-			 */
-			ByteArrayBuffer baf = new ByteArrayBuffer(50);
-			int current = 0;
-			while ((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-
-			/* Convert the Bytes read to a String. */
-			FileOutputStream fos = new FileOutputStream(file);
-			fos.write(baf.toByteArray());
-			fos.close();
-			Log.d(Synodroid.DS_TAG, "Download completed. Elapsed time: " + ((System.currentTimeMillis() - startTime) / 1000) + " sec(s)");
-			uri = Uri.fromFile(file);
-		} catch (Exception e) {
-			Log.d(Synodroid.DS_TAG, "Download Error: " + e);
-			Log.d(Synodroid.DS_TAG, "Letting the NAS do the heavy lifting...");
-		}
-		return uri;
-	}
-
 	/**
 	 * Handle all new intent
 	 * 
@@ -842,9 +758,7 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				uri = intentP.getData();
 				if (uri != null){
 					if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
-						/** Download and fix URL */
-						new TorrentDownloadAndAdd().execute(uri.toString());
-						return false;
+						out_url = true;
 					}
 				}
 				else{
