@@ -15,6 +15,7 @@ import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.Eula;
 import org.jared.synodroid.common.SearchViewBinder;
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.TorrentDownloadAndAdd;
 import org.jared.synodroid.common.action.AddTaskAction;
 import org.jared.synodroid.common.action.ClearAllTaskAction;
 import org.jared.synodroid.common.action.EnumShareAction;
@@ -23,6 +24,7 @@ import org.jared.synodroid.common.action.ResumeAllAction;
 import org.jared.synodroid.common.action.SetShared;
 import org.jared.synodroid.common.action.StopAllAction;
 import org.jared.synodroid.common.action.SynoAction;
+import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
@@ -565,11 +567,16 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				Dialog d = new AlertDialog.Builder(DownloadActivity.this).setTitle(R.string.dialog_title_confirm).setMessage(R.string.dialog_message_confirm_add).setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						TextView tv = (TextView) rl.findViewById(R.id.result_url);
-						Uri uri = Uri.parse(tv.getText().toString());
-
-						AddTaskAction addTask = new AddTaskAction(uri, true);
-					 	Synodroid app = (Synodroid) getApplication();
-					 	app.executeAction(DownloadActivity.this, addTask, true);
+						if (((Synodroid) getApplication()).getServer().getDsmVersion().smallerThen(DSMVersion.VERSION3_2)){
+							String url = tv.getText().toString();
+							new TorrentDownloadAndAdd(DownloadActivity.this).execute(url);
+						}
+						else{
+							Uri uri = Uri.parse(tv.getText().toString());
+							AddTaskAction addTask = new AddTaskAction(uri, true);
+						 	Synodroid app = (Synodroid) getApplication();
+						 	app.executeAction(DownloadActivity.this, addTask, true);
+						}
 					}
 				}).create();
 				// d.setOwnerActivity(this); // why can't the builder do this?
@@ -758,7 +765,13 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 				uri = intentP.getData();
 				if (uri != null){
 					if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
-						out_url = true;
+						if (((Synodroid) getApplication()).getServer().getDsmVersion().smallerThen(DSMVersion.VERSION3_2)){
+							new TorrentDownloadAndAdd(DownloadActivity.this).execute(uri.toString());
+							return false;
+						}
+						else{
+							out_url = true;
+						}
 					}
 				}
 				else{
