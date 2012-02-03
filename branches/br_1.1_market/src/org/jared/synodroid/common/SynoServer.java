@@ -29,6 +29,7 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManager;
 
 import org.jared.synodroid.Synodroid;
+import org.jared.synodroid.common.action.AddTaskAction;
 import org.jared.synodroid.common.action.SynoAction;
 import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SynoProtocol;
@@ -719,6 +720,12 @@ public class SynoServer {
 				// An operation is pending
 				fireMessage(handlerP, ResponseHandler.MSG_OPERATION_PENDING);
 				if (DEBUG) Log.d(Synodroid.DS_TAG, "Executing action: " + actionP.getName());
+				
+				//Kill toast if it is a safe addTaskAction...
+				try{
+					((AddTaskAction) actionP).checkToast(SynoServer.this);
+				} catch (Exception e){}
+				
 				try {
 					// If a Toast must be shown
 					if (actionP.isToastable() && showToast) {

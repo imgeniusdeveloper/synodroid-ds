@@ -17,10 +17,13 @@
 package org.jared.synodroid.common.action;
 
 import org.jared.synodroid.common.SynoServer;
+import org.jared.synodroid.common.TorrentDownloadAndAdd;
+import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.Task;
 import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.R;
 
+import android.app.Activity;
 import android.net.Uri;
 
 /**
@@ -32,6 +35,8 @@ public class AddTaskAction implements SynoAction {
 
 	private Uri uri;
 	private Task task;
+	private boolean use_safe;
+	private boolean toast = true;
 
 	/**
 	 * Constructor to upload a file defined by an Uri
@@ -39,11 +44,12 @@ public class AddTaskAction implements SynoAction {
 	 * @param uriP
 	 * @param outside_url
 	 */
-	public AddTaskAction(Uri uriP, boolean outside_url) {
+	public AddTaskAction(Uri uriP, boolean outside_url, boolean use_safeP) {
 		uri = uriP;
 		task = new Task();
 		task.fileName = uri.getLastPathSegment();
 		task.outside_url = outside_url;
+		use_safe = use_safeP;
 	}
 
 	/*
@@ -52,14 +58,25 @@ public class AddTaskAction implements SynoAction {
 	 * @see org.jared.synodroid.ds.action.TaskAction#execute(org.jared.synodroid.ds .DownloadActivity, org.jared.synodroid.common.SynoServer)
 	 */
 	public void execute(ResponseHandler handlerP, SynoServer serverP) throws Exception {
-		if (task.outside_url) {
-			// Start task using url instead of reading file
-			serverP.getDSMHandlerFactory().getDSHandler().uploadUrl(uri);
-		} else {
-			serverP.getDSMHandlerFactory().getDSHandler().upload(uri);
+		if (use_safe && serverP.getDsmVersion().smallerThen(DSMVersion.VERSION3_2)){
+			new TorrentDownloadAndAdd((Activity)handlerP).execute(uri.toString());
+		}
+		else{
+			if (task.outside_url) {
+				// Start task using url instead of reading file
+				serverP.getDSMHandlerFactory().getDSHandler().uploadUrl(uri);
+			} else {
+				serverP.getDSMHandlerFactory().getDSHandler().upload(uri);
+			}	
 		}
 	}
 
+	public void checkToast(SynoServer serverP){
+		if (use_safe && serverP.getDsmVersion().smallerThen(DSMVersion.VERSION3_2)){
+			toast = false;
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -93,7 +110,6 @@ public class AddTaskAction implements SynoAction {
 	 * @see org.jared.synodroid.ds.action.TaskAction#isToastable()
 	 */
 	public boolean isToastable() {
-		return true;
+		return toast;
 	}
-
 }
