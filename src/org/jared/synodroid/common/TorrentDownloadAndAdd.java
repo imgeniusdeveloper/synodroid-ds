@@ -4,21 +4,21 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.jared.synodroid.Synodroid;
 import org.jared.synodroid.common.action.AddTaskAction;
+import org.jared.synodroid.common.protocol.ResponseHandler;
 import org.jared.synodroid.ds.DownloadActivity;
-import org.jared.synodroid.ds.R;
 
 import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 public class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 	private Activity a;
@@ -29,8 +29,9 @@ public class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 	
 	@Override
 	protected void onPreExecute() {
-		Toast toast = Toast.makeText(a, a.getString(R.string.wait_for_download), Toast.LENGTH_SHORT);
-		toast.show();
+		Message msg = new Message();
+		msg.what = ResponseHandler.MSG_TASK_DL_WAIT;
+		((ResponseHandler)a).handleReponse(msg);
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 			if (!uri.toString().startsWith("file:")) {
 				out_url = true;
 			}
-			AddTaskAction addTask = new AddTaskAction(uri, out_url);
+			AddTaskAction addTask = new AddTaskAction(uri, out_url, false);
 			Synodroid app = (Synodroid) a.getApplication();
 			app.executeAction((DownloadActivity)a, addTask, true);
 		}
@@ -78,12 +79,18 @@ public class TorrentDownloadAndAdd extends AsyncTask<String, Void, Uri> {
 				if (((Synodroid)a.getApplication()).DEBUG) Log.d(Synodroid.DS_TAG, "Temp file destination: " + file.getAbsolutePath());
 			}catch (Exception ex){/*DO NOTHING*/}
 			/* Open a connection to that URL. */
-			URLConnection ucon = url.openConnection();
+			HttpURLConnection ucon = (HttpURLConnection) url.openConnection();
 
 			/*
 			 * Define InputStreams to read from the URLConnection.
 			 */
 			InputStream is = ucon.getInputStream();
+			
+			while (ucon.getResponseCode() == 302){
+				ucon = (HttpURLConnection) ucon.getURL().openConnection();
+				is = ucon.getInputStream();
+			}
+			
 			BufferedInputStream bis = new BufferedInputStream(is);
 
 			/*
