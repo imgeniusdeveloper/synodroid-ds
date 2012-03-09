@@ -182,7 +182,14 @@ public class FileDetailAdapter extends BaseAdapter {
 			}
 		});
 		// Changing the checkbox state is only able if the download is not finished
-		downloadFile.setEnabled((task.status.equals(TaskStatus.TASK_DOWNLOADING.name()) ? true : false));
+		try{
+			downloadFile.setEnabled((task.status.equals(TaskStatus.TASK_DOWNLOADING.name()) ? true : false));
+		}
+		catch (Exception ex){
+			if (downloadFile != null){
+				downloadFile.setEnabled(false);
+			}
+		}
 	}
 
 	/**
