@@ -354,4 +354,5 @@
 <string name="add_wizard_cell_title">Cellular Connection</string>
 <string name="add_wizard_sec_title">Security</string>
 
+<string name="magnet">Magnet links only work with DSM 3.2 and up...</string>
 </resources>

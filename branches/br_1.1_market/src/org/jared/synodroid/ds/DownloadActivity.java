@@ -23,6 +23,7 @@ import org.jared.synodroid.common.action.ResumeAllAction;
 import org.jared.synodroid.common.action.SetShared;
 import org.jared.synodroid.common.action.StopAllAction;
 import org.jared.synodroid.common.action.SynoAction;
+import org.jared.synodroid.common.data.DSMVersion;
 import org.jared.synodroid.common.data.SharedDirectory;
 import org.jared.synodroid.common.data.SynoProtocol;
 import org.jared.synodroid.common.data.Task;
@@ -765,10 +766,24 @@ public class DownloadActivity extends SynodroidActivity implements Eula.OnEulaAg
 			if (action.equals(Intent.ACTION_VIEW)) {
 				uri = intentP.getData();
 				if (uri != null){
-					if (uri.toString().startsWith("http") || uri.toString().startsWith("ftp")) {
+					if (uri.toString().startsWith("magnet")){
+						try{
+							if (((Synodroid)getApplication()).getServer().getDsmVersion().greaterThen(DSMVersion.VERSION3_1)){
+								use_safe = true;
+								out_url = true;
+							}
+							else{
+								Toast toast = Toast.makeText(this, getText(R.string.magnet), Toast.LENGTH_LONG);
+								toast.show();
+								return false;
+							}
+						}
+						catch (Exception ex){return false;}
+					}
+					else if (!uri.toString().startsWith("file")) {
 						use_safe = true;
 						out_url = true;
-					}
+					}	
 				}
 				else{
 					return true;
