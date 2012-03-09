@@ -351,5 +351,8 @@
 <string name="add_wizard_wifi_host">IP del Servidor/Nombre de dominio:</string>
 <string name="add_wizard_cell_title">Conexión red de datos móvil</string>
 <string name="add_wizard_sec_title">Seguridad</string>
-
+<string name="magnet">Los enlaces Magnet sólo funcionan con DSM 3.2 o superior...</string>
+<string name="update_search_engine">Actualizar motor de búsqueda</string>
+<string name="update_search_engine_toast">Descargar últimas versiones de los motores de búsqueda.</string>	
+ 
 </resources>
