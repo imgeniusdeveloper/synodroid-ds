@@ -353,4 +353,7 @@
 <string name="add_wizard_cell_title">Conexion Cellulaire</string>
 <string name="add_wizard_sec_title">Securité</string>
     
+<string name="magnet">Les liens Magnet ne fonctionnent seulement qu\'avec DSM 3.2 et plus...</string>	
+<string name="update_search_engine">Mise-à-Jour du moteur de recherche</string>
+<string name="update_search_engine_toast">Téléchargement de la dernière version du moteur de recherche.</string>
 </resources>

@@ -353,5 +353,8 @@
 <string name="add_wizard_wifi_host">Server IP/Domein naam:</string>
 <string name="add_wizard_cell_title">3G Connectie</string>
 <string name="add_wizard_sec_title">Beveiliging</string>
-    
+<string name="magnet">Magnet links werken alleen met DSM 3.2 en hoger...</string>
+<string name="update_search_engine">Update zoekmachine</string>
+<string name="update_search_engine_toast">De zoekmachine wordt gedownload.</string>
+     
 </resources>

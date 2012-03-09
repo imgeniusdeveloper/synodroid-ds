@@ -351,5 +351,8 @@
 <string name="add_wizard_wifi_host">Server IP/Domainname:</string>
 <string name="add_wizard_cell_title">Mobilfunk</string>
 <string name="add_wizard_sec_title">Sicherheit</string>
+<string name="magnet">Magnet Links funktionieren nur ab DSM 3.2 aufwärts...</string>
+<string name="update_search_engine">Suchengine updaten</string>
+<string name="update_search_engine_toast">Die neueste Version der Suchengine wird heruntergeladen.</string>
     
 </resources>
