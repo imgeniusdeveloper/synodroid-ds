@@ -42,6 +42,7 @@ import org.jared.synodroid.common.protocol.https.AcceptAllTrustManager;
 import org.jared.synodroid.ds.R;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Message;
 import android.util.Log;
@@ -752,7 +753,8 @@ public class SynoServer {
 				}
 			}
 		};
-		new Thread(runnable, "Synodroid DS action").start();
+		((Activity)handlerP).runOnUiThread(runnable);
+		//new Thread(runnable, "Synodroid DS action").start();
 	}
 
 	/**
