@@ -48,6 +48,9 @@ public class AddTaskAction implements SynoAction {
 		uri = uriP;
 		task = new Task();
 		task.fileName = uri.getLastPathSegment();
+		if (task.fileName == null){
+		 	 task.fileName = uri.toString();
+		}
 		task.outside_url = outside_url;
 		use_safe = use_safeP;
 	}
