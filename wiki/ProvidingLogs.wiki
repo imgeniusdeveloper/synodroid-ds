@@ -1,6 +1,6 @@
 #How to provide log to the devs
 
-== Install a SendLog app ==
+== Install a Sendlog app ==
 
  * Install "Sendlog" from the Play Store: https://play.google.com/store/apps/details?id=org.l6n.sendlog
 
@@ -14,5 +14,5 @@
 
 == Dump logcat == 
 
- * SendLog app
+ * Sendlog app
  * Send "Long" logs by mail to synodroid devs
