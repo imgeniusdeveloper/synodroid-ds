@@ -1,11 +1,8 @@
 #How to provide log to the devs
 
-== Install a Logcat app ==
+== Install a SendLog app ==
 
- * Install "Quick System info" from the market
- * Open the app
- * Click the process page
- * return to home
+ * Install "Sendlog" from the Play Store: https://play.google.com/store/apps/details?id=org.l6n.sendlog
 
 == Perform actions in Synodroid ==
 
@@ -17,8 +14,5 @@
 
 == Dump logcat == 
 
- * Open Quick system info
- * Long press the synodroid process
- * press the show log button
- * press menu and send the logs to synodroid devs
-
+ * SendLog app
+ * Send "Long" logs by mail to synodroid devs
