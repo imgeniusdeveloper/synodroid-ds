@@ -1,0 +1,10 @@
+===Download task are stuck in waiting state?===
+
+Log into you NAS using SSH then type the following commands:
+{{{
+/usr/syno/etc/rc.d/S20pgsql.sh restart 
+su -l admin
+/usr/syno/pgsql/bin/dropdb download
+exit
+/usr/syno/etc/rc.d/S25download.sh restart
+}}}
